@@ -1,0 +1,190 @@
+<section class="mob-doc content" ng-controller="InputCtrl as ctrl">
+    <h2>Input输入框</h2>
+
+    <div class="mob-doc content">
+
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                
+                <div class="mob-demo-example-child">
+                    <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                    值：<span ng-bind="value"></span>
+                </div>
+            </div>
+            <div class="meta">
+                <div class="mob-demo-example">
+                    可以直接通过 <code class="code-tag">ng-model</code> 进行双向数据绑定
+                </div>
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input style="display:block;width: 250px;" disabled></mob-input>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" disable></mob-input>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>可清空</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input style="display:block;width: 250px;" clearable></mob-input>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" clearable></mob-input>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>密码框</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input style="display:block;width: 250px;" show-password></mob-input>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" show-password></mob-input>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>带 icon 的输入框</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    属性方式：
+                    <mob-input style="display:block;width: 250px;" suffix-icon="mob-icon-calendar">
+                    </mob-input>
+
+                    <mob-input style="display:block;width: 250px;" prefix-icon="mob-icon-search">
+                    </mob-input>
+                </div>
+                <div class="mob-demo-example-child">
+                    Slot方式：
+                    <mob-input style="display:block;width: 250px;">
+                        <mob-icon-calendar slot-name="suffixIcon"></mob-icon-calendar>
+                    </mob-input>
+                    <mob-input style="display:block;width: 250px;">
+                        <mob-icon-search slot-name="prefixIcon"></mob-icon-search>
+                    </mob-input>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <div class="mob-demo-example-child">
+                                属性方式：
+                                <mob-input style="display:block;width: 250px;" suffix-icon="mob-icon-calendar">
+                                </mob-input>
+                                
+                                <mob-input style="display:block;width: 250px;" prefix-icon="mob-icon-search">
+                                </mob-input>
+                            </div>
+                            <div class="mob-demo-example-child">
+                                Slot方式：
+                                <mob-input style="display:block;width: 250px;">
+                                    <mob-icon-calendar slot-name="suffixIcon"></mob-icon-calendar>
+                                </mob-input>
+                                <mob-input style="display:block;width: 250px;">
+                                    <mob-icon-search slot-name="prefixIcon"></mob-icon-search>
+                                </mob-input>
+                            </div>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>输入长度限制</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    最大输入5个字符：
+                    <mob-input style="display:block;width: 250px;" max-length="5"></mob-input>
+                </div>
+
+                <div class="mob-demo-example-child">
+                    显示字符数：
+                    <mob-input style="display:block;width: 250px;" show-word-limit max-length="5"></mob-input>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                        <div class="mob-demo-example-child">
+                            最大输入5个字符：
+                            <mob-input style="display:block;width: 250px;" max-length="5"></mob-input>
+                        </div>
+
+                        <div class="mob-demo-example-child">
+                            显示字符数：
+                            <mob-input style="display:block;width: 250px;" show-word-limit max-length="5"></mob-input>
+                        </div>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+
+
+
+        <h3>复合型输入框</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-input style="display:block;width: 400px;">
+                        <div slot-name="prepend">Http://</div>
+                    </mob-input>
+                </div>
+
+                <div class="mob-demo-example-child">
+                    <mob-input style="display:block;width: 400px;">
+                        <div slot-name="prepend">www.</div>
+                        <div slot-name="append">.com</div>
+                    </mob-input>
+                </div>
+
+                <div class="mob-demo-example-child">
+                    <mob-input style="display:block;width: 400px;">
+                        <mob-icon-search slot-name="prepend"></mob-icon-search>
+                    </mob-input>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                        <mob-input style="display:block;width: 250px;" max-length="5"></mob-input>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+    </div>
+</section>

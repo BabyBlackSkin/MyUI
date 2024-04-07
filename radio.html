@@ -1,0 +1,132 @@
+<section class="mob-doc content" ng-controller="RadioCtrl as ctrl">
+    <h2>Radio单选框</h2>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-radio label="Option1" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
+                值：<span ng-bind="value"></span>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-radio label="Option1" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                    <mob-radio label="Option1" value="1" disabled></mob-radio>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                                <mob-radio label="Option1" value="1"></mob-radio>
+                                <mob-radio label="Option2" value="2"></mob-radio>
+                                <mob-radio label="Option3" value="3"></mob-radio>
+                            </mob-radio-group>
+                            <span style="margin-left: 20px;">值：</span>
+                            <span ng-bind="demo"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>组内选择</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                        <mob-radio label="Option1" value="1"></mob-radio>
+                        <mob-radio label="Option2" value="2"></mob-radio>
+                        <mob-radio label="Option3" value="3"></mob-radio>
+                    </mob-radio-group>
+                    <span style="margin-left: 20px;">值：</span>
+                    <span ng-bind="demo"></span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                                <mob-radio label="Option1" value="1"></mob-radio>
+                                <mob-radio label="Option2" value="2"></mob-radio>
+                                <mob-radio label="Option3" value="3"></mob-radio>
+                            </mob-radio-group>
+                            <span style="margin-left: 20px;">值：</span>
+                            <span ng-bind="demo"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>边框样式</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                        <mob-radio label="Option1" value="1" border></mob-radio>
+                        <mob-radio label="Option2" value="2" border></mob-radio>
+                        <mob-radio label="Option3" value="3" border></mob-radio>
+                        <mob-radio label="Option4" value="4" disabled border></mob-radio>
+                    </mob-radio-group>
+                    <span style="margin-left: 20px;">值：</span>
+                    <span ng-bind="demo"></span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                                <mob-radio label="Option1" value="1"></mob-radio>
+                                <mob-radio label="Option2" value="2"></mob-radio>
+                                <mob-radio label="Option3" value="3"></mob-radio>
+                            </mob-radio-group>
+                            <span style="margin-left: 20px;">值：</span>
+                            <span ng-bind="demo"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>按钮样式</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                        <mob-radio-button label="Option1" value="1"></mob-radio-button>
+                        <mob-radio-button label="Option2" value="2"></mob-radio-button>
+                        <mob-radio-button label="Option3" value="3"></mob-radio-button>
+                        <mob-radio-button label="Option4" value="4" disabled></mob-radio-button>
+                    </mob-radio-group>
+                    <span style="margin-left: 20px;">值：</span>
+                    <span ng-bind="demo"></span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-radio-group ng-model='demo' change-handle="ctrl.fatherChange(value)">
+                                <mob-radio label="Option1" value="1"></mob-radio>
+                                <mob-radio label="Option2" value="2"></mob-radio>
+                                <mob-radio label="Option3" value="3"></mob-radio>
+                            </mob-radio-group>
+                            <span style="margin-left: 20px;">值：</span>
+                            <span ng-bind="demo"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+    </div>
+</section>

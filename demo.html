@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prism Test</title>
+    <link href="prism/prism.css" rel="stylesheet" />
+  </head>
+  <body>
+    <pre>
+      <code class="language-js">
+        function curry(func) {
+          return function curried(...args) {
+            if (args.length >= func.length) {
+              return func.apply(this, args);
+            } else {
+              return function(...args2) {
+                return curried.apply(this, args.concat(args2));
+              }
+            }
+          };
+        }
+      </code>
+    </pre>
+ 
+    <script src="prism/prism.js"></script>
+  </body>
+</html>

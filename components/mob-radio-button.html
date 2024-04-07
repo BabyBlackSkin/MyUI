@@ -1,0 +1,11 @@
+<div 
+    class="mob-radio-button"
+    ng-class="{
+        'is_disabled':$attrs.disabled, 
+    }"
+    ng-click="$ctrl.clickHandle()">
+    <label for="#" class="mob-radio-button__wrapper">
+        <input type="radio" autocomplete="off" name="{{$attrs.name}}" class="mob-radio-button__original" disabled="$attrs.disabled" ng-value="$attrs.value" ng-model="$ctrl.ngModel">
+        <span class="mob-radio-button__square  mob-unselect-text" ng-bind="$attrs.label"></span>
+    </label>
+</div>

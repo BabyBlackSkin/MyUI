@@ -1,0 +1,56 @@
+:root {
+    --mob-input-color: #606266;
+    --mob-text-color-placeholder: #a8abb2;
+    --mob-transition-duration: .2s;
+    --mob-text-backgroud-color-primary: #ffffff;
+    --mob-fill-color-light:#f5f7fa;
+    --mob-fill-color-dark:#f5f7fa;
+    --mob-active-text-color: #ff4949;
+    --mob-active-fill-color:#ff4949;
+    --mob-box-shadow-light:0px 0px 12px rgba(0, 0, 0, .12);
+    --mob-border-color: #dcdfe6;
+    --mob-active-border-color: #ff4949;
+    --mob-not-allow-background-color:#f5f7fa;
+    --mob-not-allow-text-color:#c0c4cc;
+}
+/* div[ng-transclude]{
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+} */
+
+
+.mob-icon svg {
+    width: 1em;
+    height: 1em;
+}
+
+.mob-icon {
+    height: inherit;
+    line-height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--mob-transition-duration);
+    margin-left: 8px;
+}
+.mob-icon__wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.mob-unselect-text{
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard syntax */
+}
+
+.mob-icon.mob_icon__calendar::before{
+    content:' \e667 ';
+    font-family:'iconfont';
+    display: block;
+}
