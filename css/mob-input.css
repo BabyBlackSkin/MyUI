@@ -130,7 +130,7 @@
 
 
 /* icon */
-.mob-input_clear,.mob-input_acces_visiable,.mob-input_inacces_visiable{
+.mob-input_clear,.mob-input_access_visible,.mob-input_invisible{
     cursor: pointer;
 }
 
@@ -162,7 +162,7 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: 0;
-} 
+}
 /* 尾部插槽 */
 .mob-input.is_append_slot .mob-input__wrapper {
     border-top-right-radius: 0;
@@ -172,4 +172,4 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left: 0;
-} 
+}

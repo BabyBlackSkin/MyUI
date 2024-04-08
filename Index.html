@@ -68,33 +68,33 @@
 </style>
 
 <body ng-controller="IndexCtrl as ctrl">
-    <!-- <div>
-        <p>最外面的</p>
-        {{ctrl.form}}
-        <br>
-        ------
-        <div style="width: 200px;">
-            <mob-form form-item="ctrl.formItem" model="ctrl.form"></mob-form>
-        </div>
-    </div> -->
-    <div class="contain" style="display: flex;">
+<!-- <div>
+    <p>最外面的</p>
+    {{ctrl.form}}
+    <br>
+    ------
+    <div style="width: 200px;">
+        <mob-form form-item="ctrl.formItem" model="ctrl.form"></mob-form>
+    </div>
+</div> -->
+<div class="contain" style="display: flex;">
 
-        <div class="navigation">
-            <!-- <a href="#!/home">Home</a> -->
-            <div class="nav-item" ng-class="{'is_active':item.path === routPath}" ng-repeat="item in menuList">
-                <a href="{{'#' + item.path}}" ng-bind="item.label">home</a>
-            </div>
-        </div>
-
-        <div class="view">
-            <div ng-view="">
-            </div>
+    <div class="navigation">
+        <!-- <a href="#!/home">Home</a> -->
+        <div class="nav-item" ng-class="{'is_active':item.path === routPath}" ng-repeat="item in menuList">
+            <a href="{{'#' + item.path}}" ng-bind="item.label">home</a>
         </div>
     </div>
 
-    <script type="text/ng-template" id="home">
-        <h1 style="margin-top:20px"> 参考Element UI ，基于Angular1.5.3开发的UI框架 </h1>
-    </script>
+    <div class="view">
+        <div ng-view="">
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="home">
+    <h1 style="margin-top:20px"> 参考Element UI ，基于Angular1.5.3开发的UI框架 </h1>
+</script>
 
 </body>
 <script>
@@ -103,26 +103,22 @@
     app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
         // $logProvider.debugEnabled(true)
 
-        $routeProvider.
-            when('/input', {
-                templateUrl: './input.html',
-                controller: 'InputCtrl'
-            }).
-            when('/home', {
-                templateUrl: 'home',
-                controller: 'IndexCtrl'
-            }).
-            when('/radio', {
-                templateUrl: './radio.html',
-                controller: 'RadioCtrl'
-            }).
-            otherwise({ redirectTo: '/home' })
-    }])
+        $routeProvider.when('/input', {
+            templateUrl: './input.html',
+            controller: 'InputCtrl'
+        }).when('/home', {
+            templateUrl: 'home',
+            controller: 'IndexCtrl'
+        }).when('/radio', {
+            templateUrl: './radio.html',
+            controller: 'RadioCtrl'
+        }).otherwise({redirectTo: '/home'})
+    }]);
     app.run(['$rootScope', '$log', function ($rootScope, $log) {
         $rootScope.menuList = [
-            { label: 'Home', path: '/home' },
-            { label: 'Input输入框', path: '/input' },
-            { label: 'Radio单选框', path: '/radio' }
+            {label: 'Home', path: '/home'},
+            {label: 'Input输入框', path: '/input'},
+            {label: 'Radio单选框', path: '/radio'}
         ]
         //通过$on为$rootScope添加路由事件
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -137,12 +133,13 @@
 
         $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
             $log.debug('error changing routes');
-            // $log.debug(event);
-            // $log.debug(current);
-            // $log.debug(previous);
-            // $log.debug(rejection);
+            $log.debug(event);
+            $log.debug(current);
+            $log.debug(previous);
+            $log.debug(rejection);
         });
     }])
+    ;
 
     app
         .controller('IndexCtrl', ['$route', function IndexCtrl($route) {
@@ -150,30 +147,38 @@
             this.hero = {
                 name: 'Spawn'
             };
-            this.form = {
-            };
+            this.form = {};
             this.formItem = [
-                { type: 'input', label: 'clearableInput', prop: 'clearableInput', options: { clearable: true } },
-                { type: 'input', label: 'disableInput', prop: 'disableInput', options: { disable: true } },
-                { type: 'input', label: 'showPasswordInput', prop: 'showPasswordInput', options: { showPassword: true } },
-                { type: 'select', label: '名称1', prop: 'name2', options: { clearable: true, dataDic: [{ label: 'Option1', value: 'Option1' }, { label: 'Option2', value: 'Option2' }] } },
+                {type: 'input', label: 'clearableInput', prop: 'clearableInput', options: {clearable: true}},
+                {type: 'input', label: 'disableInput', prop: 'disableInput', options: {disable: true}},
+                {type: 'input', label: 'showPasswordInput', prop: 'showPasswordInput', options: {showPassword: true}},
+                {
+                    type: 'select',
+                    label: '名称1',
+                    prop: 'name2',
+                    options: {
+                        clearable: true,
+                        dataDic: [{label: 'Option1', value: 'Option1'}, {label: 'Option2', value: 'Option2'}]
+                    }
+                },
                 // {type:'input',label:'名称2',prop:'name3'}
             ];
         }])
-        .controller('InputCtrl', ['$scope', function IndexCtrl($scope) { }])
+        .controller('InputCtrl', ['$scope', function IndexCtrl($scope) {
+        }])
         .controller('RadioCtrl', ['$scope', function RadioCtrl($scope) {
 
             this.fatherChange = function (value) {
                 console.log('radio change回调方法', value)
             }
         }])
-        ;
+    ;
     app
         .directive('prism', function () {
             return {
                 restrict: 'A',
-                compile: function (element, attrs) {
-                    return function (scope, element, attrs) {
+                compile: function () {
+                    return function (scope, element) {
 
                         Prism.highlightElement(element[0], false)
                     }
@@ -208,14 +213,14 @@
                         }
 
                         let slotList = element[0].querySelectorAll("slot")
-                        if (!slotList || slotList.length == 0) {
+                        if (!slotList || slotList.length === 0) {
                             return;
                         }
                         // console.log(slotList)
                         for (innerSlot of slotList) {
                             // 获取组件内部的插槽
                             let slotName = innerSlot.getAttribute('name')
-                            if (!slotName || slotName.length == 0) {
+                            if (!slotName || slotName.length === 0) {
                                 return
                             }
                             // 根据名称获取外部传入的插槽
@@ -233,7 +238,7 @@
                 }
             }
         }])
-        .factory('attrHelp', ['$compile', function ($compile) {
+        .factory('attrHelp', [function () {
             return {
                 expose: function (scope, attrs) {
                     scope.$attrs = {}
@@ -254,9 +259,10 @@
                     }
                 }
             }
-        }]);
+        }])
     ;
 
+    // FIXME 待完善
     app
         .component('mobForm', {// https://segmentfault.com/a/1190000005868488
             transclude: true,
@@ -265,7 +271,7 @@
                 model: '=',
                 formItem: '<'
             },
-            controller: function ($scope) {
+            controller: function () {
                 this.$onInit = function () {
                 }
             }
@@ -278,7 +284,7 @@
                 label: '<',
                 prop: '<'
             },
-            controller: function ($scope) {
+            controller: function () {
                 this.generateUuid = function () {
                     return Math.random().toString(36).slice(2); // 截取小数点后的字符串
                 }
@@ -327,13 +333,16 @@
                     slot.appendChild($scope, inner, `<${icon}></${icon}>`)
                 }
 
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) { }
+                // bindings中的单向流被改变时，触发
+                this.$onChanges = function (changes) {
+                }
 
-                this.$onDistroy = function () { }
+                this.$onDestroy = function () {
+                }
 
                 // 与Vue2的mounted相同
-                this.$postLink = function () { }
+                this.$postLink = function () {
+                }
 
 
                 /**
@@ -355,7 +364,7 @@
                 /**
                  * 点击可视按钮
                  */
-                this.visiable = function () {
+                this.visibleClickHandle = function () {
                     this.focus()
                     let input = $element[0].querySelector('.mob-input__inner')
                     if ($scope.valueVisiable) {
@@ -373,7 +382,7 @@
                         this.ngModel && this.ngModel.length > 0
                 }
                 // 是否显示可视按钮
-                this.showValueAccessVisable = function () {
+                this.showValueAccessVisible = function () {
                     return $scope.$attrs.showPassword &&
                         !$scope.$attrs.disable &&
                         this.ngModel &&
@@ -381,7 +390,7 @@
                         $scope.valueVisiable
                 }
                 // 是否显示不可视按钮
-                this.showValueInaccessVisable = function () {
+                this.showValueInVisible = function () {
                     return $scope.$attrs.showPassword &&
                         !$scope.$attrs.disable &&
                         this.ngModel &&
@@ -401,9 +410,9 @@
         .component('mobSelect', { // FIXME 待完善
             templateUrl: './components/mob-select.html',
             bindings: {
-                model: '=',
-                placeHolder: '<?',
-                options: '<',
+                ngModel: '=?',
+                placeHolder: '?<',
+                changeHandle: '&?'
             },
             controller: function ($scope, $element) {
                 // 初始化工作
@@ -415,12 +424,12 @@
                     $scope.isFocus = false
                 }
 
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
+                // bindings中的单向流被改变时，触发
+                this.$onChanges = function (changes) {
 
                 }
 
-                this.$onDistroy = function () {
+                this.$onDestroy = function () {
 
                 }
 
@@ -435,7 +444,7 @@
                         selectPorpper.style.height = 0
                     } else {
                         selectPorpper.style.height = 'auto'
-                        const { height } = selectPorpper.querySelector('.mob-select-dropdown').getBoundingClientRect();
+                        const {height} = selectPorpper.querySelector('.mob-select-dropdown').getBoundingClientRect();
                         selectPorpper.style.height = 0
                         selectPorpper.offsetHeight;// reflow
                         selectPorpper.style.height = height + 'px';
@@ -490,12 +499,12 @@
                     attrHelp.expose($scope, $attrs)
                 }
 
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
+                // bindings中的单向流被改变时，触发
+                this.$onChanges = function (changes) {
 
                 }
 
-                this.$onDistroy = function () {
+                this.$onDestroy = function () {
 
                 }
 
@@ -519,7 +528,7 @@
                 this.change = function () {
                     this.ngModel = $attrs.value
                     if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({ value: $attrs.value })
+                        this.changeHandle({value: $attrs.value})
                     } else {
                         $scope.$emit('change', $attrs.value)
                     }
@@ -553,12 +562,12 @@
                     attrHelp.expose($scope, $attrs)
                 }
 
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
+                // bindings中的单向流被改变时，触发
+                this.$onChanges = function (changes) {
 
                 }
 
-                this.$onDistroy = function () {
+                this.$onDestroy = function () {
 
                 }
 
@@ -582,7 +591,7 @@
                 this.change = function () {
                     this.ngModel = $attrs.value
                     if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({ value: $attrs.value })
+                        this.changeHandle({value: $attrs.value})
                     } else {
                         $scope.$emit('change', $attrs.value)
                     }
@@ -604,12 +613,12 @@
                     attrHelp.expose($scope, $attrs)
                 }
 
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
+                // bindings中的单向流被改变时，触发
+                this.$onChanges = function (changes) {
 
                 }
 
-                this.$onDistroy = function () {
+                this.$onDestroy = function () {
 
                 }
 
@@ -622,7 +631,7 @@
                 $scope.$on('change', function (event, data) {
                     _that.ngModel = data
                     if (angular.isFunction(_that.changeHandle)) {
-                        _that.changeHandle({ value: data })
+                        _that.changeHandle({value: data})
                     }
                     // 反向通知group下所有的radio绑定的ngModel
                     $scope.$broadcast(`${_that.radioGroupName}_change`, data)
@@ -630,51 +639,23 @@
             }
         });
 
-    ;
 
-    app.component('mobIcon', {
-        transclude: true,
-        templateUrl: './components/mob-icon.html',
-        bindings: {},
-        controller: function ($scope, $element) {
-            // 初始化工作
-            this.$onInit = function () {
-            }
-
-            // bingdings中的单向流被改变时，触发
-            this.$onChange = function (changes) {
-
-            }
-
-            this.$onDistroy = function () {
-
-            }
-
-            // 与Vue2的mounted相同
-            this.$postLink = function () {
-            }
-
-            this.onFocus = function () {
-                $scope.isFocus = true;
-
-            }
-        }
-    })
-        .component('mobIconDownArrow', {
-            // transclude:true,
-            templateUrl: './icon/downArrow.html',
+    app
+        .component('mobIcon', {
+            transclude: true,
+            templateUrl: './components/mob-icon.html',
             bindings: {},
-            controller: function ($scope, $element) {
+            controller: function ($scope) {
                 // 初始化工作
                 this.$onInit = function () {
                 }
 
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
+                // bindings中的单向流被改变时，触发
+                this.$onChanges = function (changes) {
 
                 }
 
-                this.$onDistroy = function () {
+                this.$onDestroy = function () {
 
                 }
 
@@ -683,143 +664,35 @@
                 }
 
                 this.onFocus = function () {
+                    $scope.isFocus = true;
+
                 }
             }
+        })
+        .component('mobIconDownArrow', {
+            templateUrl: './icon/downArrow.html',
         })
         .component('mobIconCircleClose', {
             // transclude:true,
             templateUrl: './icon/circleClose.html',
-            bindings: {},
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
-
-                }
-
-                this.$onDistroy = function () {
-
-                }
-
-                // 与Vue2的mounted相同
-                this.$postLink = function () {
-                }
-
-                this.onFocus = function () {
-                }
-            }
         })
-        .component('mobIconAccessVisiable', {
+        .component('mobIconVisible', {
             // transclude:true,
-            templateUrl: './icon/accessVisiable.html',
-            bindings: {},
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
-
-                }
-
-                this.$onDistroy = function () {
-
-                }
-
-                // 与Vue2的mounted相同
-                this.$postLink = function () {
-                }
-
-                this.onFocus = function () {
-                }
-            }
+            templateUrl: './icon/visible.html',
         })
-        .component('mobIconInaccessVisiable', {
+        .component('mobIconInvisible', {
             // transclude:true,
-            templateUrl: './icon/inaccessVisiable.html',
-            bindings: {},
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
-
-                }
-
-                this.$onDistroy = function () {
-
-                }
-
-                // 与Vue2的mounted相同
-                this.$postLink = function () {
-                }
-
-                this.onFocus = function () {
-                }
-            }
+            templateUrl: './icon/invisible.html',
         })
         .component('mobIconCalendar', {
             // transclude:true,
             templateUrl: './icon/calendar.html',
-            bindings: {},
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
-
-                }
-
-                this.$onDistroy = function () {
-
-                }
-
-                // 与Vue2的mounted相同
-                this.$postLink = function () {
-                }
-
-                this.onFocus = function () {
-                }
-            }
         })
         .component('mobIconSearch', {
             // transclude:true,
             templateUrl: './icon/search.html',
-            bindings: {},
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-                // bingdings中的单向流被改变时，触发
-                this.$onChange = function (changes) {
-
-                }
-
-                this.$onDistroy = function () {
-
-                }
-
-                // 与Vue2的mounted相同
-                this.$postLink = function () {
-                }
-
-                this.onFocus = function () {
-                }
-            }
         })
-
-
-
-        ;
+    ;
 </script>
 
 </html>
