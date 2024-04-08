@@ -50,3 +50,8 @@ h1,h2,h3,h4,h5,h6{
     border-radius: 4px;
     border: 1px solid var(--mob-border-color);
 }
+code:not(.source-code){
+    padding: 4px 10px;
+    background-color: rgba(255, 220, 220, 0.61);
+    border-radius: 4px;
+}

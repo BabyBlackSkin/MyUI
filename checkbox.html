@@ -1,0 +1,81 @@
+<section class="mob-doc content" ng-controller="RadioCtrl as ctrl">
+    <h2>Radio单选框</h2>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-check-box label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-check-box>
+                    值：<span ng-bind="value"></span>
+                </div>
+                <p>
+                    在单一的 <code>checkbox</code> 中，默认绑定变量的值是 <code>Boolean</code>，选中为 <code>true</code>
+                </p>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-radio label="Option1" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-check-box label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-check-box>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-check-box label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-check-box>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>多选框组</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                        <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
+                            <mob-check-box label="Option1" value="Option1"></mob-check-box>
+                            <mob-check-box label="Option2" value="Option2"></mob-check-box>
+                            <mob-check-box label="Option3" value="Option3"></mob-check-box>
+                            <mob-check-box label="Option4" value="Option4"></mob-check-box>
+                            <mob-check-box label="Option5" value="Option5" disabled></mob-check-box>
+                        </mob-check-box-group>
+                        值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
+                    </div>
+                </div>
+                <p>
+                    在多选框组内，多选框的 <code>ng-model</code> 中，绑定变量的值是一个 <code>Array</code>。
+                </p>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <div></div>
+                            <mob-check-box-group ng-model="multipleCheckBoxGroup">
+                                <mob-check-box label="Option1" value="Option1"></mob-check-box>
+                                <mob-check-box label="Option2" value="Option2"></mob-check-box>
+                                <mob-check-box label="Option3" value="Option3"></mob-check-box>
+                                <mob-check-box label="Option4" value="Option4"></mob-check-box>
+                            </mob-check-box-group>
+                            值：<span>{{multipleCheckBoxGroup}}</span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+    </div>
+</section>

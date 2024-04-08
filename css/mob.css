@@ -12,6 +12,8 @@
     --mob-active-border-color: #ff4949;
     --mob-not-allow-background-color:#f5f7fa;
     --mob-not-allow-text-color:#c0c4cc;
+    --mob-checkbox-checked-icon-color:#ffffff;
+    --mob-checkbox-disabled-checked-icon-color:#a8abb2;
 }
 /* div[ng-transclude]{
     flex-shrink: 0;
