@@ -1,15 +1,15 @@
-<div 
+<div
     class="mob-radio"
     ng-class="{
-        'is_disabled':$attrs.disabled, 
-        'is_border':$attrs.border
+        'is_disabled':$ctrl.ngDisabled,
+        'is_border':$ctrl.border
     }"
     ng-click="$ctrl.clickHandle()">
     <label for="#" class="mob-radio__wrapper">
         <span class="mob-radio__inner">
-            <input type="radio" autocomplete="off" name="{{$attrs.name}}" class="mob-radio__original" disabled="$attrs.disabled" ng-value="$attrs.value" ng-model="$ctrl.ngModel">
+            <input type="radio" autocomplete="off" name="{{$attrs.name}}" class="mob-radio__original" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
             <span class="mob-radio__circ"></span>
         </span>
-        <span class="mob-radio__label mob-unselect-text" ng-bind="$attrs.label"></span>
+        <span class="mob-radio__label mob-unselect-text" ng-bind="$ctrl.label"></span>
     </label>
 </div>

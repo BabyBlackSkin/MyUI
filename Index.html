@@ -531,11 +531,19 @@
             },
             bindings: {
                 ngModel: '=?',
+                label:'<',
+                value:'<?',
+                ngDisabled:'<?',
+                border:'<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs, attrHelp) {
                 // 初始化工作
                 this.$onInit = function () {
+                    if (!this.value) {
+                        this.value = this.label
+                    }
+
                     if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
                         // 绑定model
                         this.ngModel = this.radioGroup.ngModel
@@ -565,7 +573,7 @@
 
                 // 点击事件
                 this.clickHandle = function () {
-                    if ($scope.$attrs.disabled) {
+                    if (this.ngDisabled) {
                         return
                     }
                     if (this.ngModel === $attrs.value) {
@@ -593,6 +601,9 @@
             },
             bindings: {
                 ngModel: '=?',
+                ngDisabled:'<?',
+                label:'<?',
+                value:'<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs, attrHelp) {
@@ -627,7 +638,7 @@
 
                 // 点击事件
                 this.clickHandle = function () {
-                    if ($scope.$attrs.disabled) {
+                    if (this.ngDisabled) {
                         return
                     }
                     if (this.ngModel === $attrs.value) {

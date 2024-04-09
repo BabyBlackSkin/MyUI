@@ -5,7 +5,7 @@
         <h3>基础用法</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-radio label="Option1" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
+                <mob-radio label="'Option1'" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
                 值：<span ng-bind="value"></span>
             </div>
             <div class="meta">
@@ -22,7 +22,7 @@
         <h3>禁用状态</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                    <mob-radio label="Option1" value="1" disabled></mob-radio>
+                    <mob-radio label="'Option1'" value="1" ng-disabled="true"></mob-radio>
             </div>
             <div class="meta">
                 <pre>
@@ -39,9 +39,9 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <mob-radio-group ng-model='demo'>
-                        <mob-radio label="Option1" value="1"></mob-radio>
-                        <mob-radio label="Option2" value="2"></mob-radio>
-                        <mob-radio label="Option3" value="3"></mob-radio>
+                        <mob-radio label="'Option1'" value="1"></mob-radio>
+                        <mob-radio label="'Option2'" value="2"></mob-radio>
+                        <mob-radio label="'Option3'" value="3"></mob-radio>
                     </mob-radio-group>
                     <span style="margin-left: 20px;">值：</span>
                     <span ng-bind="demo"></span>
@@ -68,10 +68,10 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <mob-radio-group ng-model='demo'>
-                        <mob-radio label="Option1" value="1" border></mob-radio>
-                        <mob-radio label="Option2" value="2" border></mob-radio>
-                        <mob-radio label="Option3" value="3" border></mob-radio>
-                        <mob-radio label="Option4" value="4" disabled border></mob-radio>
+                        <mob-radio label="'Option1'" value="1" border="true"></mob-radio>
+                        <mob-radio label="'Option2'" value="2" border="true"></mob-radio>
+                        <mob-radio label="'Option3'" value="3" border="true"></mob-radio>
+                        <mob-radio label="'Option4'" value="4" ng-disabled="true" border="true"></mob-radio>
                     </mob-radio-group>
                     <span style="margin-left: 20px;">值：</span>
                     <span ng-bind="demo"></span>
@@ -99,10 +99,10 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <mob-radio-group ng-model='demo'>
-                        <mob-radio-button label="Option1" value="1"></mob-radio-button>
-                        <mob-radio-button label="Option2" value="2"></mob-radio-button>
-                        <mob-radio-button label="Option3" value="3"></mob-radio-button>
-                        <mob-radio-button label="Option4" value="4" disabled></mob-radio-button>
+                        <mob-radio-button label="'Option1'" value="1"></mob-radio-button>
+                        <mob-radio-button label="'Option2'" value="2"></mob-radio-button>
+                        <mob-radio-button label="'Option3'" value="3"></mob-radio-button>
+                        <mob-radio-button label="'Option4'" value="4" ng-disabled="true"></mob-radio-button>
                     </mob-radio-group>
                     <span style="margin-left: 20px;">值：</span>
                     <span ng-bind="demo"></span>
