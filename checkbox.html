@@ -17,7 +17,7 @@
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-radio label="Option1" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
+                            <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-checkbox>
                             值：<span ng-bind="value"></span>
                         --></code>
                     </pre>
@@ -28,14 +28,14 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-checkbox>
+                    <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' ng-disabled="true"></mob-checkbox>
                 </div>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-check-box label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-check-box>
+                            <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-checkbox>
                         --></code>
                     </pre>
             </div>
@@ -50,8 +50,8 @@
                             <mob-checkbox label="Option1" value="Option1"></mob-checkbox>
                             <mob-checkbox label="Option2" value="Option2"></mob-checkbox>
                             <mob-checkbox label="Option3" value="Option3"></mob-checkbox>
-                            <mob-checkbox label="Option4" value="Option4" disabled></mob-checkbox>
-                            <mob-checkbox label="Option5" value="Option5" disabled></mob-checkbox>
+                            <mob-checkbox label="Option4" value="Option4" ng-disabled="true"></mob-checkbox>
+                            <mob-checkbox label="Option5" value="Option5" ng-disabled="true"></mob-checkbox>
                         </mob-checkbox-group>
                         值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                     </div>
@@ -65,14 +65,14 @@
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
                             <html>
-                                <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                                    <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
-                                        <mob-check-box label="Option1" value="Option1"></mob-check-box>
-                                        <mob-check-box label="Option2" value="Option2"></mob-check-box>
-                                        <mob-check-box label="Option3" value="Option3"></mob-check-box>
+                                 <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                                    <mob-checkbox-group ng-model="ctrl.multipleCheckBoxGroup">
+                                        <mob-checkbox label="Option1" value="Option1"></mob-checkbox>
+                                        <mob-checkbox label="Option2" value="Option2"></mob-checkbox>
+                                        <mob-checkbox label="Option3" value="Option3"></mob-checkbox>
                                         <mob-checkbox label="Option4" value="Option4" disabled></mob-checkbox>
-                                        <mob-check-box label="Option5" value="Option5" disabled></mob-check-box>
-                                    </mob-check-box-group>
+                                        <mob-checkbox label="Option5" value="Option5" disabled></mob-checkbox>
+                                    </mob-checkbox-group>
                                     值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                                 </div>
                             </html>
@@ -84,6 +84,41 @@
                                     this.multipleCheckBoxGroup = ['Option5']
                                 }])
                             </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+
+        <h3>中间状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                        <mob-checkbox label="全选" ng-model="checkAll" indeterminate change-handle="ctrl.checkAllChange"></mob-checkbox>
+                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle">
+                            <mob-checkbox label="{{city.label}}" value="{{city.value}}" ng-disabled="city.disabled" ng-repeat="city in ctrl.cities"></mob-checkbox>
+                        </mob-checkbox-group>
+                        值：<span>{{ctrl.checkedCities}}</span>
+                    </div>
+                </div>
+                <p>
+                    在多选框组内，多选框的 <code>ng-model</code> 中，绑定变量的值是一个 <code>Array</code>。
+                </p>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <div></div>
+                            <mob-check-box-group ng-model="multipleCheckBoxGroup">
+                                <mob-check-box label="Option1" value="Option1"></mob-check-box>
+                                <mob-check-box label="Option2" value="Option2"></mob-check-box>
+                                <mob-check-box label="Option3" value="Option3"></mob-check-box>
+                                <mob-check-box label="Option4" value="Option4"></mob-check-box>
+                            </mob-check-box-group>
+                            值：<span>{{multipleCheckBoxGroup}}</span>
                         --></code>
                     </pre>
             </div>
