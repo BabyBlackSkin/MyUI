@@ -182,6 +182,7 @@
                 console.log('radio change回调方法', value)
             }
         }])
+        // 多选框组件的展示ctrl
         .controller('MultipleCheckBoxGroupCtrl', ['$scope', function RadioCtrl($scope) {
             this.multipleCheckBoxGroup = ['Option5']
         }])
@@ -651,11 +652,11 @@
                 })
             }
         })
-        .component('mobCheckBox', {
+        .component('mobCheckbox', {
             transclude: true,
-            templateUrl: './components/mob-check-box.html',
+            templateUrl: './components/mob-checkbox.html',
             require: {
-                'checkBoxGroup': '?^mobCheckBoxGroup'
+                'checkBoxGroup': '?^mobCheckboxGroup'
             },
             bindings: {
                 ngModel: '=?',
@@ -675,7 +676,6 @@
                         const _that = this
                         // 监听多选框组的value的Change事件
                         $scope.$on(`${this.checkBoxGroup.checkBoxGroupName}_change`, function (event, data) {
-                            console.log(data)
                             // 判断组内是否包含自己
                             _that.ngModel = data.includes($attrs.value)
                         })
@@ -711,7 +711,7 @@
                 }
             }
         })
-        .component('mobCheckBoxGroup', {
+        .component('mobCheckboxGroup', {
             transclude: true,
             templateUrl: './components/mob-checkbox-group.html',
             bindings: {

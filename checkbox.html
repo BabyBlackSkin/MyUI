@@ -6,7 +6,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-check-box label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-check-box>
+                    <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-checkbox>
                     值：<span ng-bind="value"></span>
                 </div>
                 <p>
@@ -28,7 +28,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-check-box label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-check-box>
+                    <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='disableExampleValue' disabled></mob-checkbox>
                 </div>
             </div>
             <div class="meta">
@@ -46,13 +46,13 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
-                            <mob-check-box label="Option1" value="Option1"></mob-check-box>
-                            <mob-check-box label="Option2" value="Option2"></mob-check-box>
-                            <mob-check-box label="Option3" value="Option3"></mob-check-box>
-                            <mob-check-box label="Option4" value="Option4"></mob-check-box>
-                            <mob-check-box label="Option5" value="Option5" disabled></mob-check-box>
-                        </mob-check-box-group>
+                        <mob-checkbox-group ng-model="ctrl.multipleCheckBoxGroup">
+                            <mob-checkbox label="Option1" value="Option1"></mob-checkbox>
+                            <mob-checkbox label="Option2" value="Option2"></mob-checkbox>
+                            <mob-checkbox label="Option3" value="Option3"></mob-checkbox>
+                            <mob-checkbox label="Option4" value="Option4" disabled></mob-checkbox>
+                            <mob-checkbox label="Option5" value="Option5" disabled></mob-checkbox>
+                        </mob-checkbox-group>
                         值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                     </div>
                 </div>
@@ -64,14 +64,26 @@
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <div></div>
-                            <mob-check-box-group ng-model="multipleCheckBoxGroup">
-                                <mob-check-box label="Option1" value="Option1"></mob-check-box>
-                                <mob-check-box label="Option2" value="Option2"></mob-check-box>
-                                <mob-check-box label="Option3" value="Option3"></mob-check-box>
-                                <mob-check-box label="Option4" value="Option4"></mob-check-box>
-                            </mob-check-box-group>
-                            值：<span>{{multipleCheckBoxGroup}}</span>
+                            <html>
+                                <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                                    <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
+                                        <mob-check-box label="Option1" value="Option1"></mob-check-box>
+                                        <mob-check-box label="Option2" value="Option2"></mob-check-box>
+                                        <mob-check-box label="Option3" value="Option3"></mob-check-box>
+                                        <mob-checkbox label="Option4" value="Option4" disabled></mob-checkbox>
+                                        <mob-check-box label="Option5" value="Option5" disabled></mob-check-box>
+                                    </mob-check-box-group>
+                                    值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
+                                </div>
+                            </html>
+
+
+
+                            <script>
+                                angular.controller('MultipleCheckBoxGroupCtrl', ['$scope', function RadioCtrl($scope) {
+                                    this.multipleCheckBoxGroup = ['Option5']
+                                }])
+                            </script>
                         --></code>
                     </pre>
             </div>

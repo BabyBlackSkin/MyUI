@@ -66,7 +66,9 @@
 /* 激活时 */
 .mob-radio-button .mob-radio-button__original:checked+.mob-radio-button__square {
     background-color: var(--mob-active-fill-color);
-    border: 1px solid var(--mob-active-border-color);
+    border-top: 1px solid var(--mob-active-border-color);
+    border-right: 1px solid var(--mob-active-border-color);
+    border-bottom: 1px solid var(--mob-active-border-color);
     color: white;
 
 }
