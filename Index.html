@@ -107,6 +107,10 @@
 
 </body>
 <script>
+    const BOOLEAN_CUSTOM_ATTR = new Set();
+    angular.forEach("clearable,showPassword".split(","),function (value){
+        BOOLEAN_CUSTOM_ATTR.add(value)
+    })
     const app = angular.module('mobApp', ['ngRoute'])
     // .value('$routerRootComponent', 'mobApp')
     app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
@@ -177,7 +181,8 @@
                 // {type:'input',label:'名称2',prop:'name3'}
             ];
         }])
-        .controller('InputCtrl', ['$scope', function IndexCtrl($scope) {}])
+        .controller('InputCtrl', ['$scope', function IndexCtrl($scope) {
+        }])
         .controller('RadioCtrl', ['$scope', function RadioCtrl($scope) {
 
             this.fatherChange = function (value) {
@@ -279,8 +284,7 @@
         }])
         .factory('attrHelp', [function () {
             return {
-                expose: function (scope, attrs) {
-                    scope.$attrs = {}
+                expose: function (ctrl, attrs) {
                     for (let k of Object.keys(attrs)) {
                         if (k.indexOf("$") >= 0) {
                             continue;
@@ -289,12 +293,14 @@
                             continue
                         }
                         // 获取属性值
-                        let v = attrs[k];
-                        if ("" === v) {
-                            scope.$attrs[k] = true
-                        } else {
-                            scope.$attrs[k] = attrs[k]
+                        if (BOOLEAN_CUSTOM_ATTR.has(k)) {
+                            ctrl[k] = !!attrs[k]
                         }
+                        // if ("" === v) {
+                        //     scope.$attrs[k] = true
+                        // } else {
+                        //     scope.$attrs[k] = attrs[k]
+                        // }
                     }
                 }
             }
@@ -338,18 +344,25 @@
             templateUrl: './components/mob-input.html',
             bindings: {
                 ngModel: '=?',
+                ngDisabled:'<?',
+                clearable:'<?',
+                showPassword:'<?',
+                ngMaxlength:'<?',
+                showWordLimit:'<?',
                 handleChange: '&'
             },
             controller: function ($scope, $element, $transclude, $attrs, $compile, slot, attrHelp) {
                 // 初始化工作
                 this.$onInit = function () {
+                    attrHelp.expose(this, $attrs)
+                    console.log(this)
                     // 动态插槽实现
                     slot.replace($scope, $element, $transclude)
                     // 通过class配置icon
                     compilePrefix($attrs.prefixIcon);
                     compileSuffix($attrs.suffixIcon);
 
-                    if ($attrs.showPassword) {
+                    if (this.showPassword) {
                         $scope.valueVisiable = false // 默认为不展示明文
                     }
                 }
@@ -380,7 +393,6 @@
 
                 // 与Vue2的mounted相同
                 this.$postLink = function () {
-                    attrHelp.expose($scope, $attrs)
                 }
 
 
@@ -416,22 +428,22 @@
 
                 // 是否显示清除按钮
                 this.showClear = function () {
-                    return $scope.$attrs.clearable &&
-                        !$scope.$attrs.disable &&
+                    return this.clearable &&
+                        !this.ngDisabled &&
                         this.ngModel && this.ngModel.length > 0
                 }
                 // 是否显示可视按钮
                 this.showValueAccessVisible = function () {
-                    return $scope.$attrs.showPassword &&
-                        !$scope.$attrs.disable &&
+                    return this.showPassword &&
+                        !this.ngDisabled &&
                         this.ngModel &&
                         this.ngModel.length > 0 &&
                         $scope.valueVisiable
                 }
                 // 是否显示不可视按钮
                 this.showValueInVisible = function () {
-                    return $scope.$attrs.showPassword &&
-                        !$scope.$attrs.disable &&
+                    return this.showPassword &&
+                        !this.ngDisabled &&
                         this.ngModel &&
                         this.ngModel.length > 0 &&
                         !$scope.valueVisiable
@@ -442,7 +454,7 @@
                  * 是否显示字数统计
                  */
                 this.showWordCount = function () {
-                    return $scope.$attrs.showWordLimit && !$scope.$attrs.showPassword
+                    return this.showWordLimit && !this.showPassword
                 }
             }
         })
@@ -682,7 +694,7 @@
             },
             bindings: {
                 ngModel: '=?',
-                ngDisabled: '=?',
+                ngDisabled: '<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs, attrHelp) {

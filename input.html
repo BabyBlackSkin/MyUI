@@ -14,7 +14,7 @@
             </div>
             <div class="meta">
                 <div class="mob-demo-example">
-                    可以直接通过 <code class="code-tag">ng-model</code> 进行双向数据绑定
+                    可以直接通过 <code>ng-model</code> 进行双向数据绑定
                 </div>
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
@@ -30,13 +30,13 @@
         <h3>禁用状态</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-input style="display:block;width: 250px;" disabled></mob-input>
+                <mob-input style="display:block;width: 250px;" ng-disabled="true"></mob-input>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-input style="display:block;width: 250px;" disable></mob-input>
+                            <mob-input style="display:block;width: 250px;" ng-disabled="true"></mob-input>
                         --></code>
                     </pre>
             </div>
@@ -45,13 +45,13 @@
         <h3>可清空</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-input style="display:block;width: 250px;" clearable></mob-input>
+                <mob-input style="display:block;width: 250px;" clearable="true"></mob-input>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-input style="display:block;width: 250px;" clearable></mob-input>
+                            <mob-input style="display:block;width: 250px;" clearable="true"></mob-input>
                         --></code>
                     </pre>
             </div>
@@ -61,13 +61,13 @@
         <h3>密码框</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-input style="display:block;width: 250px;" show-password></mob-input>
+                <mob-input style="display:block;width: 250px;" show-password="true"></mob-input>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-input style="display:block;width: 250px;" show-password></mob-input>
+                            <mob-input style="display:block;width: 250px;" show-password="true"></mob-input>
                         --></code>
                     </pre>
             </div>
@@ -127,12 +127,12 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     最大输入5个字符：
-                    <mob-input style="display:block;width: 250px;" max-length="5"></mob-input>
+                    <mob-input style="display:block;width: 250px;" ng-maxlength="5"></mob-input>
                 </div>
 
                 <div class="mob-demo-example-child">
                     显示字符数：
-                    <mob-input style="display:block;width: 250px;" show-word-limit max-length="5"></mob-input>
+                    <mob-input style="display:block;width: 250px;" show-word-limit="true" ng-maxlength="5"></mob-input>
                 </div>
             </div>
             <div class="meta">
@@ -141,12 +141,12 @@
                         ><!--
                         <div class="mob-demo-example-child">
                             最大输入5个字符：
-                            <mob-input style="display:block;width: 250px;" max-length="5"></mob-input>
+                            <mob-input style="display:block;width: 250px;" ng-maxlength="5"></mob-input>
                         </div>
 
                         <div class="mob-demo-example-child">
                             显示字符数：
-                            <mob-input style="display:block;width: 250px;" show-word-limit max-length="5"></mob-input>
+                            <mob-input style="display:block;width: 250px;" show-word-limit="true" ng-maxlength="5"></mob-input>
                         </div>
                         --></code>
                 </pre>

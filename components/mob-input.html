@@ -4,9 +4,9 @@ showWordLimit:'<',
 placeholder:'<',
 clearable:'<' -->
 <div class="mob-input" ng-class="{
-    'is_clearable':$attrs.clearable,
-    'is_disabled':$attrs.disabled,
-    'is_showPassword':$attrs.showPassword,
+    'is_clearable':$ctrl.clearable,
+    'is_disabled':$ctrl.ngDisabled,
+    'is_showPassword':$ctrl.showPassword,
     'is_append_slot':$slot.slotSet.has('append'),
     'is_prepend_slot':$slot.slotSet.has('prepend')
 }">
@@ -21,19 +21,18 @@ clearable:'<' -->
                 <slot name="prefixIcon"></slot>
             </span>
         </span>
-
-        <input ng-if="!$attrs.showPassword"
+        <input ng-if="!$ctrl.showPassword"
                type="text"
                autocomplete="off"
                placeholder="请输入输入内容"
                class="mob-input__inner"
                ng-model="$ctrl.ngModel"
-               ng-disabled="$attrs.disabled"
-               maxlength="{{$attrs.maxLength}}"
-               ng-maxlength="$attrs.maxLength"
+               ng-disabled="$ctrl.ngDisabled"
+               maxlength="{{$ctrl.ngMaxlength}}"
+               ng-maxlength="$ctrl.ngMaxlength"
         >
-        <input ng-if="$attrs.showPassword" type="password" autocomplete="off" placeholder="请输入输入内容"
-               class="mob-input__inner" ng-model="$ctrl.ngModel" ng-disabled="$attrs.disabled">
+        <input ng-if="$ctrl.showPassword" type="password" autocomplete="off" placeholder="请输入输入内容"
+               class="mob-input__inner" ng-model="$ctrl.ngModel" ng-disabled="$ctrl.ngDisabled">
 
         <span class="mob-input__suffix">
             <span class="mob-input__suffix-inner">
@@ -54,7 +53,7 @@ clearable:'<' -->
 
                 <span class="mob-input-count" ng-if="$ctrl.showWordCount()">
                     <span class="mob-input-count-inner"
-                          ng-bind="($ctrl.ngModel || '').length + '/' + $attrs.maxLength"></span>
+                          ng-bind="($ctrl.ngModel || '').length + '/' + $ctrl.ngMaxlength"></span>
                 </span>
             </span>
         </span>
