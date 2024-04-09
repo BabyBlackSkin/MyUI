@@ -96,10 +96,8 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        外面的demo {{ctrl.demo}}
-                        <mob-checkbox label="'全选'" ng-model="checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-
-                        <mob-checkbox-group demo="ctrl.demo" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-checkbox  label="'全选'" ng-model="checkAll" indeterminate="ctrl.indeterminate" ng-change="" change-handle="ctrl.checkAllChange()"></mob-checkbox>
+                        <mob-checkbox-group change-tag="ctrl.changeTag" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                         </mob-checkbox-group>
 
@@ -107,21 +105,26 @@
                     </div>
                 </div>
                 <p>
-                    在多选框组内，多选框的 <code>ng-model</code> 中，绑定变量的值是一个 <code>Array</code>。
+                    因为 <code>AngularJs1.5.3</code> 版本的原因，组件内无法使用 <code>$scope.$watch</code> 监听父作用域的变量，所以需要使用一个单向的 <code>changeTag</code> 来实现监听。当外部改变 <code>model</code>
+                    时，需同时改变 <code>changeTag</code>。<code>changeTag</code>的值，无意义
                 </p>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <div></div>
-                            <mob-check-box-group ng-model="multipleCheckBoxGroup">
-                                <mob-check-box label="Option1" value="Option1"></mob-check-box>
-                                <mob-check-box label="Option2" value="Option2"></mob-check-box>
-                                <mob-check-box label="Option3" value="Option3"></mob-check-box>
-                                <mob-check-box label="Option4" value="Option4"></mob-check-box>
-                            </mob-check-box-group>
-                            值：<span>{{multipleCheckBoxGroup}}</span>
+                           <html>
+                            <mob-checkbox  label="'全选'" ng-model="checkAll" indeterminate="ctrl.indeterminate" ng-change="" change-handle="ctrl.checkAllChange()"></mob-checkbox>
+                            <mob-checkbox-group change-tag="ctrl.changeTag" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
+                            </mob-checkbox-group>
+                            值：<span>{{ctrl.checkedCities}}</span>
+                           </html>
+
+                           <script>
+
+
+                           </script>
                         --></code>
                     </pre>
             </div>
