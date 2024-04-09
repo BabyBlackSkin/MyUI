@@ -198,23 +198,29 @@
         .controller('MultipleCheckBoxGroupCtrl', ['$scope', function RadioCtrl($scope) {
             this.multipleCheckBoxGroup = ['Option5']
 
+            this.indeterminate = true
+
+
+            this.demo = 1
+
             this.checkAll = false;
+
             this.checkedCities = ['澳门'];
-            this.cities = [
-                {label:'北京',value:'北京'},
-                {label:'上海',value:'上海'},
-                {label:'广东',value:'广东'},
-                {label:'深圳',value:'深圳'},
-                {label:'香港',value:'香港'},
-                {label:'澳门',value:'澳门', disabled:true},
-            ]
+            this.cities = ['北京','上海','广东','深圳','香港','澳门']
 
             this.checkAllChange = function (){
-                console.log("全选框change事件")
+                this.checkAll = !this.checkAll
+                this.demo = this.demo + 1
+                console.log('demo++')
+                // this.checkedCities = this.checkAll ? [...this.cities] : []
+                this.checkedCities.push('北京')
             }
+
             this.checkboxChangeHandle = function (){
                 console.log("checkboxGroup change事件")
+                this.indeterminate = this.checkedCities.length === this.cities.length
             }
+
         }])
     ;
     app
@@ -533,11 +539,12 @@
                 ngModel: '=?',
                 label:'<',
                 value:'<?',
+                name:'<?',
                 ngDisabled:'<?',
                 border:'<?',
                 changeHandle: '&?'
             },
-            controller: function ($scope, $element, $attrs, attrHelp) {
+            controller: function ($scope, $element, $attrs) {
                 // 初始化工作
                 this.$onInit = function () {
                     if (!this.value) {
@@ -568,7 +575,6 @@
 
                 // 与Vue2的mounted相同
                 this.$postLink = function () {
-                    attrHelp.expose($scope, $attrs)
                 }
 
                 // 点击事件
@@ -602,11 +608,12 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled:'<?',
+                name:'<?',
                 label:'<?',
                 value:'<?',
                 changeHandle: '&?'
             },
-            controller: function ($scope, $element, $attrs, attrHelp) {
+            controller: function ($scope, $element, $attrs) {
                 // 初始化工作
                 this.$onInit = function () {
                     if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
@@ -633,7 +640,6 @@
 
                 // 与Vue2的mounted相同
                 this.$postLink = function () {
-                    attrHelp.expose($scope, $attrs)
                 }
 
                 // 点击事件
@@ -706,11 +712,18 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled: '<?',
+                name:'<?',
+                label:'<?',
+                value:'<?',
+                indeterminate:'<?',
                 changeHandle: '&?'
             },
-            controller: function ($scope, $element, $attrs, attrHelp) {
+            controller: function ($scope, $element, $attrs) {
                 // 初始化工作
                 this.$onInit = function () {
+                    if (!this.value) {
+                        this.value = this.label
+                    }
                 }
 
                 // bindings中的单向流被改变时，触发
@@ -721,7 +734,6 @@
                 // 与Vue2的mounted相同
                 this.$postLink = function () {
                     this.initValue()
-                    attrHelp.expose($scope, $attrs)
                 }
 
                 // 初始化Value，以及绑定checkbox的change事件
@@ -729,18 +741,16 @@
                     if (!angular.isUndefined(this.checkBoxGroup) && this.checkBoxGroup !== null) {
                         // 绑定model
                         if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
-                            this.ngModel = this.checkBoxGroup.ngModel.includes($attrs.value)
+                            this.ngModel = this.checkBoxGroup.ngModel.includes(this.value)
                         }
                         // 绑定name
                         $attrs.name = this.checkBoxGroup.checkBoxGroupName
-                        if('澳门' == $attrs.label){
-                            console.log($attrs.label, this.ngModel )
-                        }
+
                         const _that = this
                         // 监听多选框组的value的Change事件
                         $scope.$on(`${this.checkBoxGroup.checkBoxGroupName}_change`, function (event, data) {
                             // 判断组内是否包含自己
-                            _that.ngModel = data.includes($attrs.value)
+                            _that.ngModel = data.includes(_that.value)
                         })
                     }
                 }
@@ -757,9 +767,9 @@
                 this.change = function () {
                     this.ngModel = !this.ngModel
                     if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: $attrs.value})
+                        this.changeHandle({value: this.value})
                     } else {
-                        $scope.$emit('change', $attrs.value)
+                        $scope.$emit('change', this.value)
                     }
 
                 }
@@ -770,6 +780,7 @@
             templateUrl: './components/mob-checkbox-group.html',
             bindings: {
                 ngModel: '=?',
+                demo:'=?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs, attrHelp) {
@@ -778,12 +789,19 @@
                     if(!this.ngModel){
                         this.ngModel = []
                     }
+                    $scope.model = 1
+                    Object.getOwnPropertyNames(this.demo)
+                    $scope.demo = this.demo
                     this.checkBoxGroupName = `mobCheckBoxGroup_${$scope.$id}`
+                }
+
+                this.add = function () {
+                    $scope.model = $scope.model + 1
+                    $scope.demo = $scope.demo + 1
                 }
 
                 // bindings中的单向流被改变时，触发
                 this.$onChanges = function (changes) {
-
                 }
 
                 this.$onDestroy = function () {
@@ -792,23 +810,34 @@
 
                 // 与Vue2的mounted相同
                 this.$postLink = function () {
-                    attrHelp.expose($scope, $attrs)
+                    console.log($scope.model)
+
+                    $scope.$watch('model',function(newV){
+                        console.log('change ngModel', newV)
+                        // console.log($scope)
+                    })
+
+                    $scope.$watch('demo',function(newV){
+                        console.log('change demo', newV)
+                        // console.log($scope)
+                    })
+
                 }
 
                 const _that = this
-                $scope.$on('change', function (event, data) {
-                    if(_that.ngModel.includes(data)){
-                        _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
-                    }else{
-                        _that.ngModel.push(data);
-                    }
-                    console.log(_that.ngModel);
-                    if (angular.isFunction(_that.changeHandle)) {
-                        _that.changeHandle({value: data})
-                    }
-                    // 反向通知group下所有的radio绑定的ngModel
-                    $scope.$broadcast(`${_that.checkBoxGroupName}_change`, _that.ngModel)
-                })
+                // $scope.$on('change', function (event, data) {
+                //     if(_that.ngModel.includes(data)){
+                //         _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
+                //     }else{
+                //         _that.ngModel.push(data);
+                //     }
+                //     // console.log(_that.ngModel);
+                //     // if (angular.isFunction(_that.changeHandle)) {
+                //     //     _that.changeHandle({value: data})
+                //     // }
+                //     // // 反向通知group下所有的radio绑定的ngModel
+                //     // $scope.$broadcast(`${_that.checkBoxGroupName}_change`, _that.ngModel)
+                // })
             }
         })
 

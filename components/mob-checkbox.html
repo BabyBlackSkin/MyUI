@@ -2,15 +2,15 @@
         class="mob-checkbox"
         ng-class="{
         'is_disabled':$ctrl.ngDisabled,
-        'is_border':$attrs.border
+        'is_border':$ctrl.border,
+        'is_indeterminate':$ctrl.indeterminate
     }"
         ng-click="$ctrl.clickHandle()">
     <label for="#" class="mob-checkbox__wrapper">
         <span class="mob-checkbox__inner">
-            {{ctrl.ngDisabled}}
-            <input type="checkbox" autocomplete="off" name="{{$attrs.name}}" class="mob-checkbox__original" ng-disabled="$ctrl.ngDisabled" ng-value="$attrs.value" ng-model="$ctrl.ngModel">
+            <input type="checkbox" autocomplete="off" name="{{$ctrl.name}}" class="mob-checkbox__original" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
             <span class="mob-checkbox__square"></span>
         </span>
-        <span class="mob-checkbox__label mob-unselect-text" ng-bind="$attrs.label"></span>
+        <span class="mob-checkbox__label mob-unselect-text" ng-bind="$ctrl.label"></span>
     </label>
 </div>
