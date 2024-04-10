@@ -199,11 +199,9 @@
         .controller('MultipleCheckBoxGroupCtrl', ['$scope', function MultipleCheckBoxGroupCtrl($scope) {
             this.multipleCheckBoxGroup = ['Option5']
 
-            this.indeterminate = true
-
 
             this.checkAll = false;
-
+            this.indeterminate = true
             this.checkedCities = ['澳门'];
             this.changeTag = true;
             this.cities = ['北京', '上海', '广东', '深圳', '香港', '澳门']
@@ -219,16 +217,10 @@
 
 
             this.checkboxChangeHandle = function () {
-                this.indeterminate = this.checkedCities.length === this.cities.length
+                let checkCount = this.checkedCities.length
+                this.checkAll = checkCount === this.cities.length
+                this.indeterminate = checkCount > 0 && checkCount < this.cities.length
             }
-
-            this.addDemo = function () {
-                this.demo = this.demo + 1
-            }
-
-            console.log(this)
-            console.log($scope)
-
         }])
     ;
     app
@@ -365,11 +357,9 @@
                 showWordLimit: '<?',
                 handleChange: '&'
             },
-            controller: function ($scope, $element, $transclude, $attrs, $compile, slot, attrHelp) {
+            controller: function ($scope, $element, $transclude, $attrs, $compile, slot) {
                 // 初始化工作
                 this.$onInit = function () {
-                    attrHelp.expose(this, $attrs)
-                    console.log(this)
                     // 动态插槽实现
                     slot.replace($scope, $element, $transclude)
                     // 通过class配置icon
@@ -754,11 +744,11 @@
                             this.ngModel = this.checkBoxGroup.ngModel.includes(this.value)
                         }
                         // 绑定name
-                        $attrs.name = this.checkBoxGroup.checkBoxGroupName
+                        $attrs.name = this.checkBoxGroup.name
 
                         const _that = this
                         // 监听多选框组的value的Change事件
-                        $scope.$on(`${this.checkBoxGroup.checkBoxGroupName}_change`, function (event, data) {
+                        $scope.$on(`${$attrs.name}Change`, function (event, data) {
                             // 判断组内是否包含自己
                             _that.ngModel = data.includes(_that.value)
                         })
@@ -779,7 +769,7 @@
                     if (angular.isFunction(this.changeHandle)) {
                         this.changeHandle({value: this.value})
                     } else {
-                        $scope.$emit('change', this.value)
+                        $scope.$emit(`${$attrs.name}ChildChange`, this.value)
                     }
 
                 }
@@ -790,52 +780,54 @@
             templateUrl: './components/mob-checkbox-group.html',
             bindings: {
                 ngModel: '<?',
-                changeTag: '<?',
                 changeHandle: '&?'
             },
-            controller: function ($scope, $element, $attrs, attrHelp) {
+            controller: function ($scope, $element, $attrs) {
                 // 初始化工作
                 this.$onInit = function () {
                     if (!this.ngModel) {
                         this.ngModel = []
                     }
-                    this.checkBoxGroupName = `mobCheckBoxGroup_${$scope.$id}`
+                    this.name = `mobCheckBoxGroup_${$scope.$id}`
+                    // 创建事件订阅与监听
+                    initEvent()
                 }
 
-                // bindings中的单向流被改变时，触发
                 this.$onChanges = function (changes) {
-                    if (changes.changeTag) {
+                    if (changes.ngModel) {
                         this.change()
                     }
                 }
 
-                this.$onDestroy = function () {
-
-                }
+                this.$onDestroy = function () {}
 
                 // 与Vue2的mounted相同
-                this.$postLink = function () {
-
-                }
-
-                const _that = this
-                // 监听子组件的change事件
-                $scope.$on('change', function (event, data) {
-                    if (_that.ngModel.includes(data)) {
-                        _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
-                    } else {
-                        _that.ngModel.push(data);
-                    }
-                })
+                this.$postLink = function () {}
 
                 // ngModel改变时，同时子组件
                 this.change = function () {
-                    // console.log(_that.ngModel);
                     if (angular.isFunction(this.changeHandle)) {
                         this.changeHandle({value: this.ngModel})
                     }
                     // 反向通知group下所有的radio绑定的ngModel
-                    $scope.$broadcast(`${_that.checkBoxGroupName}_change`, this.ngModel)
+                    $scope.$broadcast(`${this.name}Change`, this.ngModel)
+                }
+
+
+                const _that = this
+                /**
+                 * 初始化事件监听
+                 */
+                function initEvent() {
+                    // 监听子组件的change事件
+                    $scope.$on(`${_that.name}ChildChange`, function (event, data) {
+                        if (_that.ngModel.includes(data)) {
+                            _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
+                        } else {
+                            _that.ngModel.push(data);
+                        }
+                        _that.change()
+                    })
                 }
             }
         })

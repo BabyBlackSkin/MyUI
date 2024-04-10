@@ -64,21 +64,6 @@ mob-checkbox-group .mob-checkbox {
     transform: rotate(45deg) scaleY(0);
 }
 
-.mob-checkbox.is_disabled .mob-checkbox__square::before {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    border:1px solid var(--mob-checkbox-disabled-checked-icon-color);
-    border-left:0;
-    border-top:0;
-    top: 2px;
-    left: calc(50% - 2px);
-    width: 3px;
-    height: 7px;
-    transition: all var(--mob-transition-duration) ease-in;
-    transform: rotate(45deg) scaleY(0);
-}
-
 .mob-checkbox .mob-checkbox__original {
     position: absolute;
     top: 0;
@@ -114,6 +99,27 @@ mob-checkbox-group .mob-checkbox {
     border: 1px solid var(--mob-active-border-color);
 }
 
+/* 半选中状态 */
+.mob-checkbox.is_indeterminate .mob-checkbox__square{
+    background-color: var(--mob-active-fill-color);
+    border: 1px solid var(--mob-active-border-color);
+}
+
+.mob-checkbox.is_indeterminate .mob-checkbox__square::before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    border-bottom:1px solid var(--mob-border-color);
+    border-left:0;
+    border-top:0;
+    top: calc(50% - 1px);
+    left: calc(50% - 4px);
+    width: 7px;
+    height: 0;
+    transition: all var(--mob-transition-duration) ease-in;
+    transform: rotate(0deg) scaleY(1);
+}
+
 /* 禁用 */
 .mob-checkbox.is_disabled .mob-checkbox__wrapper {
     cursor: not-allowed;
@@ -121,6 +127,21 @@ mob-checkbox-group .mob-checkbox {
 
 .mob-checkbox.is_disabled .mob-checkbox__square {
     background-color: var(--mob-not-allow-background-color);
+}
+
+.mob-checkbox.is_disabled .mob-checkbox__square::before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    border:1px solid var(--mob-checkbox-disabled-checked-icon-color);
+    border-left:0;
+    border-top:0;
+    top: 2px;
+    left: calc(50% - 2px);
+    width: 3px;
+    height: 7px;
+    transition: all var(--mob-transition-duration) ease-in;
+    transform: rotate(45deg) scaleY(0);
 }
 
 .mob-checkbox.is_disabled .mob-checkbox__label {

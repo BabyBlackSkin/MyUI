@@ -96,33 +96,49 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-checkbox  label="'全选'" ng-model="checkAll" indeterminate="ctrl.indeterminate" ng-change="" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-                        <mob-checkbox-group change-tag="ctrl.changeTag" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-checkbox  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
+                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                         </mob-checkbox-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
                 </div>
-                <p>
-                    因为 <code>AngularJs1.5.3</code> 版本的原因，组件内无法使用 <code>$scope.$watch</code> 监听父作用域的变量，所以需要使用一个单向的 <code>changeTag</code> 来实现监听。当外部改变 <code>model</code>
-                    时，需同时改变 <code>changeTag</code>。<code>changeTag</code>的值，无意义
-                </p>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
                            <html>
-                            <mob-checkbox  label="'全选'" ng-model="checkAll" indeterminate="ctrl.indeterminate" ng-change="" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-                            <mob-checkbox-group change-tag="ctrl.changeTag" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
-                                <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
-                            </mob-checkbox-group>
-                            值：<span>{{ctrl.checkedCities}}</span>
+                            <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                                <mob-checkbox  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
+                                <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                    <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
+                                </mob-checkbox-group>
+
+                                值：<span>{{ctrl.checkedCities}}</span>
+                            </div>
                            </html>
 
                            <script>
+                                angular.controller('MultipleCheckBoxGroupCtrl', ['$scope', function MultipleCheckBoxGroupCtrl($scope) {
 
+                                            this.checkAll = false;
+                                            this.indeterminate = true
+                                            this.checkedCities = ['澳门'];
+                                            this.cities = ['北京', '上海', '广东', '深圳', '香港', '澳门']
+
+                                            this.checkAllChange = function () {
+                                                this.checkAll = !this.checkAll
+                                                this.checkedCities = this.checkAll ? [...this.cities] : []
+                                            }
+
+                                            this.checkboxChangeHandle = function () {
+                                                let checkCount = this.checkedCities.length
+                                                this.checkAll = checkCount === this.cities.length
+                                                this.indeterminate = checkCount > 0 && checkCount < this.cities.length
+                                            }
+                                        }])
 
                            </script>
                         --></code>
