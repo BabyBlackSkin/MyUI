@@ -7,7 +7,7 @@
     ng-click="$ctrl.clickHandle()">
     <label for="#" class="mob-radio__wrapper">
         <span class="mob-radio__inner">
-            <input type="radio" autocomplete="off" name="{{$attrs.name}}" class="mob-radio__original" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
+            <input type="radio" autocomplete="off" name="{{$ctrl.name}}" class="mob-radio__original" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
             <span class="mob-radio__circ"></span>
         </span>
         <span class="mob-radio__label mob-unselect-text" ng-bind="$ctrl.label"></span>
