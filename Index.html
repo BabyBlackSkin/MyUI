@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="./css/mob.css">
     <link rel="stylesheet" href="./css/mob-doc.css">
     <link rel="stylesheet" href="./css/mob-input.css">
+    <link rel="stylesheet" href="./css/mob-input-number.css">
     <link rel="stylesheet" href="./css/mob-selec.css">
     <link rel="stylesheet" href="./css/mob-radio.css">
     <link rel="stylesheet" href="./css/mob-radio-button.css">
@@ -119,12 +120,15 @@
     app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
         // $logProvider.debugEnabled(true)
 
-        $routeProvider.when('/input', {
-            templateUrl: './input.html',
-            controller: 'InputCtrl'
-        }).when('/home', {
+        $routeProvider.when('/home', {
             templateUrl: 'home',
             controller: 'IndexCtrl'
+        }).when('/inputNumber', {
+            templateUrl: './inputNumber.html',
+            controller: 'InputNumberCtrl'
+        }).when('/input', {
+            templateUrl: './input.html',
+            controller: 'InputCtrl'
         }).when('/radio', {
             templateUrl: './radio.html',
             controller: 'RadioCtrl'
@@ -137,8 +141,9 @@
         $rootScope.menuList = [
             {label: 'Home', path: '/home'},
             {label: 'Input输入框', path: '/input'},
+            {label: 'Input Number 输入框', path: '/inputNumber'},
             {label: 'Radio单选框', path: '/radio'},
-            {label: 'CheckBox多选框', path: '/checkBox'}
+            {label: 'CheckBox多选框', path: '/checkBox'},
         ]
         //通过$on为$rootScope添加路由事件
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -181,7 +186,6 @@
                         dataDic: [{label: 'Option1', value: 'Option1'}, {label: 'Option2', value: 'Option2'}]
                     }
                 },
-                // {type:'input',label:'名称2',prop:'name3'}
             ];
         }])
         .controller('InputCtrl', ['$scope', function IndexCtrl($scope) {
@@ -197,7 +201,6 @@
                 console.log('radio change回调方法', value)
             }
         }])
-        // 多选框组件的展示ctrl
         .controller('MultipleCheckBoxGroupCtrl', ['$scope', function MultipleCheckBoxGroupCtrl($scope) {
             this.multipleCheckBoxGroup = ['Option5']
 
@@ -228,6 +231,9 @@
             this.changeMin = function(){
                 this.min = this.min + 1
             }
+        }])
+        .controller('InputNumberCtrl', ['$scope', function InputNumberCtrl($scope) {
+
         }])
     ;
     app
@@ -401,14 +407,131 @@
                     slot.appendChild($scope, inner, `<${icon}></${icon}>`)
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
                 }
 
                 this.$onDestroy = function () {
                 }
 
-                // 与Vue2的mounted相同
+
+                this.$postLink = function () {
+                }
+
+
+                /**
+                 * input聚焦
+                 */
+                this.focus = function () {
+                    let input = $element[0].querySelector('.mob-input__inner')
+                    input.focus();
+                }
+
+                /**
+                 * 清空input内容
+                 */
+                this.clean = function () {
+                    this.focus()
+                    this.ngModel = ''
+                }
+
+                /**
+                 * 点击可视按钮
+                 */
+                this.visibleClickHandle = function () {
+                    this.focus()
+                    let input = $element[0].querySelector('.mob-input__inner')
+                    if ($scope.valueVisiable) {
+                        input.type = 'password'
+                    } else {
+                        input.type = 'text'
+                    }
+                    $scope.valueVisiable = !$scope.valueVisiable
+                }
+
+                // 是否显示清除按钮
+                this.showClear = function () {
+                    return this.clearable &&
+                        !this.ngDisabled &&
+                        this.ngModel && this.ngModel.length > 0
+                }
+                // 是否显示可视按钮
+                this.showValueAccessVisible = function () {
+                    return this.showPassword &&
+                        !this.ngDisabled &&
+                        this.ngModel &&
+                        this.ngModel.length > 0 &&
+                        $scope.valueVisiable
+                }
+                // 是否显示不可视按钮
+                this.showValueInVisible = function () {
+                    return this.showPassword &&
+                        !this.ngDisabled &&
+                        this.ngModel &&
+                        this.ngModel.length > 0 &&
+                        !$scope.valueVisiable
+                }
+
+
+                /**
+                 * 是否显示字数统计
+                 */
+                this.showWordCount = function () {
+                    return this.showWordLimit && !this.showPassword
+                }
+            }
+        })
+        .component('mobInputNumber', {
+            transclude: true,
+            templateUrl: './components/mob-input-number.html',
+            bindings: {
+                ngModel: '=?',
+                ngDisabled: '<?',
+                clearable: '<?',
+                showPassword: '<?',
+                ngMaxlength: '<?',
+                showWordLimit: '<?',
+                handleChange: '&'
+            },
+            controller: function ($scope, $element, $transclude, $attrs, $compile, slot) {
+                // 初始化工作
+                this.$onInit = function () {
+                    // 动态插槽实现
+                    slot.replace($scope, $element, $transclude)
+                    // 通过class配置icon
+                    compilePrefix($attrs.prefixIcon);
+                    compileSuffix($attrs.suffixIcon);
+
+                    if (this.showPassword) {
+                        $scope.valueVisiable = false // 默认为不展示明文
+                    }
+                }
+
+
+                function compilePrefix(icon) {
+                    if (!icon) {
+                        return;
+                    }
+                    let prefixInner = $element[0].querySelector('.mob-input__prefix-inner')
+                    slot.appendChild($scope, prefixInner, `<${icon}></${icon}>`)
+                }
+
+                function compileSuffix(icon) {
+                    if (!icon) {
+                        return;
+                    }
+                    let inner = $element[0].querySelector('.mob-input__suffix-inner')
+                    slot.appendChild($scope, inner, `<${icon}></${icon}>`)
+                }
+
+
+                this.$onChanges = function (changes) {
+                }
+
+                this.$onDestroy = function () {
+                }
+
+
                 this.$postLink = function () {
                 }
 
@@ -492,7 +615,7 @@
                     $scope.isFocus = false
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
 
                 }
@@ -501,7 +624,7 @@
 
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                 }
 
@@ -575,7 +698,7 @@
                     }
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
 
                 }
@@ -584,7 +707,7 @@
 
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                 }
 
@@ -640,7 +763,7 @@
                     }
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
 
                 }
@@ -649,7 +772,7 @@
 
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                 }
 
@@ -689,7 +812,7 @@
                     this.radioGroupName = `mobRadioGroup_${$scope.$id}`
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
 
                 }
@@ -698,7 +821,7 @@
 
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                     attrHelp.expose($scope, $attrs)
                 }
@@ -738,14 +861,14 @@
                     }
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
                 }
 
                 this.$onDestroy = function () {
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                     this.initValue()
                 }
@@ -812,14 +935,14 @@
                     }
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
                 }
 
                 this.$onDestroy = function () {
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                     this.initValue()
                 }
@@ -892,7 +1015,7 @@
 
                 this.$onDestroy = function () {}
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {}
 
                 // ngModel改变时，同时子组件
@@ -949,7 +1072,6 @@
                     if (angular.isUndefined(this.horizontal)) {
                         this.horizontal = true;
                     }
-                    console.log(this.horizontal)
                 }
             }
         })
@@ -962,7 +1084,7 @@
                 this.$onInit = function () {
                 }
 
-                // bindings中的单向流被改变时，触发
+
                 this.$onChanges = function (changes) {
 
                 }
@@ -971,7 +1093,7 @@
 
                 }
 
-                // 与Vue2的mounted相同
+
                 this.$postLink = function () {
                 }
 

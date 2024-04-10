@@ -1,0 +1,30 @@
+<section class="mob-doc content" ng-controller="InputCtrl as ctrl">
+    <h2>Input Number 输入框</h2>
+
+    <div class="mob-doc content">
+
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+
+                <div class="mob-demo-example-child">
+                    <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                    值：<span ng-bind="value"></span>
+                </div>
+            </div>
+            <div class="meta">
+                <div class="mob-demo-example">
+                    可以直接通过 <code>ng-model</code> 进行双向数据绑定
+                </div>
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+        
+    </div>
+</section>

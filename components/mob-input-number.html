@@ -1,0 +1,26 @@
+<div class="mob-input__number">
+
+    <div class="mob-input_prepend" ng-class="{'is_hidden':!$slot.slotSet.has('prepend')}">
+        <slot name="prepend"></slot>
+    </div>
+
+    <div class="mob-input__wrapper">
+        <label for="{{'input_number' + $id}}"></label>
+        <input id="{{'input_number' + $id}}"
+               ng-if="!$ctrl.showPassword"
+               type="number"
+               autocomplete="off"
+               placeholder="{{$ctrl.placeholder}}"
+               class="mob-input__inner"
+               ng-model="$ctrl.ngModel"
+               ng-disabled="$ctrl.ngDisabled"
+               maxlength="{{$ctrl.ngMaxlength}}"
+               ng-maxlength="$ctrl.ngMaxlength"
+        >
+    </div>
+
+    <div class="mob-input_append" ng-class="{'is_hidden':!$slot.slotSet.has('append')}">
+        <slot name="append"></slot>
+    </div>
+
+</div>
