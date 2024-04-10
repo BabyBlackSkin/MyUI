@@ -825,11 +825,16 @@
                     // 监听子组件的change事件
                     $scope.$on(`${_that.name}ChildChange`, function (event, data) {
                         if (_that.ngModel.includes(data)) {
-                            if (_that.min && _that.ngModel.length > _that.min) {
+                            debugger
+                            let undefinedMin = angular.isUndefined(_that.min)
+                            let definedMin = angular.isDefined(_that.min)
+                            if (undefinedMin || definedMin && _that.ngModel.length > _that.min) {
                                 _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
                             }
                         } else {
-                            if (_that.max && _that.ngModel.length < _that.max) {
+                            let undefinedMax = angular.isUndefined(_that.max)
+                            let definedMax = angular.isDefined(_that.max)
+                            if (undefinedMax || definedMax && _that.ngModel.length < _that.max) {
                                 _that.ngModel.push(data);
                             }
                         }
