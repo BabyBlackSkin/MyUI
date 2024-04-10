@@ -314,6 +314,9 @@
                     })
                 },
                 appendChild: function (scope, element, childElement) {
+                    if (null == element) {
+                        return
+                    }
                     element.appendChild($compile(childElement)(scope)[0])
                 }
             }
@@ -504,41 +507,31 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled: '<?',
-                clearable: '<?',
-                showPassword: '<?',
-                ngMaxlength: '<?',
-                showWordLimit: '<?',
-                handleChange: '&'
+                step:'<?',
+                precision:'<?',
+                min:'<?',
+                max:'<?',
+                changeEvent: '&?',
+                blurEvent: '&?'
             },
             controller: function ($scope, $element, $transclude, $attrs, $compile, slot) {
                 // 初始化工作
                 this.$onInit = function () {
                     // 动态插槽实现
                     slot.replace($scope, $element, $transclude)
-                    // 通过class配置icon
-                    compilePrefix($attrs.prefixIcon);
-                    compileSuffix($attrs.suffixIcon);
-
-                    if (this.showPassword) {
-                        $scope.valueVisiable = false // 默认为不展示明文
-                    }
+                    // 获取步长
+                    this.calculateStep();
                 }
 
-
-                function compilePrefix(icon) {
-                    if (!icon) {
-                        return;
+                this.calculateStep = function () {
+                    // 未定义步长，默认为1
+                    if (angular.isUndefined(this.step)) {
+                        if (angular.isUndefined(this.precision)) {
+                            this.step = 1;
+                        } else {
+                            this.step = 1 / Math.pow(10, this.precision);
+                        }
                     }
-                    let prefixInner = $element[0].querySelector('.mob-input__prefix-inner')
-                    slot.appendChild($scope, prefixInner, `<${icon}></${icon}>`)
-                }
-
-                function compileSuffix(icon) {
-                    if (!icon) {
-                        return;
-                    }
-                    let inner = $element[0].querySelector('.mob-input__suffix-inner')
-                    slot.appendChild($scope, inner, `<${icon}></${icon}>`)
                 }
 
 
@@ -569,50 +562,75 @@
                     this.ngModel = ''
                 }
 
-                /**
-                 * 点击可视按钮
-                 */
-                this.visibleClickHandle = function () {
-                    this.focus()
-                    let input = $element[0].querySelector('.mob-input__inner')
-                    if ($scope.valueVisiable) {
-                        input.type = 'password'
-                    } else {
-                        input.type = 'text'
+
+                // 范围
+                this.patternPrecision = function () {
+                    if (angular.isUndefined(this.precision)) {
+                        return
                     }
-                    $scope.valueVisiable = !$scope.valueVisiable
+                    // FIXME 可能会出现进度问题
+                    this.ngModel = this.ngModel.toFixed(this.precision)
                 }
 
-                // 是否显示清除按钮
-                this.showClear = function () {
-                    return this.clearable &&
-                        !this.ngDisabled &&
-                        this.ngModel && this.ngModel.length > 0
-                }
-                // 是否显示可视按钮
-                this.showValueAccessVisible = function () {
-                    return this.showPassword &&
-                        !this.ngDisabled &&
-                        this.ngModel &&
-                        this.ngModel.length > 0 &&
-                        $scope.valueVisiable
-                }
-                // 是否显示不可视按钮
-                this.showValueInVisible = function () {
-                    return this.showPassword &&
-                        !this.ngDisabled &&
-                        this.ngModel &&
-                        this.ngModel.length > 0 &&
-                        !$scope.valueVisiable
+                // 步长模式
+                this.patternStep = function () {
+                    let remain = this.ngModel % this.step
+                    this.ngModel = this.ngModel - remain
+                    let doubleRemain = remain * 2
+
+                    if (doubleRemain >= this.step) {
+                        this.ngModel = this.ngModel + this.step
+                    }
+
                 }
 
+                // 范围
+                this.patternScope = function () {
+                    if (angular.isDefined(this.min) && this.ngModel < this.min) {
+                        this.ngModel = this.min
+                    }
+                    if (angular.isDefined(this.max) && this.ngModel > this.max) {
+                        this.ngModel = this.max
+                    }
+                }
 
                 /**
-                 * 是否显示字数统计
+                 * 减少
                  */
-                this.showWordCount = function () {
-                    return this.showWordLimit && !this.showPassword
+                this.decrease = function () {
+                    this.patternStep()
+                    this.ngModel = this.ngModel - this.step
+                    this.patternScope()
                 }
+
+                /**
+                 * 增加
+                 */
+                this.increase = function () {
+                    this.patternStep()
+                    this.ngModel = this.ngModel + this.step
+                    this.patternScope()
+                }
+
+                /**
+                 * model改变时的回调
+                 */
+                this.changeHandle = function () {
+                    if(angular.isFunction(this.changeEvent)){
+                        this.changeEvent(this.ngModel)
+                    }
+                }
+                /**
+                 * 失焦
+                 */
+                this.blurHandle = function (){
+                    this.patternStep()
+                    this.patternScope()
+                    if(angular.isFunction(this.blurEvent)){
+                        this.blurEvent(this.ngModel)
+                    }
+                }
+
             }
         })
         .component('mobSelect', { // FIXME 待完善
@@ -1142,6 +1160,14 @@
         .component('mobIconSearch', {
             // transclude:true,
             templateUrl: './icon/search.html',
+        })
+        .component('mobIconIncrease', {
+            // transclude:true,
+            templateUrl: './icon/increase.html',
+        })
+        .component('mobIconDecrease', {
+            // transclude:true,
+            templateUrl: './icon/decrease.html',
         })
     ;
 </script>

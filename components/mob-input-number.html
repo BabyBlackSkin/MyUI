@@ -1,7 +1,8 @@
-<div class="mob-input__number">
+<div class="mob-input__number is_prepend_slot is_append_slot">
 
-    <div class="mob-input_prepend" ng-class="{'is_hidden':!$slot.slotSet.has('prepend')}">
-        <slot name="prepend"></slot>
+    <div class="mob-input_prepend mob-input__slot" ng-click="$ctrl.decrease()">
+        <slot name="prepend" ng-show="$slot.slotSet.has('prepend')"></slot>
+        <mob-icon-decrease  ng-if="!$slot.slotSet.has('prepend')"></mob-icon-decrease>
     </div>
 
     <div class="mob-input__wrapper">
@@ -14,13 +15,14 @@
                class="mob-input__inner"
                ng-model="$ctrl.ngModel"
                ng-disabled="$ctrl.ngDisabled"
-               maxlength="{{$ctrl.ngMaxlength}}"
-               ng-maxlength="$ctrl.ngMaxlength"
+               ng-change="$ctrl.changeHandle()"
+               ng-blur="$ctrl.blurHandle()"
         >
     </div>
 
-    <div class="mob-input_append" ng-class="{'is_hidden':!$slot.slotSet.has('append')}">
-        <slot name="append"></slot>
+    <div class="mob-input_append  mob-input__slot" ng-click="$ctrl.increase()">
+        <slot name="append" ng-show="$slot.slotSet.has('append')"></slot>
+        <mob-icon-increase  ng-if="!$slot.slotSet.has('append')"></mob-icon-increase>
     </div>
 
 </div>

@@ -8,14 +8,16 @@
             <div class="mob-demo-example">
 
                 <div class="mob-demo-example-child">
-                    <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                    <mob-input-number min="1" max="10" style="display:block;width: 250px;" ng-model="value">
+                    </mob-input-number>
                     值：<span ng-bind="value"></span>
                 </div>
+                <mob-divider></mob-divider>
+                <p>
+                    默认的 <code>step</code> 为 1， <code>precision</code>为0
+                </p>
             </div>
             <div class="meta">
-                <div class="mob-demo-example">
-                    可以直接通过 <code>ng-model</code> 进行双向数据绑定
-                </div>
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
