@@ -358,6 +358,8 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled: '<?',
+                prefixIcon:'<?',
+                suffixIcon:'<?',
                 clearable: '<?',
                 showPassword: '<?',
                 ngMaxlength: '<?',
@@ -370,8 +372,8 @@
                     // 动态插槽实现
                     slot.replace($scope, $element, $transclude)
                     // 通过class配置icon
-                    compilePrefix($attrs.prefixIcon);
-                    compileSuffix($attrs.suffixIcon);
+                    compilePrefix(this.prefixIcon);
+                    compileSuffix(this.suffixIcon);
 
                     if (this.showPassword) {
                         $scope.valueVisiable = false // 默认为不展示明文
