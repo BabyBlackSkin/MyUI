@@ -24,7 +24,7 @@ clearable:'<' -->
         <input ng-if="!$ctrl.showPassword"
                type="text"
                autocomplete="off"
-               placeholder="请输入输入内容"
+               placeholder="{{$ctrl.placeholder}}"
                class="mob-input__inner"
                ng-model="$ctrl.ngModel"
                ng-disabled="$ctrl.ngDisabled"
