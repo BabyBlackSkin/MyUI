@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="./css/mob-radio-group.css">
     <link rel="stylesheet" href="./css/mob-checkbox.css">
     <link rel="stylesheet" href="./css/mob-checkbox-group.css">
+    <link rel="stylesheet" href="./css/mob-divider.css">
 </head>
 <style>
     .contain {
@@ -202,7 +203,7 @@
 
             this.checkAll = false;
             this.indeterminate = true
-            this.checkedCities = ['澳门'];
+            this.checkedCities = ['澳门', '上海'];
             this.changeTag = true;
             this.cities = ['北京', '上海', '广东', '深圳', '香港', '澳门']
 
@@ -780,6 +781,8 @@
             templateUrl: './components/mob-checkbox-group.html',
             bindings: {
                 ngModel: '<?',
+                min:'<?',
+                max:'<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs) {
@@ -822,9 +825,13 @@
                     // 监听子组件的change事件
                     $scope.$on(`${_that.name}ChildChange`, function (event, data) {
                         if (_that.ngModel.includes(data)) {
-                            _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
+                            if (_that.min && _that.ngModel.length > _that.min) {
+                                _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
+                            }
                         } else {
-                            _that.ngModel.push(data);
+                            if (_that.max && _that.ngModel.length < _that.max) {
+                                _that.ngModel.push(data);
+                            }
                         }
                         _that.change()
                     })
@@ -836,6 +843,23 @@
 
 
     app
+        .component('mobDivider',{
+            transclude: true,
+            templateUrl: './components/mob-divider.html',
+            bindings: {
+                horizontal: '<?',
+                vertical: '<?',
+                borderStyle:'<'
+            },
+            controller: function ($scope){
+                this.$onInit = function(){
+                    if (angular.isUndefined(this.horizontal)) {
+                        this.horizontal = true;
+                    }
+                    console.log(this.horizontal)
+                }
+            }
+        })
         .component('mobIcon', {
             transclude: true,
             templateUrl: './components/mob-icon.html',
