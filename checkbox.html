@@ -99,13 +99,15 @@
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
                         <mob-checkbox  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-checkbox-group ng-model="ctrl.checkedCities" listener="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                         </mob-checkbox-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
                 </div>
+                <mob-divider></mob-divider>
+                <p>因为 <code>Angular1.5.3</code>的限制， 组件内部无法 <code>$watch</code> 外部传入双向绑定遍历。需要将 <code>mode</code>作为单向流 绑定到 <code>listener</code> 上</p>
             </div>
             <div class="meta">
                 <pre>
@@ -114,7 +116,7 @@
                            <html>
                             <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
                                 <mob-checkbox  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-                                <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                <mob-checkbox-group ng-model="ctrl.checkedCities" listener="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                                     <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                                 </mob-checkbox-group>
 
@@ -151,10 +153,12 @@
 
         <h3>选择数量限制</h3>
         <div class="mob-demo-block">
-            <div class="mob-demo-example">
+            <div class="mob-demo-example" ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                <p>min：{{ctrl.min}}</p>
+                <button ng-click="ctrl.changeMin()">修改MIn</button>
                 <div class="mob-demo-example-child">
-                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-checkbox-group min="2" max="4" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                    <div>
+                        <mob-checkbox-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                         </mob-checkbox-group>
 

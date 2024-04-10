@@ -222,6 +222,11 @@
                 this.checkAll = checkCount === this.cities.length
                 this.indeterminate = checkCount > 0 && checkCount < this.cities.length
             }
+
+            this.min = 2
+            this.changeMin = function(){
+                this.min = this.min + 1
+            }
         }])
     ;
     app
@@ -780,7 +785,8 @@
             transclude: true,
             templateUrl: './components/mob-checkbox-group.html',
             bindings: {
-                ngModel: '<?',
+                ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
+                listener: '<?',// 使用单项的model，用于监听他的change，checkBox
                 min:'<?',
                 max:'<?',
                 changeHandle: '&?'
@@ -797,7 +803,7 @@
                 }
 
                 this.$onChanges = function (changes) {
-                    if (changes.ngModel) {
+                    if (changes.listener) {
                         this.change()
                     }
                 }
