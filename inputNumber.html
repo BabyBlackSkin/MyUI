@@ -1,5 +1,8 @@
-<section class="mob-doc content" ng-controller="InputCtrl as ctrl">
+<section class="mob-doc content ignore" ng-controller="InputNumberCtrl as ctrl">
+
     <h2>Input Number 输入框</h2>
+
+    <p class="tips-success"> 需依赖 <code>Decimal.js</code> 保证计算精度</p>
 
     <div class="mob-doc content">
 
@@ -8,9 +11,7 @@
             <div class="mob-demo-example">
 
                 <div class="mob-demo-example-child">
-                    <mob-input-number min="1" max="10" style="display:block;width: 250px;" ng-model="value">
-                    </mob-input-number>
-                    值：<span ng-bind="value"></span>
+                    <mob-input-number min="1" max="10" style="display:block;width: 250px;" ng-model="ctrl.value"></mob-input-number>
                 </div>
                 <mob-divider></mob-divider>
                 <p>
@@ -21,8 +22,59 @@
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
-                            值：<span ng-bind="value"></span>
+                            <mob-input-number min="1" max="10" style="display:block;width: 250px;" ng-model="value"></mob-input-number>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+
+                <div class="mob-demo-example-child">
+                    <mob-input-number min="1" max="10" style="display:block;width: 250px;" ng-model="ctrl.value2" ng-disabled="true"></mob-input-number>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input-number min="1" max="10" style="display:block;width: 250px;" ng-model="value" ng-disabled="true"></mob-input-number>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>指定步数</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-input-number style="display:block;width: 250px;"  min="1" max="10" step="2" ng-model="ctrl.value3" ></mob-input-number>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input-number style="display:block;width: 250px;"  min="1" max="10" step="2" ng-model="ctrl.value3" ></mob-input-number>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>严格步数</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-input-number style="display:block;width: 250px;"  min="1" max="10" step="2" step-strictly="true" ng-model="ctrl.value4" ></mob-input-number>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-input-number style="display:block;width: 250px;"  min="1" max="10" step="2" step-strictly="true" ng-model="ctrl.value4" ></mob-input-number>
                         --></code>
                     </pre>
             </div>

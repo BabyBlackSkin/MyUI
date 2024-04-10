@@ -47,34 +47,6 @@
 .mob-input__number .mob-input__wrapper {
     padding: 0 11px;
 }
-.mob-input__number .mob_icon_clear {
-    transition: all var(--mob-transition-duration);
-    opacity: 0;
-}
-
-.mob-input__number:hover .mob_icon_clear {
-    opacity: 1;
-}
-
-
-.mob-input__number .mob-input__suffix {
-    transition: all var(--mob-transition-duration);
-}
-
-.mob-input__number .mob-input__suffix-inner {
-    display: flex;
-}
-.mob-input__number .mob-input__prefix {
-    transition: all var(--mob-transition-duration);
-}
-
-.mob-input__number .mob-input__prefix-inner {
-    display: flex;
-}
-.mob-input__number .mob-input__prefix-inner .mob-icon{
-    margin: 0 8px 0 0;
-}
-
 
 
 .mob-input__number .mob-icon.mob-input__icon {
@@ -88,24 +60,30 @@
 }
 
 
-
 /* disabled样式 */
 .mob-input__number.is_disabled * {
-    cursor: not-allowed;
+    cursor: not-allowed !important;
 }
 
-.mob-input__number.is_disabled {
+.mob-input__number.is_disabled * {
     background-color: var(--mob-not-allow-background-color);
 }
 
-.mob-input__number input[type="number"]{
+.mob-input__number.is_disabled .mob-icon {
+    color: #e6e9ef !important;
+    fill: #e6e9ef;
+}
+
+.mob-input__number input[type="number"] {
     text-align: center;
 }
+
 .mob-input__number input[type="number"]::-webkit-outer-spin-button {
     -moz-appearance: textfield;
     appearance: none;
     -webkit-appearance: none;
 }
+
 .mob-input__number input[type="number"]::-webkit-inner-spin-button {
     -moz-appearance: textfield;
     appearance: none;
@@ -114,45 +92,52 @@
 
 
 /* icon */
-.mob-input__number.mob-input_clear,.mob-input_access_visible,.mob-input_invisible{
+.mob-input__number.mob-input_clear, .mob-input_access_visible, .mob-input_invisible {
     cursor: pointer;
 }
 
 
 /* 插槽 */
-.mob-input__number  .mob-input__slot{
+.mob-input__number .mob-input__slot {
     border-radius: 4px;
     background-color: var(--mob-fill-color-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 20px;
+    /*padding: 0 20px;*/
     box-sizing: border-box;
     cursor: pointer;
 }
-.mob-input__number .mob-input_prepend{
+
+.mob-input__number .mob-input_prepend {
     border-right: 1px solid var(--mob-border-color);
 }
-.mob-input__number .mob-input_append{
+
+.mob-input__number .mob-input_append {
     border-left: 1px solid var(--mob-border-color);
 }
-.mob-input__number .mob-input__slot .mob-icon{
-    margin: 0;
+
+.mob-input__number .mob-input__slot .mob-icon {
+    margin: 0 20px;
 }
+
 /* 头部 */
-.mob-input__number.is_prepend_slot .mob-input__wrapper{
+.mob-input__number.is_prepend_slot .mob-input__wrapper {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .mob-input__number.is_prepend_slot .mob-input_prepend {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
+
 /* 尾部插槽 */
 .mob-input__number.is_append_slot .mob-input__wrapper {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
+
 .mob-input__number.is_append_slot .mob-input_append {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

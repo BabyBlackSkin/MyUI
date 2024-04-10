@@ -13,6 +13,7 @@
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
+    <script type="text/javascript" src="decimal/decimal.js" data-manual></script>
     <script type="text/javascript" src="prism/prism.js" data-manual></script>
     <link rel="stylesheet" href="./css/router-view.css">
     <link rel="stylesheet" href="./css/mob.css">
@@ -162,23 +163,23 @@
         ]
         //通过$on为$rootScope添加路由事件
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-            $log.debug('successfully changed routes');
+            // $log.debug('successfully changed routes');
             // console.log('1')
 
             $rootScope.routPath = current.$$route.originalPath
-            $log.debug(event);
-            $log.debug(current);
-            $log.debug(previous);
+            // $log.debug(event);
+            // $log.debug(current);
+            // $log.debug(previous);
 
             $animate.on('ngView', ngViewAnimation);
         });
 
         $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
             $log.debug('error changing routes');
-            $log.debug(event);
-            $log.debug(current);
-            $log.debug(previous);
-            $log.debug(rejection);
+            // $log.debug(event);
+            // $log.debug(current);
+            // $log.debug(previous);
+            // $log.debug(rejection);
         });
     }])
     ;
@@ -250,7 +251,13 @@
             }
         }])
         .controller('InputNumberCtrl', ['$scope', function InputNumberCtrl($scope) {
+            this.value = 1
 
+            this.value2 = 2
+
+            this.value3 = 2.5
+
+            this.value4 = 3.5
         }])
     ;
     app
@@ -508,6 +515,7 @@
                 ngModel: '=?',
                 ngDisabled: '<?',
                 step:'<?',
+                stepStrictly:'<?',
                 precision:'<?',
                 min:'<?',
                 max:'<?',
@@ -562,54 +570,68 @@
                     this.ngModel = ''
                 }
 
-
-                // 范围
-                this.patternPrecision = function () {
-                    if (angular.isUndefined(this.precision)) {
-                        return
+                // 按照指定精度转换ngModel
+                this.patternPrecision = function (ngModel) {
+                    debugger
+                    let temporaryNgModel = ngModel.toNumber()
+                    // 防止越界
+                    let step = new Decimal(this.step)
+                    // 判断是否小于最小值
+                    if (angular.isDefined(this.min) && temporaryNgModel < this.min) {
+                        ngModel = ngModel.add(step)
                     }
-                    // FIXME 可能会出现进度问题
-                    this.ngModel = this.ngModel.toFixed(this.precision)
+                    // 判断是否大于最大值
+                    if (angular.isDefined(this.max) && temporaryNgModel > this.max) {
+                        ngModel = ngModel.minus(step)
+                    }
+                    // 按照精度转换为Number
+                    if (angular.isUndefined(this.precision)) {
+                        this.ngModel = ngModel.toNumber();
+                    } else {
+                        this.ngModel = ngModel.toFixed(this.precision).toNumber();
+                    }
                 }
 
                 // 步长模式
                 this.patternStep = function () {
-                    let remain = this.ngModel % this.step
-                    this.ngModel = this.ngModel - remain
-                    let doubleRemain = remain * 2
+                    let ngModel = new Decimal(this.ngModel)
+                    let step = new Decimal(this.step)
+                    let mod = ngModel.mod(step)
 
-                    if (doubleRemain >= this.step) {
-                        this.ngModel = this.ngModel + this.step
+                    if (this.stepStrictly) {
+                        ngModel = ngModel.minus(mod)
                     }
 
-                }
+                    mod = mod.mul(new Decimal(2))
+                    if (mod > step) {
+                        ngModel = ngModel.add(step)
+                    }
 
-                // 范围
-                this.patternScope = function () {
-                    if (angular.isDefined(this.min) && this.ngModel < this.min) {
-                        this.ngModel = this.min
-                    }
-                    if (angular.isDefined(this.max) && this.ngModel > this.max) {
-                        this.ngModel = this.max
-                    }
+                    this.ngModel = ngModel.toNumber()
                 }
 
                 /**
                  * 减少
                  */
                 this.decrease = function () {
+                    if (this.ngDisabled) {
+                        return
+                    }
                     this.patternStep()
-                    this.ngModel = this.ngModel - this.step
-                    this.patternScope()
+                    let ngModel = new Decimal(this.ngModel).minus(new Decimal(this.step))
+                    this.patternPrecision(ngModel)
                 }
 
                 /**
                  * 增加
                  */
                 this.increase = function () {
+                    if (this.ngDisabled) {
+                        return
+                    }
                     this.patternStep()
-                    this.ngModel = this.ngModel + this.step
-                    this.patternScope()
+                    let ngModel = new Decimal(this.ngModel).add(new Decimal(this.step))
+                    this.patternPrecision(ngModel)
                 }
 
                 /**
@@ -624,8 +646,9 @@
                  * 失焦
                  */
                 this.blurHandle = function (){
+                    debugger
                     this.patternStep()
-                    this.patternScope()
+                    this.patternPrecision(new Decimal(this.ngModel))
                     if(angular.isFunction(this.blurEvent)){
                         this.blurEvent(this.ngModel)
                     }

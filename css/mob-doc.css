@@ -66,3 +66,39 @@ code:not(.source-code) {
     /*background-color: #f5f7fa;*/
     border-radius: 4px;
 }
+
+.tips-success {
+    box-sizing: border-box;
+    padding: 40px 20px;
+    background-color: #f0f9eb;
+    border-left: 2px solid #67c23a;
+}
+
+.tips-success code:not(.source-code) {
+    background-color: #e1f3d8;
+}
+
+
+.tips-warning {
+    box-sizing: border-box;
+    padding: 40px 20px;
+    background-color: #fdf6ec;
+    border-left: 2px solid #e6a23c;
+}
+
+.tips-warning code:not(.source-code) {
+    background-color: #faecd8;
+}
+
+
+.tips-danger {
+    box-sizing: border-box;
+    padding: 40px 20px;
+    background-color: #fef0f0;
+    border-left: 2px solid #f56c6c;
+}
+
+.tips-danger code:not(.source-code) {
+    background-color: #fde2e2;
+}
+
