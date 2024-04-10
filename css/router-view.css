@@ -1,0 +1,34 @@
+.view-animate-container {
+    position: relative;
+    box-sizing: border-box;
+    width: calc(100% - 240px);
+    margin-left: 260px;
+    flex-grow: 1;
+    z-index: 0;
+}
+
+.ng-enter,.ng-leave {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transition: all .3s ease-in;
+    ;
+    /*animation: 0.5s fadeInOut;*/
+}
+
+.ng-enter {
+    opacity: 0;
+    height: 0;
+}
+
+.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.ng-leave.ng-leave-active {
+    opacity: 0;
+    height: 0;
+}

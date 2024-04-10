@@ -9,10 +9,12 @@
     <script src="./jquery.js"></script>
     <script src="./angular-1.5.3/angular.min.js"></script>
     <script src="./angular-1.5.3/angular-route.min.js"></script>
+    <script src="./angular-1.5.3/angular-animate.min.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
     <script type="text/javascript" src="prism/prism.js" data-manual></script>
+    <link rel="stylesheet" href="./css/router-view.css">
     <link rel="stylesheet" href="./css/mob.css">
     <link rel="stylesheet" href="./css/mob-doc.css">
     <link rel="stylesheet" href="./css/mob-input.css">
@@ -35,8 +37,11 @@
         position: fixed;
         padding: 20px 20px 0 0;
         width: 240px;
+        height: 100%;
+        background-color: #ffffff;
         margin-right: 20px;
         box-sizing: border-box;
+        z-index: 1;
     }
 
     .navigation .nav-item {
@@ -69,11 +74,6 @@
         background-color: var(--mob-active-text-color-light);
         color: var(--mob-active-text-color);
     }
-
-    .view {
-        margin-left: 260px;
-        flex-grow: 1;
-    }
 </style>
 
 <body ng-controller="IndexCtrl as ctrl">
@@ -95,7 +95,7 @@
         </div>
     </div>
 
-    <div class="view">
+    <div class="view view-animate-container">
         <div ng-view="">
         </div>
     </div>
@@ -115,7 +115,7 @@
     angular.forEach("clearable,showPassword".split(","), function (value) {
         BOOLEAN_CUSTOM_ATTR.add(value)
     })
-    const app = angular.module('mobApp', ['ngRoute'])
+    const app = angular.module('mobApp', ['ngRoute', 'ngAnimate'])
     // .value('$routerRootComponent', 'mobApp')
     app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
         // $logProvider.debugEnabled(true)
@@ -137,7 +137,22 @@
             controller: 'CheckBoxCtrl'
         }).otherwise({redirectTo: '/home'})
     }]);
-    app.run(['$rootScope', '$log', function ($rootScope, $log) {
+    app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
+        let ngViewAnimation = {
+            enter: function(element, done) {
+                $animate.animate(element, {
+                    event: 'enter',
+                    structural: true
+                }).then(done);
+            },
+            leave: function(element, done) {
+                $animate.animate(element, {
+                    event: 'leave',
+                    structural: true
+                }).then(done);
+            }
+        };
+
         $rootScope.menuList = [
             {label: 'Home', path: '/home'},
             {label: 'Input输入框', path: '/input'},
@@ -154,6 +169,8 @@
             $log.debug(event);
             $log.debug(current);
             $log.debug(previous);
+
+            $animate.on('ngView', ngViewAnimation);
         });
 
         $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
