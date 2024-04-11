@@ -14,13 +14,16 @@
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
     <script type="text/javascript" src="decimal/decimal.js" data-manual></script>
+    <script type="text/javascript" src="floatingui/floating-core-1.6.0.js"></script>
+    <script type="text/javascript" src="floatingui/floating-ui-1.6.3.js"></script>
     <script type="text/javascript" src="prism/prism.js" data-manual></script>
     <link rel="stylesheet" href="./css/router-view.css">
     <link rel="stylesheet" href="./css/mob.css">
     <link rel="stylesheet" href="./css/mob-doc.css">
+    <link rel="stylesheet" href="./css/mob-popper.css">
     <link rel="stylesheet" href="./css/mob-input.css">
     <link rel="stylesheet" href="./css/mob-input-number.css">
-    <link rel="stylesheet" href="./css/mob-selec.css">
+    <link rel="stylesheet" href="./css/mob-select.css">
     <link rel="stylesheet" href="./css/mob-radio.css">
     <link rel="stylesheet" href="./css/mob-radio-button.css">
     <link rel="stylesheet" href="./css/mob-radio-group.css">
@@ -136,6 +139,9 @@
         }).when('/checkBox', {
             templateUrl: './checkbox.html',
             controller: 'CheckBoxCtrl'
+        }).when('/popper', {
+            templateUrl: './popper.html',
+            controller: 'PopperCtrl'
         }).otherwise({redirectTo: '/home'})
     }]);
     app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -156,6 +162,7 @@
 
         $rootScope.menuList = [
             {label: 'Home', path: '/home'},
+            {label: 'popper容器', path: '/popper'},
             {label: 'Input输入框', path: '/input'},
             {label: 'Input Number 输入框', path: '/inputNumber'},
             {label: 'Radio单选框', path: '/radio'},
@@ -275,6 +282,19 @@
 
             this.value4 = 3.5
         }])
+        .controller('PopperCtrl', ['$scope', function CheckBoxCtrl($scope) {
+
+            const button = document.querySelector('#button');
+            const tooltip = document.querySelector('#tooltip');
+
+            window.FloatingUIDOM.
+            computePosition(button, tooltip).then(({x, y}) => {
+                Object.assign(tooltip.style, {
+                    left: `${x}px`,
+                    top: `${y}px`,
+                });
+            });
+        }])
     ;
     app
         .directive('prism', function () {
@@ -371,6 +391,40 @@
 
     // FIXME 待完善
     app
+        .component('mobPopper', { // FIXME 待完善
+            templateUrl: './components/mob-popper.html',
+            bindings: {
+                show:'<?'
+            },
+            controller: function ($scope, $element) {
+                // 初始化工作
+                this.$onInit = function () {}
+
+
+                this.$onChanges = function (changes) {
+                    if(changes.show){
+                        let mobPopper = $element[0].querySelector('.mob-popper')
+                        let h = window.getComputedStyle(mobPopper).height
+
+                        if (!this.show) {
+                            mobPopper.style.height = '0px';
+                        } else {
+                            mobPopper.style.height = 'auto';
+                            this.heigt = mobPopper.querySelector('.mob-popper__wrapper').getBoundingClientRect().height;
+                            mobPopper.style.height = 0;
+                            //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
+                            mobPopper.offsetHeight
+                            mobPopper.style.height = this.heigt + 'px';
+                        }
+                    }
+                }
+
+                this.$onDestroy = function () {}
+
+                this.$postLink = function () {}
+            }
+        })
+
         .component('mobForm', {// https://segmentfault.com/a/1190000005868488
             transclude: true,
             templateUrl: './components/mob-form.html',
