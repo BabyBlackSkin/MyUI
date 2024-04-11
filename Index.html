@@ -27,7 +27,8 @@
     <link rel="stylesheet" href="./css/mob-radio.css">
     <link rel="stylesheet" href="./css/mob-radio-button.css">
     <link rel="stylesheet" href="./css/mob-radio-group.css">
-    <link rel="stylesheet" href="./css/mob-checkbox.css">>
+    <link rel="stylesheet" href="./css/mob-checkbox.css">
+    >
     <link rel="stylesheet" href="./css/mob-checkbox-button.css">
     <link rel="stylesheet" href="./css/mob-checkbox-group.css">
     <link rel="stylesheet" href="./css/mob-divider.css">
@@ -146,13 +147,13 @@
     }]);
     app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
         let ngViewAnimation = {
-            enter: function(element, done) {
+            enter: function (element, done) {
                 $animate.animate(element, {
                     event: 'enter',
                     structural: true
                 }).then(done);
             },
-            leave: function(element, done) {
+            leave: function (element, done) {
                 $animate.animate(element, {
                     event: 'leave',
                     structural: true
@@ -225,7 +226,7 @@
                 {label: '广州', value: '广州'}
             ]
 
-            this.changeRadioGroupModel = function(){
+            this.changeRadioGroupModel = function () {
                 this.radioIndex = this.radioIndex + 1;
                 if (this.radioIndex > this.radioGroup.length - 1) {
                     this.radioIndex = 0;
@@ -269,7 +270,7 @@
             }
 
             this.min = 2
-            this.changeMin = function(){
+            this.changeMin = function () {
                 this.min = this.min + 1
             }
         }])
@@ -286,14 +287,69 @@
 
             const button = document.querySelector('#button');
             const tooltip = document.querySelector('#tooltip');
+            const arrowElement = document.querySelector('#arrow');
 
-            window.FloatingUIDOM.
-            computePosition(button, tooltip).then(({x, y}) => {
-                Object.assign(tooltip.style, {
-                    left: `${x}px`,
-                    top: `${y}px`,
+            // this.updatePosition = function () {
+            function updatePosition() {
+                window.FloatingUIDOM.computePosition(button, tooltip, {
+                        placement: 'bottom',
+                        middleware: [
+                            // window.FloatingUIDOM.flip(),// y轴自适应
+                            window.FloatingUIDOM.flip(5),// y轴自适应 添加与边缘的空隙
+                            window.FloatingUIDOM.shift(), // x轴自适应
+                            // window.FloatingUIDOM.shift(5), // x轴自适应 添加与边缘的空隙
+                            window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
+                            window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
+
+                        ]
+                    }
+                ).then(({x, y, placement, middlewareData}) => {
+                    console.log(x, y)
+                    Object.assign(tooltip.style, {
+                        left: `${x}px`,
+                        top: `${y}px`,
+                    });
+
+                    const {x: arrowX, y: arrowY} = middlewareData.arrow;
+                    console.log(arrowX, arrowY)
+
+                    debugger
+                    const staticSide = {
+                        top: 'bottom',
+                        right: 'left',
+                        bottom: 'top',
+                        left: 'right',
+                    }[placement.split('-')[0]];
+
+                    Object.assign(arrowElement.style, {
+                        left: arrowX != null ? `${arrowX}px` : '',
+                        top: arrowY != null ? `${arrowY}px` : '',
+                        right: '',
+                        bottom: '',
+                        [staticSide]: '-4px',
+                    });
                 });
-            });
+            }
+
+
+            this.showTooltip = function () {
+                tooltip.style.display = 'block';
+                // this.updatePosition();
+                updatePosition();
+            }
+
+            this.hideTooltip = function () {
+                tooltip.style.display = '';
+            }
+
+            angular.forEach([
+                ['mouseenter', this.showTooltip],
+                ['mouseleave', this.hideTooltip],
+                ['focus', this.showTooltip],
+                ['blur', this.hideTooltip]
+            ].forEach(([event, listener]) => {
+                button.addEventListener(event, listener);
+            }));
         }])
     ;
     app
@@ -394,15 +450,16 @@
         .component('mobPopper', { // FIXME 待完善
             templateUrl: './components/mob-popper.html',
             bindings: {
-                show:'<?'
+                show: '<?'
             },
             controller: function ($scope, $element) {
                 // 初始化工作
-                this.$onInit = function () {}
+                this.$onInit = function () {
+                }
 
 
                 this.$onChanges = function (changes) {
-                    if(changes.show){
+                    if (changes.show) {
                         let mobPopper = $element[0].querySelector('.mob-popper')
                         let h = window.getComputedStyle(mobPopper).height
 
@@ -419,9 +476,11 @@
                     }
                 }
 
-                this.$onDestroy = function () {}
+                this.$onDestroy = function () {
+                }
 
-                this.$postLink = function () {}
+                this.$postLink = function () {
+                }
             }
         })
 
@@ -461,9 +520,9 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled: '<?',
-                placeholder:'<?',
-                prefixIcon:'<?',
-                suffixIcon:'<?',
+                placeholder: '<?',
+                prefixIcon: '<?',
+                suffixIcon: '<?',
                 clearable: '<?',
                 showPassword: '<?',
                 ngMaxlength: '<?',
@@ -584,11 +643,11 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled: '<?',
-                step:'<?',
-                stepStrictly:'<?',
-                precision:'<?',
-                min:'<?',
-                max:'<?',
+                step: '<?',
+                stepStrictly: '<?',
+                precision: '<?',
+                min: '<?',
+                max: '<?',
                 changeEvent: '&?',
                 blurEvent: '&?'
             },
@@ -708,18 +767,18 @@
                  * model改变时的回调
                  */
                 this.changeHandle = function () {
-                    if(angular.isFunction(this.changeEvent)){
+                    if (angular.isFunction(this.changeEvent)) {
                         this.changeEvent(this.ngModel)
                     }
                 }
                 /**
                  * 失焦
                  */
-                this.blurHandle = function (){
+                this.blurHandle = function () {
                     debugger
                     this.patternStep()
                     this.patternPrecision(new Decimal(this.ngModel))
-                    if(angular.isFunction(this.blurEvent)){
+                    if (angular.isFunction(this.blurEvent)) {
                         this.blurEvent(this.ngModel)
                     }
                 }
@@ -933,7 +992,7 @@
             templateUrl: './components/mob-radio-group.html',
             bindings: {
                 ngModel: '=?',
-                listener:'<?',
+                listener: '<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs, attrHelp) {
@@ -967,7 +1026,7 @@
                     })
                 }
 
-                this.change = function(){
+                this.change = function () {
                     if (angular.isFunction(this.changeHandle)) {
                         this.changeHandle({value: this.ngModel})
                     }
@@ -988,7 +1047,7 @@
                 name: '<?',
                 label: '<?',
                 value: '<?',
-                border:'<?',
+                border: '<?',
                 indeterminate: '<?',
                 changeHandle: '&?'
             },
@@ -1131,8 +1190,8 @@
             bindings: {
                 ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
                 listener: '<?',// 使用单项的model，用于监听他的change，checkBox
-                min:'<?',
-                max:'<?',
+                min: '<?',
+                max: '<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs) {
@@ -1152,10 +1211,12 @@
                     }
                 }
 
-                this.$onDestroy = function () {}
+                this.$onDestroy = function () {
+                }
 
 
-                this.$postLink = function () {}
+                this.$postLink = function () {
+                }
 
                 // ngModel改变时，同时子组件
                 this.change = function () {
@@ -1168,6 +1229,7 @@
 
 
                 const _that = this
+
                 /**
                  * 初始化事件监听
                  */
@@ -1198,16 +1260,16 @@
 
 
     app
-        .component('mobDivider',{
+        .component('mobDivider', {
             transclude: true,
             templateUrl: './components/mob-divider.html',
             bindings: {
                 horizontal: '<?',
                 vertical: '<?',
-                borderStyle:'<'
+                borderStyle: '<'
             },
-            controller: function ($scope){
-                this.$onInit = function(){
+            controller: function ($scope) {
+                this.$onInit = function () {
                     if (angular.isUndefined(this.horizontal)) {
                         this.horizontal = true;
                     }
@@ -1274,6 +1336,6 @@
             templateUrl: './icon/decrease.html',
         })
     ;
-</script>
+    </script>
 
-</html>
+    </html>
