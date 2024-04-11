@@ -829,10 +829,10 @@
                         // 绑定model
                         this.ngModel = this.radioGroup.ngModel
                         // 绑定name，一个组内的radio应该互斥
-                        $attrs.name = this.radioGroup.radioGroupName
+                        this.name = this.radioGroup.name
 
                         const _that = this
-                        $scope.$on(`${this.radioGroup.radioGroupName}_change`, function (event, data) {
+                        $scope.$on(`${this.name}Change`, function (event, data) {
                             _that.ngModel = data
                         })
                     }
@@ -856,7 +856,7 @@
                     if (this.ngDisabled) {
                         return
                     }
-                    if (this.ngModel === $attrs.value) {
+                    if (this.ngModel === this.value) {
                         return;
                     }
                     this.change()
@@ -864,11 +864,11 @@
                 }
 
                 this.change = function () {
-                    this.ngModel = $attrs.value
+                    this.ngModel = this.value
                     if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: $attrs.value})
+                        this.changeHandle({value: this.value})
                     } else {
-                        $scope.$emit('change', $attrs.value)
+                        $scope.$emit(`${this.name}ChildChange`, this.value)
                     }
 
                 }
