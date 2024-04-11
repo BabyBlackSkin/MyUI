@@ -347,9 +347,9 @@
                 ['mouseleave', this.hideTooltip],
                 ['focus', this.showTooltip],
                 ['blur', this.hideTooltip]
-            ].forEach(([event, listener]) => {
-                button.addEventListener(event, listener);
-            }));
+            ],function (value) {
+                button.addEventListener(value[0], value[1]);
+            });
         }])
     ;
     app
