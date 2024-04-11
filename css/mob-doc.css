@@ -67,11 +67,18 @@ code:not(.source-code) {
     border-radius: 4px;
 }
 
-.tips-success {
+.tips {
     box-sizing: border-box;
     padding: 40px 20px;
+    border-left: 4px solid;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+.tips-success {
     background-color: #f0f9eb;
-    border-left: 2px solid #67c23a;
+    border-color: #67c23a;
 }
 
 .tips-success code:not(.source-code) {
@@ -80,10 +87,8 @@ code:not(.source-code) {
 
 
 .tips-warning {
-    box-sizing: border-box;
-    padding: 40px 20px;
     background-color: #fdf6ec;
-    border-left: 2px solid #e6a23c;
+    border-color: #e6a23c;
 }
 
 .tips-warning code:not(.source-code) {
@@ -92,10 +97,8 @@ code:not(.source-code) {
 
 
 .tips-danger {
-    box-sizing: border-box;
-    padding: 40px 20px;
     background-color: #fef0f0;
-    border-left: 2px solid #f56c6c;
+    border-color: #f56c6c;
 }
 
 .tips-danger code:not(.source-code) {

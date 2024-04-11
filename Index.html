@@ -210,6 +210,22 @@
         }])
         .controller('RadioCtrl', ['$scope', function RadioCtrl($scope) {
 
+            this.radioIndex = -1;
+            this.radioGroupModel = '';
+            this.radioGroup = [
+                {label: '北京', value: '北京'},
+                {label: '上海', value: '上海'},
+                {label: '广州', value: '广州'}
+            ]
+
+            this.changeRadioGroupModel = function(){
+                this.radioIndex = this.radioIndex + 1;
+                if (this.radioIndex > this.radioGroup.length - 1) {
+                    this.radioIndex = 0;
+                }
+                this.radioGroupModel = this.radioGroup[this.radioIndex].value
+            }
+            this.demo = 'Options1'
             this.fatherChange = function (value) {
                 console.log('radio change回调方法', value)
             }
@@ -747,10 +763,10 @@
                         // 绑定model
                         this.ngModel = this.radioGroup.ngModel
                         // 绑定name，一个组内的radio应该互斥
-                        this.name = this.radioGroup.radioGroupName
+                        this.name = this.radioGroup.name
 
                         const _that = this
-                        $scope.$on(`${this.radioGroup.radioGroupName}_change`, function (event, data) {
+                        $scope.$on(`${this.name}Change`, function (event, data) {
                             _that.ngModel = data
                         })
                     }
@@ -771,10 +787,11 @@
 
                 // 点击事件
                 this.clickHandle = function () {
+                    debugger
                     if (this.ngDisabled) {
                         return
                     }
-                    if (this.ngModel === $attrs.value) {
+                    if (this.ngModel === this.value) {
                         return;
                     }
                     this.change()
@@ -782,11 +799,11 @@
                 }
 
                 this.change = function () {
-                    this.ngModel = $attrs.value
+                    this.ngModel = this.value
                     if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: $attrs.value})
+                        this.changeHandle({value: this.value})
                     } else {
-                        $scope.$emit('change', $attrs.value)
+                        $scope.$emit(`${this.name}ChildChange`, this.value)
                     }
 
                 }
@@ -862,17 +879,21 @@
             templateUrl: './components/mob-radio-group.html',
             bindings: {
                 ngModel: '=?',
+                listener:'<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, $attrs, attrHelp) {
                 // 初始化工作
                 this.$onInit = function () {
-                    this.radioGroupName = `mobRadioGroup_${$scope.$id}`
+                    this.name = `mobRadioGroup_${$scope.$id}`
+                    this.initEvent()
                 }
 
 
                 this.$onChanges = function (changes) {
-
+                    if (changes.listener) {
+                        this.change()
+                    }
                 }
 
                 this.$onDestroy = function () {
@@ -884,15 +905,21 @@
                     attrHelp.expose($scope, $attrs)
                 }
 
-                const _that = this
-                $scope.$on('change', function (event, data) {
-                    _that.ngModel = data
-                    if (angular.isFunction(_that.changeHandle)) {
-                        _that.changeHandle({value: data})
+                this.initEvent = function () {
+                    const _that = this
+                    $scope.$on(`${_that.name}ChildChange`, function (event, data) {
+                        _that.ngModel = data
+                        _that.change()
+                    })
+                }
+
+                this.change = function(){
+                    if (angular.isFunction(this.changeHandle)) {
+                        this.changeHandle({value: this.ngModel})
                     }
                     // 反向通知group下所有的radio绑定的ngModel
-                    $scope.$broadcast(`${_that.radioGroupName}_change`, data)
-                })
+                    $scope.$broadcast(`${this.name}Change`, this.ngModel)
+                }
             }
         })
         .component('mobCheckbox', {
