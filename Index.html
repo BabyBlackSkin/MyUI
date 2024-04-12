@@ -289,96 +289,96 @@
             var vm = this;
             this.message = 'Welcome to School Buddy!';
 
-            const button = document.querySelector('#button');
-            const popper = document.querySelector('#mob-popper');
-            const arrowElement = document.querySelector('#arrow');
-
-            const { width: targetWidth } = button.getBoundingClientRect()
-            popper.style.minWidth = targetWidth +'px';
-
-
-            vm.autoUpdate = function(){
-                // window.FloatingUIDOM.autoUpdate(button, popper, ()=>{
-                //     vm.updatePosition()
-                // })
-            }
-
-            // this.updatePosition = function () {
-            vm.updatePosition = function(autoUpdate) {
-                    window.FloatingUIDOM.computePosition(button, popper, {
-                            placement: 'bottom-start',
-                            middleware: [
-                                window.FloatingUIDOM.flip(),// y轴自适应
-                                // window.FloatingUIDOM.flip(5),// y轴自适应 添加与边缘的空隙
-                                window.FloatingUIDOM.shift(), // x轴自适应
-                                // window.FloatingUIDOM.shift(5), // x轴自适应 添加与边缘的空隙
-                                window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
-                                window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
-
-                            ]
-                        }
-                    ).then(({x, y, placement, middlewareData}) => {
-                        console.log(x, y)
-                        Object.assign(popper.style, {
-                            left: `${x}px`,
-                            top: `${y}px`,
-                        });
-
-                        const {x: arrowX, y: arrowY} = middlewareData.arrow;
-
-                        debugger
-                        const staticSide = {
-                            top: 'bottom',
-                            right: 'left',
-                            bottom: 'top',
-                            left: 'right',
-                        }[placement.split('-')[0]];
-
-                        Object.assign(arrowElement.style, {
-                            left: arrowX != null ? `${arrowX}px` : '',
-                            // top: arrowY != null ? `${arrowY}px` : '',
-                            right: '',
-                            bottom: '',
-                            [staticSide]: '-4px',
-                            top:'0px'
-                        });
-
-
-                        popper.style.height = 'auto';
-                        const {height} = popper.getBoundingClientRect()
-
-                        popper.style.height = 0;
-                        //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
-                        popper.offsetHeight
-                        popper.style.height = height + 'px';
-
-
-                        if (autoUpdate) {
-                            setTimeout(function (){
-                                vm.autoUpdate()
-                            }, 500)
-                        }
-                    });
-            }
-
-            this.show = false
-
-            console.log(1)
-
-            this.showOrHideTooltip = function (e) {
-                console.log('我被点击了')
-                this.show = !this.show
-                if (this.show) {
-                    popper.style.display = 'block';
-                    vm.updatePosition(true);
-                } else {
-                    // popper.remove()
-                    popper.style.height = '0';
-                    setTimeout(function () {
-                        popper.style.display = '';
-                    }, 300)
-                }
-            }
+            // const button = document.querySelector('#button');
+            // const popper = document.querySelector('#mob-popper');
+            // const arrowElement = document.querySelector('#arrow');
+            //
+            // const { width: targetWidth } = button.getBoundingClientRect()
+            // popper.style.minWidth = targetWidth +'px';
+            //
+            //
+            // vm.autoUpdate = function(){
+            //     // window.FloatingUIDOM.autoUpdate(button, popper, ()=>{
+            //     //     vm.updatePosition()
+            //     // })
+            // }
+            //
+            // // this.updatePosition = function () {
+            // vm.updatePosition = function(autoUpdate) {
+            //         window.FloatingUIDOM.computePosition(button, popper, {
+            //                 placement: 'bottom-start',
+            //                 middleware: [
+            //                     window.FloatingUIDOM.flip(),// y轴自适应
+            //                     // window.FloatingUIDOM.flip(5),// y轴自适应 添加与边缘的空隙
+            //                     window.FloatingUIDOM.shift(), // x轴自适应
+            //                     // window.FloatingUIDOM.shift(5), // x轴自适应 添加与边缘的空隙
+            //                     window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
+            //                     window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
+            //
+            //                 ]
+            //             }
+            //         ).then(({x, y, placement, middlewareData}) => {
+            //             console.log(x, y)
+            //             Object.assign(popper.style, {
+            //                 left: `${x}px`,
+            //                 top: `${y}px`,
+            //             });
+            //
+            //             const {x: arrowX, y: arrowY} = middlewareData.arrow;
+            //
+            //             debugger
+            //             const staticSide = {
+            //                 top: 'bottom',
+            //                 right: 'left',
+            //                 bottom: 'top',
+            //                 left: 'right',
+            //             }[placement.split('-')[0]];
+            //
+            //             Object.assign(arrowElement.style, {
+            //                 left: arrowX != null ? `${arrowX}px` : '',
+            //                 // top: arrowY != null ? `${arrowY}px` : '',
+            //                 right: '',
+            //                 bottom: '',
+            //                 [staticSide]: '-4px',
+            //                 top:'0px'
+            //             });
+            //
+            //
+            //             popper.style.height = 'auto';
+            //             const {height} = popper.getBoundingClientRect()
+            //
+            //             popper.style.height = 0;
+            //             //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
+            //             popper.offsetHeight
+            //             popper.style.height = height + 'px';
+            //
+            //
+            //             if (autoUpdate) {
+            //                 setTimeout(function (){
+            //                     vm.autoUpdate()
+            //                 }, 500)
+            //             }
+            //         });
+            // }
+            //
+            // this.show = false
+            //
+            // console.log(1)
+            //
+            // this.showOrHideTooltip = function (e) {
+            //     console.log('我被点击了')
+            //     this.show = !this.show
+            //     if (this.show) {
+            //         popper.style.display = 'block';
+            //         vm.updatePosition(true);
+            //     } else {
+            //         // popper.remove()
+            //         popper.style.height = '0';
+            //         setTimeout(function () {
+            //             popper.style.display = '';
+            //         }, 300)
+            //     }
+            // }
 
         }])
     ;
@@ -397,18 +397,23 @@
             };
         })
         .directive('popper', function () {
-        return {
-            restrict: 'A',
-            compile: function () {
-                return function (scope, element) {
-                    document.querySelector("body").appendChild(element[0]);
-                    console.log(scope)
+            return {
+                restrict: 'E',
+                transclude:true,
+                templateUrl:'./components/mob-popper.html',
+                replace:true,
+                compile: function () {
+                    return function (scope, element) {
+                        console.log(element)
+                        document.querySelector("body").appendChild(element[0]);
+                        console.log(scope)
+                    }
+                },
+                controller: function ($scope, $element) {
                 }
-            },
-            controller: function ($scope, $element) {
-            }
-        };
-    });
+            };
+        })
+    ;
 
 
     app
@@ -490,42 +495,47 @@
 
     // FIXME 待完善
     app
-        .component('mobPopper', { // FIXME 待完善
-            templateUrl: './components/mob-popper.html',
-            bindings: {
-                show: '<?'
-            },
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-
-                this.$onChanges = function (changes) {
-                    if (changes.show) {
-                        let mobPopper = $element[0].querySelector('.mob-popper')
-                        let h = window.getComputedStyle(mobPopper).height
-
-                        if (!this.show) {
-                            mobPopper.style.height = '0px';
-                        } else {
-                            mobPopper.style.height = 'auto';
-                            this.heigt = mobPopper.querySelector('.mob-popper__wrapper').getBoundingClientRect().height;
-                            mobPopper.style.height = 0;
-                            //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
-                            mobPopper.offsetHeight
-                            mobPopper.style.height = this.heigt + 'px';
-                        }
-                    }
-                }
-
-                this.$onDestroy = function () {
-                }
-
-                this.$postLink = function () {
-                }
-            }
-        })
+        // .component('mobPopper', { // FIXME 待完善
+        //     transclude:true,
+        //     templateUrl: './components/mob-popper.html',
+        //     bindings: {
+        //         show: '<?'
+        //     },
+        //     controller: function ($scope, $element) {
+        //         // 初始化工作
+        //         this.$onInit = function () {
+        //             console.log($scope)
+        //             console.log($element[0])
+        //             $element[0].id =  `mob-popper_${$scope.$id}`
+        //             document.querySelector("body").appendChild($element[0]);
+        //         }
+        //
+        //
+        //         this.$onChanges = function (changes) {
+        //             if (changes.show) {
+        //                 let mobPopper = $element[0].querySelector('.mob-popper')
+        //                 let h = window.getComputedStyle(mobPopper).height
+        //
+        //                 if (!this.show) {
+        //                     mobPopper.style.height = '0px';
+        //                 } else {
+        //                     mobPopper.style.height = 'auto';
+        //                     this.heigt = mobPopper.querySelector('.mob-popper__wrapper').getBoundingClientRect().height;
+        //                     mobPopper.style.height = 0;
+        //                     //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
+        //                     mobPopper.offsetHeight
+        //                     mobPopper.style.height = this.heigt + 'px';
+        //                 }
+        //             }
+        //         }
+        //
+        //         this.$onDestroy = function () {
+        //         }
+        //
+        //         this.$postLink = function () {
+        //         }
+        //     }
+        // })
 
         .component('mobForm', {// https://segmentfault.com/a/1190000005868488
             transclude: true,

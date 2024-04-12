@@ -1,18 +1,8 @@
-<div class="mob-popper mob-popper__show-hide"
-     ng-show="$ctrl.ngShow"
->
-
+<div id="mob-popper">
     <div class="mob-popper__wrapper">
-        <span class="mob-popper_arrow"></span>
+        <span id="arrow"></span>
         <div class="mob-popper__inner">
-            <ul>
-                <li>北京</li>
-                <li>上海</li>
-                <li>广州</li>
-                <li>深圳</li>
-                <li>香港</li>
-                <li>澳门</li>
-            </ul>
+            <ng-transclude></ng-transclude>
         </div>
     </div>
 </div>
