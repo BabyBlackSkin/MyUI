@@ -285,6 +285,7 @@
             this.value4 = 3.5
         }])
         .controller('PopperCtrl', ['$scope', function CheckBoxCtrl($scope) {
+            $scope.name='popper'
             var vm = this;
             this.message = 'Welcome to School Buddy!';
 
@@ -400,8 +401,8 @@
             restrict: 'A',
             compile: function () {
                 return function (scope, element) {
-
-                    Prism.highlightElement(element[0], false)
+                    document.querySelector("body").appendChild(element[0]);
+                    console.log(scope)
                 }
             },
             controller: function ($scope, $element) {
