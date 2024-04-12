@@ -1,16 +1,29 @@
-<section class="mob-doc content ignore" ng-controller="PopperCtrl as ctrl">
+<section class="mob-doc content ignore">
 
     <h2>Popper 容器</h2>
 
+    {{home.message}}
+    {{home.schoolCount}}
+    {{home.activityCount}}
+
     <div class="mob-doc content">
 
-        <button id="button" aria-describedby="tooltip">
+        <button id="button" ng-click="home.showOrHideTooltip()">
             My button
         </button>
 
-        <div id="tooltip" role="tooltip">
+        <div id="mob-popper">
             <div id="arrow"></div>
-            My tooltip
+            <div>
+                <ul>
+                    <li>北京</li>
+                    <li>上海</li>
+                    <li>广州</li>
+                    <li>深圳</li>
+                    <li>澳门</li>
+                    <li>香港</li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>

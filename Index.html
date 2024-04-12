@@ -142,7 +142,8 @@
             controller: 'CheckBoxCtrl'
         }).when('/popper', {
             templateUrl: './popper.html',
-            controller: 'PopperCtrl'
+            controller: 'PopperCtrl',
+            controllerAs: 'home',
         }).otherwise({redirectTo: '/home'})
     }]);
     app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -284,14 +285,16 @@
             this.value4 = 3.5
         }])
         .controller('PopperCtrl', ['$scope', function CheckBoxCtrl($scope) {
+            var vm = this;
+            this.message = 'Welcome to School Buddy!';
 
             const button = document.querySelector('#button');
-            const tooltip = document.querySelector('#tooltip');
+            const popper = document.querySelector('#mob-popper');
             const arrowElement = document.querySelector('#arrow');
 
             // this.updatePosition = function () {
             function updatePosition() {
-                window.FloatingUIDOM.computePosition(button, tooltip, {
+                window.FloatingUIDOM.computePosition(button, popper, {
                         placement: 'bottom',
                         middleware: [
                             // window.FloatingUIDOM.flip(),// y轴自适应
@@ -305,7 +308,8 @@
                     }
                 ).then(({x, y, placement, middlewareData}) => {
                     console.log(x, y)
-                    Object.assign(tooltip.style, {
+                    console.log(popper.style.height)
+                    Object.assign(popper.style, {
                         left: `${x}px`,
                         top: `${y}px`,
                     });
@@ -328,28 +332,36 @@
                         bottom: '',
                         [staticSide]: '-4px',
                     });
+
+
+                    debugger
+
+                    popper.style.height = 'auto';
+                    const {height} = popper.getBoundingClientRect()
+
+                    popper.style.height = 0;
+                    //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
+                    popper.offsetHeight
+                    popper.style.height = height + 'px';
                 });
             }
 
+            this.show = false
 
-            this.showTooltip = function () {
-                tooltip.style.display = 'block';
-                // this.updatePosition();
-                updatePosition();
+            console.log(1)
+            var vm = this;
+            this.showOrHideTooltip = function (e) {
+                console.log('我被点击了')
+                this.show = !this.show
+                if (this.show) {
+                    popper.style.display = 'block';
+                    updatePosition();
+                } else {
+                    popper.style.display = '';
+                    popper.style.height = '0';
+                }
             }
 
-            this.hideTooltip = function () {
-                tooltip.style.display = '';
-            }
-
-            angular.forEach([
-                ['mouseenter', this.showTooltip],
-                ['mouseleave', this.hideTooltip],
-                ['focus', this.showTooltip],
-                ['blur', this.hideTooltip]
-            ],function (value) {
-                button.addEventListener(value[0], value[1]);
-            });
         }])
     ;
     app
@@ -365,7 +377,20 @@
                 controller: function ($scope, $element) {
                 }
             };
-        });
+        })
+        .directive('popper', function () {
+        return {
+            restrict: 'A',
+            compile: function () {
+                return function (scope, element) {
+
+                    Prism.highlightElement(element[0], false)
+                }
+            },
+            controller: function ($scope, $element) {
+            }
+        };
+    });
 
 
     app
