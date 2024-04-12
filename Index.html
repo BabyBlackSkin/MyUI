@@ -491,6 +491,29 @@
                 }
             }
         }])
+        .factory('floating', [function () {
+            return {
+                expose: function (ctrl, attrs) {
+                    for (let k of Object.keys(attrs)) {
+                        if (k.indexOf("$") >= 0) {
+                            continue;
+                        }
+                        if (k.startsWith('ng')) {
+                            continue
+                        }
+                        // 获取属性值
+                        if (BOOLEAN_CUSTOM_ATTR.has(k)) {
+                            ctrl[k] = !!attrs[k]
+                        }
+                        // if ("" === v) {
+                        //     scope.$attrs[k] = true
+                        // } else {
+                        //     scope.$attrs[k] = attrs[k]
+                        // }
+                    }
+                }
+            }
+        }])
     ;
 
     // FIXME 待完善
