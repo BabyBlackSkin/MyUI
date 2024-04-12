@@ -6,23 +6,25 @@
     {{home.schoolCount}}
     {{home.activityCount}}
 
-    <div class="mob-doc content">
+    <div class="mob-doc content" style="position: relative">
 
-        <button id="button" ng-click="home.showOrHideTooltip()">
+        <button id="button" ng-click="home.showOrHideTooltip()" STYLE="margin-left: 5px">
             My button
         </button>
 
         <div id="mob-popper">
-            <div id="arrow"></div>
-            <div>
-                <ul>
-                    <li>北京</li>
-                    <li>上海</li>
-                    <li>广州</li>
-                    <li>深圳</li>
-                    <li>澳门</li>
-                    <li>香港</li>
-                </ul>
+            <div class="mob-popper__wrapper">
+                <span id="arrow"></span>
+                <div class="mob-popper__inner">
+                    <ul>
+                        <li>北京</li>
+                        <li>上海</li>
+                        <li>广州</li>
+                        <li>深圳</li>
+                        <li>香港</li>
+                        <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
