@@ -402,29 +402,31 @@
                 // templateUrl:'./components/mob-popper.html',
                 // replace:true,
                 compile: function () {
-                    return function (scope, element, attr) {
-                        const target = element[0].querySelector('.mob_popper__target');
-                        const floatingDom = element[0].querySelector('.mob-popper');
-                        // 元素添加到body
-                        document.querySelector("body").appendChild(floatingDom);
-                        // 给浮动元素 生成唯一id
-                        floatingDom.id = uuId.generate()
-                        // 给目标元素绑定唯一id
-                        target.setAttribute('popper-id', floatingDom.id)
+                    return {
+                        post: function (scope, element, attr) {
+                            const target = element[0].querySelector('.mob_popper__target');
+                            const floatingDom = element[0].querySelector('.mob-popper');
+                            // 元素添加到body
+                            // document.querySelector("body").appendChild(floatingDom);
+                            // 给浮动元素 生成唯一id
+                            floatingDom.id = uuId.generate()
+                            // 给目标元素绑定唯一id
+                            target.setAttribute('popper-id', floatingDom.id)
 
-                        const { width: targetWidth } = target.getBoundingClientRect()
-                        floatingDom.style.minWidth = targetWidth +'px';
+                            const {width: targetWidth} = target.getBoundingClientRect()
+                            floatingDom.style.minWidth = targetWidth + 'px';
 
-                        scope.popperClick = function(){
-                            scope[`${floatingDom.id}Show`] = !scope[`${floatingDom.id}Show`]
-                            if (scope[`${floatingDom.id}Show`]) {
-                                floatingDom.style.display = 'block';
-                                floating.computePosition(scope, target, floatingDom)
-                            } else {
-                                floatingDom.style.height = '0';
-                                setTimeout(function () {
-                                    floatingDom.style.display = '';
-                                }, 300)
+                            scope.popperClick = function () {
+                                scope[`${floatingDom.id}Show`] = !scope[`${floatingDom.id}Show`]
+                                if (scope[`${floatingDom.id}Show`]) {
+                                    floatingDom.style.display = 'block';
+                                    floating.computePosition(scope, target, floatingDom)
+                                } else {
+                                    floatingDom.style.height = '0';
+                                    setTimeout(function () {
+                                        floatingDom.style.display = '';
+                                    }, 300)
+                                }
                             }
                         }
                     }
@@ -567,7 +569,7 @@
                         const {height} = floating.getBoundingClientRect()
                         floating.style.height = 0;
                         floating.offsetHeight
-                        floating.style.height = height + 'px';
+                        floating.style.height = (height > 200 ? 200 : height) + 'px';
                     });
                 }
             }
@@ -589,21 +591,7 @@
 
 
                 this.$onChanges = function (changes) {
-                    if (changes.show) {
-                        let mobPopper = $element[0].querySelector('.mob-popper')
-                        let h = window.getComputedStyle(mobPopper).height
 
-                        if (!this.show) {
-                            mobPopper.style.height = '0px';
-                        } else {
-                            mobPopper.style.height = 'auto';
-                            this.heigt = mobPopper.querySelector('.mob-popper__wrapper').getBoundingClientRect().height;
-                            mobPopper.style.height = 0;
-                            //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
-                            mobPopper.offsetHeight
-                            mobPopper.style.height = this.heigt + 'px';
-                        }
-                    }
                 }
 
                 this.$onDestroy = function () {
