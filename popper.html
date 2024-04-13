@@ -6,42 +6,52 @@
     {{home.schoolCount}}
     {{home.activityCount}}
 
-    <div class="mob-doc content" style="position: relative">
+    <div class="mob-doc content" style="position: relative" popper>
 
-        <button id="button" ng-click="home.showOrHideTooltip()" STYLE="margin-left: 5px">
+        <button id="button" class="mob_popper__target" ng-click="popperClick()" STYLE="margin-left: 5px">
             My button
         </button>
 
-        <popper>
-            <div>
-                <span>我是听风是风</span>
-                <span>好好学习天天向上</span>
+
+        <div class="mob-popper">
+            <div class="mob-popper__wrapper">
+                <span class="mob-popper__arrow"></span>
+                <div class="mob-popper__inner">
+                    <ul>
+                        <li>北京</li>
+                        <li>上海</li>
+                        <li>广州</li>
+                        <li>深圳</li>
+                        <li>香港</li>
+                        <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>
+                    </ul>
+                </div>
             </div>
-        </popper>
+        </div>
 
-        <ul>
-            <li>北京</li>
-            <li>上海</li>
-            <li>广州</li>
-            <li>深圳</li>
-            <li>香港</li>
-            <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>
-        </ul>
+        <!--        <ul>-->
+        <!--            <li>北京</li>-->
+        <!--            <li>上海</li>-->
+        <!--            <li>广州</li>-->
+        <!--            <li>深圳</li>-->
+        <!--            <li>香港</li>-->
+        <!--            <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>-->
+        <!--        </ul>-->
 
-<!--        <div id="mob-popper">-->
-<!--            <div class="mob-popper__wrapper">-->
-<!--                <span id="arrow"></span>-->
-<!--                <div class="mob-popper__inner">-->
-<!--                    <ul>-->
-<!--                        <li>北京</li>-->
-<!--                        <li>上海</li>-->
-<!--                        <li>广州</li>-->
-<!--                        <li>深圳</li>-->
-<!--                        <li>香港</li>-->
-<!--                        <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div id="mob-popper">-->
+        <!--            <div class="mob-popper__wrapper">-->
+        <!--                <span id="arrow"></span>-->
+        <!--                <div class="mob-popper__inner">-->
+        <!--                    <ul>-->
+        <!--                        <li>北京</li>-->
+        <!--                        <li>上海</li>-->
+        <!--                        <li>广州</li>-->
+        <!--                        <li>深圳</li>-->
+        <!--                        <li>香港</li>-->
+        <!--                        <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>-->
+        <!--                    </ul>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
     </div>
 </section>
