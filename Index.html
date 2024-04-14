@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="./css/mob-input.css">
     <link rel="stylesheet" href="./css/mob-input-number.css">
     <link rel="stylesheet" href="./css/mob-select.css">
+    <link rel="stylesheet" href="./css/mob-select-options.css">
     <link rel="stylesheet" href="./css/mob-radio.css">
     <link rel="stylesheet" href="./css/mob-radio-button.css">
     <link rel="stylesheet" href="./css/mob-radio-group.css">
@@ -958,6 +959,7 @@
                     if (angular.isUndefined(this.placeHolder)) {
                         this.placeHolder = '请选择'
                     }
+                    this.name = `mobSelect_${$scope.$id}`
                 }
 
 
@@ -966,7 +968,9 @@
                 this.$onDestroy = function () {}
 
 
-                this.$postLink = function () {}
+                this.$postLink = function () {
+                    this.initEvent()
+                }
 
                 this.clickHandler = function () {
                     let target = $element[0].querySelector('.mob_popper__target');
@@ -985,25 +989,73 @@
                     selectSection.querySelector('input').focus()
                 }
 
-
                 const _that = this
-                $scope.$on('focusOut', function (e, originEvent) {
-                    console.log('我是select组件的 focusOut')
-                    if ($element[0].contains(originEvent.target)) {
-                        _that.onFocus()
-                        originEvent.preventDefault()
-                        originEvent.stopPropagation()
-                        return
-                    }
-                    $scope.hidePopper()
-                })
+                this.initEvent = function(){
+                    // 点击select外部的时候，隐藏下拉框
+                    $scope.$on('focusOut', function (e, originEvent) {
+                        if ($element[0].contains(originEvent.target)) {
+                            _that.onFocus()
+                            originEvent.preventDefault()
+                            originEvent.stopPropagation()
+                            return
+                        }
+                        $scope.hidePopper()
+                    })
 
+                    // 监听optionsClick事件
+                    $scope.$on('selectOptionsClick', function (e, data) {
+                        _that.ngModel = data
+                        _that.placeHolder = data
+                        $scope.hidePopper()
+                        // 反向通知group下所有的radio绑定的ngModel
+                        $scope.$broadcast(`${_that.name}Change`, this.ngModel)
+                    })
+                }
+            }
+        })
+        .component('mobSelectOptions', {
+            transclude:true,
+            templateUrl: './components/mob-select-options.html',
+            require: {
+                'mobSelect': '?^mobSelect'
+            },
+            bindings: {
+                label: '<?',
+                value: '<?'
+            },
+            controller: function ($scope, $element, uuId, floating) {
+                // 初始化工作
+                this.$onInit = function () {
+                    $scope.active = false
 
-
-                this.optionClickHandler = function (options) {
+                    const _that = this
+                    this.name = this.mobSelect.name
+                    // 监听父组件的通知事件
+                    $scope.$on(`${_that.name}Change`, function (e, data) {
+                        if (Array.isArray(data)) {
+                            $scope.active = data.includes(_that.getValue())
+                        } else {
+                            $scope.active = data === _that.getValue()
+                        }
+                    })
                 }
 
-                this.cleanHandler = function ($event) {
+                this.$onChanges = function (changes) {}
+
+                this.$onDestroy = function () {}
+
+                this.$postLink = function () {}
+
+                // 获取options的Value
+                this.getValue = function (){
+                    // 优先取value，然后是label
+                    return this.value ? this.value : this.label
+                }
+                // options的点击事件，被点击时，通知父组件
+                this.clickHandler = function () {
+                    $scope.active = !$scope.active
+                    let val = this.getValue()
+                    $scope.$emit('selectOptionsClick', val)
                 }
             }
         })
