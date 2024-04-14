@@ -7,8 +7,8 @@
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
-            <div class="mob-select__selected-item mob-select__input-wrapper is-hidden">
-                <input readonly type="text" autocomplete="off" placeholder="请输入输入内容" class="mob-input__inner" ng-model="$ctrl.model">
+            <div class="mob-select__selected-item mob-select__input-wrapper">
+                <input readonly type="text" autocomplete="off" placeholder="请输入输入内容" class="mob-input__inner" ng-model="$ctrl.ngModel">
             </div>
             <div class="mob-select__selected-item mob-select-placeholder">
                 <span class="mob-unselect-text">{{$ctrl.placeHolder}}</span>
@@ -20,11 +20,11 @@
         <div class="mob-select__suffix" >
             <span class="mob-select__suffix-inner">
                 <mob-icon class="mob-icon__down-arrow" ng-class="{'is_hiddenable':$ctrl.options.clearable && $ctrl.model.length > 0}">
-                    <down-arrow></down-arrow>
+                    <mob-icon-down-arrow></mob-icon-down-arrow>
                 </mob-icon>
 
                 <mob-icon class="mob-icon__clean is_hidden" ng-if="$ctrl.options.clearable && $ctrl.model.length > 0" ng-click="$ctrl.cleanHandler($event)">
-                    <circle-close></circle-close>
+                    <mob-icon-circle-close></mob-icon-circle-close>
                 </mob-icon>
             </span>
         </div>

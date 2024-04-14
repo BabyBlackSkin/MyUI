@@ -14,7 +14,7 @@
 
 .mob-select__wrapper:focus-within {
     outline: none;
-    border-color: var(--mob-border-color)
+    border-color: var(--mob-active-border-color)
 }
 .mob-select__wrapper {
     width: 100%;
@@ -44,7 +44,6 @@
 .mob-select .mob-select__selected-item.is-hidden{
     width: 1px;
     position: absolute;
-    width: 1px;
     height: 5px;
     overflow: hidden;
     z-index: 0;
@@ -71,6 +70,7 @@
     line-height: 40px;
     outline: none;
     width: 1px;
+    /*width: 100%;*/
 }
 .mob-select .mob-select__selected-item span{
     display: inline-block;

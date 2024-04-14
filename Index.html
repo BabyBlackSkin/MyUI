@@ -125,26 +125,38 @@
     app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
         // $logProvider.debugEnabled(true)
 
-        $routeProvider.when('/home', {
-            templateUrl: 'home',
-            controller: 'IndexCtrl'
-        }).when('/inputNumber', {
-            templateUrl: './inputNumber.html',
-            controller: 'InputNumberCtrl'
-        }).when('/input', {
-            templateUrl: './input.html',
-            controller: 'InputCtrl'
-        }).when('/radio', {
-            templateUrl: './radio.html',
-            controller: 'RadioCtrl'
-        }).when('/checkBox', {
-            templateUrl: './checkbox.html',
-            controller: 'CheckBoxCtrl'
-        }).when('/popper', {
-            templateUrl: './popper.html',
-            controller: 'PopperCtrl',
-            controllerAs: 'home',
-        }).otherwise({redirectTo: '/home'})
+        $routeProvider
+            .when('/home', {
+                templateUrl: 'home',
+                controller: 'IndexCtrl'
+            })
+            .when('/inputNumber', {
+                templateUrl: './inputNumber.html',
+                controller: 'InputNumberCtrl'
+            })
+            .when('/input', {
+                templateUrl: './input.html',
+                controller: 'InputCtrl'
+            })
+            .when('/radio', {
+                templateUrl: './radio.html',
+                controller: 'RadioCtrl'
+            })
+            .when('/checkBox', {
+                templateUrl: './checkbox.html',
+                controller: 'CheckBoxCtrl'
+            })
+            .when('/popper', {
+                templateUrl: './popper.html',
+                controller: 'PopperCtrl',
+                controllerAs: 'home',
+            })
+
+            .when('/select', {
+                templateUrl: './select.html',
+                controller: 'SelectCtrl',
+            })
+            .otherwise({redirectTo: '/home'})
     }]);
     app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
         let ngViewAnimation = {
@@ -169,6 +181,7 @@
             {label: 'Input Number 输入框', path: '/inputNumber'},
             {label: 'Radio单选框', path: '/radio'},
             {label: 'CheckBox多选框', path: '/checkBox'},
+            {label: 'Select选择器', path: '/select'},
         ]
         //通过$on为$rootScope添加路由事件
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -284,11 +297,10 @@
 
             this.value4 = 3.5
         }])
-        .controller('PopperCtrl', ['$scope','floating', 'uuId', function CheckBoxCtrl($scope, floating, uuId) {
+        .controller('PopperCtrl', ['$scope', 'floating', 'uuId', function CheckBoxCtrl($scope, floating, uuId) {
             var vm = this;
             this.message = 'Welcome to School Buddy!';
             console.log($scope.$id)
-
 
 
             //
@@ -380,6 +392,9 @@
             // }
 
         }])
+        .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
+
+        }])
     ;
     app
         .directive('prism', function () {
@@ -395,7 +410,7 @@
                 }
             };
         })
-        .directive('popper', ['uuId','floating',function (uuId,floating) {
+        .directive('popper', ['uuId', 'floating', function (uuId, floating) {
             return {
                 restrict: 'A',
                 // transclude:true,
@@ -405,34 +420,56 @@
                     return {
                         post: function (scope, element, attr) {
                             const target = element[0].querySelector('.mob_popper__target');
+                            if (null == target) {
+                                console.warn('target元素不存在')
+                                return;
+                            }
                             const floatingDom = element[0].querySelector('.mob-popper');
-                            // 元素添加到body
-                            // document.querySelector("body").appendChild(floatingDom);
+                            if (null == floatingDom) {
+                                console.warn('target元素不存在')
+                                return;
+                            }
                             // 给浮动元素 生成唯一id
                             floatingDom.id = uuId.generate()
                             // 给目标元素绑定唯一id
                             target.setAttribute('popper-id', floatingDom.id)
 
-                            const {width: targetWidth} = target.getBoundingClientRect()
-                            floatingDom.style.minWidth = targetWidth + 'px';
-
-                            scope.popperClick = function () {
-                                scope[`${floatingDom.id}Show`] = !scope[`${floatingDom.id}Show`]
+                            scope.showPopper = function () {
                                 if (scope[`${floatingDom.id}Show`]) {
-                                    floatingDom.style.display = 'block';
-                                    floating.computePosition(scope, target, floatingDom)
-                                } else {
-                                    floatingDom.style.height = '0';
-                                    setTimeout(function () {
-                                        floatingDom.style.display = '';
-                                    }, 300)
+                                    return;
                                 }
+                                scope[`${floatingDom.id}Show`] = true
+                                floatingDom.style.display = 'block';
+                                floating.computePosition(scope, target, floatingDom)
+
+                            }
+                            scope.hidePopper = function(){
+                                scope[`${floatingDom.id}Show`] = false
+                                floatingDom.style.height = '0';
+                                setTimeout(function () {
+                                    floatingDom.style.display = '';
+                                }, 300)
                             }
                         }
                     }
                 },
                 controller: function ($scope, $element) {
                 }
+            };
+        }])
+        .directive('focusInOut', ['uuId', 'floating', function (uuId, floating) {
+            return {
+                restrict: 'A',
+                compile: function () {
+                    return {
+                        post: function (scope, element, attr) {
+
+                            document.addEventListener('click', function(e) {
+                                scope.$emit('focusOut', e)
+                            });
+                        }
+                    }
+                },
             };
         }])
     ;
@@ -527,8 +564,12 @@
         .factory('floating', [function () {
             return {
                 computePosition: function (scope, target, floating) {
+                    const {width: targetWidth} = target.getBoundingClientRect()
+                    console.log(targetWidth)
+                    floating.style.minWidth = targetWidth + 'px';
                     // 获取箭头元素
                     let arrowElement = floating.querySelector('.mob-popper__arrow');
+
                     window.FloatingUIDOM.computePosition(target, floating, {
                             placement: 'bottom-start',
                             middleware: [
@@ -579,7 +620,7 @@
     // FIXME 待完善
     app
         .component('mobPopper', { // FIXME 待完善
-            transclude:true,
+            transclude: true,
             templateUrl: './components/mob-popper.html',
             bindings: {
                 show: '<?'
@@ -903,49 +944,40 @@
 
             }
         })
-        .component('mobSelect', { // FIXME 待完善
+        .component('mobSelect', {
+            transclude:true,
             templateUrl: './components/mob-select.html',
             bindings: {
                 ngModel: '=?',
-                placeHolder: '?<',
+                placeHolder: '<?',
                 changeHandle: '&?'
             },
-            controller: function ($scope, $element) {
+            controller: function ($scope, $element, uuId, floating) {
                 // 初始化工作
                 this.$onInit = function () {
                     if (angular.isUndefined(this.placeHolder)) {
-                        this.placeHolder = '请选择';
+                        this.placeHolder = '请选择'
                     }
-                    $scope.hidden = true
-                    $scope.isFocus = false
                 }
 
 
-                this.$onChanges = function (changes) {
+                this.$onChanges = function (changes) {}
 
-                }
-
-                this.$onDestroy = function () {
-
-                }
+                this.$onDestroy = function () {}
 
 
-                this.$postLink = function () {
-                }
+                this.$postLink = function () {}
 
                 this.clickHandler = function () {
-                    let selectPorpper = $element[0].querySelector('.mob-select-popper')
-                    $scope.hidden = !$scope.hidden
-                    if ($scope.hidden) {
-                        selectPorpper.style.height = 0
+                    let target = $element[0].querySelector('.mob_popper__target');
+                    let popperId = target.getAttribute('popper-id')
+
+                    if ($scope[`${popperId}Show`]) {
+                        $scope.hidePopper()
                     } else {
-                        selectPorpper.style.height = 'auto'
-                        const {height} = selectPorpper.querySelector('.mob-select-dropdown').getBoundingClientRect();
-                        selectPorpper.style.height = 0
-                        selectPorpper.offsetHeight;// reflow
-                        selectPorpper.style.height = height + 'px';
+                        $scope.showPopper()
+                        this.onFocus()
                     }
-                    this.onFocus()
                 }
 
                 this.onFocus = function () {
@@ -953,19 +985,25 @@
                     selectSection.querySelector('input').focus()
                 }
 
+
+                const _that = this
+                $scope.$on('focusOut', function (e, originEvent) {
+                    console.log('我是select组件的 focusOut')
+                    if ($element[0].contains(originEvent.target)) {
+                        _that.onFocus()
+                        originEvent.preventDefault()
+                        originEvent.stopPropagation()
+                        return
+                    }
+                    $scope.hidePopper()
+                })
+
+
+
                 this.optionClickHandler = function (options) {
-                    this.clickHandler()
-                    this.model = options.value
-                    this.placeHolder = options.label
-                    this.onFocus()
                 }
 
                 this.cleanHandler = function ($event) {
-                    this.model = ''
-                    this.placeHolder = '请选择'
-                    this.onFocus()
-                    $event.preventDefault()
-                    $event.stopPropagation()
                 }
             }
         })
