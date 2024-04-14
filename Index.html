@@ -444,6 +444,19 @@
                                 floating.computePosition(scope, target, floatingDom)
 
                             }
+                            /**
+                             * 自动更新布局的
+                             */
+                            scope.showAutoUpdatePopper = function () {
+                                if (scope[`${floatingDom.id}Show`]) {
+                                    return;
+                                }
+                                scope[`${floatingDom.id}Show`] = true
+                                floatingDom.style.display = 'block';
+                                floating.autoUpdateComputePosition(scope, target, floatingDom)
+
+                            }
+
                             scope.hidePopper = function(){
                                 scope[`${floatingDom.id}Show`] = false
                                 floatingDom.style.height = '0';
@@ -562,60 +575,71 @@
                 }
             }
         }])
-        .factory('floating', [function () {
+        .factory('floating', function () {
+            function computePosition(scope, target, floating) {
+                const {width: targetWidth} = target.getBoundingClientRect()
+                // console.log(targetWidth)
+                floating.style.minWidth = targetWidth + 'px';
+                // 获取箭头元素
+                let arrowElement = floating.querySelector('.mob-popper__arrow');
+                window.FloatingUIDOM.computePosition(target, floating, {
+                        placement: 'bottom-start',
+                        middleware: [
+                            window.FloatingUIDOM.flip(),// y轴自适应
+                            window.FloatingUIDOM.shift(), // x轴自适应
+                            window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
+                            window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
+
+                        ]
+                    }
+                ).then(({x, y, placement, middlewareData}) => {
+                    // console.log(x, y)
+                    Object.assign(floating.style, {
+                        left: `${x}px`,
+                        top: `${y}px`,
+                    });
+
+                    const {x: arrowX, y: arrowY} = middlewareData.arrow;
+
+                    debugger
+                    const staticSide = {
+                        top: 'bottom',
+                        right: 'left',
+                        bottom: 'top',
+                        left: 'right',
+                    }[placement.split('-')[0]];
+
+                    Object.assign(arrowElement.style, {
+                        left: arrowX != null ? `${arrowX}px` : '',
+                        // top: arrowY != null ? `${arrowY}px` : '',
+                        right: '',
+                        bottom: '',
+                        [staticSide]: '-4px',
+                        top: '0px'
+                    });
+
+                    floating.style.height = 'auto';
+                    const {height} = floating.getBoundingClientRect()
+                    floating.style.height = 0;
+                    floating.offsetHeight
+                    floating.style.height = (height > 200 ? 200 : height) + 'px';
+                });
+            }
             return {
                 computePosition: function (scope, target, floating) {
-                    const {width: targetWidth} = target.getBoundingClientRect()
-                    console.log(targetWidth)
-                    floating.style.minWidth = targetWidth + 'px';
-                    // 获取箭头元素
-                    let arrowElement = floating.querySelector('.mob-popper__arrow');
+                    computePosition(scope, target, floating)
+                },
 
-                    window.FloatingUIDOM.computePosition(target, floating, {
-                            placement: 'bottom-start',
-                            middleware: [
-                                window.FloatingUIDOM.flip(),// y轴自适应
-                                window.FloatingUIDOM.shift(), // x轴自适应
-                                window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
-                                window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
-
-                            ]
-                        }
-                    ).then(({x, y, placement, middlewareData}) => {
-                        console.log(x, y)
-                        Object.assign(floating.style, {
-                            left: `${x}px`,
-                            top: `${y}px`,
-                        });
-
-                        const {x: arrowX, y: arrowY} = middlewareData.arrow;
-
-                        debugger
-                        const staticSide = {
-                            top: 'bottom',
-                            right: 'left',
-                            bottom: 'top',
-                            left: 'right',
-                        }[placement.split('-')[0]];
-
-                        Object.assign(arrowElement.style, {
-                            left: arrowX != null ? `${arrowX}px` : '',
-                            // top: arrowY != null ? `${arrowY}px` : '',
-                            right: '',
-                            bottom: '',
-                            [staticSide]: '-4px',
-                            top: '0px'
-                        });
-
-                        floating.style.height = 'auto';
-                        const {height} = floating.getBoundingClientRect()
-                        floating.style.height = 0;
-                        floating.offsetHeight
-                        floating.style.height = (height > 200 ? 200 : height) + 'px';
-                    });
+                autoUpdateComputePosition: function (scope, target, floating) {
+                    console.log('启用自动更新')
+                    return window.FloatingUIDOM.autoUpdate(
+                        target,
+                        floating,
+                        ()=>{computePosition(scope, target, floating)}
+                    );
                 }
-            }
-        }])
+            };
+        })
     ;
 
     // FIXME 待完善
@@ -979,6 +1003,7 @@
                     if ($scope[`${popperId}Show`]) {
                         $scope.hidePopper()
                     } else {
+                        $scope.showAutoUpdatePopper()
                         $scope.showPopper()
                         this.onFocus()
                     }
