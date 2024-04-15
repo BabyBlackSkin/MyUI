@@ -94,14 +94,14 @@
 </div> -->
 <div class="contain" style="display: flex;">
 
-    <div class="navigation">
+    <div class="navigation" style="z-index: 1">
         <!-- <a href="#!/home">Home</a> -->
         <div class="nav-item" ng-class="{'is_active':item.path === routPath}" ng-repeat="item in menuList">
             <a href="{{'#' + item.path}}" ng-bind="item.label">home</a>
         </div>
     </div>
 
-    <div>
+    <div style="z-index: 2">
         <div ng-view="" class="view-animate-container">
         </div>
     </div>
@@ -576,10 +576,22 @@
             }
         }])
         .factory('floating', function () {
-            function computePosition(scope, target, floating) {
+            // 箭头class
+            const arrowClassStyle = ['top','right','bottom','left']
+
+            function setFloatingWidth(scope, target, floating) {
                 const {width: targetWidth} = target.getBoundingClientRect()
                 // console.log(targetWidth)
                 floating.style.minWidth = targetWidth + 'px';
+            }
+            function setFloatingHeight(scope, target, floating) {
+                floating.style.height = 'auto';
+                const {height} = floating.getBoundingClientRect()
+                floating.style.height = 0;
+                floating.offsetHeight
+                floating.style.height = (height > 200 ? 200 : height) + 'px';
+            }
+            function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
                 let arrowElement = floating.querySelector('.mob-popper__arrow');
                 window.FloatingUIDOM.computePosition(target, floating, {
@@ -609,33 +621,42 @@
                         left: 'right',
                     }[placement.split('-')[0]];
 
+                    const classStyle = {
+                        top: 'bottom',
+                        right: 'left',
+                        bottom: 'top',
+                        left: 'right',
+                    }[placement.split('-')[0]];
+
+                    angular.forEach(arrowClassStyle, function (v) {
+                        arrowElement.classList.remove(v)
+                    })
+                    arrowElement.classList.add(classStyle)
+
                     Object.assign(arrowElement.style, {
                         left: arrowX != null ? `${arrowX}px` : '',
-                        // top: arrowY != null ? `${arrowY}px` : '',
+                        top: arrowY != null ? `${arrowY}px` : '',
                         right: '',
                         bottom: '',
-                        [staticSide]: '-4px',
-                        top: '0px'
+                        [staticSide]: '0px',
                     });
-
-                    floating.style.height = 'auto';
-                    const {height} = floating.getBoundingClientRect()
-                    floating.style.height = 0;
-                    floating.offsetHeight
-                    floating.style.height = (height > 200 ? 200 : height) + 'px';
+                    if (!autoUpdate) {
+                        setFloatingHeight(scope, target, floating)
+                    }
                 });
             }
             return {
                 computePosition: function (scope, target, floating) {
-                    computePosition(scope, target, floating)
+                    setFloatingWidth(scope, target, floating)
                 },
 
                 autoUpdateComputePosition: function (scope, target, floating) {
-                    console.log('启用自动更新')
+                    setFloatingWidth(scope, target, floating)
+                    setFloatingHeight(scope, target, floating)
                     return window.FloatingUIDOM.autoUpdate(
                         target,
                         floating,
-                        ()=>{computePosition(scope, target, floating)}
+                        ()=>{computePosition(scope, target, floating, true)}
                     );
                 }
             };
