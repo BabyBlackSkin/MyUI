@@ -18,8 +18,11 @@
 
         <!-- 右侧的ICON -->
         <div class="mob-select__suffix" >
-            <span class="mob-select__suffix-inner">
+            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':$ctrl.showClear()}">
                 <mob-icon-down-arrow  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-icon-down-arrow>
+            </span>
+            <span class="mob-select__suffix-inner mob-icon__clean" ng-if="$ctrl.showClear()">
+                <mob-icon-circle-close  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}" ng-click="$ctrl.clean()"></mob-icon-circle-close>
             </span>
         </div>
     </div>

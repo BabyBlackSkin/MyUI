@@ -47,7 +47,7 @@
         background-color: #ffffff;
         margin-right: 20px;
         box-sizing: border-box;
-        z-index: 1;
+        /*z-index: 1;*/
     }
 
     .navigation .nav-item {
@@ -101,7 +101,7 @@
         </div>
     </div>
 
-    <div style="z-index: 2">
+    <div>
         <div ng-view="" class="view-animate-container">
         </div>
     </div>
@@ -928,6 +928,7 @@
             bindings: {
                 ngModel: '=?',
                 ngDisabled:'<?',
+                clearable:'<?',
                 placeHolder: '<?',
                 changeHandle: '&?'
             },
@@ -950,6 +951,35 @@
                     this.initEvent()
                 }
 
+                const _that = this
+                // 初始化事件监听
+                this.initEvent = function(){
+                    // 点击select外部的时候，隐藏下拉框
+                    $scope.$on('focusOut', function (e, originEvent) {
+                        if ($element[0].contains(originEvent.target)) {
+                            _that.focus()
+                            originEvent.preventDefault()
+                            originEvent.stopPropagation()
+                            return
+                        }
+                        $scope.hidePopper()
+                    })
+
+                    // 监听optionsClick事件
+                    $scope.$on('selectOptionsClick', function (e, data) {
+                        _that.change(data)
+                        $scope.hidePopper()
+                        // 反向通知group下所有的radio绑定的ngModel
+                        $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
+                    })
+                }
+
+                this.change = function (val){
+                    _that.ngModel = val
+                    _that.placeHolder = val ? val :'请选择'
+                }
+
+
                 /**
                  * 点击事件
                  */
@@ -961,36 +991,32 @@
                         $scope.hidePopper()
                     } else {
                         $scope.showPopper()
-                        this.onFocus()
+                        this.focus()
                     }
                 }
 
-                this.onFocus = function () {
+                /**
+                 * 重新聚焦
+                 */
+                this.focus = function () {
                     let selectSection = $element[0].querySelector('.mob-select__selection')
                     selectSection.querySelector('input').focus()
                 }
 
-                const _that = this
-                this.initEvent = function(){
-                    // 点击select外部的时候，隐藏下拉框
-                    $scope.$on('focusOut', function (e, originEvent) {
-                        if ($element[0].contains(originEvent.target)) {
-                            _that.onFocus()
-                            originEvent.preventDefault()
-                            originEvent.stopPropagation()
-                            return
-                        }
-                        $scope.hidePopper()
-                    })
+                // 是否显示清除按钮
+                this.showClear = function () {
+                    return this.clearable &&
+                        !this.ngDisabled &&
+                        this.ngModel && this.ngModel.length > 0
+                }
 
-                    // 监听optionsClick事件
-                    $scope.$on('selectOptionsClick', function (e, data) {
-                        _that.ngModel = data
-                        _that.placeHolder = data
-                        $scope.hidePopper()
-                        // 反向通知group下所有的radio绑定的ngModel
-                        $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
-                    })
+
+                /**
+                 * 清空input内容
+                 */
+                this.clean = function () {
+                    this.focus()
+                    this.change('')
                 }
             }
         })
@@ -1492,11 +1518,6 @@
 
 
                 this.$postLink = function () {
-                }
-
-                this.onFocus = function () {
-                    $scope.isFocus = true;
-
                 }
             }
         })

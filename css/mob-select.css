@@ -184,8 +184,19 @@
     border-top: 1px solid #dcdfe6;
     border-left: 1px solid #dcdfe6;
 }
+.mob-select .mob-select__suffix-inner.mob-icon__clean{
+    display: none;
+}
 
-/*禁用状态*/
+.mob-select:not(.is_disabled) .mob-select__wrapper:hover .mob-select__suffix-inner.is_hide_able {
+    display: none;
+}
+
+.mob-select:not(.is_disabled) .mob-select__wrapper:hover .mob-select__suffix-inner.mob-icon__clean {
+    display: block;
+}
+
+    /*禁用状态*/
 .mob-select.is_disabled .mob-select__wrapper {
     background-color: var(--mob-disabled-background-color);
 }
