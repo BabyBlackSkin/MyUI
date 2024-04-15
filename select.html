@@ -8,68 +8,92 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <mob-select style="display: block;width: 200px" ng-model="value">
-
-                    <mob-select-options label="'北京'"></mob-select-options>
-                    <mob-select-options label="'上海'"></mob-select-options>
-                    <mob-select-options label="'广州'"></mob-select-options>
-                    <mob-select-options label="'深圳'"></mob-select-options>
-                    <mob-select-options label="'香港'"></mob-select-options>
-                    <mob-select-options label="'澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门'"></mob-select-options>
-                    <mob-select-options label="'澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门'"></mob-select-options>
-                    <mob-select-options label="'澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门'"></mob-select-options>
-                    <mob-select-options label="'澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门'"></mob-select-options>
-                    <mob-select-options label="'澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门'"></mob-select-options>
-                    <mob-select-options label="'澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门'"></mob-select-options>
+                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
                 </mob-select>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                            <mob-radio label="Option1" value="1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-radio>
-                            值：<span ng-bind="value"></span>
+                            <html>
+                             <mob-select style="display: block;width: 200px" ng-model="value">
+                                <mob-select-options ng-repeat="o in select.options" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                            </mob-select>
+                            </html>
+                            <script>
+                                    this.optionsBase = [
+                                        {label: '香港', value: '香港'},
+                                        {label: '澳门', value: '澳门'},
+                                        {label: '北京', value: '北京'},
+                                        {label: '上海', value: '上海'},
+                                        {label: '深圳'},
+                                    ]
+                            </script>
                         --></code>
                     </pre>
             </div>
         </div>
 
-<!--        <button id="button" class="mob_popper__target" ng-click="popperClick()" STYLE="margin-left: 5px">-->
-<!--            My button-->
-<!--        </button>-->
+        <h3>有禁用选项</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-select style="display: block;width: 200px" ng-model="value">
+                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                </mob-select>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <html>
+                             <mob-select style="display: block;width: 200px" ng-model="value">
+                                <mob-select-options ng-repeat="o in select.options" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                            </mob-select>
+                            </html>
+                            <script>
+                                this.optionsDisabled = [
+                                    {label: '香港', value: '香港'},
+                                    {label: '澳门', value: '澳门', disabled: true},
+                                    {label: '北京', value: '北京'},
+                                    {label: '上海', value: '上海'},
+                                    {label: '广州'},
+                                    {label: '深圳'},
+                                ]
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
 
-
-<!--        <div class="mob-popper">-->
-<!--            <div class="mob-popper__wrapper">-->
-<!--                <span class="mob-popper__arrow"></span>-->
-<!--                <div class="mob-popper__inner">-->
-<!--                    <mob-popper></mob-popper>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-        <!--        <ul>-->
-        <!--            <li>北京</li>-->
-        <!--            <li>上海</li>-->
-        <!--            <li>广州</li>-->
-        <!--            <li>深圳</li>-->
-        <!--            <li>香港</li>-->
-        <!--            <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>-->
-        <!--        </ul>-->
-
-        <!--        <div id="mob-popper">-->
-        <!--            <div class="mob-popper__wrapper">-->
-        <!--                <span id="arrow"></span>-->
-        <!--                <div class="mob-popper__inner">-->
-        <!--                    <ul>-->
-        <!--                        <li>北京</li>-->
-        <!--                        <li>上海</li>-->
-        <!--                        <li>广州</li>-->
-        <!--                        <li>深圳</li>-->
-        <!--                        <li>香港</li>-->
-        <!--                        <li>澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门澳门</li>-->
-        <!--                    </ul>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-select style="display: block;width: 200px" ng-model="value" ng-disabled="true">
+                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                </mob-select>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <html>
+                             <mob-select style="display: block;width: 200px" ng-model="value">
+                                <mob-select-options ng-repeat="o in select.options" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                            </mob-select>
+                            </html>
+                            <script>
+                                this.optionsDisabled = [
+                                    {label: '香港', value: '香港'},
+                                    {label: '澳门', value: '澳门', disabled: true},
+                                    {label: '北京', value: '北京'},
+                                    {label: '上海', value: '上海'},
+                                    {label: '广州'},
+                                    {label: '深圳'},
+                                ]
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
     </div>
 </section>

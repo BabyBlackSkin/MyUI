@@ -17,6 +17,7 @@
     overflow: hidden;
     padding: 5px 0;
     height: 0;
+    box-sizing: border-box;
 
     transition: height .3s cubic-bezier(0.84, -0.01, 0, 1);
     /*overflow: hidden;*/

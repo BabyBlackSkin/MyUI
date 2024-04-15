@@ -34,6 +34,7 @@
 }
 
 .mob-select .mob-select__selection{
+    overflow: hidden;
     position: relative;
     box-sizing: border-box;
     width: 100%;

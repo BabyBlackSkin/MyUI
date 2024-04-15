@@ -12,9 +12,14 @@
     cursor: pointer;
 }
 
-.mob-select-options:hover {
+.mob-select-options.is_disabled {
+    color: var(--mob-checkbox-disabled-checked-icon-color);
+}
+
+.mob-select-options:not(.is_disabled):hover {
     background-color: #f5f7fa;
 }
-.mob-select-options.is_active{
+
+.mob-select-options.is_active {
     color: var(--mob-active-text-color);
 }

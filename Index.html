@@ -156,6 +156,7 @@
             .when('/select', {
                 templateUrl: './select.html',
                 controller: 'SelectCtrl',
+                controllerAs: 'select',
             })
             .otherwise({redirectTo: '/home'})
     }]);
@@ -305,7 +306,23 @@
 
         }])
         .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
+            this.demo = 'Select'
+            this.optionsBase = [
+                {label: '香港', value: '香港'},
+                {label: '澳门', value: '澳门'},
+                {label: '北京', value: '北京'},
+                {label: '上海', value: '上海'},
+                {label: '深圳'},
+            ]
 
+            this.optionsDisabled = [
+                {label: '香港', value: '香港'},
+                {label: '澳门', value: '澳门', disabled: true},
+                {label: '北京', value: '北京'},
+                {label: '上海', value: '上海'},
+                {label: '广州'},
+                {label: '深圳'},
+            ]
         }])
     ;
     app
@@ -360,15 +377,14 @@
                             /**
                              * 自动更新布局的
                              */
-                            scope.showAutoUpdatePopper = function () {
-                                if (this.popperShow) {
-                                    return;
-                                }
-                                this.popperShow = true
-                                floatingDom.style.display = 'block';
-                                floating.autoUpdateComputePosition(scope, target, floatingDom)
-
-                            }
+                            // scope.showAutoUpdatePopper = function () {
+                            //     if (this.popperShow) {
+                            //         return;
+                            //     }
+                            //     this.popperShow = true
+                            //     floatingDom.style.display = 'block';
+                            //     floating.autoUpdateComputePosition(scope, target, floatingDom)
+                            // }
 
                             scope.hidePopper = function(){
                                 this.popperShow = false
@@ -561,6 +577,7 @@
             return {
                 computePosition: function (scope, target, floating) {
                     setFloatingWidth(scope, target, floating)
+                    computePosition(scope, target, floating)
                 },
 
                 autoUpdateComputePosition: function (scope, target, floating) {
@@ -908,6 +925,7 @@
             templateUrl: './components/mob-select.html',
             bindings: {
                 ngModel: '=?',
+                ngDisabled:'<?',
                 placeHolder: '<?',
                 changeHandle: '&?'
             },
@@ -934,7 +952,6 @@
                     if ($scope.popperShow) {
                         $scope.hidePopper()
                     } else {
-                        $scope.showAutoUpdatePopper()
                         $scope.showPopper()
                         this.onFocus()
                     }
@@ -976,6 +993,7 @@
                 'mobSelect': '?^mobSelect'
             },
             bindings: {
+                ngDisabled:'<?',
                 label: '<?',
                 value: '<?'
             },
@@ -988,6 +1006,9 @@
                     this.name = this.mobSelect.name
                     // 监听父组件的通知事件
                     $scope.$on(`${_that.name}Change`, function (e, data) {
+                        if (this.ngDisabled) {
+                            return
+                        }
                         if (Array.isArray(data)) {
                             $scope.active = data.includes(_that.getValue())
                         } else {
@@ -1009,6 +1030,9 @@
                 }
                 // options的点击事件，被点击时，通知父组件
                 this.clickHandler = function () {
+                    if (this.ngDisabled) {
+                        return
+                    }
                     $scope.active = !$scope.active
                     let val = this.getValue()
                     $scope.$emit('selectOptionsClick', val)
