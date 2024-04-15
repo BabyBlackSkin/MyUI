@@ -303,95 +303,6 @@
             this.message = 'Welcome to School Buddy!';
             console.log($scope.$id)
 
-
-            //
-            // const { width: targetWidth } = button.getBoundingClientRect()
-            // popper.style.minWidth = targetWidth +'px';
-            //
-            //
-            // vm.autoUpdate = function(){
-            //     // window.FloatingUIDOM.autoUpdate(button, popper, ()=>{
-            //     //     vm.updatePosition()
-            //     // })
-            // }
-            //
-            // // this.updatePosition = function () {
-            // vm.updatePosition = function(autoUpdate) {
-            //         window.FloatingUIDOM.computePosition(button, popper, {
-            //                 placement: 'bottom-start',
-            //                 middleware: [
-            //                     window.FloatingUIDOM.flip(),// y轴自适应
-            //                     // window.FloatingUIDOM.flip(5),// y轴自适应 添加与边缘的空隙
-            //                     window.FloatingUIDOM.shift(), // x轴自适应
-            //                     // window.FloatingUIDOM.shift(5), // x轴自适应 添加与边缘的空隙
-            //                     window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
-            //                     window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
-            //
-            //                 ]
-            //             }
-            //         ).then(({x, y, placement, middlewareData}) => {
-            //             console.log(x, y)
-            //             Object.assign(popper.style, {
-            //                 left: `${x}px`,
-            //                 top: `${y}px`,
-            //             });
-            //
-            //             const {x: arrowX, y: arrowY} = middlewareData.arrow;
-            //
-            //             debugger
-            //             const staticSide = {
-            //                 top: 'bottom',
-            //                 right: 'left',
-            //                 bottom: 'top',
-            //                 left: 'right',
-            //             }[placement.split('-')[0]];
-            //
-            //             Object.assign(arrowElement.style, {
-            //                 left: arrowX != null ? `${arrowX}px` : '',
-            //                 // top: arrowY != null ? `${arrowY}px` : '',
-            //                 right: '',
-            //                 bottom: '',
-            //                 [staticSide]: '-4px',
-            //                 top:'0px'
-            //             });
-            //
-            //
-            //             popper.style.height = 'auto';
-            //             const {height} = popper.getBoundingClientRect()
-            //
-            //             popper.style.height = 0;
-            //             //offsetHeight会强制浏览器重绘(先渲染0px，然后再渲染heigt，如果不加则直接会渲染height，不会渲染0px)
-            //             popper.offsetHeight
-            //             popper.style.height = height + 'px';
-            //
-            //
-            //             if (autoUpdate) {
-            //                 setTimeout(function (){
-            //                     vm.autoUpdate()
-            //                 }, 500)
-            //             }
-            //         });
-            // }
-            //
-            // this.show = false
-            //
-            // console.log(1)
-            //
-            // this.showOrHideTooltip = function (e) {
-            //     console.log('我被点击了')
-            //     this.show = !this.show
-            //     if (this.show) {
-            //         popper.style.display = 'block';
-            //         vm.updatePosition(true);
-            //     } else {
-            //         // popper.remove()
-            //         popper.style.height = '0';
-            //         setTimeout(function () {
-            //             popper.style.display = '';
-            //         }, 300)
-            //     }
-            // }
-
         }])
         .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
 
@@ -434,12 +345,14 @@
                             floatingDom.id = uuId.generate()
                             // 给目标元素绑定唯一id
                             target.setAttribute('popper-id', floatingDom.id)
+                            scope.popperId = floatingDom.id
+                            scope.popperShow = false
 
                             scope.showPopper = function () {
-                                if (scope[`${floatingDom.id}Show`]) {
+                                if (scope.popperShow) {
                                     return;
                                 }
-                                scope[`${floatingDom.id}Show`] = true
+                                scope.popperShow = true
                                 floatingDom.style.display = 'block';
                                 floating.computePosition(scope, target, floatingDom)
 
@@ -448,17 +361,17 @@
                              * 自动更新布局的
                              */
                             scope.showAutoUpdatePopper = function () {
-                                if (scope[`${floatingDom.id}Show`]) {
+                                if (this.popperShow) {
                                     return;
                                 }
-                                scope[`${floatingDom.id}Show`] = true
+                                this.popperShow = true
                                 floatingDom.style.display = 'block';
                                 floating.autoUpdateComputePosition(scope, target, floatingDom)
 
                             }
 
                             scope.hidePopper = function(){
-                                scope[`${floatingDom.id}Show`] = false
+                                this.popperShow = false
                                 floatingDom.style.height = '0';
                                 setTimeout(function () {
                                     floatingDom.style.display = '';
@@ -477,9 +390,10 @@
                 compile: function () {
                     return {
                         post: function (scope, element, attr) {
-
-                            document.addEventListener('click', function(e) {
-                                scope.$emit('focusOut', e)
+                            document.addEventListener('click', function (e) {
+                                scope.$apply(function () {
+                                    scope.$emit('focusOut', e)
+                                })
                             });
                         }
                     }
@@ -613,7 +527,6 @@
 
                     const {x: arrowX, y: arrowY} = middlewareData.arrow;
 
-                    debugger
                     const staticSide = {
                         top: 'bottom',
                         right: 'left',
@@ -1018,10 +931,7 @@
                 }
 
                 this.clickHandler = function () {
-                    let target = $element[0].querySelector('.mob_popper__target');
-                    let popperId = target.getAttribute('popper-id')
-
-                    if ($scope[`${popperId}Show`]) {
+                    if ($scope.popperShow) {
                         $scope.hidePopper()
                     } else {
                         $scope.showAutoUpdatePopper()

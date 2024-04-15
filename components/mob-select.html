@@ -14,18 +14,12 @@
                 <span class="mob-unselect-text" ng-bind="$ctrl.placeHolder"></span>
             </div>
         </div>
-        
+
 
         <!-- 右侧的ICON -->
         <div class="mob-select__suffix" >
             <span class="mob-select__suffix-inner">
-                <mob-icon class="mob-icon__down-arrow" ng-class="{'is_hiddenable':$ctrl.options.clearable && $ctrl.model.length > 0}">
-                    <down-arrow></down-arrow>
-                </mob-icon>
-
-                <mob-icon class="mob-icon__clean is_hidden" ng-if="$ctrl.options.clearable && $ctrl.model.length > 0" ng-click="$ctrl.cleanHandler($event)">
-                    <circle-close></circle-close>
-                </mob-icon>
+                <mob-icon-down-arrow  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-icon-down-arrow>
             </span>
         </div>
     </div>
@@ -40,6 +34,6 @@
         </div>
     </div>
 
-    
+
 
 </div>
