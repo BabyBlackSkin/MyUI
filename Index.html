@@ -388,6 +388,7 @@
 
                             scope.hidePopper = function(){
                                 this.popperShow = false
+                                floatingDom.style.opacity = 0;
                                 floatingDom.style.height = '0';
                                 setTimeout(function () {
                                     floatingDom.style.display = '';
@@ -520,6 +521,7 @@
                 floating.style.height = 0;
                 floating.offsetHeight
                 floating.style.height = (height > 200 ? 200 : height) + 'px';
+                floating.style.opacity = 1;
             }
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
@@ -948,7 +950,13 @@
                     this.initEvent()
                 }
 
+                /**
+                 * 点击事件
+                 */
                 this.clickHandler = function () {
+                    if (this.ngDisabled) {
+                        return
+                    }
                     if ($scope.popperShow) {
                         $scope.hidePopper()
                     } else {

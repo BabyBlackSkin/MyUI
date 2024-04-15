@@ -13,6 +13,8 @@
     --mob-active-border-color: #ff4949;
     --mob-not-allow-background-color:#f5f7fa;
     --mob-not-allow-text-color:#c0c4cc;
+    --mob-disabled-background-color:#f5f7fa;
+    --mob-disabled-text-color:#c0c4cc;
     --mob-checkbox-checked-icon-color:#ffffff;
     --mob-checkbox-disabled-checked-icon-color:#a8abb2;
     --mob-transition-animate: cubic-bezier(.645, .045, .355, 1)

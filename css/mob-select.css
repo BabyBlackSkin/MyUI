@@ -16,7 +16,7 @@
     outline: none;
     border-color: var(--mob-active-border-color)
 }
-.mob-select__wrapper {
+.mob-select .mob-select__wrapper {
     width: 100%;
     display: flex;
     align-items: center;
@@ -183,4 +183,13 @@
     position: absolute;
     border-top: 1px solid #dcdfe6;
     border-left: 1px solid #dcdfe6;
+}
+
+/*禁用状态*/
+.mob-select.is_disabled .mob-select__wrapper {
+    background-color: var(--mob-disabled-background-color);
+}
+.mob-select.is_disabled .mob-select__selected-item {
+    color: var(--mob-disabled-text-color);
+    background-color: var(--mob-disabled-background-color);
 }
