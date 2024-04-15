@@ -1054,7 +1054,7 @@
                         _that.placeHolder = data
                         $scope.hidePopper()
                         // 反向通知group下所有的radio绑定的ngModel
-                        $scope.$broadcast(`${_that.name}Change`, this.ngModel)
+                        $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
                     })
                 }
             }
@@ -1562,31 +1562,24 @@
             templateUrl: './icon/downArrow.html',
         })
         .component('mobIconCircleClose', {
-            // transclude:true,
             templateUrl: './icon/circleClose.html',
         })
         .component('mobIconVisible', {
-            // transclude:true,
             templateUrl: './icon/visible.html',
         })
         .component('mobIconInvisible', {
-            // transclude:true,
             templateUrl: './icon/invisible.html',
         })
         .component('mobIconCalendar', {
-            // transclude:true,
             templateUrl: './icon/calendar.html',
         })
         .component('mobIconSearch', {
-            // transclude:true,
             templateUrl: './icon/search.html',
         })
         .component('mobIconIncrease', {
-            // transclude:true,
             templateUrl: './icon/increase.html',
         })
         .component('mobIconDecrease', {
-            // transclude:true,
             templateUrl: './icon/decrease.html',
         })
     ;
