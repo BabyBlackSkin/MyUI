@@ -196,7 +196,10 @@
     display: block;
 }
 
-    /*禁用状态*/
+/*禁用状态*/
+.mob-select.is_disabled *{
+    cursor: not-allowed;
+}
 .mob-select.is_disabled .mob-select__wrapper {
     background-color: var(--mob-disabled-background-color);
 }
