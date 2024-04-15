@@ -930,6 +930,7 @@
                 ngDisabled:'<?',
                 clearable:'<?',
                 placeHolder: '<?',
+                multiple:'<?',
                 changeHandle: '&?'
             },
             controller: function ($scope, $element, uuId, floating) {
@@ -974,11 +975,6 @@
                     })
                 }
 
-                this.change = function (val){
-                    _that.ngModel = val
-                    _that.placeHolder = val ? val :'请选择'
-                }
-
 
                 /**
                  * 点击事件
@@ -1010,6 +1006,11 @@
                         this.ngModel && this.ngModel.length > 0
                 }
 
+
+                this.change = function (val){
+                    _that.ngModel = val
+                    _that.placeHolder = val ? val :'请选择'
+                }
 
                 /**
                  * 清空input内容
