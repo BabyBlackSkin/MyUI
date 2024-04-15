@@ -1,4 +1,11 @@
-<div class="mob-select" ng-class="{'mob-select--suffix':$ctrl.options.clearable,'is_disabled':$ctrl.ngDisabled}" popper>
+<div class="mob-select"
+     popper
+     ng-class="{
+     'mob-select--suffix':$ctrl.options.clearable,
+     'is_disabled':$ctrl.ngDisabled,
+     'is_multiple':$ctrl.multiple
+     }"
+     >
     <!-- <div ng-transclude>
 
     </div> -->
@@ -10,8 +17,11 @@
             <div class="mob-select__selected-item mob-select__input-wrapper is-hidden">
                 <input readonly type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
             </div>
-            <div class="mob-select__selected-item mob-select-placeholder">
+            <div class="mob-select__selected-item mob-select-placeholder" ng-if="!$ctrl.multiple || $ctrl.multiple && (!$ctrl.ngModel || $ctrl.ngModel.length == 0)">
                 <span class="mob-unselect-text" ng-bind="$ctrl.placeHolder"></span>
+            </div>
+            <div class="mob-select__selected-item__collapse" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0" ng-repeat="item in $ctrl.ngModel" ng-bind="item">
+
             </div>
         </div>
 

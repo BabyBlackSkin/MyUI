@@ -12,7 +12,7 @@
     --mob-input-icon-color: var(--mob-text-color-placeholder)
 }
 
-.mob-select__wrapper:focus-within {
+.mob-select .mob-select__wrapper:focus-within {
     outline: none;
     border-color: var(--mob-active-border-color)
 }
@@ -44,10 +44,9 @@
 
 .mob-select .mob-select__selected-item.is-hidden{
     width: 1px;
-    position: absolute;
-    height: 5px;
     overflow: hidden;
     z-index: 0;
+    height: 40px;
 
 }
 .mob-select .mob-select__selected-item {
@@ -103,7 +102,7 @@
 .mob-select .mob-icon__down-arrow.is_popper .mob-icon{
     transform: rotate(180deg);
 }
-.mob-select__wrapper__clearable:hover .mob-icon__clean{
+.mob-select .mob-select__wrapper__clearable:hover .mob-icon__clean{
     display: inline-flex;
 }
 
@@ -195,6 +194,19 @@
 .mob-select:not(.is_disabled) .mob-select__wrapper:hover .mob-select__suffix-inner.mob-icon__clean {
     display: block;
 }
+
+/* 多选 */
+.mob-select .mob-select__selected-item__collapse{
+    width: auto;
+    border-right: 4px;
+    height: auto;
+    margin: 2px;
+    color: #a6a9ae;
+    padding: 3px 10px;
+    font-size: .7rem;
+    background-color: #f4f4f5;
+}
+
 
 /*禁用状态*/
 .mob-select.is_disabled *{

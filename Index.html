@@ -939,6 +939,9 @@
                     if (angular.isUndefined(this.placeHolder)) {
                         this.placeHolder = '请选择'
                     }
+                    if (angular.isUndefined(this.ngModel)) {
+                        this.ngModel = []
+                    }
                     this.name = `mobSelect_${$scope.$id}`
                 }
 
@@ -969,7 +972,9 @@
                     // 监听optionsClick事件
                     $scope.$on('selectOptionsClick', function (e, data) {
                         _that.change(data)
-                        $scope.hidePopper()
+                        if (!_that.multiple) {
+                            $scope.hidePopper()
+                        }
                         // 反向通知group下所有的radio绑定的ngModel
                         $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
                     })
@@ -1007,9 +1012,19 @@
                 }
 
 
-                this.change = function (val){
-                    _that.ngModel = val
-                    _that.placeHolder = val ? val :'请选择'
+                this.change = function (val) {
+                    debugger
+                    if (this.multiple) {
+                        // 判断model中是否包含
+                        if (this.ngModel.includes(val)) {
+                            this.ngModel = this.ngModel.splice(this.ngModel.indexOf(data), 1)
+                        } else {
+                            this.ngModel.push(val)
+                        }
+                    } else {
+                        this.ngModel = val
+                        this.placeHolder = val ? val : '请选择'
+                    }
                 }
 
                 /**
@@ -1017,7 +1032,11 @@
                  */
                 this.clean = function () {
                     this.focus()
-                    this.change('')
+                    if (this.multiple) {
+                        this.change([])
+                    } else {
+                        this.change('')
+                    }
                 }
             }
         })
