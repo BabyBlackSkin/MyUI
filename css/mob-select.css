@@ -40,6 +40,7 @@
     width: 100%;
     flex: 1;
     display: flex;
+    align-items: center;
 }
 
 .mob-select .mob-select__selected-item.is-hidden{
@@ -196,10 +197,19 @@
 }
 
 /* 多选 */
+.mob-select .mob-select__selected-item__collapse-contain {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
 .mob-select .mob-select__selected-item__collapse{
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: auto;
-    border-right: 4px;
-    height: auto;
+    border-radius: 4px;
+    height: 30px;
     margin: 2px;
     color: #a6a9ae;
     padding: 3px 10px;

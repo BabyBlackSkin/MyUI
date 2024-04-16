@@ -936,6 +936,8 @@
             controller: function ($scope, $element, uuId, floating) {
                 // 初始化工作
                 this.$onInit = function () {
+                    // 初始化一个map，存放ngModel的keyValue
+                    $scope.ngModelMap = {};
                     if (angular.isUndefined(this.placeHolder)) {
                         this.placeHolder = '请选择'
                     }
@@ -1012,18 +1014,20 @@
                 }
 
 
-                this.change = function (val) {
+                this.change = function (data) {
                     debugger
                     if (this.multiple) {
                         // 判断model中是否包含
-                        if (this.ngModel.includes(val)) {
-                            this.ngModel = this.ngModel.splice(this.ngModel.indexOf(data), 1)
+                        if (this.ngModel.includes(data.value)) {
+                            this.ngModel = this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
+                            delete $scope.ngModelMap[data.label]
                         } else {
-                            this.ngModel.push(val)
+                            this.ngModel.push(data.value)
+                            $scope.ngModelMap[data.label] = data.value
                         }
                     } else {
-                        this.ngModel = val
-                        this.placeHolder = val ? val : '请选择'
+                        this.ngModel = data.value
+                        this.placeHolder = data.label ? data.label : '请选择'
                     }
                 }
 
@@ -1063,6 +1067,7 @@
                         if (this.ngDisabled) {
                             return
                         }
+                        console.log(data)
                         if (Array.isArray(data)) {
                             $scope.active = data.includes(_that.getValue())
                         } else {
@@ -1089,7 +1094,44 @@
                     }
                     $scope.active = !$scope.active
                     let val = this.getValue()
-                    $scope.$emit('selectOptionsClick', val)
+                    $scope.$emit('selectOptionsClick', {label: this.label, value: val})
+                }
+            }
+        })
+        .component('mobSelectCollapse', {
+            transclude:true,
+            templateUrl: './components/mob-select-collapse.html',
+            require: {
+                'mobSelect': '?^mobSelect'
+            },
+            bindings: {
+                label: '<',
+                value: '<?'
+            },
+            controller: function ($scope, $element, uuId, floating) {
+                // 初始化工作
+                this.$onInit = function () {
+                }
+
+                this.$onChanges = function (changes) {}
+
+                this.$onDestroy = function () {}
+
+                this.$postLink = function () {}
+
+                // 获取options的Value
+                this.getValue = function (){
+                    // 优先取value，然后是label
+                    return this.value ? this.value : this.label
+                }
+                // options的点击事件，被点击时，通知父组件
+                this.clickHandler = function () {
+                    if (this.ngDisabled) {
+                        return
+                    }
+                    $scope.active = !$scope.active
+                    let val = this.getValue()
+                    $scope.$emit('selectOptionsClick', {label: this.label,value:this.value})
                 }
             }
         })
