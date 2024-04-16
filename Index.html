@@ -377,14 +377,14 @@
                             /**
                              * 自动更新布局的
                              */
-                            // scope.showAutoUpdatePopper = function () {
-                            //     if (this.popperShow) {
-                            //         return;
-                            //     }
-                            //     this.popperShow = true
-                            //     floatingDom.style.display = 'block';
-                            //     floating.autoUpdateComputePosition(scope, target, floatingDom)
-                            // }
+                            scope.showAutoUpdatePopper = function () {
+                                if (this.popperShow) {
+                                    return;
+                                }
+                                this.popperShow = true
+                                floatingDom.style.display = 'block';
+                                floating.autoUpdateComputePosition(scope, target, floatingDom)
+                            }
 
                             scope.hidePopper = function(){
                                 this.popperShow = false
@@ -993,7 +993,11 @@
                     if ($scope.popperShow) {
                         $scope.hidePopper()
                     } else {
-                        $scope.showPopper()
+                        if (this.multiple) {// 多选的时候，才使用动态更新popper。动态定位的popper还是比较消耗性能的
+                            $scope.showAutoUpdatePopper()
+                        } else {
+                            $scope.showPopper()
+                        }
                         this.focus()
                     }
                 }
@@ -1019,7 +1023,7 @@
                     if (this.multiple) {
                         // 判断model中是否包含
                         if (this.ngModel.includes(data.value)) {
-                            this.ngModel = this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
+                            this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
                             delete $scope.ngModelMap[data.label]
                         } else {
                             this.ngModel.push(data.value)
@@ -1041,6 +1045,16 @@
                     } else {
                         this.change('')
                     }
+                }
+
+                /**
+                 * 多选移除
+                 * @param data
+                 */
+                this.multipleRemove = function (event, data){
+                    this.change(data)
+                    event.preventDefault()
+                    event.stopPropagation()
                 }
             }
         })

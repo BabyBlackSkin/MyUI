@@ -6,9 +6,6 @@
      'is_multiple':$ctrl.multiple
      }"
      >
-    <!-- <div ng-transclude>
-
-    </div> -->
 
     <div class="mob-select__wrapper mob_popper__target" focus-in-out ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="$ctrl.clickHandler()">
 
@@ -23,7 +20,7 @@
             <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0" >
                 <div class="mob-select__selected-item__collapse"  ng-repeat="(key, val) in ngModelMap">
                     <span ng-bind="key"></span>
-                    <mob-icon-circle-close  class="mob-icon__down-arrow"></mob-icon-circle-close>
+                    <mob-icon-circle-close class="mob-icon__down-arrow" ng-click="$ctrl.multipleRemove($event, {label:key,value:val})"></mob-icon-circle-close>
                 </div>
 
             </div>
