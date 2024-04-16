@@ -306,7 +306,6 @@
 
         }])
         .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
-            this.demo = 'Select'
             this.optionsBase = [
                 {label: '香港', value: '香港'},
                 {label: '澳门', value: '澳门'},
@@ -323,6 +322,11 @@
                 {label: '广州'},
                 {label: '深圳'},
             ]
+
+            $scope.demo = 'Select'
+            $scope.value = '香港'
+            $scope.value3 = '香港'
+            $scope.valueMultiple = ['香港','上海','北京']
         }])
     ;
     app
@@ -431,7 +435,6 @@
                         }
                         // scope.$slot.hasSlot = true
                         scope.$slot.slotSet = new Set()
-                        // debugger
 
                         let slotMap = new Map();
                         for (let e of clone) {
@@ -838,7 +841,6 @@
 
                 // 按照指定精度转换ngModel
                 this.patternPrecision = function (ngModel) {
-                    debugger
                     let temporaryNgModel = ngModel.toNumber()
                     // 防止越界
                     let step = new Decimal(this.step)
@@ -912,7 +914,6 @@
                  * 失焦
                  */
                 this.blurHandle = function () {
-                    debugger
                     this.patternStep()
                     this.patternPrecision(new Decimal(this.ngModel))
                     if (angular.isFunction(this.blurEvent)) {
@@ -927,11 +928,12 @@
             templateUrl: './components/mob-select.html',
             bindings: {
                 ngModel: '=?',
+                listener: '<?',
                 ngDisabled:'<?',
                 clearable:'<?',
                 placeHolder: '<?',
                 multiple:'<?',
-                changeHandle: '&?'
+                change: '&?'
             },
             controller: function ($scope, $element, uuId, floating) {
                 // 初始化工作
@@ -945,16 +947,22 @@
                         this.ngModel = []
                     }
                     this.name = `mobSelect_${$scope.$id}`
+                    console.log(this.ngModel)
                 }
 
 
-                this.$onChanges = function (changes) {}
+                this.$onChanges = function (changes) {
+                    if (changes.listener) {
+                        this.changeHandle()
+                    }
+                }
 
                 this.$onDestroy = function () {}
 
 
                 this.$postLink = function () {
                     this.initEvent()
+                    console.log(this.ngModel)
                 }
 
                 const _that = this
@@ -969,19 +977,24 @@
                             return
                         }
                         $scope.hidePopper()
+                        console.log(this.ngModel)
+                    })
+
+                    // 监听optionsInitValue事件
+                    $scope.$on(`${_that.name}ChildInitValue`, function (e, data) {
+                        if (!_that.multiple) {
+                            _that.placeHolder = data.label ? data.label : data.value
+                        }
+                        $scope.ngModelMap[data.label] = data.value
+
                     })
 
                     // 监听optionsClick事件
-                    $scope.$on('selectOptionsClick', function (e, data) {
-                        _that.change(data)
-                        if (!_that.multiple) {
-                            $scope.hidePopper()
-                        }
-                        // 反向通知group下所有的radio绑定的ngModel
-                        $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
+                    $scope.$on(`${_that.name}ChildClick`, function (e, data) {
+                        _that.changeHandle(data)
+                        console.log(this.ngModel)
                     })
                 }
-
 
                 /**
                  * 点击事件
@@ -1000,6 +1013,7 @@
                         }
                         this.focus()
                     }
+                    console.log(this.ngModel)
                 }
 
                 /**
@@ -1016,10 +1030,11 @@
                         !this.ngDisabled &&
                         this.ngModel && this.ngModel.length > 0
                 }
+                /**
+                 * 变动通知
+                 */
+                this.changeHandle = function (data) {
 
-
-                this.change = function (data) {
-                    debugger
                     if (this.multiple) {
                         // 判断model中是否包含
                         if (this.ngModel.includes(data.value)) {
@@ -1033,6 +1048,16 @@
                         this.ngModel = data.value
                         this.placeHolder = data.label ? data.label : '请选择'
                     }
+
+                    if (!this.multiple) {
+                        $scope.hidePopper()
+                    }
+
+                    if (angular.isFunction(this.change)) {
+                        this.change(this.ngModel)
+                    }
+                    // 反向通知group下所有的radio绑定的ngModel
+                    $scope.$broadcast(`${this.name}Change`, this.ngModel)
                 }
 
                 /**
@@ -1041,9 +1066,9 @@
                 this.clean = function () {
                     this.focus()
                     if (this.multiple) {
-                        this.change([])
+                        this.changeHandle({})
                     } else {
-                        this.change('')
+                        this.changeHandle('')
                     }
                 }
 
@@ -1052,7 +1077,7 @@
                  * @param data
                  */
                 this.multipleRemove = function (event, data){
-                    this.change(data)
+                    this.changeHandle(data)
                     event.preventDefault()
                     event.stopPropagation()
                 }
@@ -1062,7 +1087,7 @@
             transclude:true,
             templateUrl: './components/mob-select-options.html',
             require: {
-                'mobSelect': '?^mobSelect'
+                'mobSelect': '^mobSelect'
             },
             bindings: {
                 ngDisabled:'<?',
@@ -1070,23 +1095,14 @@
                 value: '<?'
             },
             controller: function ($scope, $element, uuId, floating) {
+                const _that = this
                 // 初始化工作
                 this.$onInit = function () {
                     $scope.active = false
-
-                    const _that = this
                     this.name = this.mobSelect.name
                     // 监听父组件的通知事件
                     $scope.$on(`${_that.name}Change`, function (e, data) {
-                        if (this.ngDisabled) {
-                            return
-                        }
-                        console.log(data)
-                        if (Array.isArray(data)) {
-                            $scope.active = data.includes(_that.getValue())
-                        } else {
-                            $scope.active = data === _that.getValue()
-                        }
+                        _that.isActive(data);
                     })
                 }
 
@@ -1094,7 +1110,28 @@
 
                 this.$onDestroy = function () {}
 
-                this.$postLink = function () {}
+                this.$postLink = function () {
+                    this.initValue()
+                }
+
+                this.initValue = function () {
+                    this.isActive(this.mobSelect.ngModel);
+                    if ($scope.active) {
+                        $scope.$emit(`${_that.name}ChildInitValue`, {label: this.label, value: _that.getValue()})
+                    }
+                }
+
+                this.isActive = function (data) {
+                    if (this.ngDisabled) {
+                        return
+                    }
+                    if (Array.isArray(data)) {
+                        $scope.active = data.includes(this.getValue())
+                    } else {
+                        $scope.active = data === this.getValue()
+                    }
+                    console.log($scope.active)
+                }
 
                 // 获取options的Value
                 this.getValue = function (){
@@ -1108,7 +1145,7 @@
                     }
                     $scope.active = !$scope.active
                     let val = this.getValue()
-                    $scope.$emit('selectOptionsClick', {label: this.label, value: val})
+                    $scope.$emit(`${_that.name}ChildClick`, {label: this.label, value: val})
                 }
             }
         })
@@ -1198,7 +1235,6 @@
 
                 // 点击事件
                 this.clickHandle = function () {
-                    debugger
                     if (this.ngDisabled) {
                         return
                     }
@@ -1535,7 +1571,6 @@
                     // 监听子组件的change事件
                     $scope.$on(`${_that.name}ChildChange`, function (event, data) {
                         if (_that.ngModel.includes(data)) {
-                            debugger
                             let undefinedMin = angular.isUndefined(_that.min)
                             let definedMin = angular.isDefined(_that.min)
                             if (undefinedMin || definedMin && _that.ngModel.length > _that.min) {
@@ -1602,6 +1637,9 @@
         })
         .component('mobIconCircleClose', {
             templateUrl: './icon/circleClose.html',
+        })
+        .component('mobIconClose', {
+            templateUrl: './icon/close.html',
         })
         .component('mobIconVisible', {
             templateUrl: './icon/visible.html',

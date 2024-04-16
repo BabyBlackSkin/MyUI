@@ -184,6 +184,20 @@
     border-top: 1px solid #dcdfe6;
     border-left: 1px solid #dcdfe6;
 }
+.mob-select .mob-icon__close .mob-icon svg{
+    width: 1.2em;
+    height: 1.2em;
+}
+.mob-select .mob-icon__close .mob-icon {
+    padding: 1px;
+    border-radius: 50%;
+}
+.mob-select .mob-icon__close  .mob-icon:hover {
+    background-color: #909399 ;
+}
+.mob-select .mob-icon__close  .mob-icon:hover svg path{
+    fill: #fff;
+}
 .mob-select .mob-select__suffix-inner.mob-icon__clean{
     display: none;
 }
