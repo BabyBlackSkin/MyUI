@@ -19,8 +19,9 @@
     height: 0;
     opacity: 0;
     box-sizing: border-box;
-
-    transition: all .3s cubic-bezier(0.84, -0.01, 0, 1);
+    transition-property: height, opacity;
+    transition-duration: .3s;
+    transition-timing-function: cubic-bezier(0.84, -0.01, 0, 1);
     /*overflow: hidden;*/
 }
 .mob-popper *{
