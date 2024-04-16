@@ -933,13 +933,15 @@
                 clearable:'<?',
                 placeHolder: '<?',
                 multiple:'<?',
+                collapseTag:'<?',
+                collapseTagTooltip:'<?',
                 change: '&?'
             },
             controller: function ($scope, $element, uuId, floating) {
                 // 初始化工作
                 this.$onInit = function () {
                     // 初始化一个map，存放ngModel的keyValue
-                    $scope.ngModelMap = {};
+                    $scope.ngModelCache = [];
                     if (angular.isUndefined(this.placeHolder)) {
                         this.placeHolder = '请选择'
                     }
@@ -985,7 +987,7 @@
                         if (!_that.multiple) {
                             _that.placeHolder = data.label ? data.label : data.value
                         }
-                        $scope.ngModelMap[data.label] = data.value
+                        $scope.ngModelCache.push({label:data.label, value:data.value})
 
                     })
 
@@ -994,6 +996,38 @@
                         _that.changeHandle(data)
                         console.log(this.ngModel)
                     })
+                }
+
+                /**
+                 * 无工具箱的collapse
+                 * @returns {false|string|boolean|*|boolean}
+                 */
+                this.isCollapseTagsNoTooltip = function (){
+                    return !this.ngDisabled &&
+                        this.multiple &&
+                        this.ngModel.length > 0 &&
+                        this.collapseTag &&
+                        !this.collapseTagTooltip
+                }
+
+
+                /**
+                 * 有工具箱的collapse
+                 * @returns {false|string|boolean|*|boolean}
+                 */
+                this.isCollapseTagsHasTooltip = function (){
+                    return !this.ngDisabled &&
+                        this.multiple &&
+                        this.ngModel.length > 0 &&
+                        this.collapseTag &&
+                        this.collapseTagTooltip
+                }
+
+                /**
+                 * 是否有多余的tags
+                 */
+                this.isCollapseTagsHasRedundant = function(){
+                    return this.multiple && this.ngModel.length > 1
                 }
 
                 /**
@@ -1039,10 +1073,11 @@
                         // 判断model中是否包含
                         if (this.ngModel.includes(data.value)) {
                             this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
-                            delete $scope.ngModelMap[data.label]
+                            let winIndex = $scope.ngModelCache.findIndex(obj=>{obj.value === data.value})
+                            $scope.ngModelCache.splice(winIndex, 1)
                         } else {
                             this.ngModel.push(data.value)
-                            $scope.ngModelMap[data.label] = data.value
+                            $scope.ngModelCache.push({label:data.label, value:data.value})
                         }
                     } else {
                         this.ngModel = data.value

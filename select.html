@@ -133,9 +133,18 @@
         <h3>基础多选</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true">
-                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                </mob-select>
+                <p>默认</p>
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true">
+                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                    </mob-select>
+                </div>
+                <p>可收集的</p>
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">
+                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
+                    </mob-select>
+                </div>
             </div>
             <div class="meta">
                 <pre>
