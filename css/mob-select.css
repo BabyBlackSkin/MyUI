@@ -27,7 +27,7 @@
     box-sizing: border-box;
     transition: border-color var(--mob-transition-duration) cubic-bezier(.645, .045, .355, 1);
     color: var(--mob-input-color);
-    padding: 0 15px;
+    padding: 0 12px;
     cursor: pointer;
     box-shadow: 0 0 0 1px var(--el-border-color) inset;
     cursor: pointer;
@@ -211,10 +211,18 @@
 }
 
 /* 多选 */
+
+.mob-select.is_multiple .mob-select__wrapper{
+    padding: 4px 12px 4px 4px;
+}
 .mob-select .mob-select__selected-item__collapse-contain {
+    max-width: 100%;
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    gap: 0 1px;
 }
 .mob-select .mob-select__selected-item__collapse{
     box-sizing: border-box;
@@ -222,6 +230,7 @@
     align-items: center;
     justify-content: center;
     width: auto;
+    max-width: 100%;
     border-radius: 4px;
     height: 30px;
     margin: 2px;
@@ -229,6 +238,13 @@
     padding: 3px 10px;
     font-size: .7rem;
     background-color: #f4f4f5;
+}
+.mob-select .mob-select__selected-item__collapse span{
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 
@@ -241,5 +257,8 @@
 }
 .mob-select.is_disabled .mob-select__selected-item {
     color: var(--mob-disabled-text-color);
+    background-color: var(--mob-disabled-background-color);
+}
+.mob-select.is_disabled .mob-input__inner {
     background-color: var(--mob-disabled-background-color);
 }
