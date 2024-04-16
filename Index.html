@@ -375,6 +375,7 @@
                                 }
                                 scope.popperShow = true
                                 floatingDom.style.display = 'block';
+                                floatingDom.style.zIndex = '100';
                                 floating.computePosition(scope, target, floatingDom)
 
                             }
@@ -387,6 +388,7 @@
                                 }
                                 this.popperShow = true
                                 floatingDom.style.display = 'block';
+                                floatingDom.style.zIndex = '100';
                                 floating.autoUpdateComputePosition(scope, target, floatingDom)
                             }
 
@@ -938,6 +940,7 @@
                 change: '&?'
             },
             controller: function ($scope, $element, uuId, floating) {
+                const _that = this
                 // 初始化工作
                 this.$onInit = function () {
                     // 初始化一个map，存放ngModel的keyValue
@@ -949,25 +952,21 @@
                         this.ngModel = []
                     }
                     this.name = `mobSelect_${$scope.$id}`
-                    console.log(this.ngModel)
                 }
-
 
                 this.$onChanges = function (changes) {
-                    if (changes.listener) {
-                        this.changeHandle()
-                    }
                 }
 
-                this.$onDestroy = function () {}
+                this.$onDestroy = function () {
+                }
 
 
                 this.$postLink = function () {
                     this.initEvent()
-                    console.log(this.ngModel)
+                    this.initWatcher()
+
                 }
 
-                const _that = this
                 // 初始化事件监听
                 this.initEvent = function(){
                     // 点击select外部的时候，隐藏下拉框
@@ -979,7 +978,6 @@
                             return
                         }
                         $scope.hidePopper()
-                        console.log(this.ngModel)
                     })
 
                     // 监听optionsInitValue事件
@@ -994,7 +992,22 @@
                     // 监听optionsClick事件
                     $scope.$on(`${_that.name}ChildClick`, function (e, data) {
                         _that.changeHandle(data)
-                        console.log(this.ngModel)
+                    })
+                }
+
+                /**
+                 * 初始化事件监听
+                 */
+                this.initWatcher = function () {
+                    $scope.$watchCollection(() => {
+                        return _that.ngModel
+                    }, function (newArr) {
+                        if (angular.isFunction(this.change)) {
+                            this.change(this.ngModel)
+                        }
+                        // 反向通知group下所有的radio绑定的ngModel
+                        console.log(`ngModel变动了， 触发${_that.name}Change`)
+                        $scope.$broadcast(`${_that.name}Change`, this.ngModel)
                     })
                 }
 
@@ -1047,7 +1060,6 @@
                         }
                         this.focus()
                     }
-                    console.log(this.ngModel)
                 }
 
                 /**
@@ -1068,40 +1080,32 @@
                  * 变动通知
                  */
                 this.changeHandle = function (data) {
-
                     if (this.multiple) {
-                        // 判断model中是否包含
-                        if (this.ngModel.includes(data.value)) {
-                            this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
-                            let winIndex = $scope.ngModelCache.findIndex(obj=>{obj.value === data.value})
-                            $scope.ngModelCache.splice(winIndex, 1)
+                        if (Array.isArray(data) && data.length === 0) {
+                            this.ngModel = []
                         } else {
-                            this.ngModel.push(data.value)
-                            $scope.ngModelCache.push({label:data.label, value:data.value})
+                            // 判断model中是否包含
+                            if (this.ngModel.includes(data.value)) {
+                                this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
+                                let winIndex = $scope.ngModelCache.findIndex(obj=>{return obj.value === data.value})
+                                $scope.ngModelCache.splice(winIndex, 1)
+                            } else {
+                                this.ngModel.push(data.value)
+                                this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
+                            }
+                            console.log(`${$scope.$id}的ngCache`, $scope.ngModelCache)
                         }
                     } else {
                         this.ngModel = data.value
-                        this.placeHolder = data.label ? data.label : '请选择'
                     }
-
-                    if (!this.multiple) {
-                        $scope.hidePopper()
-                    }
-
-                    if (angular.isFunction(this.change)) {
-                        this.change(this.ngModel)
-                    }
-                    // 反向通知group下所有的radio绑定的ngModel
-                    $scope.$broadcast(`${this.name}Change`, this.ngModel)
                 }
-
                 /**
                  * 清空input内容
                  */
                 this.clean = function () {
                     this.focus()
                     if (this.multiple) {
-                        this.changeHandle({})
+                        this.changeHandle([])
                     } else {
                         this.changeHandle('')
                     }
@@ -1135,15 +1139,18 @@
                 this.$onInit = function () {
                     $scope.active = false
                     this.name = this.mobSelect.name
+                    // console.log(`创建父组件监听${_that.name}Change事件`)
                     // 监听父组件的通知事件
                     $scope.$on(`${_that.name}Change`, function (e, data) {
+                        console.log(`收到了父组件${_that.name}Change的变动通知`)
                         _that.isActive(data);
                     })
                 }
 
                 this.$onChanges = function (changes) {}
 
-                this.$onDestroy = function () {}
+                this.$onDestroy = function () {
+                }
 
                 this.$postLink = function () {
                     this.initValue()
@@ -1165,7 +1172,6 @@
                     } else {
                         $scope.active = data === this.getValue()
                     }
-                    console.log($scope.active)
                 }
 
                 // 获取options的Value
@@ -1180,6 +1186,7 @@
                     }
                     $scope.active = !$scope.active
                     let val = this.getValue()
+                    console.log('我被点击了，通知父组件')
                     $scope.$emit(`${_that.name}ChildClick`, {label: this.label, value: val})
                 }
             }
