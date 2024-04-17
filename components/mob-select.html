@@ -19,7 +19,7 @@
             <!-- 多选select -->
             <!-- 合并 -->
             <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" >
-                <div class="mob-select__selected-item__collapse"  ng-repeat="item in ngModelCache">
+                <div class="mob-select__selected-item__collapse"  ng-repeat="item in collapseTagsList">
                     <span ng-bind="item.label"></span>
                     <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event, item)"></mob-icon-close>
                 </div>
@@ -29,12 +29,12 @@
             <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.isCollapseTagsNoTooltip()" >
                 <!-- 首个tag -->
                 <div class="mob-select__selected-item__collapse" >
-                    <span ng-bind="ngModelCache[0].label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event,ngModelCache[0])"></mob-icon-close>
+                    <span ng-bind="collapseTagsList[0].label"></span>
+                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event,collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
                 <div class="mob-select__selected-item__collapse" ng-if="$ctrl.isCollapseTagsHasRedundant()">
-                    <span ng-bind="'+' + (ngModelCache.length - 1)"></span>
+                    <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>
             </div>
 
@@ -42,16 +42,16 @@
             <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.isCollapseTagsHasTooltip()" >
                 <!-- 首个tag -->
                 <div class="mob-select__selected-item__collapse" >
-                    <span ng-bind="ngModelCache[0].label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event,ngModelCache[0])"></mob-icon-close>
+                    <span ng-bind="collapseTagsList[0].label"></span>
+                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event,collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
                 <div class="mob-select__selected-item__collapse" ng-if="$ctrl.isCollapseTagsHasRedundant()">
-                    <span ng-bind="'+' + (ngModelCache.length - 1)"></span>
+                    <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>
                 <!-- 未展示的tags -->
                 <!--                <div class="mob-select__selected-item__collapse__tooltip">-->
-                <!--                    <div class="mob-select__selected-item__collapse"  ng-repeat="item in ngModelCache" ng-if="!$first">-->
+                <!--                    <div class="mob-select__selected-item__collapse"  ng-repeat="item in collapseTagsList" ng-if="!$first">-->
                 <!--                        <span ng-bind="item.label"></span>-->
                 <!--                        <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event, item)"></mob-icon-close>-->
                 <!--                    </div>-->

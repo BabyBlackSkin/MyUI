@@ -944,7 +944,7 @@
                 // 初始化工作
                 this.$onInit = function () {
                     // 初始化一个map，存放ngModel的keyValue
-                    $scope.ngModelCache = [];
+                    $scope.collapseTagsList = [];
                     if (angular.isUndefined(this.placeHolder)) {
                         this.placeHolder = '请选择'
                     }
@@ -985,7 +985,7 @@
                         if (!_that.multiple) {
                             _that.placeHolder = data.label ? data.label : data.value
                         }
-                        $scope.ngModelCache.push({label:data.label, value:data.value})
+                        $scope.collapseTagsList.push({label:data.label, value:data.value})
 
                     })
 
@@ -997,10 +997,10 @@
                         }
                     })
 
-                    // 监听ngModelCacheUpdate事件
-                    $scope.$on(`${_that.name}ngModelCacheUpdate`, function (e, data) {
-                        console.log(`${$scope.$id} ngModelCacheUpdate`, data)
-                        _that.ngModelCacheUpdate(data)
+                    // 监听collapseTagsListUpdate事件
+                    $scope.$on(`${_that.name}collapseTagsListUpdate`, function (e, data) {
+                        console.log(`${$scope.$id} collapseTagsListUpdate`, data)
+                        _that.collapseTagsListUpdate(data)
                     })
                 }
 
@@ -1092,18 +1092,13 @@
                     if (this.multiple) {
                         if (Array.isArray(data) && data.length === 0) {
                             this.ngModel = []
-                            // $scope.ngModelCache = []
                         } else {
                             // 判断model中是否包含
                             if (this.ngModel.includes(data.value)) {
                                 this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
-                                // let winIndex = $scope.ngModelCache.findIndex(obj=>{return obj.value === data.value})
-                                // $scope.ngModelCache.splice(winIndex, 1)
                             } else {
                                 this.ngModel.push(data.value)
-                                // $scope.ngModelCache.push(data)
                             }
-                            // console.log(`${$scope.$id}的ngCache`, $scope.ngModelCache)
                         }
                     } else {
                         this.ngModel = data.value
@@ -1111,25 +1106,25 @@
                     }
                 }
 
-                this.ngModelCacheUpdate = function (data) {
+                this.collapseTagsListUpdate = function (data) {
                     console.log()
                     if (!this.multiple) {
                         return
                     }
                     if (Array.isArray(data) && data.length === 0) {
-                        $scope.ngModelCache = []
+                        $scope.collapseTagsList = []
                         return
                     }
-                    let winIndex = $scope.ngModelCache.findIndex(obj => {
+                    let winIndex = $scope.collapseTagsList.findIndex(obj => {
                         return obj.value === data.value
                     })
                     // 判断model中是否包含
                     if (winIndex > -1) {
-                        $scope.ngModelCache.splice(winIndex, 1)
+                        $scope.collapseTagsList.splice(winIndex, 1)
                     } else {
-                        $scope.ngModelCache.push(data)
+                        $scope.collapseTagsList.push(data)
                     }
-                    console.log(`${$scope.$id}的cache`, $scope.ngModelCache)
+                    console.log(`${$scope.$id}的cache`, $scope.collapseTagsList)
                 }
                 /**
                  * 清空input内容
@@ -1180,7 +1175,7 @@
                         let hasChange = _that.change(data);
                         // 通知父组件更新ngModel的cache
                         if (hasChange) {
-                            $scope.$emit(`${_that.name}ngModelCacheUpdate`, {
+                            $scope.$emit(`${_that.name}collapseTagsListUpdate`, {
                                 label: _that.label,
                                 value: _that.getValue()
                             })
