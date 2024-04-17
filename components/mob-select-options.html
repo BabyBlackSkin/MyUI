@@ -1,3 +1,4 @@
 <div class="mob-select-options" ng-class="{'is_active': active, 'is_disabled':$ctrl.ngDisabled}" ng-click="$ctrl.clickHandler()">
-    <span class="mob-unselect-text" ng-bind="$ctrl.label"></span>
+    <div ng-transclude="slot" ng-if="isSlot"></div>
+    <span class="mob-unselect-text" ng-bind="$ctrl.label" ng-if="!isSlot"></span>
 </div>

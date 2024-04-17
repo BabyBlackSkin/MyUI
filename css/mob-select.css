@@ -215,6 +215,9 @@
 .mob-select.is_multiple .mob-select__wrapper{
     padding: 4px 12px 4px 4px;
 }
+.mob-select.is_multiple .mob-select__selected-item.mob-select-placeholder{
+    padding-left: 8px;
+}
 .mob-select .mob-select__selected-item__collapse-contain {
     max-width: 100%;
     position: relative;
