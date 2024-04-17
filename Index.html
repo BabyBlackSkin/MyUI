@@ -1409,36 +1409,36 @@
             templateUrl: './components/mob-radio-group.html',
             bindings: {
                 ngModel: '=?',
-                listener: '<?',
                 changeHandle: '&?'
             },
-            controller: function ($scope, $element, $attrs, attrHelp) {
+            controller: function ($scope, $element, $attrs) {
+                const _that = this
                 // 初始化工作
                 this.$onInit = function () {
                     this.name = `mobRadioGroup_${$scope.$id}`
-                    this.initEvent()
                 }
 
 
-                this.$onChanges = function (changes) {
-                    if (changes.listener) {
-                        this.change()
-                    }
-                }
+                this.$onChanges = function (changes) {}
 
-                this.$onDestroy = function () {
-
-                }
+                this.$onDestroy = function () {}
 
 
                 this.$postLink = function () {
-                    attrHelp.expose($scope, $attrs)
+                    initEvent()
                 }
 
-                this.initEvent = function () {
-                    const _that = this
+                function initEvent() {
                     $scope.$on(`${_that.name}ChildChange`, function (event, data) {
                         _that.ngModel = data
+                        _that.change()
+                    })
+                }
+
+                function initWatcher() {
+                    $scope.$watchCollection(() => {
+                        return _that.ngModel
+                    }, function (newV) {
                         _that.change()
                     })
                 }
