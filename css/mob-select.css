@@ -224,6 +224,15 @@
     flex-wrap: wrap;
     gap: 0 1px;
 }
+.mob-select .mob-select__selected-item__collapse__tooltip{
+    max-width: 100%;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
 .mob-select .mob-select__selected-item__collapse{
     box-sizing: border-box;
     display: inline-flex;

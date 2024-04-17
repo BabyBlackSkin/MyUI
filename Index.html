@@ -188,7 +188,6 @@
         //通过$on为$rootScope添加路由事件
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
             // $log.debug('successfully changed routes');
-            // console.log('1')
 
             $rootScope.routPath = current.$$route.originalPath
             // $log.debug(event);
@@ -210,7 +209,6 @@
 
     app
         .controller('IndexCtrl', ['$route', function IndexCtrl($route) {
-            // console.log($route)
             this.hero = {
                 name: 'Spawn'
             };
@@ -251,12 +249,10 @@
             }
             this.demo = 'Options1'
             this.fatherChange = function (value) {
-                console.log('radio change回调方法', value)
             }
         }])
         .controller('CheckBoxCtrl', ['$scope', function CheckBoxCtrl($scope) {
             this.fatherChange = function (value) {
-                console.log('radio change回调方法', value)
             }
         }])
         .controller('MultipleCheckBoxGroupCtrl', ['$scope', function MultipleCheckBoxGroupCtrl($scope) {
@@ -302,7 +298,6 @@
         .controller('PopperCtrl', ['$scope', 'floating', 'uuId', function CheckBoxCtrl($scope, floating, uuId) {
             var vm = this;
             this.message = 'Welcome to School Buddy!';
-            console.log($scope.$id)
 
         }])
         .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
@@ -343,7 +338,7 @@
                 }
             };
         })
-        .directive('popper', ['uuId', 'floating', function (uuId, floating) {
+        .directive('popper', ['uuId', 'floating','$timeout', function (uuId, floating, $timeout) {
             return {
                 restrict: 'A',
                 // transclude:true,
@@ -352,54 +347,89 @@
                 compile: function () {
                     return {
                         post: function (scope, element, attr) {
-                            const target = element[0].querySelector('.mob_popper__target');
-                            if (null == target) {
-                                console.warn('target元素不存在')
-                                return;
-                            }
-                            const floatingDom = element[0].querySelector('.mob-popper');
-                            if (null == floatingDom) {
-                                console.warn('target元素不存在')
-                                return;
-                            }
-                            // 给浮动元素 生成唯一id
-                            floatingDom.id = uuId.generate()
-                            // 给目标元素绑定唯一id
-                            target.setAttribute('popper-id', floatingDom.id)
-                            scope.popperId = floatingDom.id
-                            scope.popperShow = false
-
-                            scope.showPopper = function () {
-                                if (scope.popperShow) {
+                            let popper = function() {
+                                const targetList = element[0].querySelectorAll('.mob_popper__target');
+                                if (angular.isUndefined(targetList) || targetList.length === 0) {
+                                    console.warn('targetList元素不存在')
                                     return;
                                 }
-                                scope.popperShow = true
-                                floatingDom.style.display = 'block';
-                                floatingDom.style.zIndex = '100';
-                                floating.computePosition(scope, target, floatingDom)
-
-                            }
-                            /**
-                             * 自动更新布局的
-                             */
-                            scope.showAutoUpdatePopper = function () {
-                                if (this.popperShow) {
+                                const floatingDomList = element[0].querySelectorAll('.mob-popper');
+                                if (angular.isUndefined(floatingDomList) || floatingDomList.length === 0) {
+                                    console.warn('floatingDomList元素不存在')
                                     return;
                                 }
-                                this.popperShow = true
-                                floatingDom.style.display = 'block';
-                                floatingDom.style.zIndex = '100';
-                                floating.autoUpdateComputePosition(scope, target, floatingDom)
-                            }
+                                let popperConfig = {}
+                                angular.forEach(targetList, function (target) {
+                                    let popperRole = target.getAttribute('popper-role');
+                                    let roles = popperRole.split(",");
+                                    angular.forEach(roles, function (role) {
+                                        popperConfig[role] = {
+                                            target
+                                        }
+                                    })
+                                })
+                                angular.forEach(floatingDomList,function(floatingDom){
+                                    popperConfig[floatingDom.getAttribute('popper-role')].floatingDom = floatingDom
+                                })
+                                scope.popper = {}
+                                for (let name of Object.keys(popperConfig)) {
+                                    let target = popperConfig[name].target;
+                                    if (angular.isUndefined(target)) {
+                                        console.warn(`${name} target is undefined`)
+                                        continue;
+                                    }
+                                    let floatingDom = popperConfig[name].floatingDom;
+                                    if (angular.isUndefined(floatingDom)) {
+                                        console.warn(`${name} floatingDom is undefined`)
+                                        continue;
+                                    }
+                                    scope.popper[name] = {
+                                        target,
+                                        floatingDom,
+                                        popperShow:false
+                                    }
+                                    // 给浮动元素 生成唯一id
+                                    floatingDom.id = uuId.generate()
+                                    // 给目标元素绑定唯一id
+                                    target.setAttribute('popper-id', floatingDom.id)
+                                    scope.popperId = floatingDom.id
 
-                            scope.hidePopper = function(){
-                                this.popperShow = false
-                                floatingDom.style.opacity = 0;
-                                floatingDom.style.height = '0';
-                                setTimeout(function () {
-                                    floatingDom.style.display = '';
-                                }, 300)
+                                    scope.popper[name].show = function () {
+                                        if (scope.popper[name].popper) {
+                                            return;
+                                        }
+                                        scope.popper[name].popper = true
+                                        floatingDom.style.display = 'block';
+                                        floatingDom.style.zIndex = '100';
+                                        floating.computePosition(scope, target, floatingDom)
+
+                                    }
+                                    /**
+                                     * 自动更新布局的
+                                     */
+                                    scope.popper[name].showAutoUpdate = function () {
+                                        if (scope.popper[name].popper) {
+                                            return;
+                                        }
+                                        scope.popper[name].popper = true
+                                        floatingDom.style.display = 'block';
+                                        floatingDom.style.zIndex = '100';
+                                        scope.popper[name].showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, floatingDom)
+                                    }
+
+                                    scope.popper[name].hide = function () {
+                                        scope.popper[name].popper = false
+                                        floatingDom.style.opacity = 0;
+                                        floatingDom.style.height = '0';
+                                        scope.popper[name].showAutoUpdateCleanUp && scope.popper[name].showAutoUpdateCleanUp()
+                                        setTimeout(function () {
+                                            floatingDom.style.display = '';
+                                        }, 300)
+                                    }
+
+                                }
                             }
+                            $timeout(()=>{popper()},100)
                         }
                     }
                 },
@@ -407,16 +437,19 @@
                 }
             };
         }])
-        .directive('focusInOut', ['uuId', 'floating', function (uuId, floating) {
+        .directive('focusOut', ['uuId', 'floating', function (uuId, floating) {
             return {
                 restrict: 'A',
                 compile: function () {
                     return {
                         post: function (scope, element, attr) {
                             document.addEventListener('click', function (e) {
+                                let focus = element[0].contains(e.target)
                                 scope.$apply(function () {
-                                    scope.$emit('focusOut', e)
+                                    scope.$eventListener && scope.$eventListener.focusOut && scope.$eventListener.focusOut(e, focus)
                                 })
+                                e.preventDefault()
+                                e.stopPropagation()
                             });
                         }
                     }
@@ -452,7 +485,7 @@
                         if (!slotList || slotList.length === 0) {
                             return;
                         }
-                        // console.log(slotList)
+
                         for (innerSlot of slotList) {
                             // 获取组件内部的插槽
                             let slotName = innerSlot.getAttribute('name')
@@ -517,7 +550,6 @@
 
             function setFloatingWidth(scope, target, floating) {
                 const {width: targetWidth} = target.getBoundingClientRect()
-                // console.log(targetWidth)
                 floating.style.minWidth = targetWidth + 'px';
             }
             function setFloatingHeight(scope, target, floating) {
@@ -538,11 +570,11 @@
                             window.FloatingUIDOM.shift(), // x轴自适应
                             window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
                             window.FloatingUIDOM.arrow({element: arrowElement}), // 箭头
+                            // window.FloatingUIDOM.autoPlacement(), // 使用最大空间策略（乐观）
 
                         ]
                     }
                 ).then(({x, y, placement, middlewareData}) => {
-                    // console.log(x, y)
                     Object.assign(floating.style, {
                         left: `${x}px`,
                         top: `${y}px`,
@@ -935,10 +967,9 @@
                 placeHolder: '<?',
                 multiple:'<?',
                 collapseTag:'<?',
-                collapseTagTooltip:'<?',
                 change: '&?'
             },
-            controller: function ($scope, $element, uuId, floating) {
+            controller: function ($scope, $element, $timeout) {
                 const _that = this
                 // 初始化工作
                 this.$onInit = function () {
@@ -968,16 +999,15 @@
 
                 // 初始化事件监听
                 this.initEvent = function(){
+                    $scope.$eventListener = {}
                     // 点击select外部的时候，隐藏下拉框
-                    $scope.$on('focusOut', function (e, originEvent) {
-                        if ($element[0].contains(originEvent.target)) {
+                    $scope.$eventListener.focusOut = function (e, value) {
+                        if (value) {
                             _that.focus()
-                            originEvent.preventDefault()
-                            originEvent.stopPropagation()
                             return
                         }
-                        $scope.hidePopper()
-                    })
+                        $scope.popper.selectDrown.hide()
+                    }
 
                     // 监听optionsInitValue事件
                     $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
@@ -992,13 +1022,12 @@
                     $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
                         _that.changeHandle(data)
                         if (!_that.multiple) {
-                            $scope.hidePopper()
+                            $scope.popper.selectDrown.hide()
                         }
                     })
 
                     // 监听collapseTagsListUpdate事件
                     $scope.$on(`${_that.name}collapseTagsListUpdate`, function (e, data) {
-                        console.log(`${$scope.$id} collapseTagsListUpdate`, data)
                         _that.collapseTagsListUpdate(data)
                     })
                 }
@@ -1026,27 +1055,13 @@
                     return !this.ngDisabled &&
                         this.multiple &&
                         this.ngModel.length > 0 &&
-                        this.collapseTag &&
-                        !this.collapseTagTooltip
-                }
-
-
-                /**
-                 * 有工具箱的collapse
-                 * @returns {false|string|boolean|*|boolean}
-                 */
-                this.isCollapseTagsHasTooltip = function (){
-                    return !this.ngDisabled &&
-                        this.multiple &&
-                        this.ngModel.length > 0 &&
-                        this.collapseTag &&
-                        this.collapseTagTooltip
+                        this.collapseTag
                 }
 
                 /**
                  * 是否有多余的tags
                  */
-                this.isCollapseTagsHasRedundant = function(){
+                this.isCollapseTagsHasRedundant = function () {
                     return this.multiple && this.ngModel.length > 1
                 }
 
@@ -1057,14 +1072,14 @@
                     if (this.ngDisabled) {
                         return
                     }
-                    if ($scope.popperShow) {
-                        $scope.hidePopper()
+                    if ($scope.popper.selectDrown.popper) {
+                        $scope.popper.selectDrown.hide()
                     } else {
-                        if (this.multiple) {// 多选的时候，才使用动态更新popper。动态定位的popper还是比较消耗性能的
-                            $scope.showAutoUpdatePopper()
-                        } else {
-                            $scope.showPopper()
-                        }
+                        // if (this.multiple) {// 多选的时候，才使用动态更新popper。动态定位的popper还是比较消耗性能的
+                            // $scope.popper.selectDrown.showAutoUpdate()
+                        // } else {
+                            $scope.popper.selectDrown.showAutoUpdate()
+                        // }
                         this.focus()
                     }
                 }
@@ -1105,7 +1120,6 @@
                 }
 
                 this.collapseTagsListUpdate = function (data) {
-                    console.log()
                     if (!this.multiple) {
                         return
                     }
@@ -1122,7 +1136,6 @@
                     } else {
                         $scope.collapseTagsList.push(data)
                     }
-                    console.log(`${$scope.$id}的cache`, $scope.collapseTagsList)
                 }
                 /**
                  * 清空input内容
@@ -1166,10 +1179,6 @@
                     this.name = this.mobSelect.name
                     // 监听父组件的通知事件
                     $scope.$on(`${_that.name}Change`, function (e, data) {
-                        console.log(`收到了${_that.name}Change 的事件`)
-                        if("mobSelect_26Change" == `${_that.name}Change`){
-                            debugger
-                        }
                         let hasChange = _that.change(data);
                         // 通知父组件更新ngModel的cache
                         if (hasChange) {

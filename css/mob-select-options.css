@@ -14,6 +14,7 @@
 
 .mob-select-options.is_disabled {
     color: var(--mob-checkbox-disabled-checked-icon-color);
+    cursor: not-allowed;
 }
 
 .mob-select-options:not(.is_disabled):hover {

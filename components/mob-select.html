@@ -5,8 +5,9 @@
      'is_disabled':$ctrl.ngDisabled,
      'is_multiple':$ctrl.multiple
      }"
-     >
-    <div class="mob-select__wrapper mob_popper__target" focus-in-out ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="$ctrl.clickHandler()">
+     focus-out
+>
+    <div class="mob-select__wrapper mob_popper__target" popper-role="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="$ctrl.clickHandler()">
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
@@ -38,26 +39,6 @@
                 </div>
             </div>
 
-            <!-- 合并，有工具箱 -->
-            <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.isCollapseTagsHasTooltip()" >
-                <!-- 首个tag -->
-                <div class="mob-select__selected-item__collapse" >
-                    <span ng-bind="collapseTagsList[0].label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event,collapseTagsList[0])"></mob-icon-close>
-                </div>
-                <!-- 未展示tags的数量 -->
-                <div class="mob-select__selected-item__collapse" ng-if="$ctrl.isCollapseTagsHasRedundant()">
-                    <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
-                </div>
-                <!-- 未展示的tags -->
-                <!--                <div class="mob-select__selected-item__collapse__tooltip">-->
-                <!--                    <div class="mob-select__selected-item__collapse"  ng-repeat="item in collapseTagsList" ng-if="!$first">-->
-                <!--                        <span ng-bind="item.label"></span>-->
-                <!--                        <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event, item)"></mob-icon-close>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-            </div>
-
         </div>
 
 
@@ -73,7 +54,7 @@
     </div>
 
 
-    <div class="mob-popper">
+    <div class="mob-popper" popper-role="selectDrown" >
         <div class="mob-popper__wrapper">
             <span class="mob-popper__arrow"></span>
             <div class="mob-popper__inner">
@@ -81,7 +62,6 @@
             </div>
         </div>
     </div>
-
 
 
 </div>
