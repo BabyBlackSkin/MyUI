@@ -981,7 +981,7 @@
                     })
 
                     // 监听optionsInitValue事件
-                    $scope.$on(`${_that.name}ChildInitValue`, function (e, data) {
+                    $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
                         if (!_that.multiple) {
                             _that.placeHolder = data.label ? data.label : data.value
                         }
@@ -990,8 +990,17 @@
                     })
 
                     // 监听optionsClick事件
-                    $scope.$on(`${_that.name}ChildClick`, function (e, data) {
+                    $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
                         _that.changeHandle(data)
+                        if (!_that.multiple) {
+                            $scope.hidePopper()
+                        }
+                    })
+
+                    // 监听ngModelCacheUpdate事件
+                    $scope.$on(`${_that.name}ngModelCacheUpdate`, function (e, data) {
+                        console.log(`${$scope.$id} ngModelCacheUpdate`, data)
+                        _that.ngModelCacheUpdate(data)
                     })
                 }
 
@@ -1002,12 +1011,12 @@
                     $scope.$watchCollection(() => {
                         return _that.ngModel
                     }, function (newArr) {
-                        if (angular.isFunction(this.change)) {
-                            this.change(this.ngModel)
+                        if (angular.isFunction(_that.change)) {
+                            _that.change(_that.ngModel)
                         }
                         // 反向通知group下所有的radio绑定的ngModel
-                        console.log(`ngModel变动了， 触发${_that.name}Change`)
-                        $scope.$broadcast(`${_that.name}Change`, this.ngModel)
+                        console.log(`ngModel变动了， 触发${_that.name}Change`, _that.ngModel)
+                        $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
                     })
                 }
 
@@ -1083,21 +1092,44 @@
                     if (this.multiple) {
                         if (Array.isArray(data) && data.length === 0) {
                             this.ngModel = []
+                            // $scope.ngModelCache = []
                         } else {
                             // 判断model中是否包含
                             if (this.ngModel.includes(data.value)) {
                                 this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
-                                let winIndex = $scope.ngModelCache.findIndex(obj=>{return obj.value === data.value})
-                                $scope.ngModelCache.splice(winIndex, 1)
+                                // let winIndex = $scope.ngModelCache.findIndex(obj=>{return obj.value === data.value})
+                                // $scope.ngModelCache.splice(winIndex, 1)
                             } else {
                                 this.ngModel.push(data.value)
-                                this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
+                                // $scope.ngModelCache.push(data)
                             }
-                            console.log(`${$scope.$id}的ngCache`, $scope.ngModelCache)
+                            // console.log(`${$scope.$id}的ngCache`, $scope.ngModelCache)
                         }
                     } else {
                         this.ngModel = data.value
+                        this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
                     }
+                }
+
+                this.ngModelCacheUpdate = function (data) {
+                    console.log()
+                    if (!this.multiple) {
+                        return
+                    }
+                    if (Array.isArray(data) && data.length === 0) {
+                        $scope.ngModelCache = []
+                        return
+                    }
+                    let winIndex = $scope.ngModelCache.findIndex(obj => {
+                        return obj.value === data.value
+                    })
+                    // 判断model中是否包含
+                    if (winIndex > -1) {
+                        $scope.ngModelCache.splice(winIndex, 1)
+                    } else {
+                        $scope.ngModelCache.push(data)
+                    }
+                    console.log(`${$scope.$id}的cache`, $scope.ngModelCache)
                 }
                 /**
                  * 清空input内容
@@ -1115,7 +1147,7 @@
                  * 多选移除
                  * @param data
                  */
-                this.multipleRemove = function (event, data){
+                this.collapseRemove = function (event, data){
                     this.changeHandle(data)
                     event.preventDefault()
                     event.stopPropagation()
@@ -1139,11 +1171,20 @@
                 this.$onInit = function () {
                     $scope.active = false
                     this.name = this.mobSelect.name
-                    // console.log(`创建父组件监听${_that.name}Change事件`)
                     // 监听父组件的通知事件
                     $scope.$on(`${_that.name}Change`, function (e, data) {
-                        console.log(`收到了父组件${_that.name}Change的变动通知`)
-                        _that.isActive(data);
+                        console.log(`收到了${_that.name}Change 的事件`)
+                        if("mobSelect_26Change" == `${_that.name}Change`){
+                            debugger
+                        }
+                        let hasChange = _that.change(data);
+                        // 通知父组件更新ngModel的cache
+                        if (hasChange) {
+                            $scope.$emit(`${_that.name}ngModelCacheUpdate`, {
+                                label: _that.label,
+                                value: _that.getValue()
+                            })
+                        }
                     })
                 }
 
@@ -1157,20 +1198,27 @@
                 }
 
                 this.initValue = function () {
-                    this.isActive(this.mobSelect.ngModel);
-                    if ($scope.active) {
-                        $scope.$emit(`${_that.name}ChildInitValue`, {label: this.label, value: _that.getValue()})
+                    let hasChange = this.change(this.mobSelect.ngModel);
+                    if (hasChange) {
+                        $scope.$emit(`${_that.name}OptionsInitValue`, {label: this.label, value: _that.getValue()})
                     }
                 }
 
-                this.isActive = function (data) {
+                this.change = function (data) {
                     if (this.ngDisabled) {
-                        return
+                        return false
                     }
+                    let temporaryActive = false
                     if (Array.isArray(data)) {
-                        $scope.active = data.includes(this.getValue())
+                        temporaryActive = data.includes(this.getValue())
                     } else {
-                        $scope.active = data === this.getValue()
+                        temporaryActive = data === this.getValue()
+                    }
+                    if (temporaryActive !== $scope.active) {
+                        $scope.active = temporaryActive;
+                        return true
+                    } else {
+                        return false
                     }
                 }
 
@@ -1184,10 +1232,9 @@
                     if (this.ngDisabled) {
                         return
                     }
-                    $scope.active = !$scope.active
                     let val = this.getValue()
-                    console.log('我被点击了，通知父组件')
-                    $scope.$emit(`${_that.name}ChildClick`, {label: this.label, value: val})
+
+                    $scope.$emit(`${_that.name}OptionsClick`, {label: this.label, value: val})
                 }
             }
         })
