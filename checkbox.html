@@ -99,15 +99,13 @@
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
                         <mob-checkbox  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-                        <mob-checkbox-group ng-model="ctrl.checkedCities" listener="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                         </mob-checkbox-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
                 </div>
-                <mob-divider></mob-divider>
-                <p>因为 <code>Angular1.5.3</code>的限制， 组件内部无法 <code>$watch</code> 外部传入双向绑定变量。需要将 <code>mode</code>作为单向流 绑定到 <code>listener</code> 上</p>
             </div>
             <div class="meta">
                 <pre>
@@ -116,7 +114,7 @@
                            <html>
                             <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
                                 <mob-checkbox  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-checkbox>
-                                <mob-checkbox-group ng-model="ctrl.checkedCities" listener="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                                     <mob-checkbox ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox>
                                 </mob-checkbox-group>
 
@@ -196,10 +194,6 @@
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
                 </div>
-                <mob-divider></mob-divider>
-                <p>
-                    使用 <code>min</code> 和 <code>max</code> 属性能够限制可以被勾选的项目的数量。
-                </p>
             </div>
             <div class="meta">
                 <pre>
@@ -231,10 +225,6 @@
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
                 </div>
-                <mob-divider></mob-divider>
-                <p>
-                    使用 <code>min</code> 和 <code>max</code> 属性能够限制可以被勾选的项目的数量。
-                </p>
             </div>
             <div class="meta">
                 <pre>

@@ -1606,7 +1606,6 @@
             templateUrl: './components/mob-checkbox-group.html',
             bindings: {
                 ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
-                listener: '<?',// 使用单项的model，用于监听他的change，checkBox
                 min: '<?',
                 max: '<?',
                 changeHandle: '&?'
@@ -1618,14 +1617,12 @@
                         this.ngModel = []
                     }
                     this.name = `mobCheckBoxGroup_${$scope.$id}`
-                    // 创建事件订阅与监听
-                    initEvent()
                 }
 
                 this.$onChanges = function (changes) {
-                    if (changes.listener) {
-                        this.change()
-                    }
+                    // if (changes.listener) {
+                    //     this.change()
+                    // }
                 }
 
                 this.$onDestroy = function () {
@@ -1633,6 +1630,9 @@
 
 
                 this.$postLink = function () {
+                    // 创建事件订阅与监听
+                    initEvent()
+                    initWatcher()
                 }
 
                 // ngModel改变时，同时子组件
@@ -1666,6 +1666,14 @@
                                 _that.ngModel.push(data);
                             }
                         }
+                        _that.change()
+                    })
+                }
+
+                function initWatcher(){
+                    $scope.$watchCollection(()=>{
+                        return _that.ngModel
+                    }, function (newValue, oldValue) {
                         _that.change()
                     })
                 }
