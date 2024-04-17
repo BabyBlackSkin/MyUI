@@ -1015,7 +1015,6 @@
                             _that.change(_that.ngModel)
                         }
                         // 反向通知group下所有的radio绑定的ngModel
-                        console.log(`ngModel变动了， 触发${_that.name}Change`, _that.ngModel)
                         $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
                     })
                 }
