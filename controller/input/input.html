@@ -167,7 +167,6 @@
                 <div class="mob-demo-example-child">
                     <mob-input style="display:block;width: 400px;">
                         <div slot-name="prepend">www.</div>
-                        <div slot-name="append">.com</div>
                     </mob-input>
                 </div>
 
@@ -176,12 +175,33 @@
                         <mob-icon-search slot-name="prepend"></mob-icon-search>
                     </mob-input>
                 </div>
+
+                <div class="mob-demo-example-child">
+                    <mob-input style="display:block;width: 400px;" suffix-icon="'mob-icon-calendar'"  prefix-icon="'mob-icon-search'">
+                        <div slot-name="prepend">www.</div>
+                        <div slot-name="append">.com</div>
+                    </mob-input>
+                </div>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
-                        <mob-input style="display:block;width: 250px;" max-length="5"></mob-input>
+                            <mob-input style="display:block;width: 400px;">
+                                <div slot-name="prepend">Http://</div>
+                            </mob-input>
+                            <mob-input style="display:block;width: 400px;">
+                                <div slot-name="prepend">www.</div>
+                                <div slot-name="append">.com</div>
+                            </mob-input>
+
+                            <mob-input style="display:block;width: 400px;">
+                                <mob-icon-search slot-name="prepend"></mob-icon-search>
+                            </mob-input>
+                            <mob-input style="display:block;width: 400px;" suffix-icon="'mob-icon-calendar'"  prefix-icon="'mob-icon-search'">
+                                <div slot-name="prepend">www.</div>
+                                <div slot-name="append">.com</div>
+                            </mob-input>
                         --></code>
                     </pre>
             </div>

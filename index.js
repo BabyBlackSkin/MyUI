@@ -13,7 +13,7 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'InputNumberCtrl'
         })
         .when('/input', {
-            templateUrl: './input.html',
+            templateUrl: './controller/input/input.html',
             controller: 'InputCtrl'
         })
         .when('/radio', {
