@@ -20,6 +20,8 @@
     <script src="./components/radio-group/index.js"></script>
     <script src="./components/select/index.js"></script>
     <script src="./components/select-options/index.js"></script>
+    <script src="./components/divider/index.js"></script>
+    <script src="./components/icon/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
@@ -42,7 +44,7 @@
     >
     <link rel="stylesheet" href="components/checkbox-button/mob-checkbox-button.css">
     <link rel="stylesheet" href="components/checkbox-group/mob-checkbox-group.css">
-    <link rel="stylesheet" href="./css/mob-divider.css">
+    <link rel="stylesheet" href="components/divider/mob-divider.css">
 </head>
 <style>
     .contain {
@@ -612,73 +614,6 @@
     ;
 
 
-    app
-        .component('mobDivider', {
-            transclude: true,
-            templateUrl: './components/mob-divider.html',
-            bindings: {
-                horizontal: '<?',
-                vertical: '<?',
-                borderStyle: '<'
-            },
-            controller: function ($scope) {
-                this.$onInit = function () {
-                    if (angular.isUndefined(this.horizontal)) {
-                        this.horizontal = true;
-                    }
-                }
-            }
-        })
-        .component('mobIcon', {
-            transclude: true,
-            templateUrl: './components/mob-icon.html',
-            bindings: {},
-            controller: function ($scope) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-
-                this.$onChanges = function (changes) {
-
-                }
-
-                this.$onDestroy = function () {
-
-                }
-
-
-                this.$postLink = function () {
-                }
-            }
-        })
-        .component('mobIconDownArrow', {
-            templateUrl: './icon/downArrow.html',
-        })
-        .component('mobIconCircleClose', {
-            templateUrl: './icon/circleClose.html',
-        })
-        .component('mobIconClose', {
-            templateUrl: './icon/close.html',
-        })
-        .component('mobIconVisible', {
-            templateUrl: './icon/visible.html',
-        })
-        .component('mobIconInvisible', {
-            templateUrl: './icon/invisible.html',
-        })
-        .component('mobIconCalendar', {
-            templateUrl: './icon/calendar.html',
-        })
-        .component('mobIconSearch', {
-            templateUrl: './icon/search.html',
-        })
-        .component('mobIconIncrease', {
-            templateUrl: './icon/increase.html',
-        })
-        .component('mobIconDecrease', {
-            templateUrl: './icon/decrease.html',
-        })
     ;
     </script>
 
