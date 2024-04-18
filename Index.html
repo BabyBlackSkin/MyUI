@@ -13,6 +13,8 @@
     <script src="./index.js"></script>
     <script src="./components/input/index.js"></script>
     <script src="./components/input-number/index.js"></script>
+    <script src="./components/checkbox/index.js"></script>
+    <script src="./components/checkbox-button/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
@@ -31,10 +33,10 @@
     <link rel="stylesheet" href="./css/mob-radio.css">
     <link rel="stylesheet" href="./css/mob-radio-button.css">
     <link rel="stylesheet" href="./css/mob-radio-group.css">
-    <link rel="stylesheet" href="./css/mob-checkbox.css">
+    <link rel="stylesheet" href="components/checkbox/mob-checkbox.css">
     >
-    <link rel="stylesheet" href="./css/mob-checkbox-button.css">
-    <link rel="stylesheet" href="./css/mob-checkbox-group.css">
+    <link rel="stylesheet" href="components/checkbox-button/mob-checkbox-button.css">
+    <link rel="stylesheet" href="components/checkbox-group/mob-checkbox-group.css">
     <link rel="stylesheet" href="./css/mob-divider.css">
 </head>
 <style>
@@ -1106,233 +1108,6 @@
                     }
                     // 反向通知group下所有的radio绑定的ngModel
                     $scope.$broadcast(`${this.name}Change`, this.ngModel)
-                }
-            }
-        })
-        .component('mobCheckbox', {
-            transclude: true,
-            templateUrl: './components/mob-checkbox.html',
-            require: {
-                'checkBoxGroup': '?^mobCheckboxGroup'
-            },
-            bindings: {
-                ngModel: '=?',
-                ngDisabled: '<?',
-                name: '<?',
-                label: '<?',
-                value: '<?',
-                border: '<?',
-                indeterminate: '<?',
-                changeHandle: '&?'
-            },
-            controller: function ($scope, $element, $attrs) {
-                // 初始化工作
-                this.$onInit = function () {
-                    if (!this.value) {
-                        this.value = this.label
-                    }
-                }
-
-
-                this.$onChanges = function (changes) {
-                }
-
-                this.$onDestroy = function () {
-                }
-
-
-                this.$postLink = function () {
-                    this.initValue()
-                }
-
-                // 初始化Value，以及绑定checkbox的change事件
-                this.initValue = function () {
-                    if (!angular.isUndefined(this.checkBoxGroup) && this.checkBoxGroup !== null) {
-                        // 绑定model
-                        if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
-                            this.ngModel = this.checkBoxGroup.ngModel.includes(this.value)
-                        }
-                        // 绑定name
-                        $attrs.name = this.checkBoxGroup.name
-
-                        const _that = this
-                        // 监听多选框组的value的Change事件
-                        $scope.$on(`${$attrs.name}Change`, function (event, data) {
-                            // 判断组内是否包含自己
-                            _that.ngModel = data.includes(_that.value)
-                        })
-                    }
-                }
-
-                // 点击事件
-                this.clickHandle = function () {
-                    if (this.ngDisabled) {
-                        return
-                    }
-                    this.change()
-
-                }
-
-                this.change = function () {
-                    this.ngModel = !this.ngModel
-                    if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: this.value})
-                    } else {
-                        $scope.$emit(`${$attrs.name}ChildChange`, this.value)
-                    }
-
-                }
-            }
-        })
-        .component('mobCheckboxButton', {
-            transclude: true,
-            templateUrl: './components/mob-checkbox-button.html',
-            require: {
-                'checkBoxGroup': '?^mobCheckboxGroup'
-            },
-            bindings: {
-                ngModel: '=?',
-                ngDisabled: '<?',
-                name: '<?',
-                label: '<?',
-                value: '<?',
-                indeterminate: '<?',
-                changeHandle: '&?'
-            },
-            controller: function ($scope, $element, $attrs) {
-                // 初始化工作
-                this.$onInit = function () {
-                    if (!this.value) {
-                        this.value = this.label
-                    }
-                }
-
-
-                this.$onChanges = function (changes) {
-                }
-
-                this.$onDestroy = function () {
-                }
-
-
-                this.$postLink = function () {
-                    this.initValue()
-                }
-
-                // 初始化Value，以及绑定checkbox的change事件
-                this.initValue = function () {
-                    if (!angular.isUndefined(this.checkBoxGroup) && this.checkBoxGroup !== null) {
-                        // 绑定model
-                        if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
-                            this.ngModel = this.checkBoxGroup.ngModel.includes(this.value)
-                        }
-                        // 绑定name
-                        $attrs.name = this.checkBoxGroup.name
-
-                        const _that = this
-                        // 监听多选框组的value的Change事件
-                        $scope.$on(`${$attrs.name}Change`, function (event, data) {
-                            // 判断组内是否包含自己
-                            _that.ngModel = data.includes(_that.value)
-                        })
-                    }
-                }
-
-                // 点击事件
-                this.clickHandle = function () {
-                    if (this.ngDisabled) {
-                        return
-                    }
-                    this.change()
-
-                }
-
-                this.change = function () {
-                    this.ngModel = !this.ngModel
-                    if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: this.value})
-                    } else {
-                        $scope.$emit(`${$attrs.name}ChildChange`, this.value)
-                    }
-
-                }
-            }
-        })
-        .component('mobCheckboxGroup', {
-            transclude: true,
-            templateUrl: './components/mob-checkbox-group.html',
-            bindings: {
-                ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
-                min: '<?',
-                max: '<?',
-                changeHandle: '&?'
-            },
-            controller: function ($scope, $element, $attrs) {
-                // 初始化工作
-                this.$onInit = function () {
-                    if (!this.ngModel) {
-                        this.ngModel = []
-                    }
-                    this.name = `mobCheckBoxGroup_${$scope.$id}`
-                }
-
-                this.$onChanges = function (changes) {
-                    // if (changes.listener) {
-                    //     this.change()
-                    // }
-                }
-
-                this.$onDestroy = function () {
-                }
-
-
-                this.$postLink = function () {
-                    // 创建事件订阅与监听
-                    initEvent()
-                    initWatcher()
-                }
-
-                // ngModel改变时，同时子组件
-                this.change = function () {
-                    if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: this.ngModel})
-                    }
-                    // 反向通知group下所有的radio绑定的ngModel
-                    $scope.$broadcast(`${this.name}Change`, this.ngModel)
-                }
-
-
-                const _that = this
-
-                /**
-                 * 初始化事件监听
-                 */
-                function initEvent() {
-                    // 监听子组件的change事件
-                    $scope.$on(`${_that.name}ChildChange`, function (event, data) {
-                        if (_that.ngModel.includes(data)) {
-                            let undefinedMin = angular.isUndefined(_that.min)
-                            let definedMin = angular.isDefined(_that.min)
-                            if (undefinedMin || definedMin && _that.ngModel.length > _that.min) {
-                                _that.ngModel.splice(_that.ngModel.indexOf(data), 1)
-                            }
-                        } else {
-                            let undefinedMax = angular.isUndefined(_that.max)
-                            let definedMax = angular.isDefined(_that.max)
-                            if (undefinedMax || definedMax && _that.ngModel.length < _that.max) {
-                                _that.ngModel.push(data);
-                            }
-                        }
-                        _that.change()
-                    })
-                }
-
-                function initWatcher(){
-                    $scope.$watchCollection(()=>{
-                        return _that.ngModel
-                    }, function (newValue, oldValue) {
-                        _that.change()
-                    })
                 }
             }
         })
