@@ -307,6 +307,8 @@
                 {label: '北京', value: '北京', desc:'BeiJing'},
                 {label: '上海', value: '上海', desc:'ShangHai'},
                 {label: '深圳', desc:'ShenZheng'},
+                {label: '江苏', desc:'JiangSu'},
+                {label: '广州', desc:'GuangZhou'},
             ]
 
             this.optionsDisabled = [
@@ -402,6 +404,10 @@
                                         floatingDom.style.display = 'block';
                                         floatingDom.style.zIndex = '100';
                                         floating.computePosition(scope, target, floatingDom)
+                                        debugger
+                                        setTimeout(() => {
+                                            floatingDom.querySelector('.mob-popper__inner').style.overflow = 'auto';
+                                        }, 300)
 
                                     }
                                     /**
@@ -415,10 +421,17 @@
                                         floatingDom.style.display = 'block';
                                         floatingDom.style.zIndex = '100';
                                         scope.popper[name].showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, floatingDom)
+                                        debugger
+                                        setTimeout(() => {
+                                            console.log('1')
+                                            floatingDom.querySelector('.mob-popper__inner').style.overflow = 'auto';
+                                        }, 300)
+
                                     }
 
                                     scope.popper[name].hide = function () {
                                         scope.popper[name].popper = false
+                                        floatingDom.querySelector('.mob-popper__inner').style.overflow = 'hidden';
                                         floatingDom.style.opacity = 0;
                                         floatingDom.style.height = '0';
                                         scope.popper[name].showAutoUpdateCleanUp && scope.popper[name].showAutoUpdateCleanUp()

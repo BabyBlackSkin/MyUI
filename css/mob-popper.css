@@ -42,7 +42,7 @@
 }
 .mob-popper .mob-popper__wrapper .mob-popper__inner{
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
 }
 .mob-popper .mob-popper__wrapper .mob-popper__inner::-webkit-scrollbar {
     /* 对应纵向滚动条的宽度 */
