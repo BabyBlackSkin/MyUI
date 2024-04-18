@@ -10,6 +10,9 @@
     <script src="./angular-1.5.3/angular.min.js"></script>
     <script src="./angular-1.5.3/angular-route.min.js"></script>
     <script src="./angular-1.5.3/angular-animate.min.js"></script>
+    <script src="./index.js"></script>
+    <script src="./components/input/index.js"></script>
+    <script src="./components/input-number/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
@@ -21,8 +24,8 @@
     <link rel="stylesheet" href="./css/mob.css">
     <link rel="stylesheet" href="./css/mob-doc.css">
     <link rel="stylesheet" href="./css/mob-popper.css">
-    <link rel="stylesheet" href="./css/mob-input.css">
-    <link rel="stylesheet" href="./css/mob-input-number.css">
+    <link rel="stylesheet" href="components/input/mob-input.css">
+    <link rel="stylesheet" href="components/input-number/mob-input-number.css">
     <link rel="stylesheet" href="./css/mob-select.css">
     <link rel="stylesheet" href="./css/mob-select-options.css">
     <link rel="stylesheet" href="./css/mob-radio.css">
@@ -121,91 +124,6 @@
     angular.forEach("clearable,showPassword".split(","), function (value) {
         BOOLEAN_CUSTOM_ATTR.add(value)
     })
-    const app = angular.module('mobApp', ['ngRoute', 'ngAnimate'])
-    // .value('$routerRootComponent', 'mobApp')
-    app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
-        // $logProvider.debugEnabled(true)
-
-        $routeProvider
-            .when('/home', {
-                templateUrl: 'home',
-                controller: 'IndexCtrl'
-            })
-            .when('/inputNumber', {
-                templateUrl: './inputNumber.html',
-                controller: 'InputNumberCtrl'
-            })
-            .when('/input', {
-                templateUrl: './input.html',
-                controller: 'InputCtrl'
-            })
-            .when('/radio', {
-                templateUrl: './radio.html',
-                controller: 'RadioCtrl'
-            })
-            .when('/checkBox', {
-                templateUrl: './checkbox.html',
-                controller: 'CheckBoxCtrl'
-            })
-            .when('/popper', {
-                templateUrl: './popper.html',
-                controller: 'PopperCtrl',
-                controllerAs: 'home',
-            })
-
-            .when('/select', {
-                templateUrl: './select.html',
-                controller: 'SelectCtrl',
-                controllerAs: 'select',
-            })
-            .otherwise({redirectTo: '/home'})
-    }]);
-    app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
-        let ngViewAnimation = {
-            enter: function (element, done) {
-                $animate.animate(element, {
-                    event: 'enter',
-                    structural: true
-                }).then(done);
-            },
-            leave: function (element, done) {
-                $animate.animate(element, {
-                    event: 'leave',
-                    structural: true
-                }).then(done);
-            }
-        };
-
-        $rootScope.menuList = [
-            {label: 'Home', path: '/home'},
-            {label: 'popper容器', path: '/popper'},
-            {label: 'Input输入框', path: '/input'},
-            {label: 'Input Number 输入框', path: '/inputNumber'},
-            {label: 'Radio单选框', path: '/radio'},
-            {label: 'CheckBox多选框', path: '/checkBox'},
-            {label: 'Select选择器', path: '/select'},
-        ]
-        //通过$on为$rootScope添加路由事件
-        $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-            // $log.debug('successfully changed routes');
-
-            $rootScope.routPath = current.$$route.originalPath
-            // $log.debug(event);
-            // $log.debug(current);
-            // $log.debug(previous);
-
-            $animate.on('ngView', ngViewAnimation);
-        });
-
-        $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
-            $log.debug('error changing routes');
-            // $log.debug(event);
-            // $log.debug(current);
-            // $log.debug(previous);
-            // $log.debug(rejection);
-        });
-    }])
-    ;
 
     app
         .controller('IndexCtrl', ['$route', function IndexCtrl($route) {
@@ -647,33 +565,10 @@
 
     // FIXME 待完善
     app
-        .component('mobContainer', { // FIXME 待完善
+        .component('mobContainer', {
             transclude: true,
             templateUrl: './components/mob-container.html',
             controller: function ($scope, $element) {}
-        })
-        .component('mobPopper', { // FIXME 待完善
-            transclude: true,
-            templateUrl: './components/mob-popper.html',
-            bindings: {
-                show: '<?'
-            },
-            controller: function ($scope, $element) {
-                // 初始化工作
-                this.$onInit = function () {
-                }
-
-
-                this.$onChanges = function (changes) {
-
-                }
-
-                this.$onDestroy = function () {
-                }
-
-                this.$postLink = function () {
-                }
-            }
         })
 
         .component('mobForm', {// https://segmentfault.com/a/1190000005868488
@@ -706,275 +601,7 @@
                 }
             }
         })
-        .component('mobInput', {
-            transclude: true,
-            templateUrl: './components/mob-input.html',
-            bindings: {
-                ngModel: '=?',
-                ngDisabled: '<?',
-                placeholder: '<?',
-                prefixIcon: '<?',
-                suffixIcon: '<?',
-                clearable: '<?',
-                showPassword: '<?',
-                ngMaxlength: '<?',
-                showWordLimit: '<?',
-                handleChange: '&'
-            },
-            controller: function ($scope, $element, $transclude, $attrs, $compile, slot) {
-                // 初始化工作
-                this.$onInit = function () {
-                    if (angular.isUndefined(this.placeholder)) {
-                        this.placeholder = '请输入内容'
-                    }
-                    // 动态插槽实现
-                    slot.replace($scope, $element, $transclude)
-                    // 通过class配置icon
-                    compilePrefix(this.prefixIcon);
-                    compileSuffix(this.suffixIcon);
 
-                    if (this.showPassword) {
-                        $scope.valueVisiable = false // 默认为不展示明文
-                    }
-                }
-
-
-                function compilePrefix(icon) {
-                    if (!icon) {
-                        return;
-                    }
-                    let prefixInner = $element[0].querySelector('.mob-input__prefix-inner')
-                    slot.appendChild($scope, prefixInner, `<${icon}></${icon}>`)
-                }
-
-                function compileSuffix(icon) {
-                    if (!icon) {
-                        return;
-                    }
-                    let inner = $element[0].querySelector('.mob-input__suffix-inner')
-                    slot.appendChild($scope, inner, `<${icon}></${icon}>`)
-                }
-
-
-                this.$onChanges = function (changes) {
-                }
-
-                this.$onDestroy = function () {
-                }
-
-
-                this.$postLink = function () {
-                }
-
-
-                /**
-                 * input聚焦
-                 */
-                this.focus = function () {
-                    let input = $element[0].querySelector('.mob-input__inner')
-                    input.focus();
-                }
-
-                /**
-                 * 清空input内容
-                 */
-                this.clean = function () {
-                    this.focus()
-                    this.ngModel = ''
-                }
-
-                /**
-                 * 点击可视按钮
-                 */
-                this.visibleClickHandle = function () {
-                    this.focus()
-                    let input = $element[0].querySelector('.mob-input__inner')
-                    if ($scope.valueVisiable) {
-                        input.type = 'password'
-                    } else {
-                        input.type = 'text'
-                    }
-                    $scope.valueVisiable = !$scope.valueVisiable
-                }
-
-                // 是否显示清除按钮
-                this.showClear = function () {
-                    return this.clearable &&
-                        !this.ngDisabled &&
-                        this.ngModel && this.ngModel.length > 0
-                }
-                // 是否显示可视按钮
-                this.showValueAccessVisible = function () {
-                    return this.showPassword &&
-                        !this.ngDisabled &&
-                        this.ngModel &&
-                        this.ngModel.length > 0 &&
-                        $scope.valueVisiable
-                }
-                // 是否显示不可视按钮
-                this.showValueInVisible = function () {
-                    return this.showPassword &&
-                        !this.ngDisabled &&
-                        this.ngModel &&
-                        this.ngModel.length > 0 &&
-                        !$scope.valueVisiable
-                }
-
-
-                /**
-                 * 是否显示字数统计
-                 */
-                this.showWordCount = function () {
-                    return this.showWordLimit && !this.showPassword
-                }
-            }
-        })
-        .component('mobInputNumber', {
-            transclude: true,
-            templateUrl: './components/mob-input-number.html',
-            bindings: {
-                ngModel: '=?',
-                ngDisabled: '<?',
-                step: '<?',
-                stepStrictly: '<?',
-                precision: '<?',
-                min: '<?',
-                max: '<?',
-                changeEvent: '&?',
-                blurEvent: '&?'
-            },
-            controller: function ($scope, $element, $transclude, $attrs, $compile, slot) {
-                // 初始化工作
-                this.$onInit = function () {
-                    // 动态插槽实现
-                    slot.replace($scope, $element, $transclude)
-                    // 获取步长
-                    this.calculateStep();
-                }
-
-                this.calculateStep = function () {
-                    // 未定义步长，默认为1
-                    if (angular.isUndefined(this.step)) {
-                        if (angular.isUndefined(this.precision)) {
-                            this.step = 1;
-                        } else {
-                            this.step = 1 / Math.pow(10, this.precision);
-                        }
-                    }
-                }
-
-
-                this.$onChanges = function (changes) {
-                }
-
-                this.$onDestroy = function () {
-                }
-
-
-                this.$postLink = function () {
-                }
-
-
-                /**
-                 * input聚焦
-                 */
-                this.focus = function () {
-                    let input = $element[0].querySelector('.mob-input__inner')
-                    input.focus();
-                }
-
-                /**
-                 * 清空input内容
-                 */
-                this.clean = function () {
-                    this.focus()
-                    this.ngModel = ''
-                }
-
-                // 按照指定精度转换ngModel
-                this.patternPrecision = function (ngModel) {
-                    let temporaryNgModel = ngModel.toNumber()
-                    // 防止越界
-                    let step = new Decimal(this.step)
-                    // 判断是否小于最小值
-                    if (angular.isDefined(this.min) && temporaryNgModel < this.min) {
-                        ngModel = ngModel.add(step)
-                    }
-                    // 判断是否大于最大值
-                    if (angular.isDefined(this.max) && temporaryNgModel > this.max) {
-                        ngModel = ngModel.minus(step)
-                    }
-                    // 按照精度转换为Number
-                    if (angular.isUndefined(this.precision)) {
-                        this.ngModel = ngModel.toNumber();
-                    } else {
-                        this.ngModel = ngModel.toFixed(this.precision).toNumber();
-                    }
-                }
-
-                // 步长模式
-                this.patternStep = function () {
-                    let ngModel = new Decimal(this.ngModel)
-                    let step = new Decimal(this.step)
-                    let mod = ngModel.mod(step)
-
-                    if (this.stepStrictly) {
-                        ngModel = ngModel.minus(mod)
-                    }
-
-                    mod = mod.mul(new Decimal(2))
-                    if (mod > step) {
-                        ngModel = ngModel.add(step)
-                    }
-
-                    this.ngModel = ngModel.toNumber()
-                }
-
-                /**
-                 * 减少
-                 */
-                this.decrease = function () {
-                    if (this.ngDisabled) {
-                        return
-                    }
-                    this.patternStep()
-                    let ngModel = new Decimal(this.ngModel).minus(new Decimal(this.step))
-                    this.patternPrecision(ngModel)
-                }
-
-                /**
-                 * 增加
-                 */
-                this.increase = function () {
-                    if (this.ngDisabled) {
-                        return
-                    }
-                    this.patternStep()
-                    let ngModel = new Decimal(this.ngModel).add(new Decimal(this.step))
-                    this.patternPrecision(ngModel)
-                }
-
-                /**
-                 * model改变时的回调
-                 */
-                this.changeHandle = function () {
-                    if (angular.isFunction(this.changeEvent)) {
-                        this.changeEvent(this.ngModel)
-                    }
-                }
-                /**
-                 * 失焦
-                 */
-                this.blurHandle = function () {
-                    this.patternStep()
-                    this.patternPrecision(new Decimal(this.ngModel))
-                    if (angular.isFunction(this.blurEvent)) {
-                        this.blurEvent(this.ngModel)
-                    }
-                }
-
-            }
-        })
         .component('mobSelect', {
             transclude:true,
             templateUrl: './components/mob-select.html',
