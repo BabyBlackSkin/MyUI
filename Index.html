@@ -43,7 +43,6 @@
     <link rel="stylesheet" href="components/radio-button/mob-radio-button.css">
     <link rel="stylesheet" href="components/radio-group/mob-radio-group.css">
     <link rel="stylesheet" href="components/checkbox/mob-checkbox.css">
-    >
     <link rel="stylesheet" href="components/checkbox-button/mob-checkbox-button.css">
     <link rel="stylesheet" href="components/checkbox-group/mob-checkbox-group.css">
     <link rel="stylesheet" href="components/divider/mob-divider.css">
@@ -97,19 +96,9 @@
 </style>
 
 <body ng-controller="IndexCtrl as ctrl">
-<!-- <div>
-    <p>最外面的</p>
-    {{ctrl.form}}
-    <br>
-    ------
-    <div style="width: 200px;">
-        <mob-form form-item="ctrl.formItem" model="ctrl.form"></mob-form>
-    </div>
-</div> -->
 <div class="contain" style="display: flex;">
 
     <div class="navigation" style="z-index: 1">
-        <!-- <a href="#!/home">Home</a> -->
         <div class="nav-item" ng-class="{'is_active':item.path === routPath}" ng-repeat="item in menuList">
             <a href="{{'#' + item.path}}" ng-bind="item.label">home</a>
         </div>
@@ -124,8 +113,8 @@
 <script type="text/ng-template" id="home">
     <h1 style="margin-top:20px"> 参考Element UI ，基于Angular1.5.3开发的UI框架 </h1>
     <ul>
-        <li>目前的插件都是直接操作<code>dom</code>的，并没有使用<code>Angular</code>的双向数据绑定机制，采用数据驱动的方式实现；经常出现下拉框、多选框，点击保存后，在新增，还是会显示上一步操作的内容
-        </li>
+<!--        <li>目前的插件都是直接操作<code>dom</code>的，并没有使用<code>Angular</code>的双向数据绑定机制，采用数据驱动的方式实现；经常出现下拉框、多选框，点击保存后，在新增，还是会显示上一步操作的内容-->
+<!--        </li>-->
     </ul>
 </script>
 
