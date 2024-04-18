@@ -15,6 +15,9 @@
     <script src="./components/input-number/index.js"></script>
     <script src="./components/checkbox/index.js"></script>
     <script src="./components/checkbox-button/index.js"></script>
+    <script src="./components/radio/index.js"></script>
+    <script src="./components/radio-button/index.js"></script>
+    <script src="./components/radio-group/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
@@ -30,9 +33,9 @@
     <link rel="stylesheet" href="components/input-number/mob-input-number.css">
     <link rel="stylesheet" href="./css/mob-select.css">
     <link rel="stylesheet" href="./css/mob-select-options.css">
-    <link rel="stylesheet" href="./css/mob-radio.css">
-    <link rel="stylesheet" href="./css/mob-radio-button.css">
-    <link rel="stylesheet" href="./css/mob-radio-group.css">
+    <link rel="stylesheet" href="components/radio/mob-radio.css">
+    <link rel="stylesheet" href="components/radio-button/mob-radio-button.css">
+    <link rel="stylesheet" href="components/radio-group/mob-radio-group.css">
     <link rel="stylesheet" href="components/checkbox/mob-checkbox.css">
     >
     <link rel="stylesheet" href="components/checkbox-button/mob-checkbox-button.css">
@@ -925,189 +928,6 @@
                     $scope.active = !$scope.active
                     let val = this.getValue()
                     $scope.$emit('selectOptionsClick', {label: this.label,value:this.value})
-                }
-            }
-        })
-        .component('mobRadio', {
-            templateUrl: './components/mob-radio.html',
-            require: {
-                'radioGroup': '?^mobRadioGroup'
-            },
-            bindings: {
-                ngModel: '=?',
-                ngDisabled: '<?',
-                name: '<?',
-                label: '<',
-                value: '<?',
-                border: '<?',
-                changeHandle: '&?'
-            },
-            controller: function ($scope, $element, $attrs) {
-                // 初始化工作
-                this.$onInit = function () {
-                    if (!this.value) {
-                        this.value = this.label
-                    }
-
-                    if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
-                        // 绑定model
-                        this.ngModel = this.radioGroup.ngModel
-                        // 绑定name，一个组内的radio应该互斥
-                        this.name = this.radioGroup.name
-
-                        const _that = this
-                        $scope.$on(`${this.name}Change`, function (event, data) {
-                            _that.ngModel = data
-                        })
-                    }
-                }
-
-
-                this.$onChanges = function (changes) {
-
-                }
-
-                this.$onDestroy = function () {
-
-                }
-
-
-                this.$postLink = function () {
-                }
-
-                // 点击事件
-                this.clickHandle = function () {
-                    if (this.ngDisabled) {
-                        return
-                    }
-                    if (this.ngModel === this.value) {
-                        return;
-                    }
-                    this.change()
-
-                }
-
-                this.change = function () {
-                    this.ngModel = this.value
-                    if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: this.value})
-                    } else {
-                        $scope.$emit(`${this.name}ChildChange`, this.value)
-                    }
-
-                }
-            }
-        })
-        .component('mobRadioButton', {
-            templateUrl: './components/mob-radio-button.html',
-            require: {
-                'radioGroup': '?^mobRadioGroup'
-            },
-            bindings: {
-                ngModel: '=?',
-                ngDisabled: '<?',
-                name: '<?',
-                label: '<?',
-                value: '<?',
-                changeHandle: '&?'
-            },
-            controller: function ($scope, $element, $attrs) {
-                // 初始化工作
-                this.$onInit = function () {
-                    if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
-                        // 绑定model
-                        this.ngModel = this.radioGroup.ngModel
-                        // 绑定name，一个组内的radio应该互斥
-                        this.name = this.radioGroup.name
-
-                        const _that = this
-                        $scope.$on(`${this.name}Change`, function (event, data) {
-                            _that.ngModel = data
-                        })
-                    }
-                }
-
-
-                this.$onChanges = function (changes) {
-
-                }
-
-                this.$onDestroy = function () {
-
-                }
-
-
-                this.$postLink = function () {
-                }
-
-                // 点击事件
-                this.clickHandle = function () {
-                    if (this.ngDisabled) {
-                        return
-                    }
-                    if (this.ngModel === this.value) {
-                        return;
-                    }
-                    this.change()
-
-                }
-
-                this.change = function () {
-                    this.ngModel = this.value
-                    if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: this.value})
-                    } else {
-                        $scope.$emit(`${this.name}ChildChange`, this.value)
-                    }
-
-                }
-            }
-        })
-        .component('mobRadioGroup', {
-            transclude: true,
-            templateUrl: './components/mob-radio-group.html',
-            bindings: {
-                ngModel: '=?',
-                changeHandle: '&?'
-            },
-            controller: function ($scope, $element, $attrs) {
-                const _that = this
-                // 初始化工作
-                this.$onInit = function () {
-                    this.name = `mobRadioGroup_${$scope.$id}`
-                }
-
-
-                this.$onChanges = function (changes) {}
-
-                this.$onDestroy = function () {}
-
-
-                this.$postLink = function () {
-                    initEvent()
-                }
-
-                function initEvent() {
-                    $scope.$on(`${_that.name}ChildChange`, function (event, data) {
-                        _that.ngModel = data
-                        _that.change()
-                    })
-                }
-
-                function initWatcher() {
-                    $scope.$watchCollection(() => {
-                        return _that.ngModel
-                    }, function (newV) {
-                        _that.change()
-                    })
-                }
-
-                this.change = function () {
-                    if (angular.isFunction(this.changeHandle)) {
-                        this.changeHandle({value: this.ngModel})
-                    }
-                    // 反向通知group下所有的radio绑定的ngModel
-                    $scope.$broadcast(`${this.name}Change`, this.ngModel)
                 }
             }
         })
