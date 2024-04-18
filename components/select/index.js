@@ -35,7 +35,7 @@ function controller($scope, $element, $timeout) {
                 _that.focus()
                 return
             }
-            $scope.popper.selectDrown.hide()
+            $scope.popper && $scope.popper.selectDrown && $scope.popper.selectDrown.hide && $scope.popper.selectDrown.hide()
         }
 
         // 监听optionsInitValue事件
@@ -51,7 +51,7 @@ function controller($scope, $element, $timeout) {
         $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
             _that.changeHandle(data)
             if (!_that.multiple) {
-                $scope.popper.selectDrown.hide()
+                $scope.popper && $scope.popper.selectDrown && $scope.popper.selectDrown.hide && $scope.popper.selectDrown.hide()
             }
         })
 

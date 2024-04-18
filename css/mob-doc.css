@@ -31,6 +31,10 @@ h1, h2, h3, h4, h5, h6 {
 .mob-demo-example {
     padding: 24px;
 }
+.mob-demo-example mob-*{
+    display: block;
+    width: 200px;
+}
 
 .mob-demo-block .meta {
     width: 100%;

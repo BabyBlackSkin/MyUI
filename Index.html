@@ -22,6 +22,7 @@
     <script src="./components/radio-group/index.js"></script>
     <script src="./components/select/index.js"></script>
     <script src="./components/select-options/index.js"></script>
+    <script src="./components/switch/index.js"></script>
     <script src="./components/divider/index.js"></script>
     <script src="./components/icon/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
@@ -45,6 +46,7 @@
     <link rel="stylesheet" href="components/checkbox/mob-checkbox.css">
     <link rel="stylesheet" href="components/checkbox-button/mob-checkbox-button.css">
     <link rel="stylesheet" href="components/checkbox-group/mob-checkbox-group.css">
+    <link rel="stylesheet" href="components/switch/mob-switch.css">
     <link rel="stylesheet" href="components/divider/mob-divider.css">
 </head>
 <style>
@@ -93,6 +95,10 @@
         background-color: var(--mob-active-text-color-light);
         color: var(--mob-active-text-color);
     }
+    .main-container{
+        width: calc(100% - 240px);
+        padding-left: 260px;
+    }
 </style>
 
 <body ng-controller="IndexCtrl as ctrl">
@@ -104,7 +110,7 @@
         </div>
     </div>
 
-    <div>
+    <div class="main-container">
         <div ng-view="" class="view-animate-container">
         </div>
     </div>
@@ -241,6 +247,12 @@
             $scope.value3 = '香港'
             $scope.valueMultiple = ['香港','1','上海','北京']
         }])
+        .controller('SwitchCtrl', ['$scope', function SwitchCtrl($scope) {
+            $scope.demoTwo = {
+                activeText:'包年',
+                inactiveText:'包月',
+            }
+        }])
     ;
     app
         .directive('prism', function () {
@@ -279,15 +291,19 @@
                                 let popperConfig = {}
                                 angular.forEach(targetList, function (target) {
                                     let popperRole = target.getAttribute('popper-role');
-                                    let roles = popperRole.split(",");
-                                    angular.forEach(roles, function (role) {
-                                        popperConfig[role] = {
-                                            target
-                                        }
-                                    })
+                                    if (popperRole) {
+                                        let roles = popperRole.split(",");
+                                        angular.forEach(roles, function (role) {
+                                            popperConfig[role] = {
+                                                target
+                                            }
+                                        })
+                                    }
                                 })
-                                angular.forEach(floatingDomList,function(floatingDom){
-                                    popperConfig[floatingDom.getAttribute('popper-role')].floatingDom = floatingDom
+                                angular.forEach(floatingDomList, function (floatingDom) {
+                                    if (floatingDom.getAttribute('popper-role')) {
+                                        popperConfig[floatingDom.getAttribute('popper-role')].floatingDom = floatingDom
+                                    }
                                 })
                                 scope.popper = {}
                                 for (let name of Object.keys(popperConfig)) {

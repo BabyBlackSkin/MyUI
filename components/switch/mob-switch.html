@@ -1,5 +1,19 @@
 <div class="mob-switch"
+     ng-class="{
+     'is_active':$ctrl.ngModel,
+     'is_disabled':$ctrl.ngDisabled
+     }"
 >
-    <input type="checkbox" class="mob-switch__input">
-    <span class="mob-switch-core"></span>
+
+    <input type="checkbox" class="mob-switch__input" ng-disabled="$ctrl.ngDisabled" name="$ctrl.name"
+           ng-model="$ctrl.ngModel">
+    <!-- 激活文字描述 -->
+    <span class="mob-switch__inactive_text mob-switch__tips_text" ng-class="{'is_active':!$ctrl.ngModel}" ng-bind="$ctrl.activeText" ng-if="$ctrl.activeText"></span>
+
+
+    <span class="mob-switch-core" ng-click="$ctrl.clickHandle()"></span>
+
+    <!-- 未激活文字描述 -->
+    <span class="mob-switch__active_text mob-switch__tips_text" ng-class="{'is_active':$ctrl.ngModel}" ng-bind="$ctrl.inactiveText" ng-if="$ctrl.inactiveText"></span>
+
 </div>

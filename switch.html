@@ -1,0 +1,49 @@
+<section class="mob-doc content ignore">
+
+    <h2>Switch 开关</h2>
+
+    <div class="mob-doc content" style="position: relative">
+
+
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-switch ng-model="value"></mob-switch>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-switch ng-model="value"></mob-switch>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>文字描述</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="value"></mob-switch>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <html>
+                                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="value"></mob-switch>
+                            </html>
+
+                            <script>
+                                $scope.demoTwo = {
+                                    activeText:'包年',
+                                    inactiveText:'包月',
+                                }
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+    </div>
+</section>

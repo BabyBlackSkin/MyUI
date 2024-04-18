@@ -35,6 +35,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'SelectCtrl',
             controllerAs: 'select',
         })
+        .when('/switch', {
+            templateUrl: './switch.html',
+            controller: 'SwitchCtrl',
+            controllerAs: 'switch',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -61,6 +66,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Radio单选框', path: '/radio'},
         {label: 'CheckBox多选框', path: '/checkBox'},
         {label: 'Select选择器', path: '/select'},
+        {label: 'Switch开关', path: '/switch'},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
