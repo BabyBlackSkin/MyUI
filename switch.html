@@ -24,18 +24,27 @@
         <h3>文字描述</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="value"></mob-switch>
+                <div class="mob-demo-example-child">
+                    <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch active-text="demoThree.activeText" inactive-text="demoThree.inactiveText" ng-model="demoThree.value" inline-prompt="true"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch active-text="demoFour.activeText" inactive-text="demoFour.inactiveText" inactive-color="demoFour.inactiveColor" ng-model="demoFour.value" inline-prompt="true"></mob-switch>
+                </div>
             </div>
             <div class="meta">
                 <pre>
                         <code class="source-code language-markup language-js language-html language-css" prism
                         ><!--
                             <html>
-                                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="value"></mob-switch>
+                                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value"></mob-switch>
                             </html>
 
                             <script>
-                                $scope.demoTwo = {
+                                 $scope.demoTwo = {
+                                    value:false,
                                     activeText:'包年',
                                     inactiveText:'包月',
                                 }
@@ -45,5 +54,37 @@
             </div>
         </div>
 
+
+        <h3>Icon <span class="mob-tag tag-primary">TODO</span></h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-switch active-icon="demoFive.activeIcon" inactive-icon="demoFive.inactiveIcon"
+                                ng-model="demoFive.value"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch active-icon="demoFive.activeIcon" inactive-icon="demoFive.inactiveIcon"
+                                inline-prompt="true" ng-model="demoFive.value"></mob-switch>
+                </div>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <html>
+                                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value"></mob-switch>
+                            </html>
+
+                            <script>
+                                 $scope.demoTwo = {
+                                    value:false,
+                                    activeText:'包年',
+                                    inactiveText:'包月',
+                                }
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
     </div>
 </section>

@@ -42,6 +42,32 @@
 .mob-switch.is_active .mob-switch-core::after {
     left: 21px;
 }
-.mob-switch  .mob-switch__tips_text.is_active{
-    color: var(--mob-active-text-color);
+
+.mob-switch .mob-switch-core .mob-switch__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mob-fill-color-light);
+    position: absolute;
+    top: 1.5px;
+    left: 21px;
+    width: 16px;
+    height: 16px;
+    transition: all var(--mob-transition-duration) var(--mob-transition-animate);
 }
+
+.mob-switch.is_active .mob-switch-core .mob-switch__inner {
+    left: 4px;
+}
+
+.mob-switch .mob-switch-core .mob-switch__inner .mob-switch__inner_prompt {
+    font-size: .8rem;
+}
+.mob-switch mob-switch-core .mob-icon svg{
+    width: .8rem;
+    height: .8rem;
+}
+
+/*.mob-switch  .mob-switch__tips_text.is_active{*/
+/*    color: var(--mob-active-text-color);*/
+/*}*/
