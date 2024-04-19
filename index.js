@@ -60,7 +60,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
 
     $rootScope.menuList = [
         {label: 'Home', path: '/home'},
-        {label: 'popper容器', path: '/popper'},
+        {label: 'popper容器', path: '/popper', tags: [{title:'beta', type:'warning'}]},
         {label: 'Input输入框', path: '/input'},
         {label: 'Input Number 输入框', path: '/inputNumber'},
         {label: 'Radio单选框', path: '/radio'},

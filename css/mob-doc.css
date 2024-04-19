@@ -12,16 +12,20 @@ h1, h2, h3, h4, h5, h6 {
 .mob-doc h3 {
     margin: 55px 0 20px;
 }
-.mob-doc .mob-tag{
+.mob-tag{
     border-radius: 4px;
     padding: 2px 4px;
     color: white;
-    font-size: .4rem;
+    font-size: .5rem;
+    margin-left: 5px;
 }
-.mob-doc .tag-primary{
+.tag-primary{
     background-color: #0077aa;
 }
 
+.tag-warning{
+    background-color: #e6a23c;
+}
 .mob-doc {
     width: 100%;
     height: 100%;

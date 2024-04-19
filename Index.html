@@ -107,7 +107,10 @@
 
     <div class="navigation" style="z-index: 1">
         <div class="nav-item" ng-class="{'is_active':item.path === routPath}" ng-repeat="item in menuList">
-            <a href="{{'#' + item.path}}" ng-bind="item.label">home</a>
+            <a href="{{'#' + item.path}}" >
+                {{item.label}}
+                <span ng-repeat="tag in item.tags" ng-class="'mob-tag tag-' + tag.type" ng-bind="tag.title"></span>
+            </a>
         </div>
     </div>
 
