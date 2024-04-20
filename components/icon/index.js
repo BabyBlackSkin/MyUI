@@ -1,10 +1,4 @@
 function controller($scope){
-    this.$postLink = function (){
-        console.log($scope.$id)
-        $scope.$on('changeStyle', function(e){
-            console.log(e)
-        })
-    }
 }
 
 

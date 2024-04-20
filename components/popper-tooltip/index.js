@@ -21,15 +21,14 @@ function controller($scope, $element, $attrs, $transclude) {
             tooltip: tooltipDom
         }
         if ($transclude.isSlotFilled('mobPopperTooltipArrow')) {
-
             $scope.$on(`${_that.id}_tooltipArrowPostLink`, function (e, data) {
-                console.log('收到来自arrow的通知')
                 Object.assign(dom, data)
                 $scope.$emit(`${_that.mobPopper.id}TooltipPostLink`, dom)
             })
         } else {
             $scope.$emit(`${_that.mobPopper.id}TooltipPostLink`, dom)
         }
+        console.log($element[0])
     }
 }
 

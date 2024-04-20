@@ -16,9 +16,7 @@ function controller($scope, $element, $attrs) {
 
 
     this.$postLink = function () {
-        console.log(`${_that.mobPopper.id}TooltipRenderFinish`)
         $scope.$on(`${_that.mobPopper.id}TooltipRenderFinish`, function (e, data) {
-            console.log('target 收到了来自Father的通信' , data)
             $scope.$render = data
             _that.create()
         })
@@ -47,7 +45,6 @@ function controller($scope, $element, $attrs) {
 
             if (tooltipsArrow) {
                 const {x: arrowX, y: arrowY} = middlewareData.arrow;
-                console.log('我计算了高度，', arrowX, arrowY)
 
                 const staticSide = {
                     top: 'bottom',

@@ -19,7 +19,6 @@ function controller($scope, $element, $attrs) {
     this.$postLink = function () {
         let arrowDom = $($element[0]).find(`.mob-popper-tooltip-arrow`)[0]
         debugger
-        console.log(`${_that.mobPopperTooltip.id}_tooltipArrowPostLink`)
         $scope.$emit(`${_that.mobPopperTooltip.id}_tooltipArrowPostLink`, {tooltipsArrow: arrowDom})
     }
 }
