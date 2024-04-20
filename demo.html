@@ -70,6 +70,7 @@
 
         const {x: arrowX, y: arrowY} = middlewareData.arrow;
 
+        console.log(placement)
         const staticSide = {
             top: 'bottom',
             right: 'left',
@@ -77,8 +78,9 @@
             left: 'right',
         }[placement.split('-')[0]];
 
+        debugger
         Object.assign(arrowElement.style, {
-            left: arrowX != null ? `${arrowX}px` : '',
+            left: arrowX != null ? `${arrowX }px` : '',
             top: arrowY != null ? `${arrowY}px` : '',
             right: '',
             bottom: '',

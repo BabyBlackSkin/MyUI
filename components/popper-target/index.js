@@ -16,25 +16,19 @@ function controller($scope, $element, $attrs) {
 
 
     this.$postLink = function () {
-        $scope.$render = {tooltipsDom:null}
         console.log(`${_that.mobPopper.id}TooltipRenderFinish`)
         $scope.$on(`${_that.mobPopper.id}TooltipRenderFinish`, function (e, data) {
             console.log('target 收到了来自Father的通信' , data)
-            _that.create(data)
+            $scope.$render = data
+            _that.create()
         })
     }
 
-    this.clickHandle = function () {
-        console.log('点击')
-    }
-
-
-    this.create = function(tooltip){
+    this.computePosition = function(){
         const target = $element[0];
-        console.log(target)
-        console.log(tooltip)
-        console.log('-')
-        // const arrowElement = document.querySelector('#arrow');
+        const tooltip = $scope.$render.tooltip;
+        const tooltipsArrow = $scope.$render.tooltipsArrow
+
 
         window.FloatingUIDOM.computePosition(target, tooltip, {
             placement: 'bottom-start',
@@ -42,57 +36,77 @@ function controller($scope, $element, $attrs) {
                 window.FloatingUIDOM.flip(),// y轴自适应
                 window.FloatingUIDOM.shift(), // x轴自适应
                 window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
-                // window.FloatingUIDOM.arrow({element: arrowElement}),
+                window.FloatingUIDOM.arrow({element: tooltipsArrow}),
             ]
         }).then(({x, y, placement, middlewareData}) => {
+            // console.log('我计算了高度，', x, y)
             Object.assign(tooltip.style, {
                 left: `${x}px`,
                 top: `${y}px`,
             });
 
-            // const {x: arrowX, y: arrowY} = middlewareData.arrow;
+            if (tooltipsArrow) {
+                const {x: arrowX, y: arrowY} = middlewareData.arrow;
+                console.log('我计算了高度，', arrowX, arrowY)
 
-            // const staticSide = {
-            //     top: 'bottom',
-            //     right: 'left',
-            //     bottom: 'top',
-            //     left: 'right',
-            // }[placement.split('-')[0]];
-            //
-            // Object.assign(arrowElement.style, {
-            //     left: arrowX != null ? `${arrowX}px` : '',
-            //     top: arrowY != null ? `${arrowY}px` : '',
-            //     right: '',
-            //     bottom: '',
-            //     [staticSide]: '-4px',
-            // });
+                const staticSide = {
+                    top: 'bottom',
+                    right: 'left',
+                    bottom: 'top',
+                    left: 'right',
+                }[placement.split('-')[0]];
+
+                Object.assign(tooltipsArrow.style, {
+                    left: '',
+                    top: arrowY != null ? `${arrowY}px` : '',
+                    right: '',
+                    bottom: '',
+                    [staticSide]: '-8px',
+                });
+            }
         });
+    }
 
+
+    this.create = function(){
+        const target = $element[0];
+        this.computePosition()
         let timer = {}
 
-        target.addEventListener('mouseenter', function () {
-            console.log('mouseenter')
-            tooltip.style.display = 'block'
-            clearTimeout(timer.tool)
-        })
+        if (!$scope.$render.trigger || $scope.$render.trigger === 'hover') {
+            target.addEventListener('mouseenter', function () {
+                _that.computePosition()
+                $scope.$render.tooltip.style.display = 'block'
+                clearTimeout(timer.tool)
+            })
 
-        target.addEventListener('mouseleave', function () {
-            console.log('mouseleave')
-            timer.target = setTimeout(() => {
-                tooltip.style.display = 'none'
-            }, 300)
-        })
+            target.addEventListener('mouseleave', function () {
+                timer.target = setTimeout(() => {
+                    $scope.$render.tooltip.style.display = 'none'
+                }, 300)
+            })
 
-        tooltip.addEventListener('mouseenter', function () {
-            tooltip.style.display = 'block'
-            clearTimeout(timer.target)
-        })
+            $scope.$render.tooltip.addEventListener('mouseenter', function () {
+                tooltip.style.display = 'block'
+                clearTimeout(timer.target)
+            })
 
-        tooltip.addEventListener('mouseleave', function () {
-            timer.tool = setTimeout(() => {
-                tooltip.style.display = 'none'
-            }, 300)
-        })
+            $scope.$render.tooltip.addEventListener('mouseleave', function () {
+                timer.tool = setTimeout(() => {
+                    $scope.$render.tooltip.style.display = 'none'
+                }, 300)
+            })
+        } else if($scope.$render.trigger ==='click') {
+            target.addEventListener('click', function () {
+                $scope.$render.show = !$scope.$render.show
+                if($scope.$render.show){
+                    _that.computePosition()
+                    $scope.$render.tooltip.style.display = 'block'
+                }else{
+                    $scope.$render.tooltip.style.display = 'none'
+                }
+            })
+        }
     }
 }
 

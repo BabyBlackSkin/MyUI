@@ -18,7 +18,9 @@ function controller($scope, $element, $attrs, $timeout, uuId) {
 
     this.$postLink = function () {
         $scope.$on(`${_that.id}TooltipPostLink`, function (e, data) {
-            $scope.$broadcast(`${_that.id}TooltipRenderFinish`, data.dom)
+            $scope.$broadcast(`${_that.id}TooltipRenderFinish`, Object.assign(data, {
+                trigger: _that.trigger
+            }))
         })
     }
 }
@@ -30,6 +32,8 @@ app
             popperTooltip: 'mobPopperTooltip'
         },
         templateUrl: './components/popper/mob-popper.html',
-        bindings: {},
+        bindings: {
+            trigger: '<?'
+        },
         controller: controller
     })

@@ -13,6 +13,7 @@
 
     <script src="./index.js"></script>
     <script src="./controller/input/index.js"></script>
+    <script src="./components/container/index.js"></script>
     <script src="./components/input/index.js"></script>
     <script src="./components/input-number/index.js"></script>
     <script src="./components/checkbox/index.js"></script>
@@ -28,6 +29,7 @@
     <script src="./components/icon/index.js"></script>
     <script src="./components/popper-target/index.js"></script>
     <script src="./components/popper-tooltip/index.js"></script>
+    <script src="./components/popper-tooltip-arrow/index.js"></script>
     <script src="./components/popper/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
@@ -54,6 +56,7 @@
     <link rel="stylesheet" href="components/divider/mob-divider.css">
     <link rel="stylesheet" href="components/popper/mob-popper.css">
     <link rel="stylesheet" href="components/popper-tooltip/mob-popper-tooltip.css">
+    <link rel="stylesheet" href="components/popper-tooltip-arrow/mob-popper-tooltip-arrow.css">
 </head>
 <style>
     .contain {
@@ -608,12 +611,6 @@
 
     // FIXME 待完善
     app
-        .component('mobContainer', {
-            transclude: true,
-            templateUrl: './components/mob-container.html',
-            controller: function ($scope, $element) {}
-        })
-
         .component('mobForm', {// https://segmentfault.com/a/1190000005868488
             transclude: true,
             templateUrl: './components/mob-form.html',

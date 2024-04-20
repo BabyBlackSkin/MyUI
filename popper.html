@@ -1,44 +1,67 @@
 <section class="mob-doc content ignore">
 
-<!--    <style>-->
-<!--        #tooltip {-->
-<!--            width: max-content;-->
-<!--            position: absolute;-->
-<!--            top: 0;-->
-<!--            left: 0;-->
-
-<!--            display: none;-->
-
-
-<!--            background: #222;-->
-<!--            color: white;-->
-<!--            font-weight: bold;-->
-<!--            padding: 5px;-->
-<!--            border-radius: 4px;-->
-<!--            font-size: 90%;-->
-<!--        }-->
-
-<!--        #arrow {-->
-<!--            position: absolute;-->
-<!--            background: #222;-->
-<!--            width: 8px;-->
-<!--            height: 8px;-->
-<!--            transform: rotate(45deg);-->
-<!--        }-->
-<!--    </style>-->
 
     <h2>Popper 容器</h2>
 
-    <mob-popper>
-        <mob-popper-target>
-            <button id="button" aria-describedby="tooltip">
-                My button
-            </button>
-        </mob-popper-target>
-        <mob-popper-tooltip>
-            <div id="tooltip" role="tooltip">My tooltip
-                <div id="arrow"></div>
+    <h3>基础用法</h3>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example">
+            <div class="mob-demo-example-child">
+                <mob-popper trigger="'click'">
+                    <mob-popper-target>
+                        <button aria-describedby="tooltip">
+                            Click
+                        </button>
+                    </mob-popper-target>
+                    <mob-popper-tooltip>
+                        <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
+                        <mob-container>
+                            <div role="tooltip">My tooltip
+                            </div>
+                        </mob-container>
+                    </mob-popper-tooltip>
+                </mob-popper>
+
+                <mob-popper style="margin-left: 50px">
+                    <mob-popper-target>
+                        <button aria-describedby="tooltip">
+                            hover
+                        </button>
+                    </mob-popper-target>
+                    <mob-popper-tooltip>
+                        <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
+                        <mob-container>
+                            <div role="tooltip">My tooltip </div>
+                        </mob-container>
+                    </mob-popper-tooltip>
+                </mob-popper>
             </div>
-        </mob-popper-tooltip>
-    </mob-popper>
+            <mob-divider></mob-divider>
+            <p>
+                可通过指定 <code>trigger</code> 配置触发方式
+            </p>
+        </div>
+        <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                          <mob-popper trigger="'click'">
+                            <mob-popper-target>
+                                <button aria-describedby="tooltip">
+                                    My button
+                                </button>
+                            </mob-popper-target>
+                            <mob-popper-tooltip>
+                                <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
+                                <mob-container>
+                                    <div id="tooltip" role="tooltip">My tooltip
+                                    </div>
+                                </mob-container>
+                            </mob-popper-tooltip>
+                        </mob-popper>
+                        --></code>
+                    </pre>
+        </div>
+    </div>
+
 </section>
