@@ -11,7 +11,8 @@ function controller($scope, $element, $attrs, $transclude) {
     }
 
     this.$onDestroy = function () {
-
+        // 从body中移除元素
+        document.body.removeChild($element[0])
     }
 
 
@@ -28,7 +29,8 @@ function controller($scope, $element, $attrs, $transclude) {
         } else {
             $scope.$emit(`${_that.mobPopper.id}TooltipPostLink`, dom)
         }
-        console.log($element[0])
+        document.body.appendChild($element[0])
+        // console.log()
     }
 }
 

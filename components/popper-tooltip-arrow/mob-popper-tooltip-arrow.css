@@ -1,7 +1,8 @@
-.mob-popper mob-popper-tooltip-arrow{
+mob-popper-tooltip-arrow {
     position: absolute;
 }
-.mob-popper .mob-popper-tooltip-arrow{
+
+.mob-popper-tooltip-arrow {
     position: absolute;
     background: #222;
     width: 8px;
