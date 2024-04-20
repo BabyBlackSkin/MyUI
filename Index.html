@@ -26,6 +26,9 @@
     <script src="./components/switch/index.js"></script>
     <script src="./components/divider/index.js"></script>
     <script src="./components/icon/index.js"></script>
+    <script src="./components/popper-target/index.js"></script>
+    <script src="./components/popper-tooltip/index.js"></script>
+    <script src="./components/popper/index.js"></script>
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
     <link rel="stylesheet" href="prism/prism.css">
@@ -49,6 +52,8 @@
     <link rel="stylesheet" href="components/checkbox-group/mob-checkbox-group.css">
     <link rel="stylesheet" href="components/switch/mob-switch.css">
     <link rel="stylesheet" href="components/divider/mob-divider.css">
+    <link rel="stylesheet" href="components/popper/mob-popper.css">
+    <link rel="stylesheet" href="components/popper-tooltip/mob-popper-tooltip.css">
 </head>
 <style>
     .contain {
@@ -223,65 +228,7 @@
         }])
         .controller('PopperCtrl', ['$scope', 'floating', 'uuId', function CheckBoxCtrl($scope, floating, uuId) {
 
-            const button = document.querySelector('#button');
-            const tooltip = document.querySelector('#tooltip');
-            const arrowElement = document.querySelector('#arrow');
 
-            window.FloatingUIDOM.computePosition(button, tooltip, {
-                placement: 'bottom-start',
-                middleware: [
-                    window.FloatingUIDOM.flip(),// y轴自适应
-                    window.FloatingUIDOM.shift(), // x轴自适应
-                    window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
-                    window.FloatingUIDOM.arrow({element: arrowElement}),
-                ]
-            }).then(({x, y, placement, middlewareData}) => {
-                Object.assign(tooltip.style, {
-                    left: `${x}px`,
-                    top: `${y}px`,
-                });
-
-                const {x: arrowX, y: arrowY} = middlewareData.arrow;
-
-                const staticSide = {
-                    top: 'bottom',
-                    right: 'left',
-                    bottom: 'top',
-                    left: 'right',
-                }[placement.split('-')[0]];
-
-                Object.assign(arrowElement.style, {
-                    left: arrowX != null ? `${arrowX}px` : '',
-                    top: arrowY != null ? `${arrowY}px` : '',
-                    right: '',
-                    bottom: '',
-                    [staticSide]: '-4px',
-                });
-            });
-
-            let timer = {}
-
-            button.addEventListener('mouseenter', function () {
-                tooltip.style.display = 'block'
-                clearTimeout(timer.tool)
-            })
-
-            button.addEventListener('mouseleave', function () {
-                timer.target = setTimeout(() => {
-                    tooltip.style.display = 'none'
-                }, 300)
-            })
-
-            tooltip.addEventListener('mouseenter', function () {
-                tooltip.style.display = 'block'
-                clearTimeout(timer.target)
-            })
-
-            tooltip.addEventListener('mouseleave', function () {
-                timer.tool = setTimeout(() => {
-                    tooltip.style.display = 'none'
-                }, 300)
-            })
 
         }])
         .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {

@@ -1,38 +1,44 @@
 <section class="mob-doc content ignore">
 
-    <style>
-        #tooltip {
-            width: max-content;
-            position: absolute;
-            top: 0;
-            left: 0;
+<!--    <style>-->
+<!--        #tooltip {-->
+<!--            width: max-content;-->
+<!--            position: absolute;-->
+<!--            top: 0;-->
+<!--            left: 0;-->
 
-            display: none;
+<!--            display: none;-->
 
 
-            background: #222;
-            color: white;
-            font-weight: bold;
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 90%;
-        }
+<!--            background: #222;-->
+<!--            color: white;-->
+<!--            font-weight: bold;-->
+<!--            padding: 5px;-->
+<!--            border-radius: 4px;-->
+<!--            font-size: 90%;-->
+<!--        }-->
 
-        #arrow {
-            position: absolute;
-            background: #222;
-            width: 8px;
-            height: 8px;
-            transform: rotate(45deg);
-        }
-    </style>
+<!--        #arrow {-->
+<!--            position: absolute;-->
+<!--            background: #222;-->
+<!--            width: 8px;-->
+<!--            height: 8px;-->
+<!--            transform: rotate(45deg);-->
+<!--        }-->
+<!--    </style>-->
 
     <h2>Popper 容器</h2>
 
-    <button id="button" aria-describedby="tooltip">
-        My button
-    </button>
-    <div id="tooltip" role="tooltip">My tooltip
-        <div id="arrow"></div>
-    </div>
+    <mob-popper>
+        <mob-popper-target>
+            <button id="button" aria-describedby="tooltip">
+                My button
+            </button>
+        </mob-popper-target>
+        <mob-popper-tooltip>
+            <div id="tooltip" role="tooltip">My tooltip
+                <div id="arrow"></div>
+            </div>
+        </mob-popper-tooltip>
+    </mob-popper>
 </section>
