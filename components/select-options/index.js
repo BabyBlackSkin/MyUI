@@ -75,7 +75,7 @@ app
     },
     templateUrl: './components/select-options/mob-select-options.html',
     require: {
-        'mobSelect': '^mobSelect'
+        'mobSelect': '?^mobSelect'
     },
     bindings: {
         ngDisabled:'<?',
