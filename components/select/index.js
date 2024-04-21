@@ -35,7 +35,7 @@ function controller($scope, $element, $timeout) {
                 _that.focus()
                 return
             }
-            $scope.popper && $scope.popper.selectDrown && $scope.popper.selectDrown.hide && $scope.popper.selectDrown.hide()
+            $scope.$popper && $scope.$popper.selectDrown && $scope.$popper.selectDrown.hide && $scope.$popper.selectDrown.hide()
         }
 
         // 监听optionsInitValue事件
@@ -51,7 +51,7 @@ function controller($scope, $element, $timeout) {
         $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
             _that.changeHandle(data)
             if (!_that.multiple) {
-                $scope.popper && $scope.popper.selectDrown && $scope.popper.selectDrown.hide && $scope.popper.selectDrown.hide()
+                $scope.$popper && $scope.$popper.selectDrown && $scope.$popper.selectDrown.hide && $scope.$popper.selectDrown.hide()
             }
         })
 
@@ -98,19 +98,7 @@ function controller($scope, $element, $timeout) {
      * 点击事件
      */
     this.clickHandler = function () {
-        if (this.ngDisabled) {
-            return
-        }
-        if ($scope.popper.selectDrown.popper) {
-            $scope.popper.selectDrown.hide()
-        } else {
-            // if (this.multiple) {// 多选的时候，才使用动态更新popper。动态定位的popper还是比较消耗性能的
-            // $scope.popper.selectDrown.showAutoUpdate()
-            // } else {
-            $scope.popper.selectDrown.showAutoUpdate()
-            // }
-            this.focus()
-        }
+        this.focus()
     }
 
     /**
