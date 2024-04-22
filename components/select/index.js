@@ -1,4 +1,4 @@
-function controller($scope, $element, $timeout) {
+function controller($scope, $element, $timeout,popper) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -21,6 +21,11 @@ function controller($scope, $element, $timeout) {
 
 
     this.$postLink = function () {
+        // 获取target
+        const targetList = $element[0].querySelectorAll('.mob_popper__target');
+        // 获取popperTooltip
+        const popperTooltipList = $element[0].querySelectorAll('.mob-popper');
+        popper.popper($scope, targetList, popperTooltipList)
         this.initEvent()
         this.initWatcher()
 
