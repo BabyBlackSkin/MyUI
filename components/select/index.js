@@ -54,6 +54,19 @@ function controller($scope, $element, $timeout) {
             return !_that.ngDisabled
         }
 
+
+        $scope.$popper['tooltip'].focusOut = function (e) {
+            console.log(this)
+            return new Promise(resolve => {
+                // 判断点击的是否是tooltip
+                let isTooltip = this.tooltip.contains(e.target)
+                if (isTooltip) {
+                    return resolve(false)
+                }
+                return resolve(true)
+            })
+        }
+
         // 监听optionsInitValue事件
         $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
             if (!_that.multiple) {
@@ -66,9 +79,6 @@ function controller($scope, $element, $timeout) {
         // 监听optionsClick事件
         $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
             _that.changeHandle(data)
-            if (!_that.multiple) {
-                $scope.$popper && $scope.$popper.selectDrown && $scope.$popper.selectDrown.hide && $scope.$popper.selectDrown.hide()
-            }
         })
 
         // 监听collapseTagsListUpdate事件
@@ -100,7 +110,21 @@ function controller($scope, $element, $timeout) {
         return !this.ngDisabled &&
             this.multiple &&
             this.ngModel.length > 0 &&
-            this.collapseTag
+            this.collapseTag &&
+            !this.collapseTagTooltip
+    }
+
+
+    /**
+     * 有工具箱的collapse
+     * @returns {false|string|boolean|*|boolean}
+     */
+    this.isCollapseTagsHasTooltip = function (){
+        return !this.ngDisabled &&
+            this.multiple &&
+            this.ngModel.length > 0 &&
+            this.collapseTag &&
+            this.collapseTagTooltip
     }
 
     /**
@@ -207,6 +231,7 @@ app
             placeHolder: '<?',
             multiple: '<?',
             collapseTag: '<?',
+            collapseTagTooltip:'<?',
             change: '&?'
         },
         controller: controller

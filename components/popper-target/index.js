@@ -84,7 +84,7 @@ function controller($scope, $element, $attrs) {
             })
 
             $scope.$render.tooltip.addEventListener('mouseenter', function () {
-                tooltip.style.display = 'block'
+                $scope.$render.tooltip.style.display = 'block'
                 clearTimeout(timer.target)
             })
 

@@ -44,6 +44,7 @@ app
                                 }
                             })
                             scope.$popper = {}
+                            debugger
                             // 遍历定义的popper
                             for (let name of Object.keys(popperConfig)) {
                                 let trigger = popperConfig[name].popperTrigger;
@@ -71,6 +72,7 @@ app
                                 // 判断触发方式
                                 if (!trigger || trigger === 'click') {
                                     target.addEventListener('click', async function (e) {
+                                        console.log(e.target)
                                         let res = scope.$popper[name].focus && await scope.$popper[name].focus(e) || true
                                         if (!res) {
                                             return
@@ -87,6 +89,38 @@ app
 
                                     })
                                 } else {
+                                    let timer = {
+                                        target: null,
+                                        tooltip: null
+                                    }
+                                    target.addEventListener('mouseenter', function () {
+                                        showAutoUpdate(scope, scope.$popper[name])
+                                        clearTimeout(timer.tooltip)
+                                    })
+
+                                    target.addEventListener('mouseleave', function () {
+                                        // console.log('target mouseLeave')
+                                        // timer.target = setTimeout(() => {
+                                        //     console.log('target mouseLeave hide')
+                                        //     hide(scope, scope.$popper[name])
+                                        // }, 300)
+                                    })
+
+                                    tooltip.addEventListener('mouseenter', function () {
+                                        // console.log('tooltip mouseenter')
+                                        // showAutoUpdate(scope, scope.$popper[name])
+                                        // console.log('tooltip mouseenter clearTimeout')
+                                        // clearTimeout(timer.target)
+                                    })
+
+                                    tooltip.addEventListener('mouseleave', function (e) {
+                                        // console.log(e.target)
+                                        // console.log(e.relatedTarget)
+                                        // console.log('tooltip mouseleave')
+                                        // timer.tooltip = setTimeout(() => {
+                                        //     hide(scope, scope.$popper[name])
+                                        // }, 300)
+                                    })
 
                                 }
 
@@ -120,19 +154,17 @@ app
                         }
 
                         function hide(scope, popper) {
-                            let { target, tooltip} = popper
-                            tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
-                            tooltip.style.opacity = 0;
-                            tooltip.style.height = '0';
-                            popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
-                            setTimeout(function () {
-                                tooltip.style.display = '';
-                            }, 300)
+                            // let { target, tooltip} = popper
+                            // tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
+                            // tooltip.style.opacity = 0;
+                            // tooltip.style.height = '0';
+                            // popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
+                            // setTimeout(function () {
+                            //     tooltip.style.display = '';
+                            // }, 300)
                         }
 
-                        // $timeout(() => {
                         popper()
-                        // }, 100)
                     }
                 }
             },

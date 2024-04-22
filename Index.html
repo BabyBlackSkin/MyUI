@@ -401,7 +401,7 @@
                 floating.style.height = 'auto';
                 const {height} = floating.getBoundingClientRect()
                 floating.style.height = 0;
-                floating.offsetHeight
+                floating.offsetHeight // 重绘有问题？？或者将元素放到body上
                 floating.style.height = (height > 200 ? 200 : height) + 'px';
                 floating.style.opacity = 1;
             }
