@@ -28,14 +28,24 @@ function controller($scope, $element, $timeout) {
 
     // 初始化事件监听
     this.initEvent = function () {
-        $scope.$eventListener = {}
-        // 点击select外部的时候，隐藏下拉框
-        $scope.$eventListener.focusOut = function (e, value) {
-            if (value) {
-                _that.focus()
-                return
-            }
-            $scope.$popper && $scope.$popper.selectDrown && $scope.$popper.selectDrown.hide && $scope.$popper.selectDrown.hide()
+        $scope.$popper['selectDrown'].focusOut = function (e) {
+            return new Promise(resolve => {
+                let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
+                if (isTooltip) {
+                    let optionId = e.target.getAttribute('id')
+                    $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
+                        let val = data.key === 'ngDisabled' ? !!data.value : data.value
+                        resolve(!val)
+                    })
+                    // 调用子组件方法
+                    $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
+                }
+                return resolve(!_that.multiple)
+            })
+        }
+
+        $scope.$popper['selectDrown'].focus = function () {
+            return !_that.ngDisabled
         }
 
         // 监听optionsInitValue事件
@@ -98,6 +108,9 @@ function controller($scope, $element, $timeout) {
      * 点击事件
      */
     this.clickHandler = function () {
+        if (this.ngDisabled) {
+            return
+        }
         this.focus()
     }
 

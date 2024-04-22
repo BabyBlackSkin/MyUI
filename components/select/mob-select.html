@@ -1,13 +1,12 @@
 <div class="mob-select"
      popper
      ng-class="{
-     'mob-select--suffix':$ctrl.options.clearable,
+     'is_clearable':$ctrl.clearable,
      'is_disabled':$ctrl.ngDisabled,
      'is_multiple':$ctrl.multiple
      }"
-     focus-out
 >
-    <div class="mob-select__wrapper mob_popper__target" popper-role="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="$ctrl.clickHandler()">
+    <div class="mob-select__wrapper mob_popper__target" popper-group="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="$ctrl.clickHandler()">
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
@@ -54,7 +53,7 @@
     </div>
 
 
-    <div class="mob-popper" popper-role="selectDrown" >
+    <div class="mob-popper" popper-group="selectDrown" >
         <div class="mob-popper__wrapper">
             <span class="mob-popper__arrow"></span>
             <div class="mob-popper__inner">

@@ -5,35 +5,35 @@
     <div class="mob-doc content" style="position: relative">
 
 
-        <h3>基础用法</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value">
-                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                </mob-select>
-            </div>
-            <div class="meta">
-                <pre>
-                        <code class="source-code language-markup language-js language-html language-css" prism
-                        ><!--
-                            <html>
-                             <mob-select style="display: block;width: 200px" ng-model="value">
-                                <mob-select-options ng-repeat="o in select.options" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                    this.optionsBase = [
-                                        {label: '香港', value: '香港'},
-                                        {label: '澳门', value: '澳门'},
-                                        {label: '北京', value: '北京'},
-                                        {label: '上海', value: '上海'},
-                                        {label: '深圳'},
-                                    ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
+<!--        <h3>基础用法</h3>-->
+<!--        <div class="mob-demo-block">-->
+<!--            <div class="mob-demo-example">-->
+<!--                <mob-select style="display: block;width: 200px" ng-model="value">-->
+<!--                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                </mob-select>-->
+<!--            </div>-->
+<!--            <div class="meta">-->
+<!--                <pre>-->
+<!--                        <code class="source-code language-markup language-js language-html language-css" prism-->
+<!--                        >&lt;!&ndash;-->
+<!--                            <html>-->
+<!--                             <mob-select style="display: block;width: 200px" ng-model="value">-->
+<!--                                <mob-select-options ng-repeat="o in select.options" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                            </mob-select>-->
+<!--                            </html>-->
+<!--                            <script>-->
+<!--                                    this.optionsBase = [-->
+<!--                                        {label: '香港', value: '香港'},-->
+<!--                                        {label: '澳门', value: '澳门'},-->
+<!--                                        {label: '北京', value: '北京'},-->
+<!--                                        {label: '上海', value: '上海'},-->
+<!--                                        {label: '深圳'},-->
+<!--                                    ]-->
+<!--                            </script>-->
+<!--                        &ndash;&gt;</code>-->
+<!--                    </pre>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <h3>有禁用选项</h3>
         <div class="mob-demo-block">
@@ -66,159 +66,159 @@
             </div>
         </div>
 
-        <h3>禁用状态</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value2" ng-disabled="true">
-                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                </mob-select>
-            </div>
-            <div class="meta">
-                <pre>
-                        <code class="source-code language-markup language-js language-html language-css" prism
-                        ><!--
-                            <html>
-                            <mob-select style="display: block;width: 200px" ng-model="value" ng-disabled="true">
-                                <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
+<!--        <h3>禁用状态</h3>-->
+<!--        <div class="mob-demo-block">-->
+<!--            <div class="mob-demo-example">-->
+<!--                <mob-select style="display: block;width: 200px" ng-model="value2" ng-disabled="true">-->
+<!--                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                </mob-select>-->
+<!--            </div>-->
+<!--            <div class="meta">-->
+<!--                <pre>-->
+<!--                        <code class="source-code language-markup language-js language-html language-css" prism-->
+<!--                        >&lt;!&ndash;-->
+<!--                            <html>-->
+<!--                            <mob-select style="display: block;width: 200px" ng-model="value" ng-disabled="true">-->
+<!--                                <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                            </mob-select>-->
+<!--                            </html>-->
+<!--                            <script>-->
+<!--                                this.optionsDisabled = [-->
+<!--                                    {label: '香港', value: '香港'},-->
+<!--                                    {label: '澳门', value: '澳门', disabled: true},-->
+<!--                                    {label: '北京', value: '北京'},-->
+<!--                                    {label: '上海', value: '上海'},-->
+<!--                                    {label: '广州'},-->
+<!--                                    {label: '深圳'},-->
+<!--                                ]-->
+<!--                            </script>-->
+<!--                        &ndash;&gt;</code>-->
+<!--                    </pre>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
-        <h3>可清空</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value3" clearable="true">
-                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                </mob-select>
-            </div>
-            <div class="meta">
-                <pre>
-                        <code class="source-code language-markup language-js language-html language-css" prism
-                        ><!--
-                            <html>
-                            <mob-select style="display: block;width: 200px" ng-model="value3" clearable="true">
-                                <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
+<!--        <h3>可清空</h3>-->
+<!--        <div class="mob-demo-block">-->
+<!--            <div class="mob-demo-example">-->
+<!--                <mob-select style="display: block;width: 200px" ng-model="value3" clearable="true">-->
+<!--                    <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                </mob-select>-->
+<!--            </div>-->
+<!--            <div class="meta">-->
+<!--                <pre>-->
+<!--                        <code class="source-code language-markup language-js language-html language-css" prism-->
+<!--                        >&lt;!&ndash;-->
+<!--                            <html>-->
+<!--                            <mob-select style="display: block;width: 200px" ng-model="value3" clearable="true">-->
+<!--                                <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                            </mob-select>-->
+<!--                            </html>-->
+<!--                            <script>-->
+<!--                                this.optionsDisabled = [-->
+<!--                                    {label: '香港', value: '香港'},-->
+<!--                                    {label: '澳门', value: '澳门', disabled: true},-->
+<!--                                    {label: '北京', value: '北京'},-->
+<!--                                    {label: '上海', value: '上海'},-->
+<!--                                    {label: '广州'},-->
+<!--                                    {label: '深圳'},-->
+<!--                                ]-->
+<!--                            </script>-->
+<!--                        &ndash;&gt;</code>-->
+<!--                    </pre>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
-        <h3>基础多选</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <p>默认</p>
-                <div class="mob-demo-example-child">
-                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true">
-                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                    </mob-select>
-                </div>
-                <p>可收集的</p>
-                <div class="mob-demo-example-child">
-                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">
-                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                    </mob-select>
-                </div>
-            </div>
-            <div class="meta">
-                <pre>
-                        <code class="source-code language-markup language-js language-html language-css" prism
-                        ><!--
-                            <html>
-                              <p>默认</p>
-                                <div class="mob-demo-example-child">
-                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true">
-                                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                                    </mob-select>
-                                </div>
-                                <p>可收集的</p>
-                                <div class="mob-demo-example-child">
-                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">
-                                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                                    </mob-select>
-                                </div>
-                            </html>
-                            <script>
-                                $scope.valueMultiple = ['香港','1','上海','北京']
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳', value: '1'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
+<!--        <h3>基础多选</h3>-->
+<!--        <div class="mob-demo-block">-->
+<!--            <div class="mob-demo-example">-->
+<!--                <p>默认</p>-->
+<!--                <div class="mob-demo-example-child">-->
+<!--                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true">-->
+<!--                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                    </mob-select>-->
+<!--                </div>-->
+<!--                <p>可收集的</p>-->
+<!--                <div class="mob-demo-example-child">-->
+<!--                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">-->
+<!--                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                    </mob-select>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="meta">-->
+<!--                <pre>-->
+<!--                        <code class="source-code language-markup language-js language-html language-css" prism-->
+<!--                        >&lt;!&ndash;-->
+<!--                            <html>-->
+<!--                              <p>默认</p>-->
+<!--                                <div class="mob-demo-example-child">-->
+<!--                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true">-->
+<!--                                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                                    </mob-select>-->
+<!--                                </div>-->
+<!--                                <p>可收集的</p>-->
+<!--                                <div class="mob-demo-example-child">-->
+<!--                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">-->
+<!--                                        <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>-->
+<!--                                    </mob-select>-->
+<!--                                </div>-->
+<!--                            </html>-->
+<!--                            <script>-->
+<!--                                $scope.valueMultiple = ['香港','1','上海','北京']-->
+<!--                                this.optionsDisabled = [-->
+<!--                                    {label: '香港', value: '香港'},-->
+<!--                                    {label: '澳门', value: '澳门', disabled: true},-->
+<!--                                    {label: '北京', value: '北京'},-->
+<!--                                    {label: '上海', value: '上海'},-->
+<!--                                    {label: '广州'},-->
+<!--                                    {label: '深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳', value: '1'},-->
+<!--                                ]-->
+<!--                            </script>-->
+<!--                        &ndash;&gt;</code>-->
+<!--                    </pre>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
 
-        <h3>自定义模板</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value6" multiple="true" collapse-tag="true">
-                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled">
-                        <mob-container>
-                            <p style="display:flex;"><span style="flex: 1" ng-bind="o.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>
-                        </mob-container>
-                    </mob-select-options>
-                </mob-select>
+<!--        <h3>自定义模板</h3>-->
+<!--        <div class="mob-demo-block">-->
+<!--            <div class="mob-demo-example">-->
+<!--                <mob-select style="display: block;width: 200px" ng-model="value6" multiple="true" collapse-tag="true">-->
+<!--                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled">-->
+<!--                        <mob-container>-->
+<!--                            <p style="display:flex;"><span style="flex: 1" ng-bind="o.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>-->
+<!--                        </mob-container>-->
+<!--                    </mob-select-options>-->
+<!--                </mob-select>-->
 
-            </div>
-            <div class="meta">
-                <pre>
-                        <code class="source-code language-markup language-js language-html language-css" prism
-                        ><!--
-                            <html>
-                              <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">
-                                <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled">
-                                    <mob-container>
-                                        <p style="display:flex;"><span style="flex: 1" ng-bind="o.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>
-                                    </mob-container>
-                                </mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                this.optionsBase = [
-                                    {label: '香港', value: '香港', desc:'XiangGang'},
-                                    {label: '澳门', value: '澳门', desc:'AoMen'},
-                                    {label: '北京', value: '北京', desc:'BeiJing'},
-                                    {label: '上海', value: '上海', desc:'ShangHai'},
-                                    {label: '深圳', desc:'ShenZheng'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
+<!--            </div>-->
+<!--            <div class="meta">-->
+<!--                <pre>-->
+<!--                        <code class="source-code language-markup language-js language-html language-css" prism-->
+<!--                        >&lt;!&ndash;-->
+<!--                            <html>-->
+<!--                              <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">-->
+<!--                                <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled">-->
+<!--                                    <mob-container>-->
+<!--                                        <p style="display:flex;"><span style="flex: 1" ng-bind="o.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>-->
+<!--                                    </mob-container>-->
+<!--                                </mob-select-options>-->
+<!--                            </mob-select>-->
+<!--                            </html>-->
+<!--                            <script>-->
+<!--                                this.optionsBase = [-->
+<!--                                    {label: '香港', value: '香港', desc:'XiangGang'},-->
+<!--                                    {label: '澳门', value: '澳门', desc:'AoMen'},-->
+<!--                                    {label: '北京', value: '北京', desc:'BeiJing'},-->
+<!--                                    {label: '上海', value: '上海', desc:'ShangHai'},-->
+<!--                                    {label: '深圳', desc:'ShenZheng'},-->
+<!--                                ]-->
+<!--                            </script>-->
+<!--                        &ndash;&gt;</code>-->
+<!--                    </pre>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </section>

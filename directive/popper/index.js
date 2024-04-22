@@ -25,7 +25,7 @@ app
                             let popperConfig = {}
                             // 先获取target
                             angular.forEach(targetList, function (target) {
-                                let popperRole = target.getAttribute('popper-role');
+                                let popperRole = target.getAttribute('popper-group');
                                 let popperTrigger = target.getAttribute('popper-trigger');
                                 if (popperRole) {
                                     let roles = popperRole.split(",");
@@ -39,8 +39,8 @@ app
                             })
                             // 获取工具tooltip
                             angular.forEach(popperTooltipList, function (tooltip) {
-                                if (tooltip.getAttribute('popper-role')) {
-                                    popperConfig[tooltip.getAttribute('popper-role')].tooltip = tooltip
+                                if (tooltip.getAttribute('popper-group')) {
+                                    popperConfig[tooltip.getAttribute('popper-group')].tooltip = tooltip
                                 }
                             })
                             scope.$popper = {}
@@ -63,43 +63,72 @@ app
                                     popperShow: false
                                 }
                                 // 给浮动元素 生成唯一id
-                                tooltip.id = uuId.generate()
+                                tooltip.id = uuId.newUUID()
                                 // 给目标元素绑定唯一id
                                 target.setAttribute('popper-id', tooltip.id)
                                 scope.$popperId = tooltip.id
 
                                 // 判断触发方式
-                                if(!trigger || trigger === 'click'){
-                                    target.addEventListener('click', function () {
-                                        scope.$popper.popperShow = !scope.$popper.popperShow
-                                        if(scope.$popper.popperShow){
-                                            tooltip.style.display = 'block';
-                                            tooltip.style.zIndex = '100';
-                                            floating.autoUpdateComputePosition(scope, target, tooltip)
-
-                                            setTimeout(() => {
-                                                console.log('1')
-                                                tooltip.querySelector('.mob-popper__inner').style.overflow = 'auto';
-                                            }, 300)
-                                        }else{
-                                            scope.$popper[name].popperShow = false
-                                            tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
-                                            tooltip.style.opacity = 0;
-                                            tooltip.style.height = '0';
-                                            setTimeout(function () {
-                                                tooltip.style.display = '';
-                                            }, 300)
+                                if (!trigger || trigger === 'click') {
+                                    target.addEventListener('click', async function (e) {
+                                        let res = scope.$popper[name].focus && await scope.$popper[name].focus(e) || true
+                                        if (!res) {
+                                            return
                                         }
+                                        scope.$popper[name].popperShow = !scope.$popper[name].popperShow
+                                        // 有点问题
+                                        if (scope.$popper[name].popperShow && res) {
+                                            showAutoUpdate(scope, target, tooltip)
+                                        } else {
+                                            hide(scope, target, tooltip)
+                                        }
+                                        e.preventDefault()
+                                        e.stopPropagation();
+
                                     })
-                                }
-                                else{
+                                } else {
 
                                 }
+
+                                document.addEventListener('click', async function (e) {
+                                    let focus = target.contains(e.target)
+                                    if (focus) {
+                                        return
+                                    }
+                                    let res = scope.$popper[name].focusOut && await scope.$popper[name].focusOut(e)
+
+                                    if (angular.isUndefined(res) || res) {
+                                        scope.$popper[name].popperShow = false
+                                        hide(scope, target, tooltip)
+                                    }
+                                })
 
                             }
                         }
+
+                        function showAutoUpdate(scope, target, tooltip) {
+                            tooltip.style.display = 'block';
+                            tooltip.style.zIndex = '100';
+                            floating.autoUpdateComputePosition(scope, target, tooltip)
+
+                            setTimeout(() => {
+                                console.log('1')
+                                tooltip.querySelector('.mob-popper__inner').style.overflow = 'auto';
+                            }, 300)
+                        }
+
+                        function hide(scope, target, tooltip) {
+                            // scope.$popper[name].popperShow = false
+                            tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
+                            tooltip.style.opacity = 0;
+                            tooltip.style.height = '0';
+                            setTimeout(function () {
+                                tooltip.style.display = '';
+                            }, 300)
+                        }
+
                         // $timeout(() => {
-                            popper()
+                        popper()
                         // }, 100)
                     }
                 }

@@ -2,16 +2,15 @@ function controller($scope, $element, uuId, $transclude) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        console.log($transclude.isSlotFilled('slot'))
+        this.id = uuId.newUUID()
         $scope.isSlot = $transclude.isSlotFilled('slot')
         $scope.active = false
-        this.name = this.mobSelect.name
         // 监听父组件的通知事件
-        $scope.$on(`${_that.name}Change`, function (e, data) {
+        $scope.$on(`${_that.mobSelect.name}Change`, function (e, data) {
             let hasChange = _that.change(data);
             // 通知父组件更新ngModel的cache
             if (hasChange) {
-                $scope.$emit(`${_that.name}collapseTagsListUpdate`, {
+                $scope.$emit(`${_that.mobSelect.name}collapseTagsListUpdate`, {
                     label: _that.label,
                     value: _that.getValue()
                 })
@@ -31,8 +30,12 @@ function controller($scope, $element, uuId, $transclude) {
     this.initValue = function () {
         let hasChange = this.change(this.mobSelect.ngModel);
         if (hasChange) {
-            $scope.$emit(`${_that.name}OptionsInitValue`, {label: this.label, value: _that.getValue()})
+            $scope.$emit(`${_that.mobSelect.name}OptionsInitValue`, {label: this.label, value: _that.getValue()})
         }
+
+        $scope.$on(`get${_that.id}Param`, function (e, key){
+            $scope.$emit(`get${_that.id}ParamCallBack`, {key: key, value: _that[key]})
+        })
     }
 
     this.change = function (data) {
@@ -65,7 +68,7 @@ function controller($scope, $element, uuId, $transclude) {
         }
         let val = this.getValue()
 
-        $scope.$emit(`${_that.name}OptionsClick`, {label: this.label, value: val})
+        $scope.$emit(`${_that.mobSelect.name}OptionsClick`, {label: this.label, value: val})
     }
 }
 app

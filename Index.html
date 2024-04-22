@@ -301,25 +301,6 @@
                 }
             };
         })
-        .directive('focusOut', ['uuId', 'floating', function (uuId, floating) {
-            return {
-                restrict: 'A',
-                compile: function () {
-                    return {
-                        post: function (scope, element, attr) {
-                            document.addEventListener('click', function (e) {
-                                let focus = element[0].contains(e.target)
-                                scope.$apply(function () {
-                                    scope.$eventListener && scope.$eventListener.focusOut && scope.$eventListener.focusOut(e, focus)
-                                })
-                                e.preventDefault()
-                                e.stopPropagation()
-                            });
-                        }
-                    }
-                },
-            };
-        }])
     ;
 
 
@@ -399,10 +380,10 @@
         }])
         .factory('uuId', [function () {
             return {
-                generate: function getUuid() {
-                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                        var r = Math.random() * 16 | 0,
-                            v = c == 'x' ? r : (r & 0x3 | 0x8);
+                newUUID: function getUuid() {
+                    return 'mob-uuid-' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        let r = Math.random() * 16 | 0,
+                            v = c === 'x' ? r : (r & 0x3 | 0x8);
                         return v.toString(16);
                     });
                 }
