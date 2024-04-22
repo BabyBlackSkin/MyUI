@@ -30,8 +30,14 @@ function controller($scope, $element, $timeout) {
     this.initEvent = function () {
         $scope.$popper['selectDrown'].focusOut = function (e) {
             return new Promise(resolve => {
+                // 判断点击的是否是tooltip
                 let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
                 if (isTooltip) {
+                    _that.focus()
+                    // 段暄
+                    if (_that.multiple) {
+                        return resolve(false)
+                    }
                     let optionId = e.target.getAttribute('id')
                     $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
                         let val = data.key === 'ngDisabled' ? !!data.value : data.value
@@ -40,7 +46,7 @@ function controller($scope, $element, $timeout) {
                     // 调用子组件方法
                     $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
                 }
-                return resolve(!_that.multiple)
+                return resolve(true)
             })
         }
 

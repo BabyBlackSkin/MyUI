@@ -1,4 +1,4 @@
-.mob-select-options {
+.mob-select .mob-select-options {
     font-size: 14px;
     padding: 0 20px;
     position: relative;
@@ -12,15 +12,15 @@
     cursor: pointer;
 }
 
-.mob-select-options.is_disabled {
+.mob-select .mob-select-options.is_disabled {
     color: var(--mob-checkbox-disabled-checked-icon-color);
     cursor: not-allowed;
 }
 
-.mob-select-options:not(.is_disabled):hover {
+.mob-select .mob-select-options:not(.is_disabled):hover {
     background-color: #f5f7fa;
 }
 
-.mob-select-options.is_active {
+.mob-select .mob-select-options.is_active {
     color: var(--mob-active-text-color);
 }
