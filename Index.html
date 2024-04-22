@@ -459,14 +459,27 @@
                 });
             }
             return {
-                computePosition: function (scope, target, floating) {
-                    setFloatingWidth(scope, target, floating)
+                computePosition: function (scope, target, floating, render = true) {
+                    if (render) {
+                        setFloatingWidth(scope, target, floating)
+                    }
                     computePosition(scope, target, floating)
                 },
 
-                autoUpdateComputePosition: function (scope, target, floating) {
-                    setFloatingWidth(scope, target, floating)
-                    setFloatingHeight(scope, target, floating)
+                /**
+                 * 自动更新定位
+                 * @param scope 范围
+                 * @param target 目标
+                 * @param floating 浮动元素
+                 * @param render 是否需要重绘
+                 * @returns {*}
+                 */
+                autoUpdateComputePosition: function (scope, target, floating, render = true) {
+                    if (render) {
+                        console.log('需要重绘')
+                        setFloatingWidth(scope, target, floating)
+                        setFloatingHeight(scope, target, floating)
+                    }
                     return window.FloatingUIDOM.autoUpdate(
                         target,
                         floating,

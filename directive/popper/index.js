@@ -91,35 +91,32 @@ app
                                 } else {
                                     let timer = {
                                         target: null,
-                                        tooltip: null
+                                        tooltip: null,
+                                        tooltipCss: null,
+                                        render:true,
                                     }
                                     target.addEventListener('mouseenter', function () {
-                                        showAutoUpdate(scope, scope.$popper[name])
+                                        showAutoUpdate(scope, scope.$popper[name], timer)
                                         clearTimeout(timer.tooltip)
+                                        clearTimeout(timer.tooltipCss)
                                     })
 
                                     target.addEventListener('mouseleave', function () {
-                                        // console.log('target mouseLeave')
-                                        // timer.target = setTimeout(() => {
-                                        //     console.log('target mouseLeave hide')
-                                        //     hide(scope, scope.$popper[name])
-                                        // }, 300)
+                                        timer.target = setTimeout(() => {
+                                            console.log('target mouseLeave hide')
+                                            hide(scope, scope.$popper[name], timer)
+                                        }, 300)
                                     })
 
                                     tooltip.addEventListener('mouseenter', function () {
-                                        // console.log('tooltip mouseenter')
-                                        // showAutoUpdate(scope, scope.$popper[name])
-                                        // console.log('tooltip mouseenter clearTimeout')
-                                        // clearTimeout(timer.target)
+                                        showAutoUpdate(scope, scope.$popper[name], timer)
+                                        clearTimeout(timer.target)
                                     })
 
                                     tooltip.addEventListener('mouseleave', function (e) {
-                                        // console.log(e.target)
-                                        // console.log(e.relatedTarget)
-                                        // console.log('tooltip mouseleave')
-                                        // timer.tooltip = setTimeout(() => {
-                                        //     hide(scope, scope.$popper[name])
-                                        // }, 300)
+                                        timer.tooltip = setTimeout(() => {
+                                            hide(scope, scope.$popper[name], timer)
+                                        }, 300)
                                     })
 
                                 }
@@ -140,28 +137,28 @@ app
                             }
                         }
 
-                        function showAutoUpdate(scope, popper) {
+                        function showAutoUpdate(scope, popper, timer= {render:true}) {
                             let { target, tooltip} = popper
                             tooltip.style.display = 'block';
                             tooltip.style.zIndex = '100';
                             // scope.popper[name].showAutoUpdateCleanUp
-                            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip)
-
-                            setTimeout(() => {
-                                console.log('1')
+                            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, timer.render)
+                            timer.render = false
+                            timer.tooltipCss = setTimeout(() => {
                                 tooltip.querySelector('.mob-popper__inner').style.overflow = 'auto';
                             }, 300)
                         }
 
-                        function hide(scope, popper) {
-                            // let { target, tooltip} = popper
-                            // tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
-                            // tooltip.style.opacity = 0;
-                            // tooltip.style.height = '0';
-                            // popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
-                            // setTimeout(function () {
-                            //     tooltip.style.display = '';
-                            // }, 300)
+                        function hide(scope, popper, timer = {render:true}) {
+                            let { target, tooltip} = popper
+                            tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
+                            tooltip.style.opacity = 0;
+                            tooltip.style.height = '0';
+                            popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
+                            timer.tooltipCss = setTimeout(function () {
+                                tooltip.style.display = '';
+                                timer.render = true
+                            }, 300)
                         }
 
                         popper()
