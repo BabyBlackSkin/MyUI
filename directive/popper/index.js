@@ -78,9 +78,9 @@ app
                                         scope.$popper[name].popperShow = !scope.$popper[name].popperShow
                                         // 有点问题
                                         if (scope.$popper[name].popperShow && res) {
-                                            showAutoUpdate(scope, target, tooltip)
+                                            showAutoUpdate(scope, scope.$popper[name])
                                         } else {
-                                            hide(scope, target, tooltip)
+                                            hide(scope, scope.$popper[name])
                                         }
                                         e.preventDefault()
                                         e.stopPropagation();
@@ -99,17 +99,19 @@ app
 
                                     if (angular.isUndefined(res) || res) {
                                         scope.$popper[name].popperShow = false
-                                        hide(scope, target, tooltip)
+                                        hide(scope, scope.$popper[name])
                                     }
                                 })
 
                             }
                         }
 
-                        function showAutoUpdate(scope, target, tooltip) {
+                        function showAutoUpdate(scope, popper) {
+                            let { target, tooltip} = popper
                             tooltip.style.display = 'block';
                             tooltip.style.zIndex = '100';
-                            floating.autoUpdateComputePosition(scope, target, tooltip)
+                            // scope.popper[name].showAutoUpdateCleanUp
+                            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip)
 
                             setTimeout(() => {
                                 console.log('1')
@@ -117,11 +119,12 @@ app
                             }, 300)
                         }
 
-                        function hide(scope, target, tooltip) {
-                            // scope.$popper[name].popperShow = false
+                        function hide(scope, popper) {
+                            let { target, tooltip} = popper
                             tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
                             tooltip.style.opacity = 0;
                             tooltip.style.height = '0';
+                            popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
                             setTimeout(function () {
                                 tooltip.style.display = '';
                             }, 300)
