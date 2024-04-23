@@ -21,7 +21,7 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'RadioCtrl'
         })
         .when('/checkBox', {
-            templateUrl: './checkbox.html',
+            templateUrl: './controller/checkbox/checkbox.html',
             controller: 'CheckBoxCtrl'
         })
         .when('/popper', {
