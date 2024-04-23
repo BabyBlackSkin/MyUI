@@ -86,8 +86,7 @@ app
                     // 判断触发方式
                     if (!trigger || trigger === 'click') {
                         target.addEventListener('click', async function (e) {
-                            console.log(e.target)
-                            let res = scope.$popper[name].focus && await scope.$popper[name].focus(e) || true
+                            let res = !scope.$popper[name].focus || scope.$popper[name].focus && await scope.$popper[name].focus(e)
                             if (!res) {
                                 return
                             }

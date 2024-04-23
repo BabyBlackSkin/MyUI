@@ -55,13 +55,12 @@ function controller($scope, $element, $timeout,popper) {
             })
         }
 
-        $scope.$popper['selectDrown'].focus = function () {
+        $scope.$popper['selectDrown'].focus = async function () {
             return !_that.ngDisabled
         }
 
 
         $scope.$popper['tooltip'].focusOut = function (e) {
-            console.log(this)
             return new Promise(resolve => {
                 // 判断点击的是否是tooltip
                 let isTooltip = this.tooltip.contains(e.target)
