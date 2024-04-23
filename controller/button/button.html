@@ -1,0 +1,29 @@
+<section class="mob-doc content" ng-controller="CheckBoxCtrl as ctrl">
+    <h2>CheckBox多选框</h2>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-checkbox label="'Option1'" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-checkbox>
+                    值：<span ng-bind="value"></span>
+                </div>
+                <mob-divider></mob-divider>
+                <p>
+                    在单一的 <code>checkbox</code> 中，默认绑定变量的值是 <code>Boolean</code>，选中为 <code>true</code>
+                </p>
+            </div>
+            <div class="meta">
+                <pre>
+                        <code class="source-code language-markup language-js language-html language-css" prism
+                        ><!--
+                            <mob-checkbox label="Option1" change-handle="ctrl.fatherChange(value)" ng-model='value'></mob-checkbox>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+    </div>
+</section>

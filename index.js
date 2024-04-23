@@ -25,7 +25,7 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'CheckBoxCtrl'
         })
         .when('/popper', {
-            templateUrl: './popper.html',
+            templateUrl: './controller/popper/popper.html',
             controller: 'PopperCtrl',
             controllerAs: 'home',
         })
