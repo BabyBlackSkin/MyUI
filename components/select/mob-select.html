@@ -46,7 +46,7 @@
                     <mob-icon-close class="mob-icon__close" ng-click="$ctrl.multipleRemove($event,collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
-                <div class="mob-select__selected-item__collapse mob_popper__target" popper-group="tooltip" popper-trigger="hover" ng-show="$ctrl.isCollapseTagsHasRedundant()">
+                <div class="mob-select__selected-item__collapse mob_popper__target" popper-group="tooltip"  ng-show="$ctrl.isCollapseTagsHasRedundant()">
                     <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>
 

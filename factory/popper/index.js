@@ -1,8 +1,8 @@
 app
-    .factory('popper', ['uuId','floating', 'position', function (uuId, floating, position) {
+    .factory('popper', ['uuId', 'floating', 'position', function (uuId, floating, position) {
 
-        function showAutoUpdate(scope, popper, timer= {render:true}) {
-            let { target, tooltip} = popper
+        function showAutoUpdate(scope, popper, timer = {render: true}) {
+            let {target, tooltip} = popper
             tooltip.style.display = 'block';
             tooltip.style.zIndex = '100';
             // scope.popper[name].showAutoUpdateCleanUp
@@ -13,8 +13,8 @@ app
             }, 300)
         }
 
-        function hide(scope, popper, timer = {render:true}) {
-            let { target, tooltip} = popper
+        function hide(scope, popper, timer = {render: true}) {
+            let {target, tooltip} = popper
             tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
             tooltip.style.opacity = 0;
             tooltip.style.height = '0';
@@ -103,32 +103,44 @@ app
 
                         })
                     } else {
+                        // hover 还存在问题，会出现闪烁问题 FIXME
                         let timer = {
                             target: null,
                             tooltip: null,
                             tooltipCss: null,
                             render: true,
-                            mousePositionInterval:undefined
+                            intervalCount: 0,
+                            uuId: uuId.newUUID(),
+                            mousePositionInterval: undefined
                         }
                         target.addEventListener('mouseenter', function (e) {
                             console.log('显示')
                             clearTimeout(timer.tooltip)
                             clearTimeout(timer.tooltipCss)
                             showAutoUpdate(scope, scope.$popper[name], timer)
-                            // 有时候 在执行隐藏函数时，鼠标进入，会导致不显示，设置下间隔
-                            // TODO 需要一个基数。起码需要interval，3次，保证3次的时间大于mouseLeave执行后的时间
-                            console.log('判断是否需要interval', angular.isUndefined(timer.mousePositionInterval))
-                            if (angular.isUndefined(timer.mousePositionInterval)) {
-                                if (tooltip.style.display === 'block') {
-                                    console.log('已经是block，无需')
-                                    // nothing to do
-                                } else {
-                                    console.log('非block，需要')
-                                    timer.mousePositionInterval = setInterval(function () {
-                                        console.log(position.mousePosition(e, target));
-                                    })
+
+                            clearInterval(timer.mousePositionInterval)
+                            timer.mousePositionInterval = setInterval(function () {
+                                console.log('interval', timer.uuId)
+                                if (timer.intervalCount > 3) {
+                                    clearInterval(timer.mousePositionInterval)
+                                    timer.intervalCount = 0;
                                 }
-                            }
+                                timer.intervalCount++;
+                                let {display, opacity, height} = tooltip.style
+                                if (display === 'block' && opacity === '1' && height !== '0') {
+                                    return
+                                }
+                                let mouseenter = position.mousePosition(e, target)
+                                console.log(mouseenter)
+                                if (mouseenter) {
+                                    console.log('显示')
+                                    showAutoUpdate(scope, scope.$popper[name], {render: true})
+                                    clearInterval(timer.mousePositionInterval)
+                                }
+                                console.log('interval end ----', timer.intervalCount)
+                            }, 500)
+
                         })
 
                         target.addEventListener('mouseleave', function () {
