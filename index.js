@@ -8,6 +8,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: 'home',
             controller: 'IndexCtrl'
         })
+        .when('/button', {
+            templateUrl: './controller/button/button.html',
+            controller: 'ButtonCtrl'
+        })
         .when('/inputNumber', {
             templateUrl: './controller/input-number/inputNumber.html',
             controller: 'InputNumberCtrl'
@@ -60,6 +64,9 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
 
     $rootScope.menuList = [
         {label: 'Home', path: '/home'},
+        {label: 'Basic', type: 1},
+        {label: 'Button 按钮', path: '/button'},
+        {label: 'Form', type: 1},
         {label: 'popper容器', path: '/popper', tags: [{title:'beta', type:'warning'}]},
         {label: 'Input输入框', path: '/input'},
         {label: 'Input Number 输入框', path: '/inputNumber'},

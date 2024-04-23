@@ -1,3 +1,22 @@
-<div class="mob-button">
+<button class="mob-button" ng-disabled="$ctrl.ngDisabled" ng-class="
+    {
+    'is-primary': $ctrl.type === 'primary',
+    'is-success': $ctrl.type === 'success',
+    'is-info': $ctrl.type === 'info',
+    'is-warning': $ctrl.type === 'warning',
+    'is-danger': $ctrl.type === 'danger',
+    'is-plain':$ctrl.plain,
+    'is-round':$ctrl.round,
+    'is-circle':$ctrl.circle,
+    'is-disabled':$ctrl.ngDisabled
+    }
+">
 
-</div>
+ <span class="mob-slot"  ng-class="{'is_hidden':!$slot.slotSet.has('icon')}">
+  <slot name="prepend"></slot>
+ </span>
+
+ <span ng-transclude>
+
+ </span>
+</button>

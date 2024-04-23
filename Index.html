@@ -12,6 +12,7 @@
     <script src="./angular-1.5.3/angular-animate.min.js"></script>
 
     <script src="./index.js"></script>
+    <script src="./controller/button/index.js"></script>
     <script src="./controller/input/index.js"></script>
     <script src="./controller/checkbox/index.js"></script>
     <script src="./controller/input-number/index.js"></script>
@@ -20,6 +21,9 @@
     <script src="./controller/select/index.js"></script>
     <script src="./controller/popper/index.js"></script>
     <script src="./components/container/index.js"></script>
+
+    <script src="./components/button/index.js"></script>
+
     <script src="./components/input/index.js"></script>
     <script src="./components/input-number/index.js"></script>
     <script src="./components/checkbox/index.js"></script>
@@ -50,6 +54,9 @@
     <link rel="stylesheet" href="./css/mob.css">
     <link rel="stylesheet" href="./css/mob-doc.css">
     <link rel="stylesheet" href="./css/mob-popper.css">
+
+    <link rel="stylesheet" href="components/button/mob-button.css">
+
     <link rel="stylesheet" href="components/input/mob-input.css">
     <link rel="stylesheet" href="components/input-number/mob-input-number.css">
     <link rel="stylesheet" href="components/select/mob-select.css">
@@ -85,6 +92,14 @@
     .navigation .nav-item {
         padding-left: 20px;
         height: 40px;
+        display: flex;
+        align-items: center;
+    }
+    .navigation .nav-item.group_title{
+        color: #a2a2a2;
+        padding-left: 40px;
+        font-size: .8rem;
+        margin-top: 20px;
     }
 
     .navigation .nav-item a {
@@ -122,11 +137,14 @@
 <div class="contain" style="display: flex;">
 
     <div class="navigation" style="z-index: 1">
-        <div class="nav-item" ng-class="{'is_active':item.path === routPath}" ng-repeat="item in menuList">
-            <a href="{{'#' + item.path}}" >
+        <div class="nav-item" ng-repeat="item in menuList"  ng-class="{'is_active':item.path === routPath, 'group_title':item.type === 1}">
+            <a href="{{'#' + item.path}}" ng-if="item.type !== 1">
                 {{item.label}}
                 <span ng-repeat="tag in item.tags" ng-class="'mob-tag tag-' + tag.type" ng-bind="tag.title"></span>
             </a>
+            <span class="mob-unselect-text" ng-if="item.type === 1" ng-bind="item.label">
+
+            </span>
         </div>
     </div>
 
