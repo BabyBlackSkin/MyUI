@@ -14,6 +14,10 @@
     <script src="./index.js"></script>
     <script src="./controller/input/index.js"></script>
     <script src="./controller/checkbox/index.js"></script>
+    <script src="./controller/input-number/index.js"></script>
+    <script src="./controller/radio/index.js"></script>
+    <script src="./controller/switch/index.js"></script>
+    <script src="./controller/select/index.js"></script>
     <script src="./components/container/index.js"></script>
     <script src="./components/input/index.js"></script>
     <script src="./components/input-number/index.js"></script>
@@ -167,91 +171,10 @@
                 },
             ];
         }])
-        .controller('RadioCtrl', ['$scope', function RadioCtrl($scope) {
-
-            this.radioIndex = -1;
-            this.radioGroupModel = '';
-            this.radioGroup = [
-                {label: '北京', value: '北京'},
-                {label: '上海', value: '上海'},
-                {label: '广州', value: '广州'}
-            ]
-
-            this.changeRadioGroupModel = function () {
-                this.radioIndex = this.radioIndex + 1;
-                if (this.radioIndex > this.radioGroup.length - 1) {
-                    this.radioIndex = 0;
-                }
-                this.radioGroupModel = this.radioGroup[this.radioIndex].value
-            }
-            this.demo = 'Options1'
-            this.fatherChange = function (value) {
-            }
-        }])
-        .controller('InputNumberCtrl', ['$scope', function InputNumberCtrl($scope) {
-            this.value = 1
-
-            this.value2 = 2
-
-            this.value3 = 2.5
-
-            this.value4 = 3.5
-        }])
         .controller('PopperCtrl', ['$scope', 'floating', 'uuId', function CheckBoxCtrl($scope, floating, uuId) {
 
 
 
-        }])
-        .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
-            this.optionsBase = [
-                {label: '香港', value: '香港', desc:'XiangGang'},
-                {label: '澳门', value: '澳门', desc:'AoMen'},
-                {label: '北京', value: '北京', desc:'BeiJing'},
-                {label: '上海', value: '上海', desc:'ShangHai'},
-                {label: '深圳', desc:'ShenZheng'},
-                {label: '江苏', desc:'JiangSu'},
-                {label: '广州', desc:'GuangZhou'},
-            ]
-
-            this.optionsDisabled = [
-                {label: '香港', value: '香港'},
-                {label: '澳门', value: '澳门', disabled: true},
-                {label: '北京', value: '北京'},
-                {label: '上海', value: '上海'},
-                {label: '广州'},
-                {label: '深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳', value: '1'},
-            ]
-
-            $scope.demo = 'Select'
-            $scope.value = '香港'
-            $scope.value3 = '香港'
-            $scope.valueMultiple = ['香港','1','上海','北京']
-        }])
-        .controller('SwitchCtrl', ['$scope', function SwitchCtrl($scope) {
-            $scope.demoTwo = {
-                value:false,
-                activeText:'包年',
-                inactiveText:'包月',
-            }
-
-            $scope.demoThree = {
-                value:false,
-                activeText:'Y',
-                inactiveText:'N',
-            }
-            $scope.demoFour = {
-                value:false,
-                activeText:'是',
-                inactiveText:'否',
-                inactiveColor:'#dcdfe6',
-            }
-
-            $scope.demoFive = {
-                value:false,
-                activeIcon:'mob-icon-check',
-                inactiveIcon:'mob-icon-close',
-                inactiveColor:'#dcdfe6',
-            }
         }])
     ;
     app
@@ -455,11 +378,6 @@
                 }
             };
         })
-    ;
-
-    ;
-
-
     ;
     </script>
 

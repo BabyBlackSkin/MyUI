@@ -9,7 +9,7 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'IndexCtrl'
         })
         .when('/inputNumber', {
-            templateUrl: './inputNumber.html',
+            templateUrl: './controller/input-number/inputNumber.html',
             controller: 'InputNumberCtrl'
         })
         .when('/input', {
@@ -17,7 +17,7 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'InputCtrl'
         })
         .when('/radio', {
-            templateUrl: './radio.html',
+            templateUrl: './controller/radio/radio.html',
             controller: 'RadioCtrl'
         })
         .when('/checkBox', {
@@ -31,12 +31,12 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
         })
 
         .when('/select', {
-            templateUrl: './select.html',
+            templateUrl: './controller/select/select.html',
             controller: 'SelectCtrl',
             controllerAs: 'select',
         })
         .when('/switch', {
-            templateUrl: './switch.html',
+            templateUrl: './controller/switch/switch.html',
             controller: 'SwitchCtrl',
             controllerAs: 'switch',
         })
