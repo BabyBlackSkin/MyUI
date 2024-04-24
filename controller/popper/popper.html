@@ -9,9 +9,7 @@
             <div class="mob-demo-example-child">
                 <mob-popper trigger="'click'">
                     <mob-popper-target>
-                        <button aria-describedby="tooltip">
-                            Click
-                        </button>
+                        <mob-button>Click</mob-button>
                     </mob-popper-target>
                     <mob-popper-tooltip>
                         <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
@@ -24,9 +22,7 @@
 
                 <mob-popper style="margin-left: 50px">
                     <mob-popper-target>
-                        <button aria-describedby="tooltip">
-                            hover
-                        </button>
+                        <mob-button>Hover</mob-button>
                     </mob-popper-target>
                     <mob-popper-tooltip>
                         <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
@@ -45,20 +41,30 @@
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                          <mob-popper trigger="'click'">
-                            <mob-popper-target>
-                                <button aria-describedby="tooltip">
-                                    My button
-                                </button>
-                            </mob-popper-target>
-                            <mob-popper-tooltip>
-                                <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
-                                <mob-container>
-                                    <div id="tooltip" role="tooltip">My tooltip
-                                    </div>
-                                </mob-container>
-                            </mob-popper-tooltip>
-                        </mob-popper>
+                           <mob-popper trigger="'click'">
+                                <mob-popper-target>
+                                    <mob-button>Click</mob-button>
+                                </mob-popper-target>
+                                <mob-popper-tooltip>
+                                    <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
+                                    <mob-container>
+                                        <div role="tooltip">My tooltip
+                                        </div>
+                                    </mob-container>
+                                </mob-popper-tooltip>
+                            </mob-popper>
+
+                            <mob-popper style="margin-left: 50px">
+                                <mob-popper-target>
+                                    <mob-button>Hover</mob-button>
+                                </mob-popper-target>
+                                <mob-popper-tooltip>
+                                    <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
+                                    <mob-container>
+                                        <div role="tooltip">My tooltip </div>
+                                    </mob-container>
+                                </mob-popper-tooltip>
+                            </mob-popper>
                         --></code>
                     </pre>
         </div>

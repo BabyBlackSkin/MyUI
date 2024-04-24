@@ -23,6 +23,7 @@
     <script src="./components/container/index.js"></script>
 
     <script src="./components/button/index.js"></script>
+    <script src="./components/button-group/index.js"></script>
 
     <script src="./components/input/index.js"></script>
     <script src="./components/input-number/index.js"></script>
@@ -56,6 +57,7 @@
     <link rel="stylesheet" href="./css/mob-popper.css">
 
     <link rel="stylesheet" href="components/button/mob-button.css">
+    <link rel="stylesheet" href="components/button-group/mob-button-group.css">
 
     <link rel="stylesheet" href="components/input/mob-input.css">
     <link rel="stylesheet" href="components/input-number/mob-input-number.css">
@@ -210,7 +212,7 @@
                         let id = uuId.newUUID()
                         code.setAttribute('id', id)
                         Prism.highlightElement(code, false)
-                        element[0].appendChild($compile(`<div class="show-code"><mob-button text ng-click="showCode($event, '${id}')">查看代码</mob-button></div>`)(scope)[0])
+                        element[0].appendChild($compile(`<div class="show-code"><mob-button type="'text'" ng-click="showCode($event, '${id}')">查看代码</mob-button></div>`)(scope)[0])
                     }
                 },
                 controller: function ($scope, $element) {
