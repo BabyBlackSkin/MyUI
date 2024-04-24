@@ -1,4 +1,4 @@
-<section class="mob-doc content" ng-controller="CheckBoxCtrl as ctrl">
+<section class="mob-doc content" ng-controller="ButtonCtrl as ctrl">
     <h2>Button 按钮</h2>
 
 
@@ -201,6 +201,35 @@
                         ><!--
                             <mob-button type="'text'" icon="'mob-icon-calendar'">主要按钮</mob-button>
                             <mob-button style="margin-left: 10px" type="'text'">关闭 <mob-icon-check></mob-icon-check></mob-button>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>加载中</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-button loading="loading" ng-click="request()">{{loading ? '加载中' : '加载'}}</mob-button>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                           <html>
+                            <mob-button loading="loading" ng-click="request()">{{loading ? '加载中' : '加载'}}</mob-button>
+                           </html>
+
+                           <script>
+                                $scope.request = function (){
+                                    $scope.loading = true;
+
+                                    $timeout(()=>{
+                                        $scope.loading = false;
+                                    },3000)
+                                }
+                           </script>
                         --></code>
                     </pre>
             </div>

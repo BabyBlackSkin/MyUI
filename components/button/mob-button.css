@@ -19,6 +19,9 @@
     font-size: 14px;
     border-radius: 4px;
 }
+.mob-button .mob-slot.is-hidden{
+    display: none;
+}
 .mob-button .mob-button-inner {
     display: flex;
 }

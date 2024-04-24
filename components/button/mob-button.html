@@ -1,4 +1,7 @@
-<button class="mob-button" ng-disabled="$ctrl.ngDisabled" ng-class="
+<button class="mob-button"
+        ng-disabled="$ctrl.ngDisabled"
+        ng-click="$ctrl.clickHandle($event)"
+        ng-class="
     {
     'is-primary': $ctrl.type === 'primary',
     'is-success': $ctrl.type === 'success',
@@ -9,17 +12,20 @@
     'is-plain':$ctrl.plain,
     'is-round':$ctrl.round,
     'is-circle':$ctrl.circle,
-    'is-disabled':$ctrl.ngDisabled,
+    'is-disabled':$ctrl.ngDisabled || $ctrl.loading,
+    'is_loading':$ctrl.loading,
     'is-slot':$slot.slotSet.has('icon')
     }
 ">
- <span class="mob-slot" ng-class="{'is_hidden':!$slot.slotSet.has('icon')}">
-  <slot name="icon"></slot>
- </span>
+     <span class="mob-slot" ng-class="{'is_hidden':!$slot.slotSet.has('icon')}" ng-show="!$ctrl.loading">
+        <slot name="icon"></slot>
+     </span>
+    <span ng-if="$ctrl.loading">
+        <mob-icon-loading></mob-icon-loading>
+    </span>
 
+    <span class="mob-button-inner" ng-transclude>
 
-   <span  class="mob-button-inner" ng-transclude>
-
-   </span>
+    </span>
 
 </button>

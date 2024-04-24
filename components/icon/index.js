@@ -51,3 +51,7 @@ app.component('mobIcon', {
         templateUrl: './components/icon/decrease.html',
         controller:controller
     })
+    .component('mobIconLoading', {
+        templateUrl: './components/icon/loading.html',
+        controller:controller
+    })
