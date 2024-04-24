@@ -259,7 +259,9 @@
     border-color: #fde2e2;
 }
 
-
+.mob-button .loading-icon.ng-leave-active{
+    display: none;
+}
 .mob-button .loading-icon {
     animation: rotating  2s linear infinite;
 }

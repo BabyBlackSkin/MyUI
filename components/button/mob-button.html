@@ -1,23 +1,23 @@
-<button class="mob-button"
+<button
+        class="mob-button"
         ng-disabled="$ctrl.ngDisabled"
         ng-click="$ctrl.clickHandle($event)"
-        ng-class="
-    {
-    'is-primary': $ctrl.type === 'primary',
-    'is-success': $ctrl.type === 'success',
-    'is-info': $ctrl.type === 'info',
-    'is-warning': $ctrl.type === 'warning',
-    'is-danger': $ctrl.type === 'danger',
-    'is-text':$ctrl.type === 'text',
-    'is-plain':$ctrl.plain,
-    'is-round':$ctrl.round,
-    'is-circle':$ctrl.circle,
-    'is-disabled':$ctrl.ngDisabled || $ctrl.loading,
-    'is_loading':$ctrl.loading,
-    'is-slot':$slot.slotSet.has('icon')
-    }
-">
-    {{$ctrl.loading}}
+        ng-class="{
+            'is-primary': $ctrl.type === 'primary',
+            'is-success': $ctrl.type === 'success',
+            'is-info': $ctrl.type === 'info',
+            'is-warning': $ctrl.type === 'warning',
+            'is-danger': $ctrl.type === 'danger',
+            'is-text':$ctrl.type === 'text',
+            'is-plain':$ctrl.plain,
+            'is-round':$ctrl.round,
+            'is-circle':$ctrl.circle,
+            'is-disabled':$ctrl.ngDisabled || $ctrl.loading,
+            'is_loading':$ctrl.loading,
+            'is-slot':$slot.slotSet.has('icon')
+        }"
+>
+
      <span class="mob-slot" ng-class="{'is_hidden':!$slot.slotSet.has('icon')}" ng-show="!$ctrl.loading">
         <slot name="icon"></slot>
      </span>
