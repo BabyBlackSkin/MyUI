@@ -32,7 +32,6 @@ app
             round: '<?',
             circle: '<?',
             icon: '<?',
-            text: '<?',
             ngDisabled: '<?',
         },
         controller: controller
