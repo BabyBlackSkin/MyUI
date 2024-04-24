@@ -29,6 +29,10 @@ function controller($scope, $element, $timeout,popper) {
         this.initEvent()
         this.initWatcher()
 
+        // angular.forEach(popperTooltipList, function (popper){
+        //     document.body.appendChild(popper)
+        // })
+
     }
 
     // 初始化事件监听
