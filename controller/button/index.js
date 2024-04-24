@@ -1,10 +1,10 @@
 app
     .controller('ButtonCtrl', ['$scope', '$timeout', function MultipleCheckBoxGroupCtrl($scope, $timeout) {
-        $scope.request = function (){
+        $scope.request = function () {
             $scope.loading = true;
 
-            $timeout(()=>{
+            $timeout(() => {
                 $scope.loading = false;
-            },3000)
+            }, 3000)
         }
     }])

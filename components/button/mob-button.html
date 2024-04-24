@@ -17,10 +17,11 @@
     'is-slot':$slot.slotSet.has('icon')
     }
 ">
+    {{$ctrl.loading}}
      <span class="mob-slot" ng-class="{'is_hidden':!$slot.slotSet.has('icon')}" ng-show="!$ctrl.loading">
         <slot name="icon"></slot>
      </span>
-    <span ng-if="$ctrl.loading">
+    <span ng-if="$ctrl.loading" class="loading-icon">
         <mob-icon-loading></mob-icon-loading>
     </span>
 

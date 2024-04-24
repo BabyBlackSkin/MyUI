@@ -19,20 +19,24 @@
     font-size: 14px;
     border-radius: 4px;
 }
-.mob-button .mob-slot.is-hidden{
+
+.mob-button .mob-slot.is-hidden {
     display: none;
 }
+
 .mob-button .mob-button-inner {
     display: flex;
 }
-.mob-button.is-text{
+
+.mob-button.is-text {
     padding-left: 0;
     padding-right: 0;
     color: #409eff;
     border-color: transparent;
     background-color: transparent;
 }
-.mob-button.is-text:hover{
+
+.mob-button.is-text:hover {
     color: #66b1ff;
 }
 
@@ -253,4 +257,18 @@
     color: #f9a7a7;
     background-color: #fef0f0;
     border-color: #fde2e2;
+}
+
+
+.mob-button .loading-icon {
+    animation: rotating  2s linear infinite;
+}
+
+@keyframes rotating {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(1turn);
+    }
 }
