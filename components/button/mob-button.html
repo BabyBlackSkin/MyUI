@@ -13,11 +13,13 @@
     'is-slot':$slot.slotSet.has('icon')
     }
 ">
- <span class="mob-slot"  ng-class="{'is_hidden':!$slot.slotSet.has('icon')}">
+ <span class="mob-slot" ng-class="{'is_hidden':!$slot.slotSet.has('icon')}">
   <slot name="icon"></slot>
  </span>
 
- <span ng-transclude>
 
- </span>
+   <span  class="mob-button-inner" ng-transclude>
+
+   </span>
+
 </button>

@@ -157,16 +157,17 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <mob-button text icon="'mob-icon-calendar'">主要按钮</mob-button>
-                    <mob-button ng-disabled text icon="'mob-icon-close'"></mob-button>
-                    <mob-button ng-disabled text icon="'mob-icon-check'">确认</mob-button>
+                    <mob-button style="margin-left: 10px" ng-disabled text>关闭 <mob-icon-close></mob-icon-close></mob-button>
+                    <mob-button style="margin-left: 10px" ng-disabled text icon="'mob-icon-check'">确认</mob-button>
                 </div>
             </div>
             <div class="meta">
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <mob-button text >默认按钮</mob-button>
-                            <mob-button ng-disabled text>主要按钮</mob-button>
+                            <mob-button text icon="'mob-icon-calendar'">主要按钮</mob-button>
+                            <mob-button style="margin-left: 10px" ng-disabled text>关闭 <mob-icon-close></mob-icon-close></mob-button>
+                            <mob-button style="margin-left: 10px" ng-disabled text icon="'mob-icon-check'">确认</mob-button>
                         --></code>
                     </pre>
             </div>

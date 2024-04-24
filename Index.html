@@ -235,7 +235,7 @@
                             Object.assign(code.style, {
                                 opacity: 0,
                                 height: 0,
-                                padding:0
+                                padding: 0
                             })
                         }
                     }
@@ -293,15 +293,17 @@
                         return
                     }
                     let slotTemplate = element.querySelectorAll('slot');
-                    if(!slotTemplate){
+                    if (!slotTemplate) {
                         return;
                     }
-                    angular.forEach(slotTemplate,function (slot){
+                    scope.$slot = {
+                        slotSet: new Set()
+                    }
+                    angular.forEach(slotTemplate, function (slot) {
                         let slotName = slot.getAttribute('name')
-                        console.log(slotName)
+                        scope.$slot.slotSet.add(slotName)
                         let outSlot = slotList[slotName];
-                        console.log(outSlot)
-                        if(!outSlot){
+                        if (!outSlot) {
                             return
                         }
                         slot.parentNode.replaceChild($compile(outSlot)(scope)[0], slot);

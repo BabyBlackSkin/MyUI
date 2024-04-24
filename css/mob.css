@@ -77,3 +77,9 @@
 /*    border-radius: 4px;*/
 /*    font-size: 90%;*/
 /*}*/
+
+mob-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

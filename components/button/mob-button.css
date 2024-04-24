@@ -19,7 +19,12 @@
     font-size: 14px;
     border-radius: 4px;
 }
-
+.mob-button .mob-button-inner {
+    display: flex;
+}
+.mob-button.is-slot .mob-button-inner {
+    margin-left: 5px;
+}
 .mob-button.is-text{
     padding-left: 0;
     padding-right: 0;
