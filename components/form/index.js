@@ -8,7 +8,7 @@ function controller() {
 app
     .component('mobForm', {// https://segmentfault.com/a/1190000005868488
         transclude: true,
-        templateUrl: './components/mob-form.html',
+        templateUrl: './components/form/mob-form.html',
         bindings: {
             model: '=',
             formItem: '<'

@@ -1,6 +1,6 @@
 <div class="mob-form">
     <form>
-        <div ng-repeat="item in $ctrl.formItem">
+        <div ng-repeat="item in form.formItem">
             <div ng-if="item.type === 'input'">
                 <mob-form-item model="$parent.$ctrl.model" label="item.label" prop="item.prop">
                     <mob-input model="$parent.$ctrl.model[item.prop]" clearable="item.options.clearable"
