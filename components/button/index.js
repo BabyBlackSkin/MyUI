@@ -1,10 +1,9 @@
-function controller($scope, $element, $attrs, slot) {
+function controller($scope, $element, $transclude,$attrs, slot, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        this.plain = !angular.isUndefined($attrs.plain)
-        this.round = !angular.isUndefined($attrs.round)
-        this.circle = !angular.isUndefined($attrs.circle)
+        let abbParams = ['plain','round','circle','ngDisabled','text']
+        attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
     }
 
 
@@ -18,7 +17,7 @@ function controller($scope, $element, $attrs, slot) {
     this.$postLink = function () {
         if (this.icon) {
             let prefixInner = $element[0].querySelector('.mob-slot')
-            slot.appendChild($scope, prefixInner, `<${_that.icon}></${_that.icon}>`)
+            slot.appendChild($scope, $element[0], {icon:`<${_that.icon}></${_that.icon}>`})
         }
     }
 }
@@ -28,12 +27,13 @@ app
         transclude: true,
         templateUrl: './components/button/mob-button.html',
         bindings: {
-            type:'<?',
-            plain:'<?',
-            round:'<?',
-            circle:'<?',
-            icon:'<?',
-            ngDisabled:'<?',
+            type: '<?',
+            plain: '<?',
+            round: '<?',
+            circle: '<?',
+            icon: '<?',
+            text: '<?',
+            ngDisabled: '<?',
         },
         controller: controller
     })

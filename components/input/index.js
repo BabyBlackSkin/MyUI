@@ -20,16 +20,14 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
         if (!icon) {
             return;
         }
-        let prefixInner = $element[0].querySelector('.mob-input__prefix-inner')
-        slot.appendChild($scope, prefixInner, `<${icon}></${icon}>`)
+        slot.appendChild($scope, $element[0], {prefixIcon: `<${icon}></${icon}>`})
     }
 
     function compileSuffix(icon) {
         if (!icon) {
             return;
         }
-        let inner = $element[0].querySelector('.mob-input__suffix-inner')
-        slot.appendChild($scope, inner, `<${icon}></${icon}>`)
+        slot.appendChild($scope, $element[0], {suffixIcon: `<${icon}></${icon}>`})
     }
 
 

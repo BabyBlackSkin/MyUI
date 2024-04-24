@@ -95,7 +95,8 @@
         display: flex;
         align-items: center;
     }
-    .navigation .nav-item.group_title{
+
+    .navigation .nav-item.group_title {
         color: #a2a2a2;
         padding-left: 40px;
         font-size: .8rem;
@@ -127,7 +128,8 @@
         background-color: var(--mob-active-text-color-light);
         color: var(--mob-active-text-color);
     }
-    .main-container{
+
+    .main-container {
         width: calc(100% - 240px);
         padding-left: 260px;
     }
@@ -137,7 +139,8 @@
 <div class="contain" style="display: flex;">
 
     <div class="navigation" style="z-index: 1">
-        <div class="nav-item" ng-repeat="item in menuList"  ng-class="{'is_active':item.path === routPath, 'group_title':item.type === 1}">
+        <div class="nav-item" ng-repeat="item in menuList"
+             ng-class="{'is_active':item.path === routPath, 'group_title':item.type === 1}">
             <a href="{{'#' + item.path}}" ng-if="item.type !== 1">
                 {{item.label}}
                 <span ng-repeat="tag in item.tags" ng-class="'mob-tag tag-' + tag.type" ng-bind="tag.title"></span>
@@ -157,8 +160,8 @@
 <script type="text/ng-template" id="home">
     <h1 style="margin-top:20px"> 参考Element UI ，基于Angular1.5.3开发的UI框架 </h1>
     <ul>
-<!--        <li>目前的插件都是直接操作<code>dom</code>的，并没有使用<code>Angular</code>的双向数据绑定机制，采用数据驱动的方式实现；经常出现下拉框、多选框，点击保存后，在新增，还是会显示上一步操作的内容-->
-<!--        </li>-->
+        <!--        <li>目前的插件都是直接操作<code>dom</code>的，并没有使用<code>Angular</code>的双向数据绑定机制，采用数据驱动的方式实现；经常出现下拉框、多选框，点击保存后，在新增，还是会显示上一步操作的内容-->
+        <!--        </li>-->
     </ul>
 </script>
 
@@ -192,16 +195,50 @@
         }])
     ;
     app
-        .directive('prism', function () {
+        .directive('prism', function ($compile, uuId) {
             return {
+                scope: true,
                 restrict: 'A',
                 compile: function () {
                     return function (scope, element) {
-
-                        Prism.highlightElement(element[0], false)
+                        let code = $(element[0]).children('code')[0]
+                        Object.assign(code.style, {
+                            width: '100%',
+                            height: 0,
+                            padding: 0
+                        })
+                        let id = uuId.newUUID()
+                        code.setAttribute('id', id)
+                        Prism.highlightElement(code, false)
+                        element[0].appendChild($compile(`<div class="show-code"><mob-button text ng-click="showCode($event, '${id}')">查看代码</mob-button></div>`)(scope)[0])
                     }
                 },
                 controller: function ($scope, $element) {
+                    $scope.showCode = function (e, id) {
+                        $scope.show = !$scope.show
+                        console.log(id)
+                        if ($scope.show) {
+                            $($element[0]).children('.show-code')[0].style.borderTop = '1px solid #ededed'
+                            let code = document.getElementById(id)
+                            code.style.height = 'auto'
+                            let {height} = code.getBoundingClientRect()
+                            code.style.height = 0
+                            code.offsetHeight
+                            Object.assign(code.style, {
+                                height: `calc(${height}px + 2rem)`,
+                                opacity: 1,
+                                padding: 1 + 'rem'
+                            })
+                        } else {
+                            $($element[0]).children('.show-code')[0].style.borderTop = 'none'
+                            let code = document.getElementById(id)
+                            Object.assign(code.style, {
+                                opacity: 0,
+                                height: 0,
+                                padding:0
+                            })
+                        }
+                    }
                 }
             };
         })
@@ -251,11 +288,24 @@
                         }
                     })
                 },
-                appendChild: function (scope, element, childElement) {
+                appendChild: function (scope, element, slotList) {
                     if (null == element) {
                         return
                     }
-                    element.appendChild($compile(childElement)(scope)[0])
+                    let slotTemplate = element.querySelectorAll('slot');
+                    if(!slotTemplate){
+                        return;
+                    }
+                    angular.forEach(slotTemplate,function (slot){
+                        let slotName = slot.getAttribute('name')
+                        console.log(slotName)
+                        let outSlot = slotList[slotName];
+                        console.log(outSlot)
+                        if(!outSlot){
+                            return
+                        }
+                        slot.parentNode.replaceChild($compile(outSlot)(scope)[0], slot);
+                    })
                 }
             }
         }])
@@ -279,6 +329,17 @@
                         //     scope.$attrs[k] = attrs[k]
                         // }
                     }
+                },
+                // 可缩写的转换
+                abbAttrsTransfer: function (target, keys, attrs) {
+                    if (!keys) {
+                        return
+                    }
+                    angular.forEach(keys, function (k) {
+                        if (attrs[k] === '') {
+                            target[k] = true
+                        }
+                    })
                 }
             }
         }])
@@ -295,12 +356,13 @@
         }])
         .factory('floating', function () {
             // 箭头class
-            const arrowClassStyle = ['top','right','bottom','left']
+            const arrowClassStyle = ['top', 'right', 'bottom', 'left']
 
             function setFloatingWidth(scope, target, floating) {
                 const {width: targetWidth} = target.getBoundingClientRect()
                 floating.style.minWidth = targetWidth + 'px';
             }
+
             function setFloatingHeight(scope, target, floating) {
                 floating.style.height = 'auto';
                 const {height} = floating.getBoundingClientRect()
@@ -309,6 +371,7 @@
                 floating.style.height = (height > 200 ? 200 : height) + 'px';
                 floating.style.opacity = 1;
             }
+
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
                 let arrowElement = floating.querySelector('.mob-popper__arrow');
@@ -362,6 +425,7 @@
                     }
                 });
             }
+
             return {
                 computePosition: function (scope, target, floating, render = true) {
                     if (render) {
@@ -387,12 +451,14 @@
                     return window.FloatingUIDOM.autoUpdate(
                         target,
                         floating,
-                        ()=>{computePosition(scope, target, floating, true)}
+                        () => {
+                            computePosition(scope, target, floating, true)
+                        }
                     );
                 }
             };
         })
     ;
-    </script>
+</script>
 
-    </html>
+</html>

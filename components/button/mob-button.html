@@ -8,12 +8,13 @@
     'is-plain':$ctrl.plain,
     'is-round':$ctrl.round,
     'is-circle':$ctrl.circle,
-    'is-disabled':$ctrl.ngDisabled
+    'is-disabled':$ctrl.ngDisabled,
+    'is-text':$ctrl.text,
+    'is-slot':$slot.slotSet.has('icon')
     }
 ">
-
  <span class="mob-slot"  ng-class="{'is_hidden':!$slot.slotSet.has('icon')}">
-  <slot name="prepend"></slot>
+  <slot name="icon"></slot>
  </span>
 
  <span ng-transclude>

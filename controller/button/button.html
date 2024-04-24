@@ -89,60 +89,84 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-button ng-disabled="true" >默认按钮</mob-button>
-                    <mob-button ng-disabled="true" type="'primary'">主要按钮</mob-button>
-                    <mob-button ng-disabled="true" type="'success'">成功按钮</mob-button>
-                    <mob-button ng-disabled="true" type="'info'">信息按钮</mob-button>
-                    <mob-button ng-disabled="true" type="'warning'">警告按钮</mob-button>
-                    <mob-button ng-disabled="true" type="'danger'">危险按钮</mob-button>
+                    <mob-button ng-disabled >默认按钮</mob-button>
+                    <mob-button ng-disabled type="'primary'">主要按钮</mob-button>
+                    <mob-button ng-disabled type="'success'">成功按钮</mob-button>
+                    <mob-button ng-disabled type="'info'">信息按钮</mob-button>
+                    <mob-button ng-disabled type="'warning'">警告按钮</mob-button>
+                    <mob-button ng-disabled type="'danger'">危险按钮</mob-button>
                 </div>
                 <div class="mob-demo-example-child">
-                    <mob-button ng-disabled="true" plain>默认按钮</mob-button>
-                    <mob-button ng-disabled="true" plain type="'primary'">主要按钮</mob-button>
-                    <mob-button ng-disabled="true" plain type="'success'">成功按钮</mob-button>
-                    <mob-button ng-disabled="true" plain type="'info'">信息按钮</mob-button>
-                    <mob-button ng-disabled="true" plain type="'warning'">警告按钮</mob-button>
-                    <mob-button ng-disabled="true" plain type="'danger'">危险按钮</mob-button>
+                    <mob-button ng-disabled plain>默认按钮</mob-button>
+                    <mob-button ng-disabled plain type="'primary'">主要按钮</mob-button>
+                    <mob-button ng-disabled plain type="'success'">成功按钮</mob-button>
+                    <mob-button ng-disabled plain type="'info'">信息按钮</mob-button>
+                    <mob-button ng-disabled plain type="'warning'">警告按钮</mob-button>
+                    <mob-button ng-disabled plain type="'danger'">危险按钮</mob-button>
                 </div>
             </div>
             <div class="meta">
-                <pre>
-                        <code class="source-code language-markup language-js language-html language-css" prism
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                            <div class="mob-demo-example-child">
-                            <mob-button>默认按钮</mob-button>
-                            <mob-button type="'primary'">主要按钮</mob-button>
-                            <mob-button type="'success'">成功按钮</mob-button>
-                            <mob-button type="'info'">信息按钮</mob-button>
-                            <mob-button type="'warning'">警告按钮</mob-button>
-                            <mob-button type="'danger'">危险按钮</mob-button>
+                            <mob-button ng-disabled >默认按钮</mob-button>
+                            <mob-button ng-disabled type="'primary'">主要按钮</mob-button>
+                            <mob-button ng-disabled type="'success'">成功按钮</mob-button>
+                            <mob-button ng-disabled type="'info'">信息按钮</mob-button>
+                            <mob-button ng-disabled type="'warning'">警告按钮</mob-button>
+                            <mob-button ng-disabled type="'danger'">危险按钮</mob-button>
                         </div>
                         <div class="mob-demo-example-child">
-                            <mob-button plain>默认按钮</mob-button>
-                            <mob-button plain type="'primary'">主要按钮</mob-button>
-                            <mob-button plain type="'success'">成功按钮</mob-button>
-                            <mob-button plain type="'info'">信息按钮</mob-button>
-                            <mob-button plain type="'warning'">警告按钮</mob-button>
-                            <mob-button plain type="'danger'">危险按钮</mob-button>
+                            <mob-button ng-disabled plain>默认按钮</mob-button>
+                            <mob-button ng-disabled plain type="'primary'">主要按钮</mob-button>
+                            <mob-button ng-disabled plain type="'success'">成功按钮</mob-button>
+                            <mob-button ng-disabled plain type="'info'">信息按钮</mob-button>
+                            <mob-button ng-disabled plain type="'warning'">警告按钮</mob-button>
+                            <mob-button ng-disabled plain type="'danger'">危险按钮</mob-button>
                         </div>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
 
-                        <div class="mob-demo-example-child">
-                            <mob-button round>默认按钮</mob-button>
-                            <mob-button round type="'primary'">主要按钮</mob-button>
-                            <mob-button round type="'success'">成功按钮</mob-button>
-                            <mob-button round type="'info'">信息按钮</mob-button>
-                            <mob-button round type="'warning'">警告按钮</mob-button>
-                            <mob-button round type="'danger'">危险按钮</mob-button>
-                        </div>
 
-                        <div class="mob-demo-example-child">
-                            <mob-button circle icon="'mob-icon-check'"></mob-button>
-                            <mob-button circle icon="'mob-icon-circle-close'" type="'primary'"></mob-button>
-                            <mob-button circle icon="'mob-icon-close'" type="'success'"></mob-button>
-                            <mob-button circle icon="'mob-icon-down-arrow'" type="'info'"></mob-button>
-                            <mob-button circle icon="'mob-icon-invisible'" type="'warning'"></mob-button>
-                            <mob-button circle icon="'mob-icon-search'" type="'danger'"></mob-button>
-                        </div>
+        <h3>文件按钮</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-button text >默认按钮</mob-button>
+                    <mob-button ng-disabled text>主要按钮</mob-button>
+                    <mob-button ng-disabled text icon="'mob-icon-close'"></mob-button>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-button text >默认按钮</mob-button>
+                            <mob-button ng-disabled text>主要按钮</mob-button>
+                            <mob-button ng-disabled text icon="'mob-icon-close'"></mob-button>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>图标按钮</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-button text icon="'mob-icon-calendar'">主要按钮</mob-button>
+                    <mob-button ng-disabled text icon="'mob-icon-close'"></mob-button>
+                    <mob-button ng-disabled text icon="'mob-icon-check'">确认</mob-button>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-button text >默认按钮</mob-button>
+                            <mob-button ng-disabled text>主要按钮</mob-button>
                         --></code>
                     </pre>
             </div>
