@@ -16,11 +16,13 @@
     display: none;
     overflow: hidden;
     padding: 5px 0;
-    height: 0;
+    height: 200px;
     opacity: 0;
     box-sizing: border-box;
-    transition-property: height, opacity;
-    transition-duration: .3s;
+    transform: scaleY(0);
+    /*transform-origin:center;*/
+    transition-property: transform;
+    transition-duration: 10s;
     transition-timing-function: cubic-bezier(0.84, -0.01, 0, 1);
     /*overflow: hidden;*/
 }

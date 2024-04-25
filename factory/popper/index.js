@@ -17,7 +17,7 @@ app
             let {target, tooltip} = popper
             tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
             tooltip.style.opacity = 0;
-            tooltip.style.height = '0';
+            tooltip.style.transform = 'scaleY(0)';
             popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
             timer.tooltipCss = setTimeout(function () {
                 tooltip.style.display = '';

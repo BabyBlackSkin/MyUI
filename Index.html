@@ -376,17 +376,17 @@
             }
 
             function setFloatingHeight(scope, target, floating) {
-                floating.style.height = 'auto';
-                const {height} = floating.getBoundingClientRect()
-                floating.style.height = 0;
-                floating.offsetHeight // 重绘有问题？？或者将元素放到body上
-                floating.style.height = (height > 200 ? 200 : height) + 'px';
+                // const {height} = floating.getBoundingClientRect()
+                // floating.style.height = 0;
+                // floating.offsetHeight // 重绘有问题？？或者将元素放到body上
+                floating.style.transform = 'scaleY(1)';
                 floating.style.opacity = 1;
             }
 
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
                 let arrowElement = floating.querySelector('.mob-popper__arrow');
+
                 window.FloatingUIDOM.computePosition(target, floating, {
                         placement: 'bottom-start',
                         middleware: [
@@ -460,6 +460,7 @@
                         setFloatingWidth(scope, target, floating)
                         setFloatingHeight(scope, target, floating)
                     }
+                    // 需要判断是从下面还是从上面打开
                     return window.FloatingUIDOM.autoUpdate(
                         target,
                         floating,
