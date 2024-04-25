@@ -387,6 +387,42 @@
                 // 获取箭头元素
                 let arrowElement = floating.querySelector('.mob-popper__arrow');
 
+                setFloatingHeight(scope, target, floating);
+                const {
+                    x: targetX,
+                    y: targetY,
+                    top: targetTop,
+                    right: targetRight,
+                    bottom: targetBottom,
+                    left: targetLeft,
+                    width: targetWidth,
+                    height: targetHeight
+                } = target.getBoundingClientRect();
+                // console.log('target', targetX, targetY, targetTop, targetRight, targetBottom, targetLeft, targetWidth, targetHeight)
+                const {
+                    x: floatingX,
+                    y: floatingY,
+                    top: floatingTop,
+                    right: floatingRight,
+                    bottom: floatingBottom,
+                    left: floatingLeft,
+                    width: floatingWidth,
+                    height: floatingHeight
+                } = floating.getBoundingClientRect()
+
+
+                // 尝试通过 placement决定显示的动画
+
+                // console.log(floatingBottom + 200, window.innerHeight)
+                // if (floatingBottom + 200 < window.innerHeight) {
+                //     console.log('在上面')
+                //     floating.style.transformOrigin= 'center bottom'
+                // } else {
+                //     floating.style.transformOrigin= 'center top'
+                //     console.log('在下面')
+                // }
+
+
                 window.FloatingUIDOM.computePosition(target, floating, {
                         placement: 'bottom-start',
                         middleware: [
@@ -456,9 +492,7 @@
                  */
                 autoUpdateComputePosition: function (scope, target, floating, render = true) {
                     if (render) {
-                        console.log('需要重绘')
                         setFloatingWidth(scope, target, floating)
-                        setFloatingHeight(scope, target, floating)
                     }
                     // 需要判断是从下面还是从上面打开
                     return window.FloatingUIDOM.autoUpdate(
