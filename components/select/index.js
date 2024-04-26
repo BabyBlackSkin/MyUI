@@ -149,10 +149,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            <div class="mob-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList"
-                                 ng-if="!$first">
+                            <div class="mob-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
                                 <span ng-bind="item.label"></span>
-                                <mob-icon-close class="mob-icon__close" select-name="${_that.name}" ng-click="multipleRemove($event, item)"></mob-icon-close>
+                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
                             </div>
                         </div>
                     </div>

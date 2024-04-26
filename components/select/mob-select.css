@@ -150,8 +150,8 @@
     flex-wrap: wrap;
     gap: 0 1px;
 }
-.mob-select.is_multiple .mob-select__selected-item__collapse-contain,
-.mob-select-popper.is_multiple .mob-select__selected-item__collapse-contain {
+.mob-select.is_collapseTag .mob-select__selected-item__collapse-contain,
+.mob-select-popper.is_collapseTag .mob-select__selected-item__collapse-contain {
     flex-wrap: nowrap;
 }
 .mob-select .mob-select__selected-item__collapse__tooltip
