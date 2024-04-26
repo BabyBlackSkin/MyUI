@@ -5,17 +5,6 @@ function controller($scope, $element, uuId, $transclude) {
         this.id = uuId.newUUID()
         $scope.isSlot = $transclude.isSlotFilled('slot')
         $scope.active = false
-        // 监听父组件的通知事件
-        $scope.$on(`${_that.mobSelect.name}Change`, function (e, data) {
-            let hasChange = _that.change(data);
-            // 通知父组件更新ngModel的cache
-            if (hasChange) {
-                $scope.$emit(`${_that.mobSelect.name}collapseTagsListUpdate`, {
-                    label: _that.label,
-                    value: _that.getValue()
-                })
-            }
-        })
     }
 
     this.$onChanges = function (changes) {}
@@ -25,6 +14,7 @@ function controller($scope, $element, uuId, $transclude) {
 
     this.$postLink = function () {
         this.initValue()
+        this.initEvent()
     }
 
     this.initValue = function () {
@@ -35,6 +25,21 @@ function controller($scope, $element, uuId, $transclude) {
 
         $scope.$on(`get${_that.id}Param`, function (e, key){
             $scope.$emit(`get${_that.id}ParamCallBack`, {key: key, value: _that[key]})
+        })
+    }
+
+    this.initEvent = function(){
+
+        // 监听父组件的通知事件
+        $scope.$on(`${_that.mobSelect.name}Change`, function (e, data) {
+            let hasChange = _that.change(data);
+            // 通知父组件更新ngModel的cache
+            if (hasChange) {
+                $scope.$emit(`${_that.mobSelect.name}collapseTagsListUpdate`, {
+                    label: _that.label,
+                    value: _that.getValue()
+                })
+            }
         })
     }
 

@@ -77,7 +77,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Input Number 输入框', path: '/inputNumber'},
         {label: 'Radio单选框', path: '/radio'},
         {label: 'CheckBox多选框', path: '/checkBox'},
-        {label: 'Select选择器', path: '/select'},
+        {label: 'Select选择器', path: '/select', tags: [{title:'preview', type:'primary'}]},
         {label: 'Switch开关', path: '/switch'},
         {label: 'Form表单', path: '/form'},
     ]

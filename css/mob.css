@@ -83,3 +83,6 @@ mob-button{
     align-items: center;
     justify-content: center;
 }
+mob-select{
+    display: block;
+}

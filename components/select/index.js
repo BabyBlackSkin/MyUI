@@ -1,4 +1,4 @@
-function controller($scope, $element, $timeout,popper) {
+function controller($scope, $element, $timeout, popper) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -127,7 +127,7 @@ function controller($scope, $element, $timeout,popper) {
      * 有工具箱的collapse
      * @returns {false|string|boolean|*|boolean}
      */
-    this.isCollapseTagsHasTooltip = function (){
+    this.isCollapseTagsHasTooltip = function () {
         return !this.ngDisabled &&
             this.multiple &&
             this.ngModel.length > 0 &&
@@ -239,7 +239,7 @@ app
             placeHolder: '<?',
             multiple: '<?',
             collapseTag: '<?',
-            collapseTagTooltip:'<?',
+            collapseTagTooltip: '<?',
             change: '&?'
         },
         controller: controller

@@ -1,5 +1,12 @@
 app
-    .controller('SelectCtrl', ['$scope', function InputNumberCtrl($scope) {
+    .controller('SelectCtrl', ['$scope','uuId', function InputNumberCtrl($scope, uuId) {
+        let _that = this
+        $scope.addOption = function (){
+            let id = uuId.newUUID()
+            _that.optionsBase.push({
+                label:id,value:id
+            })
+        }
         this.optionsBase = [
             {label: '香港', value: '香港', desc:'XiangGang'},
             {label: '澳门', value: '澳门', desc:'AoMen'},
