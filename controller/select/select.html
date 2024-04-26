@@ -195,15 +195,13 @@
 
 
 
-        <h3>自定义模板</h3>
+        <h3>append-to-body <span class="mob-tag tag-warning">experimental</span></h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value6" multiple="true" collapse-tag="true">
-                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
-                        <mob-container>
-                            <p style="display:flex;"><span style="flex: 1" ng-bind="$data.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>
-                        </mob-container>
-                    </mob-select-options>
+
+                <mob-button ng-click="addOption()">追加options</mob-button>
+
+                <mob-select style="display: block;width: 200px" ng-model="value6" multiple="true" collapse-tag="true" options="select.optionsBase" collapse-tag-tooltip="true" append-to-body>
                 </mob-select>
 
             </div>
@@ -234,13 +232,15 @@
             </div>
         </div>
 
-        <h3>append-to-body <span class="mob-tag tag-warning">experimental</span></h3>
+        <h3>自定义模板</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-
-                <mob-button ng-click="addOption()">追加options</mob-button>
-
-                <mob-select style="display: block;width: 200px" ng-model="value6" multiple="true" collapse-tag="true" options="select.optionsBase" append-to-body>
+                <mob-select style="display: block;width: 200px" ng-model="value6" multiple="true" collapse-tag="true">
+                    <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
+                        <mob-container>
+                            <p style="display:flex;"><span style="flex: 1" ng-bind="$data.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>
+                        </mob-container>
+                    </mob-select-options>
                 </mob-select>
 
             </div>
