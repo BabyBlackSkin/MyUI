@@ -29,6 +29,9 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #e6a23c;
 }
 
+.tag-success {
+    background-color: #67c23a;
+}
 .mob-doc {
     width: 100%;
     height: 100%;

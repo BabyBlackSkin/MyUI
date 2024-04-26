@@ -58,7 +58,6 @@ app
                     }
                 })
                 scope.$popper = {}
-                debugger
                 // 遍历定义的popper
                 for (let name of Object.keys(popperConfig)) {
                     let trigger = popperConfig[name].popperTrigger;

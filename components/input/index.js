@@ -20,7 +20,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
         if (!icon) {
             return;
         }
-        slot.appendChild($scope, $element[0], {prefixIcon: `<${icon}></${icon}>`})
+        slot.appendChild($scope, $element[0], {prefixIcon:`<${icon}></${icon}>`})
     }
 
     function compileSuffix(icon) {

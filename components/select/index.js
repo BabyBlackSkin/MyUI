@@ -1,7 +1,11 @@
-function controller($scope, $element, $timeout, popper) {
+function controller($scope, $element, $timeout, $document, $compile, $attrs, popper, cross, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        let abbParams = ['appendToBody']
+        debugger
+        attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
+
         // 初始化一个map，存放ngModel的keyValue
         $scope.collapseTagsList = [];
         if (angular.isUndefined(this.placeHolder)) {
@@ -11,6 +15,7 @@ function controller($scope, $element, $timeout, popper) {
             this.ngModel = []
         }
         this.name = `mobSelect_${$scope.$id}`
+        $scope.$options = this.options;
     }
 
     this.$onChanges = function (changes) {
@@ -21,17 +26,25 @@ function controller($scope, $element, $timeout, popper) {
 
 
     this.$postLink = function () {
+
         // 获取target
         const targetList = $element[0].querySelectorAll('.mob_popper__target');
         // 获取popperTooltip
-        const popperTooltipList = $element[0].querySelectorAll('.mob-popper');
+        const popperTooltipList = []
+
+
+        if (this.appendToBody) {
+            popperTooltipList.push(...this.dropDownAppendToBody());
+            console.log(popperTooltipList)
+        } else {
+            popperTooltipList.push(...$element[0].querySelectorAll('.mob-popper'));
+        }
+
+
+
         popper.popper($scope, targetList, popperTooltipList)
         this.initEvent()
         this.initWatcher()
-
-        // angular.forEach(popperTooltipList, function (popper){
-        //     document.body.appendChild(popper)
-        // })
 
     }
 
@@ -42,7 +55,7 @@ function controller($scope, $element, $timeout, popper) {
                 // 判断点击的是否是tooltip
                 let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
                 if (isTooltip) {
-                    _that.focus()
+                    $scope.focus()
                     // 段暄
                     if (_that.multiple) {
                         return resolve(false)
@@ -110,62 +123,47 @@ function controller($scope, $element, $timeout, popper) {
         })
     }
 
-    /**
-     * 无工具箱的collapse
-     * @returns {false|string|boolean|*|boolean}
-     */
-    this.isCollapseTagsNoTooltip = function () {
-        return !this.ngDisabled &&
-            this.multiple &&
-            this.ngModel.length > 0 &&
-            this.collapseTag &&
-            !this.collapseTagTooltip
+
+    this.dropDownAppendToBody = function () {
+        let popperTooltipList = []
+        cross.put(this.name, this)
+        let selectOptions = $compile(
+            `
+                <div class="mob-popper mob-select-popper" popper-group="selectDrown">
+                    <div class="mob-popper__wrapper">
+                        <span class="mob-popper__arrow"></span>
+                        <div class="mob-popper__inner">
+                            <mob-select-options ng-repeat="o in $options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
+                            </mob-select-options>
+                        </div>
+                    </div>
+                </div>
+            `
+        )($scope)[0]
+        $document[0].body.appendChild(selectOptions)
+        popperTooltipList.push(selectOptions)
+
+        let tooltip = $compile(
+            `
+                <div class="mob-popper mob-select-popper" popper-group="tooltip">
+                    <div class="mob-popper__wrapper">
+                        <span class="mob-popper__arrow"></span>
+                        <div class="mob-popper__inner">
+                            <div class="mob-select__selected-item__collapse" ng-repeat="item in collapseTagsList"
+                                 ng-if="!$first">
+                                <span ng-bind="item.label"></span>
+                                <mob-icon-close class="mob-icon__close" select-name="${_that.name}" ng-click="multipleRemove($event, item)"></mob-icon-close>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        )($scope)[0]
+        $document[0].body.appendChild(tooltip)
+        popperTooltipList.push(tooltip)
+        return popperTooltipList
     }
 
-
-    /**
-     * 有工具箱的collapse
-     * @returns {false|string|boolean|*|boolean}
-     */
-    this.isCollapseTagsHasTooltip = function () {
-        return !this.ngDisabled &&
-            this.multiple &&
-            this.ngModel.length > 0 &&
-            this.collapseTag &&
-            this.collapseTagTooltip
-    }
-
-    /**
-     * 是否有多余的tags
-     */
-    this.isCollapseTagsHasRedundant = function () {
-        return this.multiple && this.ngModel.length > 1
-    }
-
-    /**
-     * 点击事件
-     */
-    this.clickHandler = function () {
-        if (this.ngDisabled) {
-            return
-        }
-        this.focus()
-    }
-
-    /**
-     * 重新聚焦
-     */
-    this.focus = function () {
-        let selectSection = $element[0].querySelector('.mob-select__selection')
-        selectSection.querySelector('input').focus()
-    }
-
-    // 是否显示清除按钮
-    this.showClear = function () {
-        return this.clearable &&
-            !this.ngDisabled &&
-            this.ngModel && this.ngModel.length > 0
-    }
     /**
      * 变动通知
      */
@@ -206,14 +204,70 @@ function controller($scope, $element, $timeout, popper) {
         }
     }
     /**
+     * 无工具箱的collapse
+     * @returns {false|string|boolean|*|boolean}
+     */
+    $scope.isCollapseTagsNoTooltip = function () {
+        return !_that.ngDisabled &&
+            _that.multiple &&
+            _that.ngModel.length > 0 &&
+            _that.collapseTag &&
+            !_that.collapseTagTooltip
+    }
+
+
+    /**
+     * 有工具箱的collapse
+     * @returns {false|string|boolean|*|boolean}
+     */
+    $scope.isCollapseTagsHasTooltip = function () {
+        return !_that.ngDisabled &&
+            _that.multiple &&
+            _that.ngModel.length > 0 &&
+            _that.collapseTag &&
+            _that.collapseTagTooltip
+    }
+
+    /**
+     * 是否有多余的tags
+     */
+    $scope.isCollapseTagsHasRedundant = function () {
+        return _that.multiple && _that.ngModel.length > 1
+    }
+
+    /**
+     * 点击事件
+     */
+    $scope.clickHandler = function () {
+        if (_that.ngDisabled) {
+            return
+        }
+        this.focus()
+    }
+
+    /**
+     * 重新聚焦
+     */
+    $scope.focus = function () {
+        let selectSection = $element[0].querySelector('.mob-select__selection')
+        selectSection.querySelector('input').focus()
+    }
+
+    // 是否显示清除按钮
+    $scope.showClear = function () {
+        return _that.clearable &&
+            !_that.ngDisabled &&
+            _that.ngModel && _that.ngModel.length > 0
+    }
+    /**
      * 清空input内容
      */
-    this.clean = function () {
+    $scope.clean = function () {
         this.focus()
-        if (this.multiple) {
-            this.changeHandle([])
+        if (_that.multiple) {
+            _that.changeHandle([])
         } else {
-            this.changeHandle('')
+            _that.changeHandle('')
         }
     }
 
@@ -221,8 +275,8 @@ function controller($scope, $element, $timeout, popper) {
      * 多选移除
      * @param data
      */
-    this.collapseRemove = function (event, data) {
-        this.changeHandle(data)
+    $scope.collapseRemove = function (event, data) {
+        _that.changeHandle(data)
         event.preventDefault()
         event.stopPropagation()
     }
@@ -234,6 +288,8 @@ app
         templateUrl: './components/select/mob-select.html',
         bindings: {
             ngModel: '=?',
+            options: '<?',
+            appendToBody: '<?',
             ngDisabled: '<?',
             clearable: '<?',
             placeHolder: '<?',

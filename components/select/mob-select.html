@@ -6,7 +6,7 @@
      'is_multiple':$ctrl.multiple
      }"
 >
-    <div class="mob-select__wrapper mob_popper__target" popper-group="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="$ctrl.clickHandler()">
+    <div class="mob-select__wrapper mob_popper__target" popper-group="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="clickHandler()">
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
@@ -21,32 +21,32 @@
             <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" >
                 <div class="mob-select__selected-item__collapse"  ng-repeat="item in collapseTagsList">
                     <span ng-bind="item.label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event, item)"></mob-icon-close>
+                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
                 </div>
 
             </div>
             <!-- 合并，无工具箱 -->
-            <div class="mob-select__selected-item__collapse-contain" ng-show="$ctrl.isCollapseTagsNoTooltip()" >
+            <div class="mob-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()" >
                 <!-- 首个tag -->
                 <div class="mob-select__selected-item__collapse" >
                     <span ng-bind="collapseTagsList[0].label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="$ctrl.collapseRemove($event,collapseTagsList[0])"></mob-icon-close>
+                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event,collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
-                <div class="mob-select__selected-item__collapse" ng-if="$ctrl.isCollapseTagsHasRedundant()">
+                <div class="mob-select__selected-item__collapse" ng-if="isCollapseTagsHasRedundant()">
                     <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>
             </div>
 
             <!-- 合并，有工具箱 -->
-            <div class="mob-select__selected-item__collapse-contain" ng-show="$ctrl.isCollapseTagsHasTooltip()" >
+            <div class="mob-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()" >
                 <!-- 首个tag -->
                 <div class="mob-select__selected-item__collapse" >
                     <span ng-bind="collapseTagsList[0].label"></span>
                     <mob-icon-close class="mob-icon__close" ng-click="$ctrl.multipleRemove($event,collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
-                <div class="mob-select__selected-item__collapse mob_popper__target" popper-group="tooltip"  ng-show="$ctrl.isCollapseTagsHasRedundant()">
+                <div class="mob-select__selected-item__collapse mob_popper__target" popper-group="tooltip"  ng-show="isCollapseTagsHasRedundant()">
                     <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>
 
@@ -57,17 +57,17 @@
 
         <!-- 右侧的ICON -->
         <div class="mob-select__suffix" >
-            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':$ctrl.showClear()}">
+            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':showClear()}">
                 <mob-icon-down-arrow  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-icon-down-arrow>
             </span>
-            <span class="mob-select__suffix-inner mob-icon__clean" ng-if="$ctrl.showClear()">
-                <mob-icon-circle-close ng-class="{'is_popper':popperShow}" ng-click="$ctrl.clean()"></mob-icon-circle-close>
+            <span class="mob-select__suffix-inner mob-icon__clean" ng-if="showClear()">
+                <mob-icon-circle-close ng-class="{'is_popper':popperShow}" ng-click="clean()"></mob-icon-circle-close>
             </span>
         </div>
     </div>
 
-
-    <div class="mob-popper mob-select-popper" popper-group="selectDrown" >
+    <!-- 下拉框 -->
+    <div class="mob-popper mob-select-popper" popper-group="selectDrown" ng-show="!$ctrl.appendToBody">
         <div class="mob-popper__wrapper">
             <span class="mob-popper__arrow"></span>
             <div class="mob-popper__inner">
@@ -77,7 +77,7 @@
     </div>
 
     <!-- 未展示的tags -->
-    <div class="mob-popper mob-select-popper" popper-group="tooltip">
+    <div class="mob-popper mob-select-popper" popper-group="tooltip"  ng-show="!$ctrl.appendToBody">
         <div class="mob-popper__wrapper">
             <span class="mob-popper__arrow"></span>
             <div class="mob-popper__inner">

@@ -1,13 +1,19 @@
-function controller($scope, $element, uuId, $transclude) {
+function controller($scope, $element, uuId, $transclude, cross) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
         this.id = uuId.newUUID()
         $scope.isSlot = $transclude.isSlotFilled('slot')
         $scope.active = false
+        $scope.$data = this.data // 绑定data，给container使用
+        if (!this.mobSelect) {// 如果select是appendToBody时，要通过cross服务来获取父级作用域
+            let name = $element[0].getAttribute("select-name")
+            this.mobSelect = cross.get(name)
+        }
     }
 
-    this.$onChanges = function (changes) {}
+    this.$onChanges = function (changes) {
+    }
 
     this.$onDestroy = function () {
     }
@@ -23,12 +29,12 @@ function controller($scope, $element, uuId, $transclude) {
             $scope.$emit(`${_that.mobSelect.name}OptionsInitValue`, {label: this.label, value: _that.getValue()})
         }
 
-        $scope.$on(`get${_that.id}Param`, function (e, key){
+        $scope.$on(`get${_that.id}Param`, function (e, key) {
             $scope.$emit(`get${_that.id}ParamCallBack`, {key: key, value: _that[key]})
         })
     }
 
-    this.initEvent = function(){
+    this.initEvent = function () {
 
         // 监听父组件的通知事件
         $scope.$on(`${_that.mobSelect.name}Change`, function (e, data) {
@@ -62,7 +68,7 @@ function controller($scope, $element, uuId, $transclude) {
     }
 
     // 获取options的Value
-    this.getValue = function (){
+    this.getValue = function () {
         // 优先取value，然后是label
         return this.value ? this.value : this.label
     }
@@ -76,19 +82,21 @@ function controller($scope, $element, uuId, $transclude) {
         $scope.$emit(`${_that.mobSelect.name}OptionsClick`, {label: this.label, value: val})
     }
 }
+
 app
-.component('mobSelectOptions', {
-    transclude: {
-        'slot':'?mobContainer'
-    },
-    templateUrl: './components/select-options/mob-select-options.html',
-    require: {
-        'mobSelect': '?^mobSelect'
-    },
-    bindings: {
-        ngDisabled:'<?',
-        label: '<?',
-        value: '<?'
-    },
-    controller: controller
-})
+    .component('mobSelectOptions', {
+        transclude: {
+            'slot': '?mobContainer'
+        },
+        templateUrl: './components/select-options/mob-select-options.html',
+        require: {
+            'mobSelect': '?^mobSelect'
+        },
+        bindings: {
+            ngDisabled: '<?',
+            label: '<?',
+            value: '<?',
+            data: '<?'
+        },
+        controller: controller
+    })
