@@ -79,9 +79,7 @@
 /*}*/
 
 mob-button{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-flex;
 }
 mob-select{
     display: block;
