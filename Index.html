@@ -376,11 +376,18 @@
             }
 
             function setFloatingHeight(scope, target, floating) {
-                // const {height} = floating.getBoundingClientRect()
-                // floating.style.height = 0;
-                // floating.offsetHeight // 重绘有问题？？或者将元素放到body上
                 floating.style.transform = 'scaleY(1)';
                 floating.style.opacity = 1;
+                const {
+                    bottom: targetBottom,
+                } = target.getBoundingClientRect();
+
+                // 尝试通过 placement决定显示的动画
+                if (window.innerHeight - targetBottom < 200) {
+                    floating.style.transformOrigin= 'center bottom'
+                } else {
+                    floating.style.transformOrigin= 'center top'
+                }
             }
 
             function computePosition(scope, target, floating, autoUpdate) {
@@ -388,39 +395,6 @@
                 let arrowElement = floating.querySelector('.mob-popper__arrow');
 
                 setFloatingHeight(scope, target, floating);
-                const {
-                    x: targetX,
-                    y: targetY,
-                    top: targetTop,
-                    right: targetRight,
-                    bottom: targetBottom,
-                    left: targetLeft,
-                    width: targetWidth,
-                    height: targetHeight
-                } = target.getBoundingClientRect();
-                // console.log('target', targetX, targetY, targetTop, targetRight, targetBottom, targetLeft, targetWidth, targetHeight)
-                const {
-                    x: floatingX,
-                    y: floatingY,
-                    top: floatingTop,
-                    right: floatingRight,
-                    bottom: floatingBottom,
-                    left: floatingLeft,
-                    width: floatingWidth,
-                    height: floatingHeight
-                } = floating.getBoundingClientRect()
-
-
-                // 尝试通过 placement决定显示的动画
-
-                // console.log(floatingBottom + 200, window.innerHeight)
-                // if (floatingBottom + 200 < window.innerHeight) {
-                //     console.log('在上面')
-                //     floating.style.transformOrigin= 'center bottom'
-                // } else {
-                //     floating.style.transformOrigin= 'center top'
-                //     console.log('在下面')
-                // }
 
 
                 window.FloatingUIDOM.computePosition(target, floating, {

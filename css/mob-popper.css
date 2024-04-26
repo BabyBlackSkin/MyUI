@@ -21,7 +21,7 @@
     box-sizing: border-box;
     transform: scaleY(0);
     transform-origin:top center;
-    transition-property: transform;
+    transition-property: transform,opacity;
     transition-duration: .5s;
     transition-timing-function: cubic-bezier(0.84, -0.01, 0, 1);
     /*overflow: hidden;*/

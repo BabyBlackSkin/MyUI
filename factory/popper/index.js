@@ -20,7 +20,7 @@ app
             tooltip.style.transform = 'scaleY(0)';
             popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
             timer.tooltipCss = setTimeout(function () {
-                tooltip.style.display = '';
+                // tooltip.style.display = '';
                 timer.render = true
             }, 300)
         }
