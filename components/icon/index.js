@@ -55,3 +55,7 @@ app.component('mobIcon', {
         templateUrl: './components/icon/loading.html',
         controller:controller
     })
+    .component('mobIconClock', {
+        templateUrl: './components/icon/clock.html',
+        controller:controller
+    })
