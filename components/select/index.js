@@ -2,8 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody']
-        debugger
+        let abbParams = ['appendToBody','filterable']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -106,6 +105,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
         $scope.$on(`${_that.name}collapseTagsListUpdate`, function (e, data) {
             _that.collapseTagsListUpdate(data)
         })
+
+        // 监听键盘输入事件
+        $element[0].querySelector('input.mob-input__inner').addEventListener('keydown', function (e) {
+            // TODO 键盘没有按回车就会触发，需优化
+            console.log('aa')
+        })
+
     }
 
     /**
@@ -213,7 +219,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
             _that.collapseTag &&
             !_that.collapseTagTooltip
     }
-
+    /**
+     * 有工具箱的collapse
+     * @returns {false|string|boolean|*|boolean}
+     */
+    $scope.isSpanPlaceHolder = function () {
+        return !_that.filterable && (!_that.multiple || _that.multiple && (!_that.ngModel || _that.ngModel.length === 0))
+    }
 
     /**
      * 有工具箱的collapse
@@ -295,6 +307,8 @@ app
             multiple: '<?',
             collapseTag: '<?',
             collapseTagTooltip: '<?',
+            filterable: '<?',
+            filterMethod: '&?',
             change: '&?'
         },
         controller: controller

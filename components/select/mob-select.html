@@ -4,17 +4,18 @@
      'is_clearable':$ctrl.clearable,
      'is_disabled':$ctrl.ngDisabled,
      'is_multiple':$ctrl.multiple,
-     'is_collapseTag':$ctrl.collapseTag
+     'is_collapseTag':$ctrl.collapseTag,
+     'is_filterable':$ctrl.filterable,
      }"
 >
     <div class="mob-select__wrapper mob_popper__target" popper-group="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="clickHandler()">
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
-            <div class="mob-select__selected-item mob-select__input-wrapper is-hidden" stop-bubbling>
-                <input readonly type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
+            <div class="mob-select__selected-item mob-select__input-wrapper" stop-bubbling>
+                <input ng-readonly="!$ctrl.filterable" type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
             </div>
-            <div class="mob-select__selected-item mob-select-placeholder" ng-if="!$ctrl.multiple || $ctrl.multiple && (!$ctrl.ngModel || $ctrl.ngModel.length == 0)">
+            <div class="mob-select__selected-item mob-select-placeholder" ng-if="isSpanPlaceHolder()">
                 <span class="mob-unselect-text" ng-bind="$ctrl.placeHolder"></span>
             </div>
             <!-- 多选select -->
