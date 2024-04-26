@@ -129,7 +129,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
         cross.put(this.name, this)
         let selectOptions = $compile(
             `
-                <div class="mob-popper mob-select-popper" popper-group="selectDrown">
+                <div class="mob-popper mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -145,7 +145,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
 
         let tooltip = $compile(
             `
-                <div class="mob-popper mob-select-popper" popper-group="tooltip">
+                <div class="mob-popper mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">

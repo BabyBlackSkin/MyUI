@@ -142,13 +142,17 @@
 }
 .mob-select .mob-select__selected-item__collapse-contain,
 .mob-select-popper .mob-select__selected-item__collapse-contain {
-    max-width: 100%;
+    max-width: calc(100% - 40px - 12px); <!-- 为什么是这个数值，还需要计算 -->
     position: relative;
     z-index: 2;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 0 1px;
+}
+.mob-select.is_multiple .mob-select__selected-item__collapse-contain,
+.mob-select-popper.is_multiple .mob-select__selected-item__collapse-contain {
+    flex-wrap: nowrap;
 }
 .mob-select .mob-select__selected-item__collapse__tooltip
 .mob-select-popper .mob-select__selected-item__collapse__tooltip{
