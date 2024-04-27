@@ -35,7 +35,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
 
         if (this.appendToBody) {
             popperTooltipList.push(...this.dropDownAppendToBody());
-            console.log(popperTooltipList)
         } else {
             popperTooltipList.push(...$element[0].querySelectorAll('.mob-popper'));
         }
@@ -54,6 +53,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
             return new Promise(resolve => {
                 // 判断点击的是否是tooltip
                 let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
+                debugger
                 if (isTooltip) {
                     $scope.focus()
                     // 段暄
@@ -145,7 +145,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
 
         let tooltip = $compile(
             `
-                <div class="mob-popper mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">

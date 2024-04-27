@@ -1,5 +1,4 @@
 <div class="mob-select"
-     popper
      ng-class="{
      'is_clearable':$ctrl.clearable,
      'is_disabled':$ctrl.ngDisabled,
@@ -11,7 +10,7 @@
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
-            <div class="mob-select__selected-item mob-select__input-wrapper is-hidden" stop-bubbling>
+            <div class="mob-select__selected-item mob-select__input-wrapper is-hidden">
                 <input readonly type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
             </div>
             <div class="mob-select__selected-item mob-select-placeholder" ng-if="!$ctrl.multiple || $ctrl.multiple && (!$ctrl.ngModel || $ctrl.ngModel.length == 0)">
@@ -19,7 +18,7 @@
             </div>
             <!-- 多选select -->
             <!-- 合并 -->
-            <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" stop-bubbling>
+            <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag">
                 <div class="mob-select__selected-item__collapse"  ng-repeat="item in collapseTagsList">
                     <span ng-bind="item.label"></span>
                     <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
@@ -27,7 +26,7 @@
 
             </div>
             <!-- 合并，无工具箱 -->
-            <div class="mob-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()" stop-bubbling>
+            <div class="mob-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()">
                 <!-- 首个tag -->
                 <div class="mob-select__selected-item__collapse" >
                     <span ng-bind="collapseTagsList[0].label"></span>
@@ -40,7 +39,7 @@
             </div>
 
             <!-- 合并，有工具箱 -->
-            <div class="mob-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()" stop-bubbling>
+            <div class="mob-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()">
                 <!-- 首个tag -->
                 <div class="mob-select__selected-item__collapse" >
                     <span ng-bind="collapseTagsList[0].label"></span>
@@ -78,12 +77,12 @@
     </div>
 
     <!-- 未展示的tags -->
-    <div class="mob-popper mob-select-popper" popper-group="tooltip"  ng-show="!$ctrl.appendToBody">
+    <div class="mob-popper mob-select-popper mob-tag-popper" popper-group="tooltip"  ng-show="!$ctrl.appendToBody">
         <div class="mob-popper__wrapper">
             <span class="mob-popper__arrow"></span>
             <div class="mob-popper__inner">
                 <div class="mob-select__selected-item__collapse" ng-repeat="item in collapseTagsList"
-                     ng-if="!$first" stop-bubbling>
+                     ng-if="!$first">
                     <span ng-bind="item.label"></span>
                     <mob-icon-close class="mob-icon__close" ng-click="$ctrl.multipleRemove($event, item)"></mob-icon-close>
                 </div>

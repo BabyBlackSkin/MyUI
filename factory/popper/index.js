@@ -96,8 +96,8 @@ app
                             } else {
                                 hide(scope, scope.$popper[name])
                             }
-                            e.preventDefault()
-                            e.stopPropagation();
+                            // e.preventDefault()
+                            // e.stopPropagation();
 
                         })
                     } else {
@@ -167,6 +167,7 @@ app
 
                     document.addEventListener('click', async function (e) {
                         let focus = target.contains(e.target)
+                        console.log('body click')
                         if (focus) {
                             return
                         }
