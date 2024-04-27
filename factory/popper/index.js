@@ -101,7 +101,7 @@ app
 
                         })
                     } else {
-                        // hover 还存在问题，会出现闪烁问题 FIXME
+                        // hover 还存在问题，会出现闪烁问题 FIXME 防抖？
                         let timer = {
                             target: null,
                             tooltip: null,

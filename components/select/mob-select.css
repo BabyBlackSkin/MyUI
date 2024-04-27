@@ -43,7 +43,7 @@
     align-items: center;
 }
 
-.mob-select .mob-select__selected-item.is-hidden{
+.mob-select .mob-select__selected-item.mob-select__input-wrapper{
     width: 1px;
     overflow: hidden;
     z-index: 0;
@@ -203,4 +203,15 @@
 }
 .mob-select.is_disabled .mob-input__inner {
     background-color: var(--mob-disabled-background-color);
+}
+
+
+/*可过滤的*/
+.mob-select.is_filterable .mob-select__selected-item.mob-select__input-wrapper{
+    width: 100%;
+
+}
+.mob-select.is_filterable .mob-input__inner{
+    text-indent: 8px;
+    width: 100%;
 }

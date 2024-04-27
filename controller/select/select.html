@@ -240,5 +240,46 @@
                     </pre>
             </div>
         </div>
+
+
+        <h3>可搜索</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-select style="display: block;width: 200px"
+                            ng-model="value6"
+                            multiple="true"
+                            collapse-tag="true"
+                            options="select.optionsBase"
+                            collapse-tag-tooltip="true"
+                            filterable
+                            append-to-body></mob-select>
+
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                              <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true">
+                                <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled">
+                                    <mob-container>
+                                        <p style="display:flex;"><span style="flex: 1" ng-bind="o.label"></span><span style="font-size: 0.7rem;font-weight: 600" ng-bind="o.desc"></span></p>
+                                    </mob-container>
+                                </mob-select-options>
+                            </mob-select>
+                            </html>
+                            <script>
+                                this.optionsBase = [
+                                    {label: '香港', value: '香港', desc:'XiangGang'},
+                                    {label: '澳门', value: '澳门', desc:'AoMen'},
+                                    {label: '北京', value: '北京', desc:'BeiJing'},
+                                    {label: '上海', value: '上海', desc:'ShangHai'},
+                                    {label: '深圳', desc:'ShenZheng'},
+                                ]
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
     </div>
 </section>
