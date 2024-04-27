@@ -43,7 +43,8 @@
     align-items: center;
 }
 
-.mob-select .mob-select__selected-item.mob-select__input-wrapper{
+.mob-select .mob-select__selected-item.mob-select__input-wrapper,
+.mob-select .mob-select__selected-item.is-hidden{
     width: 1px;
     overflow: hidden;
     z-index: 0;
@@ -70,8 +71,16 @@
     height: 40px;
     line-height: 40px;
     outline: none;
+    /*width: 1px;*/
+    width: 100%;
+}
+.mob-select .mob-input__inner.mob-input-filterable{
+    padding: 12px;
+    cursor: pointer;
+}
+.mob-select .mob-select__selected-item.mob-select__input-wrapper .mob-input__inner,
+.mob-select .mob-select__selected-item.is-hidden.mob-select__input-wrapper .mob-input__inner{
     width: 1px;
-    /*width: 100%;*/
 }
 .mob-select .mob-select__selected-item span{
     display: inline-block;
@@ -207,11 +216,11 @@
 
 
 /*可过滤的*/
-.mob-select.is_filterable .mob-select__selected-item.mob-select__input-wrapper{
-    width: 100%;
+/*.mob-select.is_filterable .mob-select__selected-item.mob-select__input-wrapper{*/
+/*    width: 100%;*/
 
-}
-.mob-select.is_filterable .mob-input__inner{
-    text-indent: 8px;
-    width: 100%;
-}
+/*}*/
+/*.mob-select.is_filterable .mob-input__inner{*/
+/*    text-indent: 8px;*/
+/*    width: 100%;*/
+/*}*/

@@ -52,7 +52,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
             return new Promise(resolve => {
                 // 判断点击的是否是tooltip
                 let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
-                debugger
                 if (isTooltip) {
                     $scope.focus()
                     // 段暄
@@ -104,12 +103,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
         // 监听collapseTagsListUpdate事件
         $scope.$on(`${_that.name}collapseTagsListUpdate`, function (e, data) {
             _that.collapseTagsListUpdate(data)
-        })
-
-        // 监听键盘输入事件
-        $element[0].querySelector('input.mob-input__inner').addEventListener('keydown', function (e) {
-            // TODO 键盘没有按回车就会触发，需优化
-            console.log('aa')
         })
 
     }
@@ -188,6 +181,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
             this.ngModel = data.value
             this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
         }
+        if (this.filterable) {
+            this.filterOptions(true)
+            $scope.filterableText = ''
+        }
     }
 
     this.collapseTagsListUpdate = function (data) {
@@ -207,6 +204,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
         } else {
             $scope.collapseTagsList.push(data)
         }
+    }
+
+    this.filterOptions = function (filter) {
+        $scope.$broadcast(`${_that.name}Filter`, {
+            filter,
+            value: $scope.filterableText,
+            filterMethod: _that.filterMethod
+        })
     }
     /**
      * 无工具箱的collapse
@@ -260,8 +265,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
      * 重新聚焦
      */
     $scope.focus = function () {
-        let selectSection = $element[0].querySelector('.mob-select__selection')
-        selectSection.querySelector('input').focus()
+        if (this.filterable) {
+            let input = $element[0].querySelector('.mob-input__inner')
+            input.focus()
+        } else {
+            let input = $element[0].querySelector('.mob-input-filterable')
+            input.focus()
+        }
     }
 
     // 是否显示清除按钮

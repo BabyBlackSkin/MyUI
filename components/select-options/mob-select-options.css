@@ -24,3 +24,7 @@
 .mob-select-popper .mob-select-options.is_active {
     color: var(--mob-active-text-color);
 }
+
+.mob-select-options.is_hidden {
+    display: none;
+}

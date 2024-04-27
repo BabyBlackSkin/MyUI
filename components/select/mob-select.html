@@ -1,5 +1,4 @@
 <div class="mob-select"
-     popper
      ng-class="{
      'is_clearable':$ctrl.clearable,
      'is_disabled':$ctrl.ngDisabled,
@@ -12,8 +11,11 @@
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
-            <div class="mob-select__selected-item mob-select__input-wrapper" stop-bubbling>
-                <input ng-readonly="!$ctrl.filterable" type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
+            <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
+                <input readonly type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
+            </div>
+            <div class="mob-select__selected-item mob-select__filterable-input-wrapper" ng-class="{'is-hidden':!$ctrl.filterable }">
+                <input type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" ng-keyup="$ctrl.filterOptions()" class="mob-input__inner mob-input-filterable" ng-model="filterableText">
             </div>
             <div class="mob-select__selected-item mob-select-placeholder" ng-if="isSpanPlaceHolder()">
                 <span class="mob-unselect-text" ng-bind="$ctrl.placeHolder"></span>

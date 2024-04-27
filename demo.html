@@ -8,108 +8,57 @@
     <script type="text/javascript" src="floatingui/floating-core-1.6.0.js"></script>
     <script type="text/javascript" src="floatingui/floating-ui-1.6.3.js"></script>
     <style>
-        body {
-            padding: 100px;
+        #grandfather {
+            width: 100px;
+            max-height: 200px;
+            background-color: black;
         }
 
-        #tooltip {
-            width: max-content;
-            position: absolute;
-            top: 0;
-            left: 0;
-
-            display: none;
-
-
-            background: #222;
-            color: white;
-            font-weight: bold;
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 90%;
+        #father{
+            display: inline-flex;
+            background-color: rebeccapurple;
+            width: 100px;
+            height: 100%;
+            position: relative;
+            overflow: auto;
+            box-sizing: border-box;
         }
 
-        #arrow {
-            position: absolute;
-            background: #222;
-            width: 8px;
-            height: 8px;
-            transform: rotate(45deg);
+        #sonOne{
+            background-color: #8cc5ff;
+            width: 100%;
+            height: 20px;
         }
+        #sonTwo{
+            background-color: #9a6e3a;
+            width: 100%;
+            height: 200px;
+        }
+        #sonTwo .sonTwo-sub{
+            background-color: red;
+            display: block;
+            width: 100%;
+            height: 50px;
+        }
+
     </style>
 </head>
 <body>
-
-<button id="button" aria-describedby="tooltip">
-    My button
-</button>
-<div id="tooltip" role="tooltip">My tooltip
-    <div id="arrow"></div>
+<div id="grandfather">
+    <div id="father">
+        <div id="sonOne"></div>
+        <div id="sonTwo">
+            <span class="sonTwo-sub"></span>
+            <span class="sonTwo-sub"></span>
+            <span class="sonTwo-sub"></span>
+            <span class="sonTwo-sub"></span>
+            <span class="sonTwo-sub"></span>
+        </div>
+    </div>
 </div>
 </body>
 
 <script>
 
-    const button = document.querySelector('#button');
-    const tooltip = document.querySelector('#tooltip');
-    const arrowElement = document.querySelector('#arrow');
-
-    window.FloatingUIDOM.computePosition(button, tooltip, {
-        placement: 'bottom-start',
-        middleware: [
-            window.FloatingUIDOM.flip(),// y轴自适应
-            window.FloatingUIDOM.shift(), // x轴自适应
-            window.FloatingUIDOM.offset(5), // 与目标组件的  空隙
-            window.FloatingUIDOM.arrow({element: arrowElement}),
-        ]
-    }).then(({x, y, placement, middlewareData}) => {
-        Object.assign(tooltip.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-        });
-
-        const {x: arrowX, y: arrowY} = middlewareData.arrow;
-
-        console.log(placement)
-        const staticSide = {
-            top: 'bottom',
-            right: 'left',
-            bottom: 'top',
-            left: 'right',
-        }[placement.split('-')[0]];
-
-        debugger
-        Object.assign(arrowElement.style, {
-            left: arrowX != null ? `${arrowX }px` : '',
-            top: arrowY != null ? `${arrowY}px` : '',
-            right: '',
-            bottom: '',
-            [staticSide]: '-4px',
-        });
-    });
-
-    let timer = {}
-
-    button.addEventListener('mouseenter', function () {
-        tooltip.style.display = 'block'
-        clearTimeout(timer.tool)
-    })
-
-    button.addEventListener('mouseleave', function () {
-        timer.target = setTimeout(() => {
-            tooltip.style.display = 'none'
-        }, 300)
-    })
-
-    tooltip.addEventListener('mouseenter', function () {
-        tooltip.style.display = 'block'
-        clearTimeout(timer.target)
-    })
-
-    tooltip.addEventListener('mouseleave', function () {
-        timer.tool = setTimeout(() => {
-            tooltip.style.display = 'none'
-        }, 300)
-    })
 </script>
 </html>
