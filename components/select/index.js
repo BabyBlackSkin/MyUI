@@ -1,4 +1,4 @@
-function controller($scope, $element, $timeout, $document, $compile, $attrs, popper, cross, attrHelp) {
+function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, popper, cross, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -120,6 +120,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
             // 反向通知group下所有的radio绑定的ngModel
             $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
         })
+
+
+
+        $scope.$watch(()=>{return $scope.filterableText},function(newV, oldV){
+            _that.filterOptions()
+        })
     }
 
 
@@ -182,7 +188,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
             this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
         }
         if (this.filterable) {
-            this.filterOptions(true)
             $scope.filterableText = ''
         }
     }
@@ -206,13 +211,18 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, pop
         }
     }
 
-    this.filterOptions = function (filter) {
-        $scope.$broadcast(`${_that.name}Filter`, {
-            filter,
-            value: $scope.filterableText,
-            filterMethod: _that.filterMethod
-        })
+    this.filterOptions = function () {
+        $debounce.debounce($scope, () => {
+            let filter = !!$scope.filterableText
+            console.log(filter)
+            $scope.$broadcast(`${_that.name}Filter`, {
+                filter,
+                value: $scope.filterableText,
+                filterMethod: _that.filterMethod
+            })
+        }, 500)()
     }
+
     /**
      * 无工具箱的collapse
      * @returns {false|string|boolean|*|boolean}

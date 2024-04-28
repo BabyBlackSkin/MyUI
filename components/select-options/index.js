@@ -50,13 +50,13 @@ function controller($scope, $element, uuId, $transclude, cross) {
 
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
-            if (data.filter) {
+            if (!data.filter) {
                 $scope.hidden = false
                 return
             }
             let val = _that.getValue()
-            $scope.hidden = val !== data.value
-            console.log(data)
+            $scope.hidden = val.indexOf(data.value) < 0
+            // console.log(`${val} indexOf ${ val.indexOf(data.value)}`)
         })
     }
 
