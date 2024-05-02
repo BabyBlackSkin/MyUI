@@ -245,15 +245,29 @@
         <h3>可搜索</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px"
-                            ng-model="value6"
-                            multiple="true"
-                            collapse-tag="true"
-                            options="select.optionsBase"
-                            collapse-tag-tooltip="true"
-                            filterable
-                            append-to-body></mob-select>
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px"
+                                ng-model="value6"
+                                multiple="true"
+                                collapse-tag="true"
+                                options="select.optionsBase"
+                                collapse-tag-tooltip="true"
+                                filterable
+                                append-to-body></mob-select>
 
+                </div>
+
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px"
+                                ng-model="value6"
+                                multiple="true"
+                                collapse-tag="true"
+                                collapse-tag-tooltip="true"
+                                filterable>
+                        <mob-select-options ng-repeat="o in select.optionsBase" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
+                    </mob-select>
+
+                </div>
             </div>
             <div class="meta">
                 <pre prism>

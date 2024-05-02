@@ -2,7 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody','filterable']
+        let abbParams = ['appendToBody', 'filterable']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -15,6 +15,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
         this.name = `mobSelect_${$scope.$id}`
         $scope.$options = this.options;
+        // 当开启过滤时，每个options的匹配结果
+        $scope.filterResult = {
+            options: {},
+            anyMatch: false
+        }
     }
 
     this.$onChanges = function (changes) {
@@ -37,7 +42,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         } else {
             popperTooltipList.push(...$element[0].querySelectorAll('.mob-popper'));
         }
-
 
 
         popper.popper($scope, targetList, popperTooltipList)
@@ -105,6 +109,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             _that.collapseTagsListUpdate(data)
         })
 
+        // 监听filter结果
+        $scope.$on(`${_that.name}FilterResult`, function (e, data) {
+            $scope.filterResult.options[data.key] = data.value
+            _that.filterHasMatched()
+        })
+
     }
 
     /**
@@ -122,8 +132,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         })
 
 
-
-        $scope.$watch(()=>{return $scope.filterableText},function(newV, oldV){
+        $scope.$watch(() => {
+            return $scope.filterableText
+        }, function (newV, oldV) {
             _that.filterOptions()
         })
     }
@@ -140,6 +151,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <div class="mob-popper__inner">
                             <mob-select-options ng-repeat="o in $options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>
@@ -214,12 +226,19 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.filterOptions = function () {
         $debounce.debounce($scope, () => {
             let filter = !!$scope.filterableText
-            console.log(filter)
             $scope.$broadcast(`${_that.name}Filter`, {
                 filter,
                 value: $scope.filterableText,
                 filterMethod: _that.filterMethod
             })
+        }, 500)()
+    }
+    /**
+     * filterHasMatched
+     */
+    this.filterHasMatched = function () {
+        $debounce.debounce($scope, () => {
+            $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o.value === true)
         }, 500)()
     }
 
@@ -310,6 +329,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         _that.changeHandle(data)
         event.preventDefault()
         event.stopPropagation()
+    }
+
+    $scope.showNoMatchOptions = function () {
+        return !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
     }
 }
 

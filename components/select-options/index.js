@@ -1,7 +1,9 @@
-function controller($scope, $element, uuId, $transclude, cross) {
+function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        let abbParams = ['noMatchOption']
+        attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
         this.id = uuId.newUUID()
         $scope.isSlot = $transclude.isSlotFilled('slot')
         $scope.active = false
@@ -50,13 +52,16 @@ function controller($scope, $element, uuId, $transclude, cross) {
 
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
-            if (!data.filter) {
+            if (!data.filter || _that.noMatchOption) {
                 $scope.hidden = false
                 return
             }
             let val = _that.getValue()
             $scope.hidden = val.indexOf(data.value) < 0
-            // console.log(`${val} indexOf ${ val.indexOf(data.value)}`)
+            $scope.$emit(`${_that.mobSelect.name}FilterResult`, {
+                key: $scope.$id,
+                value: !$scope.hidden
+            })
         })
     }
 
@@ -105,6 +110,7 @@ app
         },
         bindings: {
             ngDisabled: '<?',
+            noMatchOption: '<?',
             label: '<?',
             value: '<?',
             data: '<?'
