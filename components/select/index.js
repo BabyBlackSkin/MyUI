@@ -2,7 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody', 'filterable']
+        let abbParams = ['appendToBody', 'filterable','allowCreate']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -151,7 +151,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <div class="mob-popper__inner">
                             <mob-select-options ng-repeat="o in $options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
-                            <mob-select-options ng-if="showNoMatchOptions()" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
+                            <mob-select-options ng-if="showCreateOptions()" select-name="${_that.name}" label="filterableText" value="filterableText" no-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>
@@ -231,7 +232,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 value: $scope.filterableText,
                 filterMethod: _that.filterMethod
             })
-        }, 500)()
+        }, 300)()
     }
     /**
      * filterHasMatched
@@ -330,9 +331,20 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         event.preventDefault()
         event.stopPropagation()
     }
-
+    /**
+     * 是否展示未匹配的选项
+     * @returns {boolean}
+     */
     $scope.showNoMatchOptions = function () {
-        return !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
+        return !!!_that.allowCreate && !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
+    }
+
+    /**
+     * 是否展示未匹配的选项
+     * @returns {boolean}
+     */
+    $scope.showCreateOptions = function () {
+        return  !!_that.allowCreate && !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
     }
 }
 
@@ -352,6 +364,7 @@ app
             collapseTagTooltip: '<?',
             filterable: '<?',
             filterMethod: '&?',
+            allowCreate:'<?',
             change: '&?'
         },
         controller: controller

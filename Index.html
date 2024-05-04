@@ -410,7 +410,7 @@
                     }
                 ).then(({x, y, placement, middlewareData}) => {
                     Object.assign(floating.style, {
-                        left: `${x - 5}px`, // -5px 抵消padding，不知道我什么shift不起作用
+                        left: `${x - 5}px`, // -5px 抵消padding，不知道为什么shift不起作用
                         top: `${y}px`,
                     });
 
