@@ -30,4 +30,10 @@ app
         $scope.value = '香港'
         $scope.value3 = '香港'
         $scope.valueMultiple = ['香港','1','上海','北京']
+
+
+        this.optionsBaseAllowCreate = [
+            {label: '香港', value: '香港', desc:'XiangGang'}
+        ]
+
     }])

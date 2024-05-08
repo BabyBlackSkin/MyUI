@@ -71,29 +71,29 @@
     </div>
 
     <!-- 下拉框 -->
-    <div class="mob-popper mob-select-popper" popper-group="selectDrown" ng-show="!$ctrl.appendToBody">
-        <div class="mob-popper__wrapper">
-            <span class="mob-popper__arrow"></span>
-            <div class="mob-popper__inner">
-                <div ng-transclude></div>
-                <mob-select-options ng-if="showNoMatchOptions()" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
-            </div>
-        </div>
-    </div>
+<!--    <div class="mob-popper mob-select-popper" popper-group="selectDrown" ng-show="!$ctrl.appendToBody">-->
+<!--        <div class="mob-popper__wrapper">-->
+<!--            <span class="mob-popper__arrow"></span>-->
+<!--            <div class="mob-popper__inner">-->
+<!--                <div ng-transclude></div>-->
+<!--                <mob-select-options ng-if="showNoMatchOptions()" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
-    <!-- 未展示的tags -->
-    <div class="mob-popper mob-select-popper" popper-group="tooltip"  ng-show="!$ctrl.appendToBody">
-        <div class="mob-popper__wrapper">
-            <span class="mob-popper__arrow"></span>
-            <div class="mob-popper__inner">
-                <div class="mob-select__selected-item__collapse" ng-repeat="item in collapseTagsList"
-                     ng-if="!$first" stop-bubbling>
-                    <span ng-bind="item.label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--    &lt;!&ndash; 未展示的tags &ndash;&gt;-->
+<!--    <div class="mob-popper mob-select-popper" popper-group="tooltip"  ng-show="!$ctrl.appendToBody">-->
+<!--        <div class="mob-popper__wrapper">-->
+<!--            <span class="mob-popper__arrow"></span>-->
+<!--            <div class="mob-popper__inner">-->
+<!--                <div class="mob-select__selected-item__collapse" ng-repeat="item in collapseTagsList"-->
+<!--                     ng-if="!$first" stop-bubbling>-->
+<!--                    <span ng-bind="item.label"></span>-->
+<!--                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
 
 </div>

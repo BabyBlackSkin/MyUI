@@ -1,4 +1,4 @@
-function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, popper, cross, attrHelp) {
+function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, $transclude, uuId, popper, cross, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -36,12 +36,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         // 获取popperTooltip
         const popperTooltipList = []
 
-
-        if (this.appendToBody) {
-            popperTooltipList.push(...this.dropDownAppendToBody());
-        } else {
-            popperTooltipList.push(...$element[0].querySelectorAll('.mob-popper'));
-        }
+        popperTooltipList.push(...this.dropDownAppendToBody());
 
 
         popper.popper($scope, targetList, popperTooltipList)
@@ -145,7 +140,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         cross.put(this.name, this)
         let selectOptions = $compile(
             `
-                <div class="mob-popper mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                <div class="mob-popper mob-select-popper" id="cccccccccccccc${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -163,7 +158,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
         let tooltip = $compile(
             `
-                <div class="mob-popper mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-select-tag-popper" id="aaaaaaaaa${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -355,7 +350,6 @@ app
         bindings: {
             ngModel: '=?',
             options: '<?',
-            appendToBody: '<?',
             ngDisabled: '<?',
             clearable: '<?',
             placeHolder: '<?',
