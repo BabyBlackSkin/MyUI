@@ -73,16 +73,18 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             return !_that.ngDisabled
         }
 
-
-        $scope.$popper['tooltip'].focusOut = function (e) {
-            return new Promise(resolve => {
-                // 判断点击的是否是tooltip
-                let isTooltip = this.tooltip.contains(e.target)
-                if (isTooltip) {
-                    return resolve(false)
-                }
-                return resolve(true)
-            })
+        // 标签工具集
+        if (this.collapseTagTooltip) {
+            $scope.$popper['tooltip'].focusOut = function (e) {
+                return new Promise(resolve => {
+                    // 判断点击的是否是tooltip
+                    let isTooltip = this.tooltip.contains(e.target)
+                    if (isTooltip) {
+                        return resolve(false)
+                    }
+                    return resolve(true)
+                })
+            }
         }
 
         // 监听optionsInitValue事件
@@ -156,9 +158,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $document[0].body.appendChild(selectOptions)
         popperTooltipList.push(selectOptions)
 
-        let tooltip = $compile(
-            `
-                <div class="mob-popper mob-select-tag-popper" id="aaaaaaaaa${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+        // 标签工具集
+        if (this.collapseTagTooltip) {
+            let tooltip = $compile(
+                `
+                <div class="mob-popper mob-select-popper mob-select-tag-popper" data-type="aaaaaaaaaaaaa" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -170,9 +174,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     </div>
                 </div>
             `
-        )($scope)[0]
-        $document[0].body.appendChild(tooltip)
-        popperTooltipList.push(tooltip)
+            )($scope)[0]
+            $document[0].body.appendChild(tooltip)
+            popperTooltipList.push(tooltip)
+        }
         return popperTooltipList
     }
 
