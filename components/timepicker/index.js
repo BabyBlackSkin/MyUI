@@ -55,11 +55,8 @@ function controller($scope, $element, $attrs) {
 }
 
 app
-    .component('mobRadio', {
-        templateUrl: './components/radio/mob-radio.html',
-        require: {
-            'radioGroup': '?^mobRadioGroup'
-        },
+    .component('mobTimePicker', {
+        templateUrl: './components/timepicker/mob-timepicker.html',
         bindings: {
             ngModel: '=?',
             ngDisabled: '<?',
