@@ -44,6 +44,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'SwitchCtrl',
             controllerAs: 'switch',
         })
+        .when('/timepicker', {
+            templateUrl: './controller/timepicker/timepicker.html',
+            controller: 'TimepickerCtrl',
+            controllerAs: 'timepicker',
+        })
         .when('/form', {
             templateUrl: './controller/form/form.html',
             controller: 'FormCtrl',
@@ -79,6 +84,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'CheckBox多选框', path: '/checkBox'},
         {label: 'Select选择器', path: '/select', tags: [{title:'preview', type:'primary'}]},
         {label: 'Switch开关', path: '/switch'},
+        {label: 'Timepicker时间选择器', path: '/timepicker'},
         {label: 'Form表单', path: '/form'},
     ]
     //通过$on为$rootScope添加路由事件
