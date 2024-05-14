@@ -238,9 +238,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * filterHasMatched
      */
     this.filterHasMatched = function () {
-        $debounce.debounce($scope, () => {
-            $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o.value === true)
-        }, 500)()
+        // console.log('filer')
+        // $debounce.debounce($scope, () => {
+            $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o === true)
+        // }, 100)()
     }
 
     /**
