@@ -9,6 +9,11 @@
 >
     <div class="mob-select__wrapper mob_popper__target" popper-group="selectDrown" ng-class="{'mob-select__wrapper__clearable':$ctrl.options.clearable}" ng-click="clickHandler()">
 
+        <!-- 右侧的ICON -->
+        <div class="mob-select__suffix" ng-class="{'is_hidden':!$slot.slotSet.has('prefix')}">
+            <slot name="prefix"></slot>
+        </div>
+
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
             <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
@@ -69,31 +74,5 @@
             </span>
         </div>
     </div>
-
-    <!-- 下拉框 -->
-<!--    <div class="mob-popper mob-select-popper" popper-group="selectDrown" ng-show="!$ctrl.appendToBody">-->
-<!--        <div class="mob-popper__wrapper">-->
-<!--            <span class="mob-popper__arrow"></span>-->
-<!--            <div class="mob-popper__inner">-->
-<!--                <div ng-transclude></div>-->
-<!--                <mob-select-options ng-if="showNoMatchOptions()" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; 未展示的tags &ndash;&gt;-->
-<!--    <div class="mob-popper mob-select-popper" popper-group="tooltip"  ng-show="!$ctrl.appendToBody">-->
-<!--        <div class="mob-popper__wrapper">-->
-<!--            <span class="mob-popper__arrow"></span>-->
-<!--            <div class="mob-popper__inner">-->
-<!--                <div class="mob-select__selected-item__collapse" ng-repeat="item in collapseTagsList"-->
-<!--                     ng-if="!$first" stop-bubbling>-->
-<!--                    <span ng-bind="item.label"></span>-->
-<!--                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
 
 </div>

@@ -8,8 +8,10 @@
         <h3>基础用法</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-button ng-click="addOption()">追加options</mob-button>
-                <mob-select style="width: 200px; margin-top: 20px" ng-model="value" options="select.optionsBase"></mob-select>
+                <div class="mob-demo-example-child">
+                    <mob-button ng-click="addOption()">追加options</mob-button>
+                    <mob-select style="width: 200px;" ng-model="value" options="select.optionsBase"></mob-select>
+                </div>
             </div>
             <div class="meta">
                 <pre prism>

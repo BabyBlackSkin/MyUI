@@ -1,0 +1,31 @@
+.mob-popper .mob-timepicker-options {
+    font-size: 14px;
+    padding: 0 20px;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #606266;
+    height: 34px;
+    line-height: 34px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.mob-popper .mob-timepicker-options.is_disabled {
+    color: var(--mob-checkbox-disabled-checked-icon-color);
+    cursor: not-allowed;
+}
+
+.mob-popper .mob-timepicker-options:not(.is_disabled):hover {
+    background-color: #f5f7fa;
+    font-weight: bold;
+}
+
+.mob-popper .mob-timepicker-options.is_active {
+    color: var(--mob-active-text-color);
+}
+
+.mob-timepicker-options.is_hidden {
+    display: none;
+}

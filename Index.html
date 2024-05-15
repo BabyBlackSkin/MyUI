@@ -40,6 +40,8 @@
     <script src="./components/radio-group/index.js"></script>
     <script src="./components/select/index.js"></script>
     <script src="./components/select-options/index.js"></script>
+    <script src="./components/timepicker/index.js"></script>
+    <script src="./components/timepicker-options/index.js"></script>
 
     <script src="./components/switch/index.js"></script>
     <script src="./components/divider/index.js"></script>
@@ -80,14 +82,21 @@
     <link rel="stylesheet" href="components/checkbox-button/mob-checkbox-button.css">
     <link rel="stylesheet" href="components/checkbox-group/mob-checkbox-group.css">
     <link rel="stylesheet" href="components/switch/mob-switch.css">
+    <link rel="stylesheet" href="components/timepicker/index.css">
+    <link rel="stylesheet" href="components/timepicker-options/index.css">
     <link rel="stylesheet" href="components/divider/mob-divider.css">
     <link rel="stylesheet" href="components/popper/mob-popper.css">
     <link rel="stylesheet" href="components/popper-tooltip/mob-popper-tooltip.css">
     <link rel="stylesheet" href="components/popper-tooltip-arrow/mob-popper-tooltip-arrow.css">
 </head>
 <style>
+    html,body{
+        width: 100%;
+        height: 100%;
+    }
     .contain {
         display: flex;
+        height: 100%;
     }
 
     .navigation {
@@ -143,6 +152,7 @@
 
     .main-container {
         width: calc(100% - 240px);
+        height: 100%;
         padding-left: 260px;
     }
 </style>
@@ -164,17 +174,15 @@
     </div>
 
     <div class="main-container">
-        <div ng-view="" class="view-animate-container">
+        <div ng-view="" class="view-animate-container" style="height: 100%">
         </div>
     </div>
 </div>
 
 <script type="text/ng-template" id="home">
-    <h1 style="margin-top:20px"> 参考Element UI ，基于Angular1.5.3开发的UI框架 </h1>
-    <ul>
-        <!--        <li>目前的插件都是直接操作<code>dom</code>的，并没有使用<code>Angular</code>的双向数据绑定机制，采用数据驱动的方式实现；经常出现下拉框、多选框，点击保存后，在新增，还是会显示上一步操作的内容-->
-        <!--        </li>-->
-    </ul>
+    <div style="display: flex;width: 100%;height: 100%;justify-content: center;box-sizing: border-box;padding-top: 100px">
+        <h1 style="margin-top:20px;font-weight:bold;background:var(--mob-ui-title-background);-webkit-text-fill-color:var(--mob-ui-title-color);background-clip:text;" >基于Angular1.5.3开发的UI框架 </h1>
+    </div>
 </script>
 
 </body>
