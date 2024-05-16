@@ -1,0 +1,62 @@
+.mob-time-spinner__wrapper {
+    box-sizing: border-box;
+    display: flex;
+    max-height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+.mob-time-spinner__wrapper mob-divider{
+    width: 100%;
+    position: absolute;
+}
+.mob-time-spinner__wrapper .mob-divider{
+    margin: 0;
+}
+
+.mob-time-spinner__wrapper mob-divider:first-of-type {
+    top: 128px;
+}
+
+.mob-time-spinner__wrapper mob-divider:last-of-type {
+    top: 160px;
+}
+.mob-time-spinner__selection {
+    /*height: inherit;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.mob-time-spinner__selection::before {
+    content: '';
+    display: block;
+    height: 128px;
+    width: 60px;
+}
+.mob-time-spinner__selection::after{
+    content: '';
+    display: inline-block;
+    height: 96px;
+    width: 60px;
+}
+.mob-time-spinner__selection ul{
+    padding: 0;
+    margin: 0;
+}
+.mob-time-spinner__selection ul li.disabled{
+    color: var(--mob-disabled-text-color);
+}
+.mob-time-spinner__selection ul li:hover{
+    background-color: var(--mob-active-color-dark);
+}
+.mob-time-spinner__selection ul li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 12px;
+    list-style: none;
+    color: var(--mob-normal-color);
+    cursor: pointer;
+}

@@ -1,0 +1,27 @@
+<div class="mob-time-spinner">
+    <div class="mob-time-spinner__container">
+        <div class="mob-time-spinner__wrapper">
+<!--            <mob-divider class="top-divider"></mob-divider>-->
+<!--            <mob-divider class="bottom-divider"></mob-divider>-->
+            <div class="mob-time-spinner__selection hour-selection mob-scrollbar">
+                <ul>
+                    <li ng-repeat="h in $options.hour" ng-bind="h"></li>
+                </ul>
+            </div>
+            <div class="mob-time-spinner__selection minute-selection mob-scrollbar">
+                <ul>
+                    <li ng-repeat="m in $options.minute" ng-bind="m"></li>
+                </ul>
+            </div>
+            <div class="mob-time-spinner__selection second-selection mob-scrollbar">
+                <ul>
+                    <li ng-repeat="s in $options.second" ng-bind="s"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-time-spinner__operation">
+
+    </div>
+</div>

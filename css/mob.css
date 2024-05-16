@@ -1,10 +1,15 @@
 :root {
     --mob-input-color: #606266;
+    --mob-normal-color: #606266;
+    --mob-disabled-text-color:#c0c4cc;
+    --mob-not-allow-text-color:#c0c4cc;
+    --mob-fill-color-light:#f5f7fa;
+    --mob-fill-color-dark:#f5f7fa;
+    --mob-active-color-dark:#f5f7fa;
+
     --mob-text-color-placeholder: #a8abb2;
     --mob-transition-duration: .2s;
     --mob-text-backgroud-color-primary: #ffffff;
-    --mob-fill-color-light:#f5f7fa;
-    --mob-fill-color-dark:#f5f7fa;
     --mob-active-text-color: #ff4949;
     --mob-active-text-color-light: #ffecec;
     --mob-active-fill-color:#ff4949;
@@ -12,9 +17,7 @@
     --mob-border-color: #dcdfe6;
     --mob-active-border-color: #ff4949;
     --mob-not-allow-background-color:#f5f7fa;
-    --mob-not-allow-text-color:#c0c4cc;
     --mob-disabled-background-color:#f5f7fa;
-    --mob-disabled-text-color:#c0c4cc;
     --mob-checkbox-checked-icon-color:#ffffff;
     --mob-checkbox-disabled-checked-icon-color:#a8abb2;
     --mob-transition-animate: cubic-bezier(.645, .045, .355, 1);
@@ -65,9 +68,33 @@
     display: block;
 }
 
-mob-button,mob-time-picker,mob-select {
+mob-button,mob-time-picker,mob-select,mob-time-spinner,mob-divider {
     display: inline-flex;
 }
 /*mob-select{*/
 /*    display: block;*/
 /*}*/
+
+
+.mob-scrollbar::-webkit-scrollbar {
+    /* 对应纵向滚动条的宽度 */
+    width: 8px;
+    /* 对应横向滚动条的宽度 */
+    height: 8px;
+    background-color: #ffffff;
+}
+/* 滚动条上的箭头按钮 */
+.mob-scrollbar::-webkit-scrollbar-button {
+    display: none;
+}
+/* 滚动条上的滚动滑块 */
+.mob-scrollbar::-webkit-scrollbar-thumb {
+    width: 4px;
+    border-radius: 4px;
+    background-color: #e4e7ed;
+    cursor: pointer;
+}
+
+.mob-scrollbar::-webkit-scrollbar-thumb:hover{
+    background-color: #c5c7cb;
+}
