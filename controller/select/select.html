@@ -252,5 +252,52 @@
         </div>
 
 
+        <h3>可分组</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-select style="width: 200px;" filterable ng-model="value" group options="select.groupOptions"></mob-select>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-select style="width: 200px;" filterable ng-model="value" group options="select.groupOptions"></mob-select>
+                            </html>
+                            <script>
+                                    this.groupOptions = [{
+                                        label: '热门城市',
+                                        options: [{
+                                            value: 'Shanghai',
+                                            label: '上海'
+                                        }, {
+                                            value: 'Beijing',
+                                            label: '北京'
+                                        }]
+                                    }, {
+                                        label: '城市名',
+                                        options: [{
+                                            value: 'Chengdu',
+                                            label: '成都'
+                                        }, {
+                                            value: 'Shenzhen',
+                                            label: '深圳'
+                                        }, {
+                                            value: 'Guangzhou',
+                                            label: '广州'
+                                        }, {
+                                            value: 'Dalian',
+                                            label: '大连'
+                                        }]
+                                    }]
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
     </div>
 </section>

@@ -2,7 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody', 'filterable','allowCreate']
+        let abbParams = ['appendToBody', 'filterable', "group"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -140,21 +140,42 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.dropDownAppendToBody = function () {
         let popperTooltipList = []
         cross.put(this.name, this)
-        let selectOptions = $compile(
+        let selectOptions = null;
+        if (this.group) {
+            selectOptions = $compile(
+                `
+                <div class="mob-popper mob-select-popper" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                    <div class="mob-popper__wrapper">
+                        <span class="mob-popper__arrow"></span>
+                        <div class="mob-popper__inner">
+                            <mob-select-group ng-repeat="group in $options" select-name="${_that.name}" label="group.label">
+                            <div>
+                                <mob-select-options ng-repeat="o in group.options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
+                            </div>
+                            </mob-select-options>
+                            </mob-select-group>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
+                        </div>
+                    </div>
+                </div>
             `
-                <div class="mob-popper mob-select-popper" id="cccccccccccccc${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+            )($scope)[0]
+        } else {
+            selectOptions = $compile(
+                `
+                <div class="mob-popper mob-select-popper" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
                             <mob-select-options ng-repeat="o in $options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
                             <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
-                            <mob-select-options ng-if="showCreateOptions()" select-name="${_that.name}" label="filterableText" value="filterableText" no-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>
             `
-        )($scope)[0]
+            )($scope)[0]
+        }
         $document[0].body.appendChild(selectOptions)
         popperTooltipList.push(selectOptions)
 
@@ -162,7 +183,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-select-popper mob-select-tag-popper" data-type="aaaaaaaaaaaaa" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -224,6 +245,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
     }
 
+    /**
+     * 发送过滤操作
+     */
     this.filterOptions = function () {
         $debounce.debounce($scope, () => {
             let filter = !!$scope.filterableText
@@ -235,13 +259,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }, 300)()
     }
     /**
+     * 对过滤结果进行匹配
      * filterHasMatched
      */
     this.filterHasMatched = function () {
-        // console.log('filer')
-        // $debounce.debounce($scope, () => {
-            $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o === true)
-        // }, 100)()
+        $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o === true)
     }
 
     /**
@@ -337,16 +359,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @returns {boolean}
      */
     $scope.showNoMatchOptions = function () {
-        return !!!_that.allowCreate && !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
+        return !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
     }
 
-    /**
-     * 是否展示未匹配的选项
-     * @returns {boolean}
-     */
-    $scope.showCreateOptions = function () {
-        return  !!_that.allowCreate && !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
-    }
 }
 
 app
@@ -364,8 +379,8 @@ app
             collapseTagTooltip: '<?',
             filterable: '<?',
             filterMethod: '&?',
-            allowCreate:'<?',
-            change: '&?'
+            change: '&?',
+            group:'<?'
         },
         controller: controller
     })

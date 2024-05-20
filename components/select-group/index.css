@@ -1,0 +1,25 @@
+.mob-select-popper .mob-popper__inner mob-select-group:not(:last-child) .mob-select-group::after{
+    content: '';
+    display: block;
+    width: 80%;
+    height: 1px;
+    background-color: #e4e7ed;
+    margin: 10px 10%;
+}
+.mob-select-group .mob-select-group-title {
+
+    font-size: 14px;
+    padding: 0 20px;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #909399;
+    height: 34px;
+    line-height: 34px;
+    box-sizing: border-box;
+    cursor: default;
+}
+.mob-select-group.is_hidden {
+    display: none;
+}

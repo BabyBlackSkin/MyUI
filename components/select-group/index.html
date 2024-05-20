@@ -1,0 +1,14 @@
+<div class="mob-select-group" id="{{$ctrl.id}}"
+
+     ng-class="{
+     'is_hidden':noMatch()
+     }"
+>
+    <div class="mob-select-group-wrap">
+        <div class="mob-select-group-title">
+            <p ng-bind="$ctrl.label"></p>
+        </div>
+        <div ng-transclude></div>
+    </div>
+
+</div>

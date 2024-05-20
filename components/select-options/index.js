@@ -52,12 +52,12 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
-            if (!data.filter || _that.noMatchOption) {
+            if (typeof  data.value =='undefined' ||_that.noMatchOption) {
                 $scope.hidden = false
                 return
             }
-            let val = _that.getValue()
-            $scope.hidden = val.indexOf(data.value) < 0
+            $scope.hidden = _that.label.indexOf(data.value) < 0
+
             $scope.$emit(`${_that.mobSelect.name}FilterResult`, {
                 key: $scope.$id,
                 value: !$scope.hidden
