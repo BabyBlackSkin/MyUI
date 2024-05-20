@@ -122,7 +122,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             return _that.ngModel
         }, function (newArr) {
             if (angular.isFunction(_that.change)) {
-                _that.change(_that.ngModel)
+                _that.change({value:_that.ngModel})
             }
             // 反向通知group下所有的radio绑定的ngModel
             $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
@@ -154,7 +154,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                             </div>
                             </mob-select-options>
                             </mob-select-group>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>
@@ -169,7 +169,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <div class="mob-popper__inner">
                             <mob-select-options ng-repeat="o in $options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" no-match-option></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>

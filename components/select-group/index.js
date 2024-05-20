@@ -58,7 +58,6 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
      */
     this.filterHasMatched = function () {
         $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o === true)
-        console.log('group的匹配结果', this.label, $scope.noMatch())
     }
 
     /**

@@ -62,4 +62,7 @@ app
             }]
         }]
 
+        $scope.changeDemo = function(v){
+            console.log(v)
+        }
     }])

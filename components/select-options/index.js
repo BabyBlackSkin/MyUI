@@ -2,7 +2,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['noMatchOption']
+        let abbParams = ['notJoinMatchOption']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
         this.id = uuId.newUUID()
         $scope.isSlot = $transclude.isSlotFilled('slot')
@@ -52,7 +52,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
-            if (typeof  data.value =='undefined' ||_that.noMatchOption) {
+            if (typeof  data.value =='undefined' ||_that.notJoinMatchOption) {
                 $scope.hidden = false
                 return
             }
@@ -105,12 +105,12 @@ app
             'slot': '?mobContainer'
         },
         templateUrl: './components/select-options/mob-select-options.html',
-        require: {
-            'mobSelect': '?^mobSelect'
-        },
+        // require: {
+        //     'mobSelect': '?^mobSelect'
+        // },
         bindings: {
             ngDisabled: '<?',
-            noMatchOption: '<?',
+            notJoinMatchOption: '<?',
             label: '<?',
             value: '<?',
             data: '<?'
