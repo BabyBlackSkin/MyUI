@@ -1,4 +1,4 @@
-function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, $transclude, uuId, popper, cross, attrHelp) {
+function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, $transclude, $q, uuId, popper, cross, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -48,25 +48,32 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化事件监听
     this.initEvent = function () {
         $scope.$popper['selectDrown'].focusOut = function (e) {
-            return new Promise(resolve => {
-                // 判断点击的是否是tooltip
-                let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
-                if (isTooltip) {
-                    $scope.focus()
-                    // 段暄
-                    if (_that.multiple) {
-                        return resolve(false)
-                    }
-                    let optionId = e.target.getAttribute('id')
-                    $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
-                        let val = data.key === 'ngDisabled' ? !!data.value : data.value
-                        resolve(!val)
-                    })
-                    // 调用子组件方法
-                    $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
+            let deferred = $q.defer();
+
+            // 判断点击的是否是tooltip
+            let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
+            if (isTooltip) {
+                $scope.focus()
+                // 多选
+                if (_that.multiple) {
+                    return resolve(false)
                 }
-                return resolve(true)
-            })
+                let optionId = e.target.getAttribute('id')
+                $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
+                    let val = data.key === 'ngDisabled' ? !!data.value : data.value
+                    resolve(!val)
+                })
+                // 调用子组件方法
+                $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
+            }
+            else {
+                // 点击其他地方时，判断是否为可输入的
+                if (_that.filterable) {
+                    $scope.filterableText = ''
+                }
+            }
+            deferred.resolve(true);
+            return deferred.promise;
         }
 
         $scope.$popper['selectDrown'].focus = async function () {
