@@ -77,6 +77,11 @@
 .mob-select .mob-input__inner.mob-input-filterable{
     padding: 12px;
     cursor: pointer;
+    color: var(--mob-text-color-placeholder);
+}
+
+.mob-select .mob-input__inner.mob-input-filterable::placeholder {
+    color: var(--mob-input-color);
 }
 .mob-select .mob-select__selected-item.mob-select__input-wrapper .mob-input__inner,
 .mob-select .mob-select__selected-item.is-hidden.mob-select__input-wrapper .mob-input__inner{
