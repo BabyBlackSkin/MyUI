@@ -52,7 +52,8 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
-            if (typeof  data.value =='undefined' ||_that.notJoinMatchOption) {
+            // 当父组件的过滤字段是undefined时，代表无需过滤，当options是不参与匹配的options时，无需处理
+            if (typeof data.value == 'undefined' || _that.notJoinMatchOption) {
                 $scope.hidden = false
                 return
             }
