@@ -49,30 +49,40 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initEvent = function () {
         $scope.$popper['selectDrown'].focusOut = function (e) {
             let deferred = $q.defer();
-
             // 判断点击的是否是tooltip
             let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
             if (isTooltip) {
                 $scope.focus()
                 // 多选
                 if (_that.multiple) {
-                    return resolve(false)
+                    deferred.resolve(false);
+                    // 需要收起下拉框时，判断是否的存在输入框，如果存在则清空输入框
+                    if (_that.filterable) {
+                        $scope.filterableText = ''
+                    }
                 }
-                let optionId = e.target.getAttribute('id')
-                $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
-                    let val = data.key === 'ngDisabled' ? !!data.value : data.value
-                    resolve(!val)
-                })
-                // 调用子组件方法
-                $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
+                else {
+                    let target = e.target;
+                    // 这里的target有可能是mob-options内部的dom元素,是没有id的,尝试找到父级元素,得到id
+                    let optionId = target.getAttribute('id')
+                    if (!optionId) {
+                        optionId = $(target).closest('.mob-select-options')[0].getAttribute('id')
+                    }
+                    $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
+                        let val = data.key === 'ngDisabled' ? !!!data.value : data.value
+                        // 需要收起下拉框时，判断是否的存在输入框，如果存在则清空输入框
+                        if(val && _that.filterable){
+                            $scope.filterableText = ''
+                        }
+                        deferred.resolve(val);
+                    })
+                    // 调用子组件方法
+                    $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
+                }
             }
             else {
-                // 点击其他地方时，判断是否为可输入的
-                if (_that.filterable) {
-                    $scope.filterableText = ''
-                }
+                deferred.resolve(true);
             }
-            deferred.resolve(true);
             return deferred.promise;
         }
 
