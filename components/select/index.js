@@ -454,7 +454,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (angular.isFunction(o[label])) {
             return o[label]()
         }
-        return o[label] + o['render']
+        return o[label]
     }
 
     /**

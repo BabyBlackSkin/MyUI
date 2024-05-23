@@ -36,80 +36,32 @@ app
             {label: '香港', value: '香港', desc:'XiangGang'}
         ]
 
-        // $scope.groupOptions = [{
-        //     label: '热门城市',
-        //     options: [{
-        //         value: 'Shanghai',
-        //         label: '上海'
-        //     }, {
-        //         value: 'Beijing',
-        //         label: '北京'
-        //     }]
-        // }, {
-        //     label: '城市名',
-        //     options: [{
-        //         value: 'Chengdu',
-        //         label: '成都'
-        //     }, {
-        //         value: 'Shenzhen',
-        //         label: '深圳'
-        //     }, {
-        //         value: 'Guangzhou',
-        //         label: '广州'
-        //     }, {
-        //         value: 'Dalian',
-        //         label: '大连'
-        //     }]
-        // }]
-        $scope.groupData = {
-            groupOptions: [{
-                label: '热门城市',
-                options: [{
-                    value: 'Shanghai',
-                    label: '上海'
-                }, {
-                    value: 'Beijing',
-                    label: '北京'
-                }]
+        $scope.groupOptions = [{
+            label: '热门城市',
+            options: [{
+                value: 'Shanghai',
+                label: '上海'
+            }, {
+                value: 'Beijing',
+                label: '北京'
             }]
-        }
+        }, {
+            label: '城市名',
+            options: [{
+                value: 'Chengdu',
+                label: '成都'
+            }, {
+                value: 'Shenzhen',
+                label: '深圳'
+            }, {
+                value: 'Guangzhou',
+                label: '广州'
+            }, {
+                value: 'Dalian',
+                label: '大连'
+            }]
+        }]
 
-        $scope.copyOptions2 = function (){
-            $scope.groupData.groupOptions[0].options[0].render = !$scope.groupData.groupOptions[0].options[0].render
-        }
-
-        $scope.getList = function (){
-            return  $scope.groupData.groupOptions
-        }
-        $scope.inx = true
-        $scope.copyOptions = function(v){
-            if( $scope.inx){
-                $scope.groupData.groupOptions = [{
-                    label: '热门城市',
-                    options: [{
-                        value: 'Shanghai',
-                        label: '上海',
-                        render:false
-                    }, {
-                        value: 'Beijing',
-                        label: '北京'
-                    }]
-                }]
-            }else{
-                $scope.groupData.groupOptions = [{
-                    label: '热门城市',
-                    options: [{
-                        value: 'Shanghai',
-                        label: '上海',
-                        render:true
-                    }, {
-                        value: 'Beijing',
-                        label: '北京'
-                    }]
-                }]
-            }
-            $scope.inx = !$scope.inx
-        }
 
 
         $scope.changeDemo = function(v){
