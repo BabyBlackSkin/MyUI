@@ -14,7 +14,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             this.ngModel = []
         }
         this.name = `mobSelect_${$scope.$id}`
-        $scope.$options = this.options;
         // 当开启过滤时，每个options的匹配结果
         $scope.filterResult = {
             options: {},
@@ -25,7 +24,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.$onChanges = function (changes) {
     }
 
+    /**
+     * 销毁
+     * 需要支持appendToBody了 TODO
+     */
     this.$onDestroy = function () {
+        // 将创建的select和tag销毁
+        $(`${_that.name}_mob-select-popper`).remove()
+        $(`${_that.name}_mob-select-tag-popper`).remove()
     }
 
 
@@ -137,9 +143,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initWatcher = function () {
         $scope.$watchCollection(() => {
             return _that.ngModel
-        }, function (newArr) {
+        }, function (newV,oldV) {
             if (angular.isFunction(_that.change)) {
-                _that.change({value:_that.ngModel})
+                _that.change({newV: _that.ngModel, oldV: oldV})
             }
             // 反向通知group下所有的radio绑定的ngModel
             $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
@@ -161,13 +167,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.group) {
             selectOptions = $compile(
                 `
-                <div class="mob-popper mob-select-popper" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                <div class="mob-popper mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            <mob-select-group ng-repeat="group in $options" select-name="${_that.name}" label="group.label">
+                            
+                            <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-name="${_that.name}" label="group.label">
                             <div>
-                                <mob-select-options ng-repeat="o in group.options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
+                                <mob-select-options ng-repeat="o in group.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
+                                </mob-select-options>
                             </div>
                             </mob-select-options>
                             </mob-select-group>
@@ -180,11 +188,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         } else {
             selectOptions = $compile(
                 `
-                <div class="mob-popper mob-select-popper" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                <div class="mob-popper mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            <mob-select-options ng-repeat="o in $options" select-name="${_that.name}" select-name="${_that.name}" label="o.label" value="o.value" ng-disabled="o.disabled" data="o">
+                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
                             <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
@@ -193,14 +201,20 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             `
             )($scope)[0]
         }
-        $document[0].body.appendChild(selectOptions)
+        // 下拉框是否添加到body中
+        if (this.appendToBody) {
+            $document[0].body.appendChild(selectOptions)
+        }
+        else {
+            $element[0].appendChild(selectOptions)
+        }
         popperTooltipList.push(selectOptions)
 
         // 标签工具集
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${uuId.newUUID()}" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -213,7 +227,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 </div>
             `
             )($scope)[0]
-            $document[0].body.appendChild(tooltip)
+            if (this.appendToBody) {
+                $document[0].body.appendChild(tooltip)
+            }
+            else {
+                $element[0].appendChild(tooltip)
+            }
             popperTooltipList.push(tooltip)
         }
         return popperTooltipList
@@ -275,6 +294,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             })
         }, 300)()
     }
+
     /**
      * 对过滤结果进行匹配
      * filterHasMatched
@@ -371,12 +391,109 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         event.preventDefault()
         event.stopPropagation()
     }
+
+    $scope.hasSelectableOptions = function (options){
+        return !$scope.isNoSelectableOptions(options)
+    }
+
+    $scope.isNoSelectableOptions = function (options) {
+        if (!options || options.length === 0) {
+            return true
+        }
+
+        let noSelected = true;
+        for (let o of options) {
+            let isRender = $scope.optionsConfigIsRender(o)
+            noSelected = ! (!isRender || isRender)
+            // 有一个有值就退出循环
+            if (!noSelected) {
+                break
+            }
+        }
+        return noSelected;
+    }
     /**
-     * 是否展示未匹配的选项
+     * 是否展示无数据匹配项
      * @returns {boolean}
      */
-    $scope.showNoMatchOptions = function () {
-        return !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
+    $scope.showNoMatchOptions  = function () {
+        // 是否有满足过滤条件的options
+        let filterNoMatch = !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
+
+        // 是否有options
+        let noOptions = !_that.options || _that.options.length === 0;
+        if (!noOptions && _that.group) {// 如果分组，则校验每个组下的options
+            let allEmpty = true;
+            for (let g of _that.options) {
+                allEmpty = $scope.isNoSelectableOptions(g.options)
+                // 有一个有值就退出循环
+                if (!allEmpty) {
+                    break
+                }
+            }
+            noOptions = allEmpty
+        }
+
+        return filterNoMatch || noOptions
+    }
+
+    /**
+     * 获取options的label属性
+     * @param o
+     */
+    $scope.optionsConfigGetLabel = function (o) {
+        let label = null;
+        if (_that.optionsConfig) {
+            label = _that.optionsConfig["label"]
+        }
+
+        if (!label) {
+            label = "label"
+        }
+
+        if (angular.isFunction(o[label])) {
+            return o[label]()
+        }
+        return o[label] + o['render']
+    }
+
+    /**
+     * 获取options的label属性
+     * @param o
+     */
+    $scope.optionsConfigGetValue = function (o) {
+        let value = null;
+        if (_that.optionsConfig) {
+            value = _that.optionsConfig["value"]
+        }
+
+        if (!value) {
+            value = "value"
+        }
+        if (angular.isFunction(o[value])) {
+            return o[value]()
+        }
+        return o[value]
+    }
+
+    /**
+     * 获取options的label属性
+     * @param o
+     * @return boolean default True
+     */
+    $scope.optionsConfigIsRender = function (o) {
+        let render = null;
+        if (_that.optionsConfig) {
+            render = _that.optionsConfig["render"]
+        }
+
+        if (!render) {
+            render = "render"
+        }
+        if (angular.isFunction(o[render])) {
+            return o[render]()
+        }
+        return !o[render] || o[render]
     }
 
 }

@@ -32,7 +32,7 @@ function controller($scope, $element, $transclude, $attrs, slot, attrHelp) {
             return
         }
         if (angular.isFunction(this.click)) {
-            this.click(event)
+            this.click({event: event})
         }
     }
 }

@@ -373,6 +373,28 @@
                             target[k] = true
                         }
                     })
+                },
+                // 根据key或者key的别名获取value
+                getAttrValueByKeyOrAlias: function (obj, aliasConfig, key, defaultV) {
+                    let alias = null;
+                    if (aliasConfig) {// 判断是否存在别名的配置
+                        alias = aliasConfig[key]
+                    }
+
+                    if (!alias) {
+                        alias = key
+                    }
+
+                    let result = null;
+                    if (angular.isFunction(obj[alias])) {
+                        result = obj[alias]()
+                    }
+                    result = obj[alias]
+
+                    if (angular.isUndefined(result)) {
+                        return defaultV
+                    }
+                    return result
                 }
             }
         }])

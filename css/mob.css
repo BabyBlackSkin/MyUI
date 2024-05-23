@@ -69,7 +69,7 @@
 }
 
 mob-button,mob-time-picker,mob-select,mob-time-spinner,mob-divider {
-    display: inline-flex;
+    display: block;
 }
 /*mob-select{*/
 /*    display: block;*/

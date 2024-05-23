@@ -197,6 +197,8 @@
 .mob-select .mob-select__selected-item__collapse span,
 .mob-select-popper .mob-select__selected-item__collapse span{
     display: inline-block;
+    box-sizing: border-box;
+    padding: 0 2px;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
