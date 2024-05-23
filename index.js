@@ -77,14 +77,14 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Basic', type: 1},
         {label: 'Button 按钮', path: '/button'},
         {label: 'Form', type: 1},
-        {label: 'popper容器', path: '/popper', tags: [{title:'beta', type:'warning'}]},
+        {label: 'popper容器', path: '/popper', },
         {label: 'Input输入框', path: '/input'},
         {label: 'Input Number 输入框', path: '/inputNumber'},
         {label: 'Radio单选框', path: '/radio'},
         {label: 'CheckBox多选框', path: '/checkBox'},
-        {label: 'Select选择器', path: '/select', tags: [{title:'preview', type:'primary'}]},
+        {label: 'Select选择器', path: '/select'},
         {label: 'Switch开关', path: '/switch'},
-        {label: 'Timepicker时间选择器', path: '/timepicker'},
+        {label: 'Timepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Form表单', path: '/form'},
     ]
     //通过$on为$rootScope添加路由事件
