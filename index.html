@@ -283,7 +283,6 @@
             return {
                 replace: function (scope, element, transcludeFn) {
                     transcludeFn(scope, function (clone) {
-                        debugger
                         if (!clone) {
                             return
                         }
@@ -326,7 +325,6 @@
                     })
                 },
                 appendChild: function (scope, element, slotList) {
-                    debugger
                     if (null == element) {
                         return
                     }
