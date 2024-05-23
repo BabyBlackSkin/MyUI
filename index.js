@@ -54,6 +54,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'FormCtrl',
             controllerAs: 'form',
         })
+        .when('/experimental', {
+            templateUrl: './controller/experimental/input.html',
+            controller: 'Experimental',
+            controllerAs: 'experimental',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -73,6 +78,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
     };
 
     $rootScope.menuList = [
+        {label: '实验性', path: '/experimental', tags: [{title:'experimental', type:'danger'}]},
         {label: 'Home', path: '/home'},
         {label: 'Basic', type: 1},
         {label: 'Button 按钮', path: '/button'},
