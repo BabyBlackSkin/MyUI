@@ -67,8 +67,11 @@
     font-family:'iconfont';
     display: block;
 }
+mob-button{
+    display: inline-flex;
 
-mob-button,mob-time-picker,mob-select,mob-time-spinner,mob-divider {
+}
+mob-time-picker,mob-select,mob-time-spinner,mob-divider {
     display: block;
 }
 /*mob-select{*/
