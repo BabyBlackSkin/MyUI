@@ -30,7 +30,6 @@
     padding: 0 12px;
     cursor: pointer;
     box-shadow: 0 0 0 1px var(--el-border-color) inset;
-    cursor: pointer;
 }
 
 .mob-select .mob-select__selection{
@@ -74,7 +73,8 @@
     /*width: 1px;*/
     width: 100%;
 }
-.mob-select .mob-input__inner.mob-input-filterable{
+
+.mob-select .mob-input__inner.mob-input-filterable {
     padding: 12px;
     cursor: pointer;
     color: var(--mob-text-color-placeholder);
@@ -83,6 +83,7 @@
 .mob-select .mob-input__inner.mob-input-filterable::placeholder {
     color: var(--mob-input-color);
 }
+
 .mob-select .mob-select__selected-item.mob-select__input-wrapper .mob-input__inner,
 .mob-select .mob-select__selected-item.is-hidden.mob-select__input-wrapper .mob-input__inner{
     width: 1px;
@@ -124,14 +125,15 @@
     width: 1.2em;
     height: 1.2em;
 }
-.mob-select .mob-icon__close .mob-icon {
+.mob-select .mob-icon__close .mob-icon,.mob-select-popper .mob-icon__close .mob-icon{
     padding: 1px;
     border-radius: 50%;
+    cursor: pointer;
 }
-.mob-select .mob-icon__close  .mob-icon:hover {
+.mob-select .mob-icon__close  .mob-icon:hover,.mob-select-popper .mob-icon__close  .mob-icon:hover {
     background-color: #909399 ;
 }
-.mob-select .mob-icon__close  .mob-icon:hover svg path{
+.mob-select .mob-icon__close  .mob-icon:hover svg path,.mob-select-popper .mob-icon__close  .mob-icon:hover svg path {
     fill: #fff;
 }
 .mob-select .mob-select__suffix-inner.mob-icon__clean{
@@ -197,8 +199,6 @@
 .mob-select .mob-select__selected-item__collapse span,
 .mob-select-popper .mob-select__selected-item__collapse span{
     display: inline-block;
-    box-sizing: border-box;
-    padding: 0 2px;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -2,6 +2,9 @@ function controller($scope, $element, $transclude, $attrs, slot, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        if(!this.nativeType){
+            this.nativeType = "button"
+        }
         let abbParams = ['plain', 'round', 'circle', 'ngDisabled', 'text']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
     }
@@ -20,21 +23,6 @@ function controller($scope, $element, $transclude, $attrs, slot, attrHelp) {
         }
     }
 
-    this.clickHandle = function (event) {
-        if (this.ngDisabled) {
-            event.preventDefault()
-            event.stopPropagation()
-            return
-        }
-        if (this.loading) {
-            event.preventDefault()
-            event.stopPropagation()
-            return
-        }
-        if (angular.isFunction(this.click)) {
-            this.click({event: event})
-        }
-    }
 }
 
 app
@@ -43,13 +31,13 @@ app
         templateUrl: './components/button/mob-button.html',
         bindings: {
             type: '<?',
+            nativeType:'<?',
             plain: '<?',
             round: '<?',
             circle: '<?',
             icon: '<?',
             loading: '<?',
-            ngDisabled: '<?',
-            click: '&?'
+            ngDisabled: '<?'
         },
         controller: controller
     })

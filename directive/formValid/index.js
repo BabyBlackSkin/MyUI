@@ -11,27 +11,30 @@ app.directive('formValidate', function() {
             ngModel.$formatters.push(function(value) {
                 console.log("$formatters")
                 // return value;
-                return '$' + value;
+                // return '$' + value;
+                return value;
             });
 
             // 键盘抬起，失去焦点触发
             ngModel.$setViewValue = function (value ,trigger){
                 console.log("$setViewValue", value ,trigger)
                 // return value;
-                return '$' + value;
+                // return '$' + value;
+                return value;
             }
 
             // render貌似没作用
             ngModel.$render = function (value) {
                 console.log("$render")
-                // return value;
-                return '$' + value;
+                return value;
+                // return '$' + value;
             };
 
             // 改变的是modelValue
             ngModel.$parsers.push(function(value) {
                 console.log("parsers")
-                return "$" + value
+                // return "$" + value
+                return value
             });
 
 
@@ -48,7 +51,7 @@ app.directive('formValidate', function() {
             ngModel.$validators.input = function (modelVal, viewVal) {
                 let value = modelVal || viewVal;
                 console.log("$validators", modelVal, viewVal)
-                return value > 10;
+                return value > 0;
             };
         },
         controllerAs: 'ctrl'

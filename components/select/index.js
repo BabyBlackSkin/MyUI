@@ -2,13 +2,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody', 'filterable', "group"]
+        let abbParams = ['appendToBody', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
+        console.log('我init完了')
 
         // 初始化一个map，存放ngModel的keyValue
         $scope.collapseTagsList = [];
         if (angular.isUndefined(this.placeHolder)) {
-            this.placeHolder = '请选择'
+            this.placeHolder = "请选择"
         }
         if (angular.isUndefined(this.ngModel)) {
             this.ngModel = []
@@ -53,6 +54,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
     // 初始化事件监听
     this.initEvent = function () {
+
         $scope.$popper['selectDrown'].focusOut = function (e) {
             let deferred = $q.defer();
             // 判断点击的是否是tooltip
@@ -62,10 +64,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 // 多选
                 if (_that.multiple) {
                     deferred.resolve(false);
-                    // 需要收起下拉框时，判断是否的存在输入框，如果存在则清空输入框
-                    if (_that.filterable) {
-                        $scope.filterableText = ''
-                    }
                 }
                 else {
                     let target = e.target;
@@ -76,19 +74,21 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     }
                     $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
                         let val = data.key === 'ngDisabled' ? !!!data.value : data.value
-                        // 需要收起下拉框时，判断是否的存在输入框，如果存在则清空输入框
-                        if(val && _that.filterable){
-                            $scope.filterableText = ''
-                        }
                         deferred.resolve(val);
                     })
                     // 调用子组件方法
                     $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
                 }
+
             }
             else {
+                // 点击非下拉框的地方时
+                if (_that.filterable) {// 如果是支持搜素的，清空搜索输入框
+                    $scope.filterableText = ''
+                }
                 deferred.resolve(true);
             }
+
             return deferred.promise;
         }
 
@@ -144,13 +144,17 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newV,oldV) {
+            if (_that.filterable) {
+                $scope.filterableText = ''
+                _that.placeHolder = _that.ngModel.length === 0 ? "请选择" : ""
+            }
+
             if (angular.isFunction(_that.change)) {
-                _that.change({newV: _that.ngModel, oldV: oldV})
+                _that.change({newV,oldV})
             }
             // 反向通知group下所有的radio绑定的ngModel
             $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
         })
-
 
         $scope.$watch(() => {
             return $scope.filterableText
@@ -256,9 +260,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         } else {
             this.ngModel = data.value
             this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
-        }
-        if (this.filterable) {
-            $scope.filterableText = ''
         }
     }
 
