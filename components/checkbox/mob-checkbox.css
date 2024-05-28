@@ -82,20 +82,20 @@ mob-checkbox-group .mob-checkbox {
 }
 
 /* 激活时 */
-.mob-checkbox:not(.mob-checkbox.is_disabled) .mob-checkbox__original:checked + .mob-checkbox__square {
+.mob-checkbox:not(.mob-checkbox.is_disabled) .mob-checkbox__original.is_active + .mob-checkbox__square {
     background-color: var(--mob-active-fill-color);
     border: 1px solid var(--mob-active-border-color);
 }
 
-.mob-checkbox .mob-checkbox__original:checked + .mob-checkbox__square::before {
+.mob-checkbox .mob-checkbox__original.is_active + .mob-checkbox__square::before {
     transform: rotate(45deg) scaleY(1);
 }
 
-.mob-checkbox:not(.mob-checkbox.is_disabled) .mob-checkbox__wrapper:has(.mob-checkbox__original:checked) .mob-checkbox__label {
+.mob-checkbox:not(.mob-checkbox.is_disabled) .mob-checkbox__wrapper:has(.mob-checkbox__original.is_active) .mob-checkbox__label {
     color: var(--mob-active-text-color);
 }
 
-.mob-checkbox.is_border .mob-checkbox__wrapper:has(.mob-checkbox__original:checked) {
+.mob-checkbox.is_border .mob-checkbox__wrapper:has(.mob-checkbox__original.is_active) {
     border: 1px solid var(--mob-active-border-color);
 }
 

@@ -8,7 +8,7 @@
         ng-click="$ctrl.clickHandle()">
     <label for="#" class="mob-checkbox__wrapper">
         <span class="mob-checkbox__inner">
-            <input type="checkbox" autocomplete="off" name="{{$ctrl.name}}" class="mob-checkbox__original" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
+            <input type="checkbox" autocomplete="off" name="{{$ctrl.name}}" class="mob-checkbox__original" ng-class="{'is_active':$ctrl.value === $ctrl.ngModel }" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
             <span class="mob-checkbox__square"></span>
         </span>
         <span class="mob-checkbox__label mob-unselect-text" ng-bind="$ctrl.label"></span>
