@@ -4,7 +4,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.$onInit = function () {
         let abbParams = ['appendToBody', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
-        console.log('我init完了')
 
         // 初始化一个map，存放ngModel的keyValue
         $scope.collapseTagsList = [];
@@ -146,7 +145,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }, function (newV,oldV) {
             if (_that.filterable) {
                 $scope.filterableText = ''
-                _that.placeHolder = _that.ngModel.length === 0 ? "请选择" : ""
+                if (_that.multiple) {
+                    _that.placeHolder = _that.ngModel.length === 0 ? "请选择" : ""
+                }
             }
 
             if (angular.isFunction(_that.change)) {
