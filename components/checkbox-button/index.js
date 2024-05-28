@@ -2,7 +2,8 @@ function controller($scope, $element, $attrs) {
     // 初始化工作
     this.$onInit = function () {
         if (!this.value) {
-            this.value = this.label
+            this.value = true
+            this.unCheckValue = false
         }
     }
 
@@ -47,9 +48,15 @@ function controller($scope, $element, $attrs) {
     }
 
     this.change = function () {
-        this.ngModel = !this.ngModel
+        if (this.ngModel === this.value) {
+            this.ngModel = this.unCheckValue
+        }
+        else {
+            this.ngModel = this.value
+        }
+
         if (angular.isFunction(this.changeHandle)) {
-            this.changeHandle({value: this.value})
+            this.changeHandle({value: this.ngModel})
         } else {
             $scope.$emit(`${$attrs.name}ChildChange`, this.value)
         }
@@ -70,6 +77,7 @@ app
             name: '<?',
             label: '<?',
             value: '<?',
+            unCheckValue: '<',// 未选中值
             indeterminate: '<?',
             changeHandle: '&?'
         },
