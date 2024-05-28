@@ -245,7 +245,7 @@
                         let id = uuId.newUUID()
                         code.setAttribute('id', id)
                         Prism.highlightElement(code, false)
-                        element[0].appendChild($compile(`<div class="show-code"><mob-button type="'text'" click="showCode($event, '${id}')">查看代码</mob-button></div>`)(scope)[0])
+                        element[0].appendChild($compile(`<div class="show-code"><mob-button type="'text'" ng-click="showCode($event, '${id}')">查看代码</mob-button></div>`)(scope)[0])
                     }
                 },
                 controller: function ($scope, $element) {
