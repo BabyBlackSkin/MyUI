@@ -74,6 +74,10 @@ app
                     scope.$popper[name] = {
                         target,
                         tooltip,
+                        hide: function (timer = {render: true}) {
+                            this.popperShow = false
+                            hide(scope, this, timer)
+                        },
                         popperShow: false
                     }
                     // 给浮动元素 生成唯一id
@@ -83,102 +87,37 @@ app
                     scope.$popperId = tooltip.id
 
                     // 判断触发方式
-                    if (!trigger || trigger === 'click') {
-                        target.addEventListener('click', async function (e) {
-                            let res = !scope.$popper[name].focus || scope.$popper[name].focus && await scope.$popper[name].focus(e)
-                            if (!res) {
-                                return
-                            }
-                            scope.$popper[name].popperShow = !scope.$popper[name].popperShow
-                            // 有点问题
-                            if (scope.$popper[name].popperShow && res) {
-                                showAutoUpdate(scope, scope.$popper[name])
-                            } else {
-                                hide(scope, scope.$popper[name])
-                            }
-                            // e.preventDefault()
-                            // e.stopPropagation();
-
-                        })
-                    } else {
-                        // hover 还存在问题，会出现闪烁问题 FIXME 防抖？
-                        let timer = {
-                            target: null,
-                            tooltip: null,
-                            tooltipCss: null,
-                            render: true,
-                            intervalCount: 0,
-                            uuId: uuId.newUUID(),
-                            mousePositionInterval: undefined
-                        }
-                        target.addEventListener('mouseenter', function (e) {
-                            console.log('显示')
-                            clearTimeout(timer.tooltip)
-                            clearTimeout(timer.tooltipCss)
-                            showAutoUpdate(scope, scope.$popper[name], timer)
-
-                            clearInterval(timer.mousePositionInterval)
-                            timer.mousePositionInterval = setInterval(function () {
-                                console.log('interval', timer.uuId)
-                                if (timer.intervalCount > 3) {
-                                    clearInterval(timer.mousePositionInterval)
-                                    timer.intervalCount = 0;
-                                }
-                                timer.intervalCount++;
-                                let {display, opacity, height} = tooltip.style
-                                if (display === 'block' && opacity === '1' && height !== '0') {
-                                    return
-                                }
-                                let mouseenter = position.mousePosition(e, target)
-                                console.log(mouseenter)
-                                if (mouseenter) {
-                                    console.log('显示')
-                                    showAutoUpdate(scope, scope.$popper[name], {render: true})
-                                    clearInterval(timer.mousePositionInterval)
-                                }
-                                console.log('interval end ----', timer.intervalCount)
-                            }, 500)
-
-                        })
-
-                        target.addEventListener('mouseleave', function () {
-                            timer.target = setTimeout(() => {
-                                console.log('隐藏')
-                                hide(scope, scope.$popper[name], timer)
-                                console.log('隐藏完毕')
-                            }, 300)
-                        })
-
-                        tooltip.addEventListener('mouseenter', function () {
-                            console.log('显示')
-                            clearTimeout(timer.target)
-                            showAutoUpdate(scope, scope.$popper[name], timer)
-                        })
-
-                        tooltip.addEventListener('mouseleave', function (e) {
-                            timer.tooltip = setTimeout(() => {
-                                console.log('隐藏')
-                                hide(scope, scope.$popper[name], timer)
-                                console.log('隐藏完毕')
-                            }, 300)
-                        })
-
-                    }
-
-                    document.addEventListener('click', async function (e) {
-                        let focus = target.contains(e.target)
-                        console.log('body click')
-                        if (focus) {
+                    target.addEventListener('click', async function (e) {
+                        let res = !scope.$popper[name].focus || scope.$popper[name].focus && await scope.$popper[name].focus(e)
+                        if (!res) {
                             return
                         }
-                        let res = scope.$popper[name].focusOut && await scope.$popper[name].focusOut(e)
-
-                        if (angular.isUndefined(res) || res) {
-                            scope.$popper[name].popperShow = false
-                            hide(scope, scope.$popper[name])
+                        scope.$popper[name].popperShow = !scope.$popper[name].popperShow
+                        // 有点问题
+                        if (scope.$popper[name].popperShow && res) {
+                            showAutoUpdate(scope, scope.$popper[name])
+                        } else {
+                            scope.$popper[name].hide()
                         }
+
                     })
 
+                    document.addEventListener('click', async function (e) {
+                        // 点击的目标自己，不做处理
+                        if (target.contains(e.target)) {
+                            return
+                        }
+
+                        // 点击的是tooltip自己，不做处理
+                        if(tooltip.contains(e.target)){
+                            return
+                        }
+
+                        let res = scope.$popper[name].focusOut && await scope.$popper[name].focusOut(e)
+                        if (angular.isUndefined(res) || res) {
+                            scope.$popper[name].hide()
+                        }
+                    })
                 }
             }
         }

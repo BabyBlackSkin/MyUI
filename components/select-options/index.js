@@ -96,7 +96,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         }
         let val = this.getValue()
 
-        $scope.$emit(`${_that.mobSelect.name}OptionsClick`, {label: this.label, value: val})
+        $scope.$emit(`${_that.mobSelect.name}OptionsClick`, {label: this.label, value: val, $id: _that.id,})
     }
 }
 

@@ -16,15 +16,7 @@
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
-            <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
-                <input readonly type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
-            </div>
-            <div class="mob-select__selected-item mob-select__filterable-input-wrapper" ng-class="{'is-hidden':!$ctrl.filterable }">
-                <input type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner mob-input-filterable" ng-model="filterableText">
-            </div>
-            <div class="mob-select__selected-item mob-select-placeholder" ng-if="isSpanPlaceHolder()">
-                <span class="mob-unselect-text" ng-bind="$ctrl.placeHolder"></span>
-            </div>
+
             <!-- 多选select -->
             <!-- 合并 -->
             <div class="mob-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" stop-bubbling>
@@ -61,6 +53,15 @@
 
             </div>
 
+            <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
+                <input readonly type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" class="mob-input__inner" ng-model="$ctrl.model">
+            </div>
+            <div class="mob-select__selected-item mob-select__filterable-input-wrapper" ng-class="{'is-hidden':!$ctrl.filterable }">
+                <input type="text" autocomplete="off" placeholder="{{$ctrl.placeHolder}}" ng-readonly="!$ctrl.filterable"  class="mob-input__inner mob-input-filterable" ng-model="filterableText">
+            </div>
+            <div class="mob-select__selected-item mob-select-placeholder" ng-if="isSpanPlaceHolder()">
+                <span class="mob-unselect-text" ng-bind="$ctrl.placeHolder"></span>
+            </div>
         </div>
 
 

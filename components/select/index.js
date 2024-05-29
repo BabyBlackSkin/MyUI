@@ -54,43 +54,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化事件监听
     this.initEvent = function () {
 
-        $scope.$popper['selectDrown'].focusOut = function (e) {
-            let deferred = $q.defer();
-            // 判断点击的是否是tooltip
-            let isTooltip = $scope.$popper['selectDrown'].tooltip.contains(e.target)
-            if (isTooltip) {
-                $scope.focus()
-                // 多选
-                if (_that.multiple) {
-                    deferred.resolve(false);
-                }
-                else {
-                    let target = e.target;
-                    // 这里的target有可能是mob-options内部的dom元素,是没有id的,尝试找到父级元素,得到id
-                    let optionId = target.getAttribute('id')
-                    if (!optionId) {
-                        optionId = $(target).closest('.mob-select-options')[0].getAttribute('id')
-                    }
-                    $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
-                        let val = data.key === 'ngDisabled' ? !!!data.value : data.value
-                        deferred.resolve(val);
-                    })
-                    // 调用子组件方法
-                    $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
-                }
-
-            }
-            else {
-                // 点击非下拉框的地方时
-                if (_that.filterable) {// 如果是支持搜素的，清空搜索输入框
-                    $scope.filterableText = ''
-                }
-                deferred.resolve(true);
-            }
-
-            return deferred.promise;
-        }
-
         $scope.$popper['selectDrown'].focus = async function () {
             return !_that.ngDisabled
         }
@@ -247,6 +210,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 变动通知
      */
     this.changeHandle = function (data) {
+        this.changeValueHandle(data)
+        this.changeStyleHandle(data)
+    }
+
+    /**
+     * 变动时，值的处理
+     * @param data
+     */
+    this.changeValueHandle = function (data) {
         if (this.multiple) {
             if (Array.isArray(data) && data.length === 0) {
                 this.ngModel = []
@@ -262,6 +234,29 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             this.ngModel = data.value
             this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
         }
+    }
+
+    /**
+     * 变动时。tooltip的样式处理
+     * @param data
+     * @returns {undefined|string}
+     */
+    this.changeStyleHandle = function (data) {
+        $scope.focus()
+        // 多选
+        if (_that.multiple) {
+            return
+        }
+        let optionId = data.$id
+
+        $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
+            let val = data.key === 'ngDisabled' ? !!!data.value : data.value
+            if (val) {
+                $scope.$popper['selectDrown'].hide()
+            }
+        })
+        // 调用子组件方法
+        $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
     }
 
     this.collapseTagsListUpdate = function (data) {
