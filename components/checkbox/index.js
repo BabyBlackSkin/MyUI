@@ -77,7 +77,7 @@ app
             name: '<?',
             label: '<?',
             value: '<?',
-            unCheckValue: '<',// 未选中值
+            unCheckValue: '<?',// 未选中值
             border: '<?',
             indeterminate: '<?',
             changeHandle: '&?'
