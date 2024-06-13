@@ -5,6 +5,7 @@ function controller($scope, $element, $attrs) {
             this.value = true
             this.unCheckValue = false
         }
+        console.log('子组件')
     }
 
 
@@ -16,6 +17,7 @@ function controller($scope, $element, $attrs) {
 
 
     this.$postLink = function () {
+        console.log('子组件 link')
         this.initValue()
     }
 
@@ -24,7 +26,8 @@ function controller($scope, $element, $attrs) {
         if (!angular.isUndefined(this.checkBoxGroup) && this.checkBoxGroup !== null) {
             // 绑定model
             if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
-                this.ngModel = this.checkBoxGroup.ngModel.includes(this.value)
+                let match = this.checkBoxGroup.ngModel.includes(this.value);
+                this.ngModel = match ? this.value : this.unCheckValue
             }
             // 绑定name
             $attrs.name = this.checkBoxGroup.name
@@ -33,7 +36,8 @@ function controller($scope, $element, $attrs) {
             // 监听多选框组的value的Change事件
             $scope.$on(`${$attrs.name}Change`, function (event, data) {
                 // 判断组内是否包含自己
-                _that.ngModel = data.includes(_that.value)
+                let match = data.includes(_that.value)
+                _that.ngModel = match ? _that.value : _that.unCheckValue
             })
         }
     }

@@ -10,9 +10,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (angular.isUndefined(this.placeHolder)) {
             this.placeHolder = "请选择"
         }
-        if (angular.isUndefined(this.ngModel)) {
-            this.ngModel = []
-        }
         this.name = `mobSelect_${$scope.$id}`
         // 当开启过滤时，每个options的匹配结果
         $scope.filterResult = {
@@ -220,6 +217,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      */
     this.changeValueHandle = function (data) {
         if (this.multiple) {
+            if (angular.isUndefined(this.ngModel)) {
+                this.ngModel = []
+            }
             if (Array.isArray(data) && data.length === 0) {
                 this.ngModel = []
             } else {

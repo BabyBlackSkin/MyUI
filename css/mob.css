@@ -1,4 +1,9 @@
 :root {
+    /*颜色*/
+    --mob-primary-color: #409eff;
+    --mob-primary-light-color: #ecf5ff;
+
+
     --mob-input-color: #606266;
     --mob-normal-color: #606266;
     --mob-disabled-text-color:#c0c4cc;
@@ -7,15 +12,19 @@
     --mob-fill-color-dark:#f5f7fa;
     --mob-active-color-dark:#f5f7fa;
 
+    /*文字颜色*/
+    --mob-active-text-color: var(--mob-primary-color);
+
+    /*背景颜色*/
+    --mob-active-text-color-light: var(--mob-primary-light-color);
+
     --mob-text-color-placeholder: #a8abb2;
     --mob-transition-duration: .2s;
     --mob-text-backgroud-color-primary: #ffffff;
-    --mob-active-text-color: #ff4949;
-    --mob-active-text-color-light: #ffecec;
-    --mob-active-fill-color:#ff4949;
+    --mob-active-fill-color: var(--mob-primary-color);
     --mob-box-shadow-light:0px 0px 12px rgba(0, 0, 0, .12);
     --mob-border-color: #dcdfe6;
-    --mob-active-border-color: #ff4949;
+    --mob-active-border-color: var(--mob-primary-color);
     --mob-not-allow-background-color:#f5f7fa;
     --mob-disabled-background-color:#f5f7fa;
     --mob-checkbox-checked-icon-color:#ffffff;
