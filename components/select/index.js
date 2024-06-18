@@ -7,9 +7,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
         // 初始化一个map，存放ngModel的keyValue
         $scope.collapseTagsList = [];
-        if (angular.isUndefined(this.placeHolder)) {
-            this.placeHolder = "请选择"
+        if (angular.isUndefined(this.placeholder)) {
+            this.placeholder = "请选择"
         }
+        $scope.placeholder = this.placeholder
         this.name = `mobSelect_${$scope.$id}`
         // 当开启过滤时，每个options的匹配结果
         $scope.filterResult = {
@@ -72,7 +73,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         // 监听optionsInitValue事件
         $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
             if (!_that.multiple) {
-                _that.placeHolder = data.label ? data.label : data.value
+                $scope.placeholder = data.label ? data.label : data.value
             }
             $scope.collapseTagsList.push({label: data.label, value: data.value})
 
@@ -106,7 +107,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (_that.filterable) {
                 $scope.filterableText = ''
                 if (_that.multiple) {
-                    _that.placeHolder = _that.ngModel.length === 0 ? "请选择" : ""
+                    $scope.placeholder = _that.ngModel.length === 0 ? _that.placeholder : ""
                 }
             }
 
@@ -232,7 +233,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         } else {
             this.ngModel = data.value
-            this.placeHolder = data.label ? data.label : data.value ? data.value : '请选择'
+            $scope.placeholder = data.label ? data.label : data.value ? data.value : this.placeholder
         }
     }
 
@@ -504,7 +505,7 @@ app
             options: '<?',
             ngDisabled: '<?',
             clearable: '<?',
-            placeHolder: '<?',
+            placeholder: '<?',
             multiple: '<?',
             collapseTag: '<?',
             collapseTagTooltip: '<?',

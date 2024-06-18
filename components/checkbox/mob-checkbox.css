@@ -40,6 +40,7 @@ mob-checkbox-group .mob-checkbox {
     height: 14px;
     border: 1px solid var(--mob-border-color);
     /*border-radius: 50%;*/
+    transition: all var(--mob-transition-duration) ease-in;
     z-index: 1;
 
 }
@@ -72,7 +73,6 @@ mob-checkbox-group .mob-checkbox {
     left: 0;
     opacity: 0;
     z-index: 0;
-    background-color: red;
     cursor: pointer;
 }
 
@@ -87,7 +87,7 @@ mob-checkbox-group .mob-checkbox {
     border: 1px solid var(--mob-active-border-color);
 }
 
-.mob-checkbox .mob-checkbox__original.is_active + .mob-checkbox__square::before {
+.mob-checkbox:not(.mob-checkbox.is_disabled) .mob-checkbox__original.is_active + .mob-checkbox__square::before {
     transform: rotate(45deg) scaleY(1);
 }
 
