@@ -6,6 +6,18 @@ mob-checkbox-group .mob-checkbox {
     margin-right: 20px;
     font-size: 14px;
 }
+mob-check-box {
+    display: inline-block;
+}
+
+mob-check-box .mob-checkbox {
+    display: inline-block;
+}
+mob-check-box * {
+    margin: 0;
+    padding: 0;
+}
+
 
 .mob-checkbox.is_border .mob-checkbox__wrapper {
     border: 1px solid var(--mob-border-color);
@@ -35,9 +47,12 @@ mob-checkbox-group .mob-checkbox {
 
 .mob-checkbox .mob-checkbox__square {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 14px;
     height: 14px;
+    border-radius: 4px;
     border: 1px solid var(--mob-border-color);
     /*border-radius: 50%;*/
     transition: all var(--mob-transition-duration) ease-in;
@@ -48,19 +63,19 @@ mob-checkbox-group .mob-checkbox {
 .mob-checkbox:not(.mob-checkbox.is_disabled):hover .mob-checkbox__square,
 .mob-checkbox.is_border:not(.mob-checkbox.is_disabled):hover .mob-checkbox__wrapper {
     border: 1px solid var(--mob-active-border-color);
+    box-shadow: 0 0 0 2px var(--mob-primary-light-color6);
 }
 
 .mob-checkbox .mob-checkbox__square::before {
+    margin-top: 10%;
     content: '';
     display: inline-block;
-    position: absolute;
-    border:1px solid var(--mob-checkbox-checked-icon-color);
+    border:2px solid var(--mob-checkbox-checked-icon-color);
     border-left:0;
     border-top:0;
-    top: 2px;
-    left: calc(50% - 2px);
-    width: 3px;
-    height: 7px;
+    width: 25%;
+    height: 55%;
+    margin-bottom: 20%;
     transition: all var(--mob-transition-duration) ease-in;
     transform: rotate(45deg) scaleY(0);
 }

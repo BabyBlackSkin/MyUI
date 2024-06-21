@@ -69,7 +69,7 @@ function controller($scope, $element, $attrs) {
 }
 
 app
-    .component('mobCheckbox', {
+    .component('mobCheckBox', {
         transclude: true,
         templateUrl: './components/checkbox/mob-checkbox.html',
         require: {

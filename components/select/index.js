@@ -374,9 +374,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.clean = function () {
         this.focus()
         if (_that.multiple) {
-            _that.changeHandle([])
+            _that.changeHandle({value:[]})
         } else {
-            _that.changeHandle('')
+            _that.changeHandle({value:""})
         }
     }
 
