@@ -70,9 +70,9 @@ function controller($scope, $element, $attrs) {
 }
 
 app
-    .component('mobCheckboxGroup', {
+    .component('mobCheckBoxGroup', {
         transclude: true,
-        templateUrl: './components/checkbox-group/mob-checkbox-group.html',
+        templateUrl: './components/checkbox-group/index.html',
         bindings: {
             ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
             min: '<?',

@@ -1,0 +1,82 @@
+.mob-radio-button {
+    display: flex;
+    /* width: 100%; */
+    height: 40px;
+    align-items: center;
+    font-size: 14px;
+}
+
+.mob-radio-button .mob-radio-button__wrapper {
+    /* width: 100%; */
+    height: 100%;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.mob-radio-button .mob-radio-button__square {
+    position: relative;
+    display: inline-flex;
+    width: 77px;
+    height: 40px;
+    border-top: 1px solid var(--mob-border-color);
+    border-right: 1px solid var(--mob-border-color);
+    border-bottom: 1px solid var(--mob-border-color);
+    /* border-radius: 4px; */
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    color: #606266;
+    transition: all var(--mob-transition-duration);
+
+}
+
+.mob-radio-button:not(.is_disabled) .mob-radio-button__square:hover {
+    color: var(--mob-active-text-color);
+}
+
+.mob-radio-button:not(.is_disabled) .mob-radio-button__square::before {
+    border-radius: 50%;
+    content: '';
+    display: inline-block;
+    position: absolute;
+    background-color: var(--mob-fill-color-light);
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    transition: transform .1s ease-in;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.mob-radio-button .mob-radio-button__original {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 0;
+    background-color: red;
+    cursor: pointer;
+}
+
+/* 激活时 */
+.mob-radio-button .mob-radio-button__original:checked+.mob-radio-button__square {
+    background-color: var(--mob-active-fill-color);
+    border-top: 1px solid var(--mob-active-border-color);
+    border-right: 1px solid var(--mob-active-border-color);
+    border-bottom: 1px solid var(--mob-active-border-color);
+    color: white;
+
+}
+
+.mob-radio-button.is_disabled .mob-radio-button__wrapper {
+    cursor: not-allowed;
+}
+
+.mob-radio-button.is_disabled .mob-radio-button__square {
+    background-color: var(--mob-not-allow-background-color);
+}

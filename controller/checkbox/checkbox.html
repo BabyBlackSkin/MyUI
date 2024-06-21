@@ -47,13 +47,13 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-checkbox-group ng-model="ctrl.multipleCheckBoxGroup">
+                        <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
                             <mob-check-box label="'Option1'" value="'Option1'"></mob-check-box>
                             <mob-check-box label="'Option2'" value="'Option2'"></mob-check-box>
                             <mob-check-box label="'Option3'" value="'Option3'"></mob-check-box>
                             <mob-check-box label="'Option4'" value="'Option4'" ng-disabled="true"></mob-check-box>
                             <mob-check-box label="'Option5'" value="'Option5'" ng-disabled="true"></mob-check-box>
-                        </mob-checkbox-group>
+                        </mob-check-box-group>
                         值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                     </div>
                 </div>
@@ -68,13 +68,13 @@
                         ><!--
                             <html>
                                  <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                                    <mob-checkbox-group ng-model="ctrl.multipleCheckBoxGroup">
-                                        <mob-check-box label="'Option1'" value="'Option1'"></mob-checkbox>
-                                        <mob-check-box label="'Option2'" value="'Option2'"></mob-checkbox>
-                                        <mob-check-box label="'Option3'" value="'Option3'"></mob-checkbox>
-                                        <mob-check-box label="'Option4'" value="'Option4'" ng-disabled="true"></mob-checkbox>
-                                        <mob-check-box label="'Option5'" value="'Option5'" ng-disabled="true"></mob-checkbox>
-                                    </mob-checkbox-group>
+                                    <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
+                                        <mob-check-box label="'Option1'" value="'Option1'"></mob-check-box>
+                                        <mob-check-box label="'Option2'" value="'Option2'"></mob-check-box>
+                                        <mob-check-box label="'Option3'" value="'Option3'"></mob-check-box>
+                                        <mob-check-box label="'Option4'" value="'Option4'" ng-disabled="true"></mob-check-box>
+                                        <mob-check-box label="'Option5'" value="'Option5'" ng-disabled="true"></mob-check-box>
+                                    </mob-check-box-group>
                                     值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                                 </div>
                             </html>
@@ -99,9 +99,9 @@
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
                         <mob-check-box  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-check-box>
-                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-check-box ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box>
-                        </mob-checkbox-group>
+                        </mob-check-box-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
@@ -114,9 +114,9 @@
                            <html>
                             <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
                                 <mob-check-box  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change-handle="ctrl.checkAllChange()"></mob-check-box>
-                                <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                                     <mob-check-box ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box>
-                                </mob-checkbox-group>
+                                </mob-check-box-group>
 
                                 值：<span>{{ctrl.checkedCities}}</span>
                             </div>
@@ -154,9 +154,9 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-checkbox-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-check-box-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-check-box ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box>
-                        </mob-checkbox-group>
+                        </mob-check-box-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
@@ -171,9 +171,9 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                                <mob-checkbox-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                <mob-check-box-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                                     <mob-check-box ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box>
-                                </mob-checkbox-group>
+                                </mob-check-box-group>
 
                                 值：<span>{{ctrl.checkedCities}}</span>
                             </div>
@@ -187,9 +187,9 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
-                            <mob-checkbox-button ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-checkbox-button>
-                        </mob-checkbox-group>
+                        <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                            <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box-button>
+                        </mob-check-box-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
@@ -200,9 +200,9 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                                <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
-                                    <mob-checkbox-button ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-checkbox-button>
-                                </mob-checkbox-group>
+                                <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                    <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box-button>
+                                </mob-check-box-group>
 
                                 值：<span>{{ctrl.checkedCities}}</span>
                             </div>
@@ -218,9 +218,9 @@
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                        <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                        <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                             <mob-check-box ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" border="true" ></mob-check-box>
-                        </mob-checkbox-group>
+                        </mob-check-box-group>
 
                         值：<span>{{ctrl.checkedCities}}</span>
                     </div>
@@ -231,9 +231,9 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
-                                <mob-checkbox-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
-                                    <mob-checkbox-button ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-checkbox-button>
-                                </mob-checkbox-group>
+                                <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
+                                    <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-check-box-button>
+                                </mob-check-box-group>
 
                                 值：<span>{{ctrl.checkedCities}}</span>
                             </div>

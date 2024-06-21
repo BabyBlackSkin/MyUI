@@ -71,9 +71,9 @@ function controller($scope, $element, $attrs) {
 app
     .component('mobCheckBox', {
         transclude: true,
-        templateUrl: './components/checkbox/mob-checkbox.html',
+        templateUrl: './components/checkbox/index.html',
         require: {
-            'checkBoxGroup': '?^mobCheckboxGroup'
+            'checkBoxGroup': '?^mobCheckBoxGroup'
         },
         bindings: {
             ngModel: '=?',

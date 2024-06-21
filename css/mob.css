@@ -30,8 +30,8 @@
     --mob-active-border-color: var(--mob-primary-color);
     --mob-not-allow-background-color:#f5f7fa;
     --mob-disabled-background-color:#f5f7fa;
-    --mob-checkbox-checked-icon-color:#ffffff;
-    --mob-checkbox-disabled-checked-icon-color:#a8abb2;
+    --mob-check-box-checked-icon-color:#ffffff;
+    --mob-check-box-disabled-checked-icon-color:#a8abb2;
     --mob-transition-animate: cubic-bezier(.645, .045, .355, 1);
     --mob-ui-title-color:transparent;
     --mob-ui-title-background:-webkit-linear-gradient(

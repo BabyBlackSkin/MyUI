@@ -65,11 +65,11 @@ function controller($scope, $element, $attrs) {
 }
 
 app
-    .component('mobCheckboxButton', {
+    .component('mobCheckBoxButton', {
         transclude: true,
-        templateUrl: './components/checkbox-button/mob-checkbox-button.html',
+        templateUrl: './components/checkbox-button/index.html',
         require: {
-            'checkBoxGroup': '?^mobCheckboxGroup'
+            'checkBoxGroup': '?^mobCheckBoxGroup'
         },
         bindings: {
             ngModel: '=?',

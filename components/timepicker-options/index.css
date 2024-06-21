@@ -13,7 +13,7 @@
 }
 
 .mob-popper .mob-timepicker-options.is_disabled {
-    color: var(--mob-checkbox-disabled-checked-icon-color);
+    color: var(--mob-check-box-disabled-checked-icon-color);
     cursor: not-allowed;
 }
 

@@ -67,10 +67,9 @@ mob-check-box * {
 }
 
 .mob-checkbox .mob-checkbox__square::before {
-    margin-top: 10%;
     content: '';
     display: inline-block;
-    border:2px solid var(--mob-checkbox-checked-icon-color);
+    border:2px solid #FFF;
     border-left:0;
     border-top:0;
     width: 25%;
@@ -121,10 +120,10 @@ mob-check-box * {
 }
 
 .mob-checkbox.is_indeterminate .mob-checkbox__square::before {
+    margin-top: 0;
     content: '';
     display: inline-block;
     position: absolute;
-    border-bottom:1px solid var(--mob-border-color);
     border-left:0;
     border-top:0;
     top: calc(50% - 1px);
