@@ -59,3 +59,19 @@ app.component('mobIcon', {
         templateUrl: './components/icon/clock.html',
         controller:controller
     })
+    .component('mobIconCaretLeft', {
+        templateUrl: './components/icon/caretLeft.html',
+        controller:controller
+    })
+    .component('mobIconCaretTop', {
+        templateUrl: './components/icon/caretTop.html',
+        controller:controller
+    })
+    .component('mobIconCaretRight', {
+        templateUrl: './components/icon/caretRight.html',
+        controller:controller
+    })
+    .component('mobIconCaretBottom', {
+        templateUrl: './components/icon/caretBottom.html',
+        controller:controller
+    })

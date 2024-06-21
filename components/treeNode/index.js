@@ -1,4 +1,5 @@
 function controller($scope, $element, $attrs) {
+    const _that = this
     // 初始化工作
     this.$onInit = function () {
 
@@ -16,20 +17,28 @@ function controller($scope, $element, $attrs) {
 
     this.$postLink = function () {
     }
+
+
+    $scope.paddingLeft = function (e){
+        let style = getComputedStyle(document.documentElement);
+        let Value = style.getPropertyValue("--mob-tree-icon-size");
+        console.log(Value)
+        return 16;
+    }
 }
 
 app
-    .component('mobTreeItem', {
-        templateUrl: './components/radio-button/mob-radio-button.html',
+    .component('mobTreeNode', {
+        templateUrl: './components/treeNode/index.html',
         require: {
-            'radioGroup': '?^mobRadioGroup'
+            // 'radioGroup': '?^mobRadioGroup'
         },
         bindings: {
             // === 属性 ===
             ngModel: "=?",// 双向数据绑定
             data: "<?",// 展示数据
             nodeKey:"<?",// 节点的唯一标识属性，整个树唯一
-            label: "<?",
+            layer:"<?",// 节点所在层
             /**
              * 节点属性
              * label：节点的标签

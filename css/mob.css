@@ -5,13 +5,14 @@
     --mob-primary-light-color6: #b3d8ff;
     --mob-primary-light-color9: #ecf5ff;
 
+    --mob-fill-color-light:#f5f7fa;
+    --mob-fill-color-light2: #a8abb2;
 
 
     --mob-input-color: #606266;
     --mob-normal-color: #606266;
     --mob-disabled-text-color:#c0c4cc;
     --mob-not-allow-text-color:#c0c4cc;
-    --mob-fill-color-light:#f5f7fa;
     --mob-fill-color-dark:#f5f7fa;
     --mob-active-color-dark:#f5f7fa;
 
@@ -43,13 +44,18 @@
             -45deg,
             #bd34fe 50%,
             #47caff 50%
-    )
+    );
+    /* icon */
+    --mob-icon-size:1rem;
+
+    /* tree树形控件属性 */
+    --mob-tree-icon-size: var(--mob-icon-size);
 }
 
 
 .mob-icon svg {
-    width: 1em;
-    height: 1em;
+    width: var(--mob-icon-size);
+    height: var(--mob-icon-size);
 }
 
 .mob-icon {

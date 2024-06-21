@@ -4,8 +4,11 @@
         'is_disabled':$ctrl.ngDisabled,
     }"
     ng-click="$ctrl.clickHandle()">
-    <label for="#" class="mob-radio-button__wrapper">
-        <input type="radio" autocomplete="off" name="{{$attrs.name}}" class="mob-radio-button__original" ng-disabled="$ctrl.ngDisabled" ng-value="$ctrl.value" ng-model="$ctrl.ngModel">
-        <span class="mob-radio-button__square  mob-unselect-text" ng-bind="$ctrl.label"></span>
-    </label>
+    <mob-tree-node ng-repeat="node in $ctrl.data"
+                   data="node"
+                   node-key="$ctrl.nodeKey"
+                   props="$ctrl.props"
+                   ng-model="$ctrl.ngModel"
+                   layer="1"
+    >
 </div>

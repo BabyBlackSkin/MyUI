@@ -1,0 +1,21 @@
+<div
+    class="mob-tree-node"
+>
+    <div class="mob-tree-node-content">
+        <!-- icon -->
+        <div class="mob-tree-node-expand">
+            <mob-icon-caret-right/>
+        </div>
+        <!-- checkBox -->
+        <div class="mob-tree-node-operate">
+            <mob-check-box ng-model="$ctrl.data.checked"></mob-check-box>
+        </div>
+        <div class="mob-tree-node-label">
+            <span ng-bind="$ctrl.data.label"></span>
+        </div>
+    </div>
+    <!-- 子节点 -->
+    <div class="mob-tree-node-children" ng-style="{'padding-left': paddingLeft()}" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
+        <mob-tree-node ng-repeat="item in $ctrl.data.children" data="item" layer="$ctrl.layer+1"></mob-tree-node>
+    </div>
+</div>

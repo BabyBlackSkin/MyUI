@@ -1,0 +1,22 @@
+mob-tree-node{
+    display: block;
+}
+mob-tree-node .mob-tree-node{
+
+}
+mob-tree-node .mob-tree-node .mob-tree-node-content{
+    display: flex;
+}
+mob-tree-node .mob-tree-node .mob-tree-node-content>div:not(:last-child){
+    margin-right: 5px;
+}
+mob-tree-node .mob-tree-node .mob-tree-node-content .mob-tree-node-expand{
+    width: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mob-tree-node .mob-tree-node .mob-tree-node-content mob-icon-caret-right{
+    color: var(--mob-fill-color-light2);
+}

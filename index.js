@@ -59,6 +59,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'Experimental',
             controllerAs: 'experimental',
         })
+        .when('/tree', {
+            templateUrl: './controller/tree/index.html',
+            controller: 'Tree',
+            controllerAs: 'tree',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -91,6 +96,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Select选择器', path: '/select'},
         {label: 'Switch开关', path: '/switch'},
         {label: 'Timepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
+        {label: 'Tree树形控件', path: '/tree', tags: [{title:'developing', type:'danger'}]},
         {label: 'Form表单', path: '/form', tags: [{title:'developing', type:'danger'}]},
     ]
     //通过$on为$rootScope添加路由事件

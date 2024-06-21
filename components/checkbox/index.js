@@ -5,7 +5,6 @@ function controller($scope, $element, $attrs) {
             this.value = true
             this.unCheckValue = false
         }
-        console.log('子组件')
     }
 
 
@@ -17,7 +16,6 @@ function controller($scope, $element, $attrs) {
 
 
     this.$postLink = function () {
-        console.log('子组件 link')
         this.initValue()
     }
 

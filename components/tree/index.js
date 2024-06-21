@@ -19,11 +19,8 @@ function controller($scope, $element, $attrs) {
 }
 
 app
-    .component('mobRadioButton', {
-        templateUrl: './components/radio-button/mob-radio-button.html',
-        require: {
-            'radioGroup': '?^mobRadioGroup'
-        },
+    .component('mobTree', {
+        templateUrl: './components/tree/index.html',
         bindings: {
             // === 属性 ===
             ngModel: "=?",// 双向数据绑定
