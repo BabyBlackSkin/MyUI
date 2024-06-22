@@ -45,11 +45,11 @@ function controller($scope, $element, $attrs) {
         if (this.ngDisabled) {
             return
         }
-        this.change()
+        this.changeHandler()
 
     }
 
-    this.change = function () {
+    this.changeHandler = function () {
         if (this.ngModel === this.value) {
             this.ngModel = this.unCheckValue
         }
@@ -57,9 +57,11 @@ function controller($scope, $element, $attrs) {
             this.ngModel = this.value
         }
 
-        if (angular.isFunction(this.changeHandle)) {
-            this.changeHandle({value: this.ngModel})
-        } else {
+        if (angular.isFunction(this.change)) {
+            let opt = {value: this.ngModel, attachment: this.attachment}
+            this.change({opt: opt})
+        }
+        else {
             $scope.$emit(`${$attrs.name}ChildChange`, this.value)
         }
 
@@ -82,7 +84,17 @@ app
             unCheckValue: '<?',// 未选中值
             border: '<?',
             indeterminate: '<?',
-            changeHandle: '&?'
+            /**
+             *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
+             *  以下写法会报异常：
+             *  <mob-checkbox ng-mode="obj.val" change="(value)=>{customChangeHandler(value, obj)}"></mob-checkbox>
+             *
+             *  此时需要通过attachment将对象传入
+             *  <mob-checkbox ng-mode="obj.val" attachment="obj" change="customChangeHandler(value, obj)"></mob-checkbox>
+             */
+            attachment:"<?",
+            // Event
+            change: '&?',
         },
         controller: controller
     })

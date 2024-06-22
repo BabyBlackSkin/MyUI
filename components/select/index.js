@@ -2,7 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip"]
+        let abbParams = ['appendToBody','clearable', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -11,6 +11,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             this.placeholder = "请选择"
         }
         $scope.placeholder = this.placeholder
+
         this.name = `mobSelect_${$scope.$id}`
         // 当开启过滤时，每个options的匹配结果
         $scope.filterResult = {
@@ -27,6 +28,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 需要支持appendToBody了 TODO
      */
     this.$onDestroy = function () {
+        cross.delete(this.name)
         // 将创建的select和tag销毁
         $(`${_that.name}_mob-select-popper`).remove()
         $(`${_that.name}_mob-select-tag-popper`).remove()
@@ -81,7 +83,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
         // 监听optionsClick事件
         $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
-            _that.changeHandle(data)
+            _that.changeHandler(data)
         })
 
         // 监听collapseTagsListUpdate事件
@@ -112,7 +114,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
 
             if (angular.isFunction(_that.change)) {
-                _that.change({newV,oldV})
+                let opt = {value: this.ngModel, attachment: this.attachment}
+                _that.change({opt: opt})
             }
             // 反向通知group下所有的radio绑定的ngModel
             $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
@@ -207,16 +210,16 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     /**
      * 变动通知
      */
-    this.changeHandle = function (data) {
-        this.changeValueHandle(data)
-        this.changeStyleHandle(data)
+    this.changeHandler = function (data) {
+        this.changeValueHandler(data)
+        this.changeStyleHandler(data)
     }
 
     /**
      * 变动时，值的处理
      * @param data
      */
-    this.changeValueHandle = function (data) {
+    this.changeValueHandler = function (data) {
         if (this.multiple) {
             if (angular.isUndefined(this.ngModel)) {
                 this.ngModel = []
@@ -242,7 +245,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @param data
      * @returns {undefined|string}
      */
-    this.changeStyleHandle = function (data) {
+    this.changeStyleHandler = function (data) {
         $scope.focus()
         // 多选
         if (_that.multiple) {
@@ -316,7 +319,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 有工具箱的collapse
      * @returns {false|string|boolean|*|boolean}
      */
-    $scope.isSpanPlaceHolder = function () {
+    $scope.isSpanPlaceholder = function () {
+        // 不是可过滤
+        // 且  不是多选 或者多选时并没有选中
         return !_that.filterable && (!_that.multiple || _that.multiple && (!_that.ngModel || _that.ngModel.length === 0))
     }
 
@@ -374,9 +379,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.clean = function () {
         this.focus()
         if (_that.multiple) {
-            _that.changeHandle({value:[]})
+            _that.changeHandler({value:[]})
         } else {
-            _that.changeHandle({value:""})
+            _that.changeHandler({value:''})
         }
     }
 
@@ -385,7 +390,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @param data
      */
     $scope.collapseRemove = function (event, data) {
-        _that.changeHandle(data)
+        _that.changeHandler(data)
         event.preventDefault()
         event.stopPropagation()
     }
@@ -501,18 +506,38 @@ app
         transclude: true,
         templateUrl: './components/select/mob-select.html',
         bindings: {
-            ngModel: '=?',
-            options: '<?',
-            ngDisabled: '<?',
-            clearable: '<?',
-            placeholder: '<?',
-            multiple: '<?',
-            collapseTag: '<?',
-            collapseTagTooltip: '<?',
-            filterable: '<?',
-            filterMethod: '&?',
+            ngModel: '=?',// 双向数据绑定
+            required:'<?', // 是否必填
+            options: '<?',// 选项
+            /**
+             * optionsConfig控制select中的options选择
+             * 可用参数：
+             * label：options的label
+             * value：options的value
+             * hidden：options是否隐藏
+             */
+            optionsConfig:'<?',// options的配置参数
+            appendToBody:'<?',// 是否添加到body TODO（不建议使用，当selec被销毁时，options无法被销毁）
+            ngDisabled: '<?', // 是否禁用
+            clearable: '<?', // 可清空的
+            placeholder: '<?',// 提示文字
+            multiple: '<?',// 是否支持多选
+            collapseTag: '<?', // 是否显示Tag
+            collapseTagTooltip: '<?', // 是否显示Tag工具箱
+            filterable: '<?', // 是否可过滤
+            filterMethod: '&?', // 过滤方法, TODO 待实现
+            group:'<?',// 是否分组
+            /**
+             *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
+             *  以下写法会报异常：
+             *  <mob-checkbox ng-mode="obj.val" change-handle="(value)=>{customChangeHandler(value, obj)}"></mob-checkbox>
+             *
+             *  此时需要通过attachment将对象传入
+             *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
+             */
+            attachment:"<?",
+            // Events
             change: '&?',
-            group:'<?'
         },
         controller: controller
     })
