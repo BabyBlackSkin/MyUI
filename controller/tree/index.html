@@ -5,10 +5,11 @@
 
     <div class="mob-doc content" style="position: relative">
         <h3>基础用法</h3>
+        {{treeModel}}
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData" ></mob-tree>
+                <mob-tree data="treeData" ng-model="treeModel" node-key="'value'" ></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>

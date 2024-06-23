@@ -1,8 +1,12 @@
-function controller($scope, $element, $attrs) {
+function controller($scope, $element, $attrs, $injector) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-
+        // 初始化每个Node下的checkBox的属性
+        this.data.checkBox = {
+            check:false,
+            indeterminate:false,
+        }
     }
 
 
@@ -18,12 +22,18 @@ function controller($scope, $element, $attrs) {
     this.$postLink = function () {
     }
 
+    /**
+     * 节点checkbox的change方法
+     */
+    this.changeHandler = function (opt) {
+        // 是不是通知给tree，由tree来修改？
+        let {value} = opt
+        this.data.checkBox.check = value
+        // this.modifyChildNode(this.data)
+        // this.modifyParentNode(this.data)
 
-    $scope.paddingLeft = function (e){
-        let style = getComputedStyle(document.documentElement);
-        let Value = style.getPropertyValue("--mob-tree-icon-size");
-        console.log(Value)
-        return 16;
+        console.log(`${_that.tree.name}NodeChange`)
+        $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey:_that.data[_that.nodeKey], checked:value})
     }
 }
 
@@ -31,10 +41,10 @@ app
     .component('mobTreeNode', {
         templateUrl: './components/treeNode/index.html',
         require: {
-            // 'radioGroup': '?^mobRadioGroup'
+            'tree': '?^mobTree'
         },
         bindings: {
-            // === 属性 ===
+            // === Props ===
             ngModel: "=?",// 双向数据绑定
             data: "<?",// 展示数据
             nodeKey:"<?",// 节点的唯一标识属性，整个树唯一
@@ -61,7 +71,8 @@ app
             indent:"<?", // 树节点缩进，单位为像素
             // icon-class
             lazy:"<?",// 是否懒加载节点。与load方法结合使用
-            // === 方法 ===
+
+            // === Events ===
             load: "&?", // 加载子节点 Function(node, resolve)
             filterNodeMethod:"&?", // 对树节点进行筛选时执行的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏 Function(value, data, node)
 

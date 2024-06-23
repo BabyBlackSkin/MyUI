@@ -4,11 +4,14 @@
         'is_disabled':$ctrl.ngDisabled,
     }"
     ng-click="$ctrl.clickHandle()">
-    <mob-tree-node ng-repeat="node in $ctrl.data"
+<!--    {{$ctrl.data}}-->
+<!--    <p>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</p>-->
+<!--    {{$ctrl.nodeList}}-->
+    <mob-tree-node ng-repeat="node in $ctrl.nodeList"
                    data="node"
                    node-key="$ctrl.nodeKey"
                    props="$ctrl.props"
-                   ng-model="$ctrl.ngModel"
-                   layer="1"
+<!--                   ng-model="$ctrl.ngModel"-->
+                   layer="0"
     >
 </div>
