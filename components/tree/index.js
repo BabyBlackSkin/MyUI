@@ -44,43 +44,45 @@ function controller($scope, $element, $attrs) {
                 indexOf > -1 && _that.ngModel.splice(indexOf, 1)
             }
             let node = _that.nodeCache[nodeKey]
-            console.log(node)
-            _that.modifyChildNode(node)
-            _that.modifyParentNode(node)
+            _that.modifyChildNode(node, true)
+            _that.modifyParentNode(node, true)
         })
     }
 
 
     /**
      * 修改子节点
-     * @param node
+     * @param node 节点
+     * @param syncNgModel 是否需要同步ngModel
      */
-    this.modifyChildNode = function (node) {
+    this.modifyChildNode = function (node, syncNgModel) {
         if (angular.isUndefined(node)) {
             return
         }
         if (angular.isUndefined(node.children) || node.children.length === 0) {
             return;
         }
-        node.checkBox.indeterminate = false
+        node.$nodeStatus.indeterminate = false
         // 自己的子节点，将子节点的check改为自己的值
         for (let child of node.children) {
-            child.checkBox.check = node.checkBox.check
-            if (child.checkBox.check) {
-                _that.ngModel.push(child[_that.nodeKey])
-            } else {
-                let indexOf = _that.ngModel.indexOf(child[_that.nodeKey]);
-                indexOf > -1 && _that.ngModel.splice(indexOf, 1)
+            child.$nodeStatus.check = node.$nodeStatus.check
+            if (syncNgModel) {
+                if (child.$nodeStatus.check) {
+                    _that.pushInNgModel(child[_that.nodeKey])
+                } else {
+                    _that.removeFromNgModel(child[_that.nodeKey])
+                }
             }
             // 继续往下找
-            this.modifyChildNode(child)
+            this.modifyChildNode(child, syncNgModel)
         }
     }
     /**
      * 修改父节点
-     * @param node
+     * @param node 节点
+     * @param syncNgModel 是否需要同步ngModel
      */
-    this.modifyParentNode = function (node) {
+    this.modifyParentNode = function (node, syncNgModel) {
         if (angular.isUndefined(node)) {
             return;
         }
@@ -93,21 +95,33 @@ function controller($scope, $element, $attrs) {
         let childIndeterminateSize = 0;
         // 自己的子节点，将子节点的check改为自己的值
         for (let child of parentNode.children) {
-            child.checkBox.check && childCheckNum++
-            child.checkBox.indeterminate && childIndeterminateSize++
+            child.$nodeStatus.check && childCheckNum++
+            child.$nodeStatus.indeterminate && childIndeterminateSize++
         }
         // 修改父级节点的状态
-        parentNode.checkBox.check = childCheckNum === parentNode.children.length
-        parentNode.checkBox.indeterminate = childIndeterminateSize > 0 || childCheckNum > 0 && childCheckNum !== parentNode.children.length
-        if (parentNode.checkBox.check) {
-            _that.ngModel.push(parentNode[_that.nodeKey])
-        } else {
-            let indexOf = _that.ngModel.indexOf(parentNode[_that.nodeKey]);
-            indexOf > -1 && _that.ngModel.splice(indexOf, 1)
+        parentNode.$nodeStatus.check = childCheckNum === parentNode.children.length
+        parentNode.$nodeStatus.indeterminate = childIndeterminateSize > 0 || childCheckNum > 0 && childCheckNum !== parentNode.children.length
+
+        if (syncNgModel) {
+            if (parentNode.$nodeStatus.check) {
+                _that.pushInNgModel(parentNode[_that.nodeKey])
+            } else {
+                _that.removeFromNgModel(parentNode[_that.nodeKey])
+            }
         }
 
         // 往上找
-        this.modifyParentNode(parentNode)
+        this.modifyParentNode(parentNode, syncNgModel)
+    }
+
+    this.pushInNgModel =function (nodeKey){
+        let indexOf = _that.ngModel.indexOf(nodeKey);
+        indexOf < 0 && _that.ngModel.push(nodeKey)
+    }
+
+    this.removeFromNgModel =function (nodeKey){
+        let indexOf = _that.ngModel.indexOf(nodeKey);
+        indexOf > -1 && _that.ngModel.splice(indexOf, 1)
     }
 
 
@@ -116,8 +130,12 @@ function controller($scope, $element, $attrs) {
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newValue, oldValue) {
-            console.log('我change了', newValue, oldValue)
-            // _that.changeHandler()
+            // 遍历newValue，重新设置样式
+            for (let nodeKey of newValue) {
+                let node = _that.nodeCache[nodeKey]
+                _that.modifyChildNode(node, false)
+                _that.modifyParentNode(node, false)
+            }
         })
     }
 

@@ -85,8 +85,9 @@
     font-family:'iconfont';
     display: block;
 }
-mob-button{
+mob-button, mob-check-box{
     display: inline-flex;
+    font-size: 0;
 
 }
 mob-time-picker,mob-select,mob-time-spinner,mob-divider {

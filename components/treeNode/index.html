@@ -1,21 +1,24 @@
 <div
     class="mob-tree-node"
+    ng-class="{
+    'is_expand':$ctrl.data.$nodeStatus.expand
+    }"
 >
-    <div class="mob-tree-node-content">
+    <div class="mob-tree-node-content" ng-style="{'padding-left': 16 * ($ctrl.layer + 1) +'px'}">
         <!-- icon -->
         <div class="mob-tree-node-expand">
-            <mob-icon-caret-right/>
+            <mob-icon-caret-right ng-if="$ctrl.data.children && $ctrl.data.children.length > 0" ng-click="$ctrl.expandTreeNode()"/>
         </div>
         <!-- checkBox -->
         <div class="mob-tree-node-operate">
-            <mob-check-box ng-model="$ctrl.data.checkBox.check" indeterminate="$ctrl.data.checkBox.indeterminate" change="$ctrl.changeHandler(opt)"></mob-check-box>
+            <mob-check-box ng-model="$ctrl.data.$nodeStatus.check" indeterminate="$ctrl.data.$nodeStatus.indeterminate" change="$ctrl.changeHandler(opt)"></mob-check-box>
         </div>
         <div class="mob-tree-node-label">
             <span ng-bind="$ctrl.data.label"></span>
         </div>
     </div>
     <!-- 子节点 -->
-    <div class="mob-tree-node-children" ng-style="{'padding-left': 16 * ($ctrl.layer + 1) +'px'}" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
+    <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
         <mob-tree-node ng-repeat="item in $ctrl.data.children" node-key="$ctrl.nodeKey" data="item" layer="$ctrl.layer + 1"></mob-tree-node>
     </div>
 </div>

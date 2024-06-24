@@ -1,14 +1,19 @@
-function controller($scope, $element, $attrs, $injector) {
+function controller($scope, $element, $attrs, $injector,$timeout) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        // 初始化每个Node下的checkBox的属性
-        this.data.checkBox = {
-            check:false,
-            indeterminate:false,
-        }
+        this.initial()
     }
 
+    // 设置参数的默认值
+    this.initial = function () {
+        // 初始化每个Node下的checkBox的属性
+        this.data.$nodeStatus = {
+            check: false,
+            indeterminate: false,
+            expand: angular.isUndefined(this.defaultExpandAll) ? false : this.defaultExpandAll,
+        }
+    }
 
     this.$onChanges = function (changes) {
 
@@ -28,12 +33,43 @@ function controller($scope, $element, $attrs, $injector) {
     this.changeHandler = function (opt) {
         // 是不是通知给tree，由tree来修改？
         let {value} = opt
-        this.data.checkBox.check = value
-        // this.modifyChildNode(this.data)
-        // this.modifyParentNode(this.data)
-
-        console.log(`${_that.tree.name}NodeChange`)
+        this.data.$nodeStatus.check = value
         $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey:_that.data[_that.nodeKey], checked:value})
+    }
+
+    /**
+     * 展开节点
+     */
+    this.expandTreeNode = function () {
+        if (angular.isUndefined(this.data.children) || this.data.children.length === 0) {
+            return
+        }
+        let childContent = $element[0].querySelector('.mob-tree-node-children')
+        // console.log(childContent)
+        if (this.data.$nodeStatus.expand) {
+            let {height} = childContent.getBoundingClientRect()
+            childContent.style.height = height + 'px'
+            childContent.offsetHeight
+            childContent.style.height = 0
+            childContent.style.opacity = 0
+            $timeout(function () {
+                childContent.style.display = 'none'
+            }, 300)
+
+        } else {
+            childContent.style.display = 'block'
+            childContent.style.height = 'auto'
+            let {height} = childContent.getBoundingClientRect()
+            childContent.style.height = 0
+            childContent.offsetHeight
+            childContent.style.height = height + 'px'
+            childContent.style.opacity = 1
+
+            $timeout(function () {
+                childContent.style.height = 'auto'
+            }, 300)
+        }
+        this.data.$nodeStatus.expand = !this.data.$nodeStatus.expand;
     }
 }
 
@@ -60,7 +96,7 @@ app
              *
              */
             props:"<?",//节点属性
-            renderAfterExpand: "<?",// 	是否在第一次展开某个树节点后才渲染其子节点
+            // renderAfterExpand: "<?",// 	是否在第一次展开某个树节点后才渲染其子节点
             defaultExpandAll:"<?",// 是否默认展开所有节点
             expandOnClickNode:"<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
             checkOnClickNode:"<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
