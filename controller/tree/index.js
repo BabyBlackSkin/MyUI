@@ -7,10 +7,10 @@ app
         // TODO
         $scope.loadTree = function (opt) {
             console.log('loadTree', opt);
-            opt.deferred.resolve('okkk')
             setTimeout(function () {
-                return opt.deferred.promise
+                opt.deferred.resolve('okkk')
             }, 3000)
+            return opt.deferred.promise
         }
 
         $scope.treeModel = []
