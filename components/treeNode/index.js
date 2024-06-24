@@ -66,7 +66,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 let deferred = $q.defer();
                 let opt = {node:this.data, deferred: deferred}
                 this.tree.load({opt: opt}).then(data=>{
-                    console.log('data', data)
+                    this.data.children = data
+                    this.data.$node.load = true
                 }).catch(err=>{
                     console.log('err', err)
                 })

@@ -8,7 +8,16 @@ app
         $scope.loadTree = function (opt) {
             console.log('loadTree', opt);
             setTimeout(function () {
-                opt.deferred.resolve('okkk')
+                opt.deferred.resolve([
+                    {
+                        label: "Level three 3-1",
+                        value: '3-1',
+                    },
+                    {
+                        label: "Level three 3-2",
+                        value: '3-2',
+                    }
+                ])
             }, 3000)
             return opt.deferred.promise
         }
