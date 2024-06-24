@@ -4,11 +4,21 @@ app
         this.nodeChangeHandler = function () {
             console.log(1)
         }
+        // TODO
+        $scope.loadTree = function (opt) {
+            console.log('loadTree', opt);
+            opt.deferred.resolve('okkk')
+            setTimeout(function () {
+                return opt.deferred.promise
+            }, 3000)
+        }
+
         $scope.treeModel = []
         $scope.treeData = [
             {
                 label: "Level one 1",
                 value: '1',
+                leaf:false,
                 children: [
                     {
                         label: "Level tow 1-1",

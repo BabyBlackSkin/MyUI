@@ -9,7 +9,7 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData" ng-model="treeModel" node-key="'value'" ></mob-tree>
+                <mob-tree data="treeData" ng-model="treeModel" node-key="'value'" lazy="true" load="loadTree(opt)" ></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>

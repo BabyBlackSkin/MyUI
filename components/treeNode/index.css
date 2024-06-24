@@ -30,6 +30,7 @@ mob-tree-node .mob-tree-node .mob-tree-node-content .mob-tree-node-expand {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 mob-tree-node .mob-tree-node .mob-tree-node-content .mob-icon {

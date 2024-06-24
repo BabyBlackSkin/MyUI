@@ -62,12 +62,12 @@ function controller($scope, $element, $attrs) {
         if (angular.isUndefined(node.children) || node.children.length === 0) {
             return;
         }
-        node.$nodeStatus.indeterminate = false
+        node.$node.indeterminate = false
         // 自己的子节点，将子节点的check改为自己的值
         for (let child of node.children) {
-            child.$nodeStatus.check = node.$nodeStatus.check
+            child.$node.check = node.$node.check
             if (syncNgModel) {
-                if (child.$nodeStatus.check) {
+                if (child.$node.check) {
                     _that.pushInNgModel(child[_that.nodeKey])
                 } else {
                     _that.removeFromNgModel(child[_that.nodeKey])
@@ -95,15 +95,15 @@ function controller($scope, $element, $attrs) {
         let childIndeterminateSize = 0;
         // 自己的子节点，将子节点的check改为自己的值
         for (let child of parentNode.children) {
-            child.$nodeStatus.check && childCheckNum++
-            child.$nodeStatus.indeterminate && childIndeterminateSize++
+            child.$node.check && childCheckNum++
+            child.$node.indeterminate && childIndeterminateSize++
         }
         // 修改父级节点的状态
-        parentNode.$nodeStatus.check = childCheckNum === parentNode.children.length
-        parentNode.$nodeStatus.indeterminate = childIndeterminateSize > 0 || childCheckNum > 0 && childCheckNum !== parentNode.children.length
+        parentNode.$node.check = childCheckNum === parentNode.children.length
+        parentNode.$node.indeterminate = childIndeterminateSize > 0 || childCheckNum > 0 && childCheckNum !== parentNode.children.length
 
         if (syncNgModel) {
-            if (parentNode.$nodeStatus.check) {
+            if (parentNode.$node.check) {
                 _that.pushInNgModel(parentNode[_that.nodeKey])
             } else {
                 _that.removeFromNgModel(parentNode[_that.nodeKey])
