@@ -8,16 +8,20 @@ app
         $scope.loadTree = function (opt) {
             console.log('loadTree', opt);
             setTimeout(function () {
-                opt.deferred.resolve([
-                    {
-                        label: "Level three 3-1",
-                        value: '3-1',
-                    },
-                    {
-                        label: "Level three 3-2",
-                        value: '3-2',
-                    }
-                ])
+                if (opt.node.value === "3") {
+                    opt.deferred.resolve([
+                        {
+                            label: "Level three 3-1",
+                            value: '3-1',
+                        },
+                        {
+                            label: "Level three 3-2",
+                            value: '3-2',
+                        }
+                    ])
+                } else {
+                    opt.deferred.reject()
+                }
             }, 3000)
             return opt.deferred.promise
         }
@@ -27,7 +31,7 @@ app
             {
                 label: "Level one 1",
                 value: '1',
-                leaf:false,
+                leaf: false,
                 children: [
                     {
                         label: "Level tow 1-1",

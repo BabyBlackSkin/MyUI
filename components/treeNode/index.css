@@ -38,7 +38,7 @@ mob-tree-node .mob-tree-node .mob-tree-node-content .mob-icon {
     transform: rotate(-90deg);
 }
 
-mob-tree-node .mob-tree-node .mob-tree-node-content mob-icon-caret-right {
+mob-tree-node .mob-tree-node .mob-tree-node-content mob-icon {
     color: var(--mob-fill-color-light2);
 }
 
@@ -62,13 +62,19 @@ mob-tree-node .mob-tree-node.is_expand>.mob-tree-node-children {
     /*display: block;*/
 }
 
-/*@keyframes tree-node-expand {*/
-/*    from {*/
-/*        height: 0;*/
-/*        !*opacity: 0;*!*/
-/*    }*/
-/*    to {*/
-/*        height: auto;*/
-/*        !*opacity: 1;*!*/
-/*    }*/
-/*}*/
+
+/**
+加载状态
+ */
+mob-tree-node .mob-tree-node.is_loading .mob-tree-node-content mob-icon-loading {
+    animation: circle-loading 1s linear infinite;
+}
+
+@keyframes circle-loading {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(90deg);
+    }
+}

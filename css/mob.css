@@ -85,12 +85,21 @@
     font-family:'iconfont';
     display: block;
 }
-mob-button, mob-check-box{
+mob-icon,mob-icon-calendar,mob-icon-caret-bottom,mob-icon-caret-left,
+mob-icon-caret-right,mob-icon-caret-top,mob-icon-check,mob-icon-circle-close,mob-icon-clock,
+mob-icon-close,mob-icon-decrease,mob-icon-down-arrow,mob-icon-increase,mob-icon-invisible,
+mob-icon-loading,mob-icon-search,mob-icon-visible,mob-icon {
+    font-size: 0;
+    display: inline-block;
+}
+
+mob-button, mob-check-box {
     display: inline-flex;
     font-size: 0;
 
 }
-mob-time-picker,mob-select,mob-time-spinner,mob-divider {
+
+mob-time-picker, mob-select, mob-time-spinner, mob-divider {
     display: block;
 }
 /*mob-select{*/

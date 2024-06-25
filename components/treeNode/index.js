@@ -15,7 +15,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             indeterminate: false,
             left: true,// 是否有叶子节点
             expand: angular.isUndefined(this.defaultExpandAll) ? false : this.defaultExpandAll,// 是否展开
-            load: angular.isDefined(this.data.children) && this.data.children.length > 0, // 是否需要加载
+            load: angular.isDefined(this.data.children) && this.data.children.length > 0 ? 1 : 0, // 是否需要加载
         }
     }
 
@@ -29,6 +29,20 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
 
 
     this.$postLink = function () {
+        this.initEvent()
+    }
+
+    this.initEvent = function (){
+        $scope.$on("treeNodeRepeatFinish", function (){
+            // 判断是不是动态加载的回调
+            if(_that.data.$node.load !== 2){
+                return
+            }
+            _that.data.$node.load = 1
+            // $timeout(() => {
+            _that.expand()
+            // }, 50)
+        })
     }
 
     /**
@@ -37,8 +51,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.canExpand = function () {
         let isLeaf = angular.isUndefined(this.data.leaf) || this.data.leaf
-        // 懒加载时，默认允许展开
-        let isLazyAndLeaf = this.lazy && (angular.isUndefined(this.data.leaf) || this.data.leaf);
         //存在子节点时，默认允许展开
         let hasChild = this.data.children && this.data.children.length > 0
         // 如果包含子节点，则允许展开
@@ -58,27 +70,34 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * 展开节点
      */
     this.expandTreeNode = function () {
-        if (!this.data.$node.load) {// 未加载时，请求加载
-            // TODO
-            console.log('load')
+        if (this.data.$node.load === 0) {// 未加载时，请求加载
+            this.data.$node.load = 2
             // 调用父类的
             if (angular.isFunction(this.tree.load)) {
                 let deferred = $q.defer();
-                let opt = {node:this.data, deferred: deferred}
-                this.tree.load({opt: opt}).then(data=>{
+                let opt = {node: this.data, deferred: deferred}
+                this.tree.load({opt: opt}).then(data => {
+                    // 将节点添加到tree中
                     this.data.children = data
-                    this.data.$node.load = true
-                }).catch(err=>{
+                    this.tree.parseNode(data, this.tree.nodeCache, this.data[this.nodeKey])
+                    console.log(this.tree.nodeCache)
+                }).catch(err => {
+                    this.data.$node.load = 0
                     console.log('err', err)
                 })
             }
             return;
         }
+        this.expand()
+    }
+    /**
+     * 展开节点
+     */
+    this.expand = function () {
         if (angular.isUndefined(this.data.children) || this.data.children.length === 0) {
             return
         }
         let childContent = $element[0].querySelector('.mob-tree-node-children')
-        // console.log(childContent)
         if (this.data.$node.expand) {
             let {height} = childContent.getBoundingClientRect()
             childContent.style.height = height + 'px'
@@ -93,6 +112,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             childContent.style.display = 'block'
             childContent.style.height = 'auto'
             let {height} = childContent.getBoundingClientRect()
+            console.log(height)
             childContent.style.height = 0
             childContent.offsetHeight
             childContent.style.height = height + 'px'
@@ -128,13 +148,13 @@ app
              */
             props: "<?",//节点属性
             // renderAfterExpand: "<?",// 	是否在第一次展开某个树节点后才渲染其子节点
-            defaultExpandAll: "<?",// 是否默认展开所有节点
-            expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
-            checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
-            defaultExpandedKeys: "<?", // 默认展开的节点的 key 的数组
+            // defaultExpandAll: "<?",// 是否默认展开所有节点
+            // expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+            // checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
+            // defaultExpandedKeys: "<?", // 默认展开的节点的 key 的数组
             showCheckbox: "<?",// 是否显示多选框
-            defaultCheckedKeys: "<?",// 默认勾选的节点的 key 的数组
-            currentNodeKey: "=?",// 当前选中节点的 key
+            // defaultCheckedKeys: "<?",// 默认勾选的节点的 key 的数组
+            // currentNodeKey: "=?",// 当前选中节点的 key
 
 
         },

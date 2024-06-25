@@ -64,6 +64,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'Tree',
             controllerAs: 'tree',
         })
+        .when('/icon', {
+            templateUrl: './controller/icon/index.html',
+            controller: 'Icon',
+            controllerAs: 'icon',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -86,6 +91,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: '实验性', path: '/experimental', tags: [{title:'experimental', type:'danger'}]},
         {label: 'Home', path: '/home'},
         {label: 'Basic', type: 1},
+        {label: 'ICON', path: '/icon'},
         {label: 'Button 按钮', path: '/button'},
         {label: 'Form', type: 1},
         {label: 'popper容器', path: '/popper', },
