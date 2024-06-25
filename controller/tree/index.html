@@ -154,7 +154,7 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTree(opt)"></mob-tree>
+                <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeOne(opt)"></mob-tree>
 
             </div>
             <div class="meta">
@@ -162,13 +162,13 @@
                                 <code class="source-code language-markup language-js language-html language-css"
                                 ><!--
                                     <html>
-                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTree(opt)"></mob-tree>
+                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTreeOne(opt)"></mob-tree>
                                     </html>
                                     <script>
                                         $scope.loadTree = function (opt) {
                                             console.log(opt)
                                             setTimeout(function () {
-                                                if (opt.attachment.result) {
+                                                if (opt.node.value === "3") {
                                                     opt.deferred.resolve([
                                                         {
                                                             label: "Level three 3-1",
@@ -177,7 +177,8 @@
                                                         },
                                                         {
                                                             label: "Level three 3-2",
-                                                            value: '3-2',
+                                                            value: '3-2',,
+                                                            leaf: false
                                                         }
                                                     ])
                                                 } else {
@@ -250,19 +251,19 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData4" ng-model="treeModel4" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:false}" load="loadTree(opt)"></mob-tree>
+                <mob-tree data="treeData4" ng-model="treeModel4" node-key="'value'" show-checkbox="true" lazy="true"load="loadTreeTwo(opt)"></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>
                                 <code class="source-code language-markup language-js language-html language-css"
                                 ><!--
                                     <html>
-                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTree(opt)"></mob-tree>
+                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeTwo(opt)"></mob-tree>
                                     </html>
                                     <script>
                                         $scope.loadTree = function (opt) {
                                             setTimeout(function () {
-                                                if (opt.attachment.result) {
+                                                if (opt.node.value === "3") {
                                                     opt.deferred.resolve([
                                                         {
                                                             label: "Level three 3-1",

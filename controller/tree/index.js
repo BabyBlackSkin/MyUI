@@ -5,24 +5,30 @@ app
             console.log(1)
         }
 
-        $scope.loadTree = function (opt) {
-            console.log(opt)
+        $scope.loadTreeOne = function (opt) {
             setTimeout(function () {
-                if (opt.attachment.result) {
+                if (opt.node.value === "3") {
                     opt.deferred.resolve([
                         {
                             label: "Level three 3-1",
                             value: '3-1',
-                            leaf:false
+                            leaf: false
                         },
                         {
                             label: "Level three 3-2",
-                            value: '3-2',
+                            value: '3-2'
                         }
                     ])
                 } else {
-                    opt.deferred.reject()
+                    opt.deferred.resolve([])
                 }
+            }, 3000)
+            return opt.deferred.promise
+        }
+
+        $scope.loadTreeTwo = function (opt) {
+            setTimeout(function () {
+                opt.deferred.reject()
             }, 3000)
             return opt.deferred.promise
         }

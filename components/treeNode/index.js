@@ -59,8 +59,10 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
         let isLeaf = angular.isUndefined(this.data.leaf) || this.data.leaf
         //存在子节点时，默认允许展开
         let hasChild = this.data.children && this.data.children.length > 0
+        // 是否懒加载。且未加载过
+        let lazy = this.lazy && this.data.$node.load === 0
         // 如果包含子节点，则允许展开
-        return isLeaf && (this.lazy || hasChild)
+        return isLeaf && (lazy || hasChild)
     }
     /**
      * 节点checkbox的change方法
@@ -76,9 +78,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * 当节点被点击时
      */
     this.clickHandler = function (event) {
-        console.log(event.target)
-        // 判断点击节点是否展开
-        if (this.expandOnClickNode) {
+        // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
+        if (angular.isUndefined(this.expandOnClickNode) || this.expandOnClickNode) {
             this.expandTreeNode()
             return
         }
@@ -105,10 +106,13 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 let deferred = $q.defer();
                 let opt = {node: this.data, deferred: deferred, attachment:this.tree.attachment}
                 this.tree.load({opt: opt}).then(data => {
+                    if(angular.isUndefined(data) || data.length === 0){
+                        this.data.$node.load = 1
+                        return
+                    }
                     // 将节点添加到tree中
                     this.data.children = data
                     this.tree.parseNode(data, this.tree.nodeCache, this.data[this.nodeKey])
-                    console.log(this.tree.nodeCache)
                 }).catch(err => {
                     this.data.$node.load = 0
                     console.log('err', err)
