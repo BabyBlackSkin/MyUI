@@ -111,6 +111,7 @@
 }
 .mob-select .mob-select__suffix-inner{
     position: relative;
+    display: flex;
 }
 .mob-select  .mob-select__suffix .is_hidden{
     display: none;
