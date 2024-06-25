@@ -516,6 +516,8 @@ app
             showCheckbox:"<?",
             props:"<?",
             lazy:"<?",
+            expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+            checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
             load:"&?",
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，

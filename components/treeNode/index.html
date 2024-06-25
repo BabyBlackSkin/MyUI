@@ -26,7 +26,13 @@
     </div>
     <!-- 子节点 -->
     <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
-        <mob-tree-node ng-repeat="item in $ctrl.data.children" show-checkbox="$ctrl.showCheckbox"  data="item" layer="$ctrl.layer + 1"
-                       node-key="$ctrl.nodeKey" on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>
+        <mob-tree-node ng-repeat="item in $ctrl.data.children"
+                       show-checkbox="$ctrl.showCheckbox"
+                       data="item" 
+                       layer="$ctrl.layer + 1"
+                       node-key="$ctrl.nodeKey"
+                       expand-on-click-node="$ctrl.expandOnClickNode"
+                       check-on-click-node="$ctrl.checkOnClickNode"
+                       on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>
     </div>
 </div>
