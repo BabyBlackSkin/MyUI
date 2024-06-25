@@ -80,7 +80,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.clickHandler = function (event) {
         // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
         if (angular.isUndefined(this.expandOnClickNode) || this.expandOnClickNode) {
-            this.expandTreeNode()
+            this.canExpand() && this.expandTreeNode()
             return
         }
         if (this.checkOnClickNode) {
