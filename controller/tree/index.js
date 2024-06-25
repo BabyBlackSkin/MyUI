@@ -4,15 +4,16 @@ app
         this.nodeChangeHandler = function () {
             console.log(1)
         }
-        // TODO
+
         $scope.loadTree = function (opt) {
-            console.log('loadTree', opt);
+            console.log(opt)
             setTimeout(function () {
-                if (opt.node.value === "3") {
+                if (opt.attachment.result) {
                     opt.deferred.resolve([
                         {
                             label: "Level three 3-1",
                             value: '3-1',
+                            leaf:false
                         },
                         {
                             label: "Level three 3-2",
@@ -25,9 +26,7 @@ app
             }, 3000)
             return opt.deferred.promise
         }
-
-        $scope.treeModel = []
-        $scope.treeData = [
+        $scope.baseTreeData = [
             {
                 label: "Level one 1",
                 value: '1',
@@ -74,4 +73,22 @@ app
                 value: '3',
             }
         ]
+
+
+        $scope.treeModel1 = []
+        $scope.treeData1 = angular.copy($scope.baseTreeData)
+
+        $scope.treeModel2 = []
+        $scope.treeData2 = angular.copy($scope.baseTreeData)
+
+        $scope.treeModel3 = []
+        $scope.treeData3 = angular.copy($scope.baseTreeData)
+
+        $scope.treeModel4 = []
+        $scope.treeData4 = angular.copy($scope.baseTreeData)
+
+
+        $scope.treeModel5 = []
+        $scope.treeData5 = angular.copy($scope.baseTreeData)
+        $scope.treeData5[1].children[1].disabled = true
     }])

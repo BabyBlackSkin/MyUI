@@ -7,7 +7,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
 
     // 设置参数的默认值
     this.initial = function () {
-        this.nodeKey = this.tree.nodeKey
         this.lazy = this.tree.lazy
         // 初始化每个Node下的checkBox的属性
         this.data.$node = {
@@ -75,7 +74,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             // 调用父类的
             if (angular.isFunction(this.tree.load)) {
                 let deferred = $q.defer();
-                let opt = {node: this.data, deferred: deferred}
+                let opt = {node: this.data, deferred: deferred, attachment:this.tree.attachment}
                 this.tree.load({opt: opt}).then(data => {
                     // 将节点添加到tree中
                     this.data.children = data
@@ -136,6 +135,7 @@ app
             // === Props ===
             data: "=?",// 展示数据
             layer: "<?",// 节点所在层
+            nodeKey:"<?",
             /**
              * 节点属性
              * label：节点的标签

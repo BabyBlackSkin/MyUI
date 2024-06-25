@@ -158,6 +158,10 @@ function controller($scope, $element, $attrs) {
             // 判断是否
             if (!angular.isUndefined(parentNodeKey)) {
                 node.parentNode = nodeCache[parentNodeKey]
+                // 如果子节点的disabled状态，因跟随父节点
+                if (angular.isDefined(node.parentNode.disabled)) {
+                    node.disabled = node.parentNode.disabled
+                }
             }
 
             // 判断是否存在子节点，如果存在构建子节点
@@ -204,6 +208,15 @@ app
             // indent: "<?", // 树节点缩进，单位为像素
             // icon-class
             lazy: "<?",// 是否懒加载节点。与load方法结合使用
+            /**
+             *  angularJs无法解析  箭头函数，如果想在load中拿到外部作用域的对象，
+             *  以下写法会报异常：
+             *  <mob-checkbox ng-mode="obj.val" load="(value)=>{customChangeHandler(value, obj)}"></mob-checkbox>
+             *
+             *  此时需要通过attachment将对象传入
+             *  <mob-checkbox ng-mode="obj.val" attachment="obj" load="customChangeHandler(value, obj)"></mob-checkbox>
+             */
+            attachment:"<?",
             // === 方法 ===
             load: "&?", // 加载子节点 Function(node, resolve)
             // filterNodeMethod: "&?", // 对树节点进行筛选时执行的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏 Function(value, data, node)

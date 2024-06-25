@@ -49,6 +49,10 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box;
     padding-top: 20px;
 }
+.mob-doc-desc{
+    font-size: 14px;
+    line-height: 22px;
+}
 
 .mob-demo-block {
     /*min-width: min-content;*/

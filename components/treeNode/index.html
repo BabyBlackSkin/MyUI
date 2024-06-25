@@ -13,7 +13,12 @@
         </div>
         <!-- checkBox -->
         <div class="mob-tree-node-operate">
-            <mob-check-box ng-if="$ctrl.showCheckbox" ng-model="$ctrl.data.$node.check" indeterminate="$ctrl.data.$node.indeterminate" change="$ctrl.changeHandler(opt)"></mob-check-box>
+            <mob-check-box ng-if="$ctrl.showCheckbox"
+                           ng-model="$ctrl.data.$node.check"
+                           indeterminate="$ctrl.data.$node.indeterminate"
+                           change="$ctrl.changeHandler(opt)"
+                           ng-disabled="$ctrl.data.disabled"
+            ></mob-check-box>
         </div>
         <div class="mob-tree-node-label">
             <span ng-bind="$ctrl.data.label"></span>
