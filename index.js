@@ -94,7 +94,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
     };
 
     $rootScope.menuList = [
-        {label: '实验性', path: '/experimental', tags: [{title:'experimental', type:'danger'}]},
+        {label: '实验性', path: '/experimental', tags: [{title:'experimental', type:'primary'}]},
         {label: 'Home', path: '/home'},
         {label: 'Basic', type: 1},
         {label: 'ICON', path: '/icon'},
@@ -109,7 +109,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'TreeSelect选择器', path: '/treeSelect'},
         {label: 'Switch开关', path: '/switch'},
         {label: 'Timepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
-        {label: 'Tree树形控件', path: '/tree', tags: [{title:'developing', type:'danger'}]},
+        {label: 'Tree树形控件', path: '/tree'},
         {label: 'Form表单', path: '/form', tags: [{title:'developing', type:'danger'}]},
     ]
     //通过$on为$rootScope添加路由事件
