@@ -18,6 +18,7 @@ mob-tree-node .mob-tree-node .mob-tree-node-content > div {
 }
 
 mob-tree-node .mob-tree-node .mob-tree-node-content {
+    cursor: pointer;
     display: flex;
 }
 

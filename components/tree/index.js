@@ -6,9 +6,15 @@ function controller($scope, $element, $attrs) {
         this.name = `mobCheckBoxGroup_${$scope.$id}`
         // 初始化数据
         this.initialNodeList()
-        // 初始化数组
-        if (angular.isUndefined(this.ngModel)) {
+        if (angular.isUndefined(this.multiple)) {
+            this.multiple = true
+        }
+        // 初始化ngModel
+        if (angular.isUndefined(this.ngModel) && this.multiple) {
             this.ngModel = []
+        }
+        if (angular.isUndefined(this.nodeKey)) {
+            this.nodeKey = 'id'
         }
     }
 
@@ -37,15 +43,23 @@ function controller($scope, $element, $attrs) {
                 checked, // 是否选中，true，false
             } = data
 
-            if (checked) {
-                _that.ngModel.push(nodeKey)
+            if (_that.multiple) {
+                if (checked) {
+                    _that.ngModel.push(nodeKey)
+                } else {
+                    let indexOf = _that.ngModel.indexOf(nodeKey);
+                    indexOf > -1 && _that.ngModel.splice(indexOf, 1)
+                }
+                let node = _that.nodeCache[nodeKey]
+                _that.modifyChildNode(node, true)
+                _that.modifyParentNode(node, true)
             } else {
-                let indexOf = _that.ngModel.indexOf(nodeKey);
-                indexOf > -1 && _that.ngModel.splice(indexOf, 1)
+                if (checked) {
+                    _that.ngModel = nodeKey
+                } else {
+                    _that.ngModel = ''
+                }
             }
-            let node = _that.nodeCache[nodeKey]
-            _that.modifyChildNode(node, true)
-            _that.modifyParentNode(node, true)
         })
     }
 
@@ -114,12 +128,12 @@ function controller($scope, $element, $attrs) {
         this.modifyParentNode(parentNode, syncNgModel)
     }
 
-    this.pushInNgModel =function (nodeKey){
+    this.pushInNgModel = function (nodeKey) {
         let indexOf = _that.ngModel.indexOf(nodeKey);
         indexOf < 0 && _that.ngModel.push(nodeKey)
     }
 
-    this.removeFromNgModel =function (nodeKey){
+    this.removeFromNgModel = function (nodeKey) {
         let indexOf = _that.ngModel.indexOf(nodeKey);
         indexOf > -1 && _that.ngModel.splice(indexOf, 1)
     }
@@ -130,11 +144,23 @@ function controller($scope, $element, $attrs) {
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newValue, oldValue) {
-            // 遍历newValue，重新设置样式
-            for (let nodeKey of newValue) {
-                let node = _that.nodeCache[nodeKey]
-                _that.modifyChildNode(node, false)
-                _that.modifyParentNode(node, false)
+            if (_that.multiple) {
+                // 遍历newValue，重新设置样式
+                for (let nodeKey of newValue) {
+                    let node = _that.nodeCache[nodeKey]
+                    _that.modifyChildNode(node, false)
+                    _that.modifyParentNode(node, false)
+                }
+            } else {
+                // 遍历newValue，重新设置样式
+                if (angular.isDefined(oldValue)) {
+                    let oldNode = _that.nodeCache[oldValue]
+                    if (angular.isDefined(oldNode)) {
+                        oldNode.$node.check = false
+                        oldNode.$node.indeterminate = false
+                    }
+                }
+                _that.nodeCache[newValue].$node.check = false
             }
         })
     }
@@ -150,6 +176,9 @@ function controller($scope, $element, $attrs) {
      * 构建node
      */
     this.parseNode = function (nodeList, nodeCache, parentNodeKey) {
+        if (angular.isUndefined(nodeList) || nodeList.length === 0) {
+            return;
+        }
         for (let node of nodeList) {
             let nodeKey = node[this.nodeKey]
             // 将node的缓存下来
@@ -185,7 +214,6 @@ app
             ngModel: "=?",// 双向数据绑定
             data: "<?",// 展示数据
             nodeKey: "<?",// 节点的唯一标识属性，整个树唯一
-            label: "<?",
             /**
              * 节点属性
              * label：节点的标签
@@ -208,6 +236,7 @@ app
             // indent: "<?", // 树节点缩进，单位为像素
             // icon-class
             lazy: "<?",// 是否懒加载节点。与load方法结合使用
+            multiple:'<?',// 多选还是单选
             /**
              *  angularJs无法解析  箭头函数，如果想在load中拿到外部作用域的对象，
              *  以下写法会报异常：
@@ -216,7 +245,7 @@ app
              *  此时需要通过attachment将对象传入
              *  <mob-checkbox ng-mode="obj.val" attachment="obj" load="customChangeHandler(value, obj)"></mob-checkbox>
              */
-            attachment:"<?",
+            attachment: "<?",
             // === 方法 ===
             load: "&?", // 加载子节点 Function(node, resolve)
             // filterNodeMethod: "&?", // 对树节点进行筛选时执行的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏 Function(value, data, node)

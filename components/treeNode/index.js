@@ -7,6 +7,13 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
 
     // 设置参数的默认值
     this.initial = function () {
+        // 初始化参数
+        if (angular.isUndefined(this.expandOnClickNode)) {
+            this.expandOnClickNode = true
+        }
+        if (angular.isUndefined(this.checkOnClickNode)) {
+            this.checkOnClickNode = false
+        }
         this.lazy = this.tree.lazy
         // 初始化每个Node下的checkBox的属性
         this.data.$node = {
@@ -66,9 +73,31 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     }
 
     /**
+     * 当节点被点击时
+     */
+    this.clickHandler = function (event) {
+        console.log(event.target)
+        // 判断点击节点是否展开
+        if (this.expandOnClickNode) {
+            this.expandTreeNode()
+            return
+        }
+        if (this.checkOnClickNode) {
+            this.data.$node.check = true
+            // return;
+        }
+    }
+
+    /**
      * 展开节点
      */
-    this.expandTreeNode = function () {
+    this.expandTreeNode = function (event) {
+        if (angular.isDefined(event)) {
+            event.preventDefault()
+            event.stopPropagation()
+            return;
+        }
+
         if (this.data.$node.load === 0) {// 未加载时，请求加载
             this.data.$node.load = 2
             // 调用父类的
@@ -149,8 +178,8 @@ app
             props: "<?",//节点属性
             // renderAfterExpand: "<?",// 	是否在第一次展开某个树节点后才渲染其子节点
             // defaultExpandAll: "<?",// 是否默认展开所有节点
-            // expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
-            // checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
+            expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+            checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
             // defaultExpandedKeys: "<?", // 默认展开的节点的 key 的数组
             showCheckbox: "<?",// 是否显示多选框
             // defaultCheckedKeys: "<?",// 默认勾选的节点的 key 的数组

@@ -6,16 +6,19 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
-        if (this.multiple) {
+        if (angular.isUndefined(this.multiple)) {
+            this.multiple = false
+        } else {
             $scope.collapseTagsList = [];
         }
 
+        // 初始化参数
         if (angular.isUndefined(this.placeholder)) {
             this.placeholder = "请选择"
         }
         $scope.placeholder = this.placeholder
 
-        this.name = `mobSelect_${$scope.$id}`
+        this.name = `mobTreeSelect_${$scope.$id}`
         // 当开启过滤时，每个options的匹配结果
         $scope.filterResult = {
             options: {},
@@ -33,8 +36,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.$onDestroy = function () {
         cross.delete(this.name)
         // 将创建的select和tag销毁
-        $(`${_that.name}_mob-select-popper`).remove()
-        $(`${_that.name}_mob-select-tag-popper`).remove()
+        $(`${_that.name}_mob-tree-select-popper`).remove()
+        $(`${_that.name}_mob-tree-select-tag-popper`).remove()
     }
 
 
@@ -135,44 +138,28 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.dropDownAppendToBody = function () {
         let popperTooltipList = []
         cross.put(this.name, this)
-        let selectOptions = null;
-        if (this.group) {
-            selectOptions = $compile(
+        let selectOptions = $compile(
                 `
-                <div class="mob-popper mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                <div class="mob-popper mob-tree-select-popper" id="${_that.name}_mob-tree-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            
-                            <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-name="${_that.name}" label="group.label">
-                            <div>
-                                <mob-select-options ng-repeat="o in group.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
-                                </mob-select-options>
-                            </div>
-                            </mob-select-options>
-                            </mob-select-group>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
+                            <mob-tree ng-model="$ctrl.ngModel"
+                                data="$ctrl.options" 
+                                node-key="$ctrl.nodeKey"
+                                props="$ctrl.props"
+                                show-checkbox="$ctrl.showCheckbox"
+                                lazy="$ctrl.lazy"
+                                attachment="$ctrl.attachment"
+                                load="$ctrl.optionsConfig.load"
+                                multiple="$ctrl.multiple"
+                             ></mob-tree>
                         </div>
                     </div>
                 </div>
             `
             )($scope)[0]
-        } else {
-            selectOptions = $compile(
-                `
-                <div class="mob-popper mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
-                    <div class="mob-popper__wrapper">
-                        <span class="mob-popper__arrow"></span>
-                        <div class="mob-popper__inner">
-                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
-                            </mob-select-options>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
-                        </div>
-                    </div>
-                </div>
-            `
-            )($scope)[0]
-        }
+
         // 下拉框是否添加到body中
         if (this.appendToBody) {
             $document[0].body.appendChild(selectOptions)
@@ -186,11 +173,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-tree-select-popper mob-tree-select-tag-popper" id="${_that.name}_mob-tree-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            <div class="mob-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
+                            <div class="mobtree-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
                                 <span ng-bind="item.label"></span>
                                 <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
                             </div>
@@ -505,21 +492,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 }
 
 app
-    .component('mobSelect', {
+    .component('mobTreeSelect', {
         transclude: true,
-        templateUrl: './components/select/mob-select.html',
+        templateUrl: './components/tree-select/index.html',
         bindings: {
             ngModel: '=?',// 双向数据绑定
             required:'<?', // 是否必填
             options: '<?',// 选项
-            /**
-             * optionsConfig控制select中的options选择
-             * 可用参数：
-             * label：options的label
-             * value：options的value
-             * hidden：options是否隐藏
-             */
-            optionsConfig:'<?',// options的配置参数
             appendToBody:'<?',// 是否添加到body TODO（不建议使用，当selec被销毁时，options无法被销毁）
             ngDisabled: '<?', // 是否禁用
             clearable: '<?', // 可清空的
@@ -530,6 +509,14 @@ app
             filterable: '<?', // 是否可过滤
             filterMethod: '&?', // 过滤方法, TODO 待实现
             group:'<?',// 是否分组
+            /**
+             * 下面是tree组件的内容
+             */
+            nodeKey:"<?",
+            showCheckbox:"<?",
+            props:"<?",
+            lazy:"<?",
+            load:"&?",
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
              *  以下写法会报异常：

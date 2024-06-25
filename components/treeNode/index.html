@@ -5,14 +5,14 @@
     'is_loading':$ctrl.data.$node.load === 2
     }"
 >
-    <div class="mob-tree-node-content" ng-style="{'padding-left': 16 * ($ctrl.layer + 1) +'px'}">
+    <div class="mob-tree-node-content" ng-click="$ctrl.clickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.layer + 1) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
         <!-- icon -->
-        <div class="mob-tree-node-expand">
-            <mob-icon-caret-right ng-if="$ctrl.canExpand() && $ctrl.data.$node.load !== 2" ng-click="$ctrl.expandTreeNode()"></mob-icon-caret-right>
+        <div class="mob-tree-node-expand" stop-bubbling>
+            <mob-icon-caret-right ng-if="$ctrl.canExpand() && $ctrl.data.$node.load !== 2"ng-click="$ctrl.expandTreeNode()"></mob-icon-caret-right>
             <mob-icon-loading ng-if="$ctrl.data.$node.load === 2"></mob-icon-loading>
         </div>
         <!-- checkBox -->
-        <div class="mob-tree-node-operate">
+        <div class="mob-tree-node-operate" stop-bubbling>
             <mob-check-box ng-if="$ctrl.showCheckbox"
                            ng-model="$ctrl.data.$node.check"
                            indeterminate="$ctrl.data.$node.indeterminate"
@@ -26,6 +26,7 @@
     </div>
     <!-- 子节点 -->
     <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
-        <mob-tree-node ng-repeat="item in $ctrl.data.children" show-checkbox="$ctrl.showCheckbox"  data="item" layer="$ctrl.layer + 1" on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>
+        <mob-tree-node ng-repeat="item in $ctrl.data.children" show-checkbox="$ctrl.showCheckbox"  data="item" layer="$ctrl.layer + 1"
+                       node-key="$ctrl.nodeKey" on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>
     </div>
 </div>

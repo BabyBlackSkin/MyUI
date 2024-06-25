@@ -39,6 +39,12 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'SelectCtrl',
             controllerAs: 'select',
         })
+
+        .when('/treeSelect', {
+            templateUrl: './controller/tree-select/index.html',
+            controller: 'TreeSelectCtrl',
+            controllerAs: 'treeSelect',
+        })
         .when('/switch', {
             templateUrl: './controller/switch/switch.html',
             controller: 'SwitchCtrl',
@@ -100,6 +106,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Radio单选框', path: '/radio'},
         {label: 'CheckBox多选框', path: '/checkBox'},
         {label: 'Select选择器', path: '/select'},
+        {label: 'TreeSelect选择器', path: '/treeSelect'},
         {label: 'Switch开关', path: '/switch'},
         {label: 'Timepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Tree树形控件', path: '/tree', tags: [{title:'developing', type:'danger'}]},
