@@ -1,16 +1,23 @@
-function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, $transclude, $q, uuId, popper, cross, attrHelp) {
+function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, $transclude, $q, uuId, popper, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody','clearable', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip"]
+        debugger
+        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "collapseTag", "collapseTagTooltip", "showCheckbox"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
         if (angular.isUndefined(this.multiple)) {
             this.multiple = false
+            this.ngModel = ''
         } else {
+            if (this.multiple) {
+                this.ngModel = []
+            }
             $scope.collapseTagsList = [];
         }
+
+        this.initOptionsCache()
 
         // 初始化参数
         if (angular.isUndefined(this.placeholder)) {
@@ -24,6 +31,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             options: {},
             anyMatch: false
         }
+        console.log($scope.$id, this.collapseTag, this.collapseTagTooltip)
     }
 
     this.$onChanges = function (changes) {
@@ -34,7 +42,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 需要支持appendToBody了 TODO
      */
     this.$onDestroy = function () {
-        cross.delete(this.name)
         // 将创建的select和tag销毁
         $(`${_that.name}_mob-tree-select-popper`).remove()
         $(`${_that.name}_mob-tree-select-tag-popper`).remove()
@@ -77,32 +84,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 })
             }
         }
-
-        // 监听optionsInitValue事件
-        $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
-            if (!_that.multiple) {
-                $scope.placeholder = data.label ? data.label : data.value
-            }
-            $scope.collapseTagsList.push({label: data.label, value: data.value})
-
-        })
-
-        // 监听optionsClick事件
-        $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
-            _that.changeHandler(data)
-        })
-
-        // 监听collapseTagsListUpdate事件
-        $scope.$on(`${_that.name}collapseTagsListUpdate`, function (e, data) {
-            _that.collapseTagsListUpdate(data)
-        })
-
-        // 监听filter结果
-        $scope.$on(`${_that.name}FilterResult`, function (e, data) {
-            $scope.filterResult.options[data.key] = data.value
-            _that.filterHasMatched()
-        })
-
     }
 
     /**
@@ -111,11 +92,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initWatcher = function () {
         $scope.$watchCollection(() => {
             return _that.ngModel
-        }, function (newV,oldV) {
-            if (_that.filterable) {
-                $scope.filterableText = ''
-                if (_that.multiple) {
-                    $scope.placeholder = _that.ngModel.length === 0 ? _that.placeholder : ""
+        }, function (newV, oldV) {
+            if (_that.multiple) {
+                $scope.collapseTagsList = []
+                for (let v of newV) {
+                    _that.collapseTagsListUpdate(_that.optionsCache[v])
                 }
             }
 
@@ -123,23 +104,35 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 let opt = {value: this.ngModel, attachment: this.attachment}
                 _that.change({opt: opt})
             }
-            // 反向通知group下所有的radio绑定的ngModel
+            // 反向通知group下所有的radio绑定的ngModel TODO
             $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
         })
-
-        $scope.$watch(() => {
-            return $scope.filterableText
-        }, function (newV, oldV) {
-            _that.filterOptions()
-        })
     }
+    /**
+     * 一维化tree
+     */
+    this.initOptionsCache = function (){
+        this.optionsCache = {};
+        this.parseOptions(this.options)
+    }
+    this.parseOptions = function (optionsList) {
+        let nodeKey = angular.isDefined(this.nodeKey) ? this.nodeKey : "id"
+        if (angular.isUndefined(optionsList)) {
+            return
+        }
+        for (let options of optionsList) {
+            this.optionsCache[options[nodeKey]] = options
 
+            if (angular.isDefined(options.children)) {
+                this.parseOptions(options.children)
+            }
+        }
+    }
 
     this.dropDownAppendToBody = function () {
         let popperTooltipList = []
-        cross.put(this.name, this)
         let selectOptions = $compile(
-                `
+            `
                 <div class="mob-popper mob-tree-select-popper" id="${_that.name}_mob-tree-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
@@ -158,13 +151,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     </div>
                 </div>
             `
-            )($scope)[0]
+        )($scope)[0]
 
         // 下拉框是否添加到body中
         if (this.appendToBody) {
             $document[0].body.appendChild(selectOptions)
-        }
-        else {
+        } else {
             $element[0].appendChild(selectOptions)
         }
         popperTooltipList.push(selectOptions)
@@ -177,9 +169,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            <div class="mobtree-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
+                            <div class="mob-tree-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
                                 <span ng-bind="item.label"></span>
-                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
+                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)" stop-bubbling></mob-icon-close>
                             </div>
                         </div>
                     </div>
@@ -188,8 +180,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             )($scope)[0]
             if (this.appendToBody) {
                 $document[0].body.appendChild(tooltip)
-            }
-            else {
+            } else {
                 $element[0].appendChild(tooltip)
             }
             popperTooltipList.push(tooltip)
@@ -202,7 +193,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      */
     this.changeHandler = function (data) {
         this.changeValueHandler(data)
-        this.changeStyleHandler(data)
     }
 
     /**
@@ -230,29 +220,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
     }
 
-    /**
-     * 变动时。tooltip的样式处理
-     * @param data
-     * @returns {undefined|string}
-     */
-    this.changeStyleHandler = function (data) {
-        $scope.focus()
-        // 多选
-        if (_that.multiple) {
-            return
-        }
-        let optionId = data.$id
-
-        $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
-            let val = data.key === 'ngDisabled' ? !!!data.value : data.value
-            if (val) {
-                $scope.$popper['selectDrown'].hide()
-            }
-        })
-        // 调用子组件方法
-        $scope.$broadcast(`get${optionId}Param`, 'ngDisabled')
-    }
-
     this.collapseTagsListUpdate = function (data) {
         if (!this.multiple) {
             return
@@ -276,14 +243,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 发送过滤操作
      */
     this.filterOptions = function () {
-        $debounce.debounce($scope, () => {
-            let filter = !!$scope.filterableText
-            $scope.$broadcast(`${_that.name}Filter`, {
-                filter,
-                value: $scope.filterableText,
-                filterMethod: _that.filterMethod
-            })
-        }, 300)()
+        // $debounce.debounce($scope, () => {
+        //     let filter = !!$scope.filterableText
+        //     // TODO 通知tree进行过滤
+        //     $scope.$broadcast(`${_that.name}Filter`, {
+        //         filter,
+        //         value: $scope.filterableText,
+        //         filterMethod: _that.filterMethod
+        //     })
+        // }, 300)()
     }
 
     /**
@@ -348,13 +316,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 重新聚焦
      */
     $scope.focus = function () {
-        if (this.filterable) {
-            let input = $element[0].querySelector('.mob-input__inner')
-            input.focus()
-        } else {
-            let input = $element[0].querySelector('.mob-input-filterable')
-            input.focus()
-        }
+        let input = $element[0].querySelector('.mob-input__inner')
+        input.focus()
     }
 
     // 是否显示清除按钮
@@ -369,9 +332,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.clean = function () {
         this.focus()
         if (_that.multiple) {
-            _that.changeHandler({value:[]})
+            _that.changeHandler({value: []})
         } else {
-            _that.changeHandler({value:''})
+            _that.changeHandler({value: ''})
         }
     }
 
@@ -379,13 +342,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 多选移除
      * @param data
      */
-    $scope.collapseRemove = function (event, data) {
+    $scope.collapseRemove = function (data) {
         _that.changeHandler(data)
-        event.preventDefault()
-        event.stopPropagation()
     }
 
-    $scope.hasSelectableOptions = function (options){
+    $scope.hasSelectableOptions = function (options) {
         return !$scope.isNoSelectableOptions(options)
     }
 
@@ -397,7 +358,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         let noSelected = true;
         for (let o of options) {
             let isRender = $scope.optionsConfigIsRender(o)
-            noSelected = ! (!isRender || isRender)
+            noSelected = !(!isRender || isRender)
             // 有一个有值就退出循环
             if (!noSelected) {
                 break
@@ -409,7 +370,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 是否展示无数据匹配项
      * @returns {boolean}
      */
-    $scope.showNoMatchOptions  = function () {
+    $scope.showNoMatchOptions = function () {
         // 是否有满足过滤条件的options
         let filterNoMatch = !!_that.filterable && !$scope.filterResult.anyMatch && !!$scope.filterableText
 
@@ -497,28 +458,28 @@ app
         templateUrl: './components/tree-select/index.html',
         bindings: {
             ngModel: '=?',// 双向数据绑定
-            required:'<?', // 是否必填
+            required: '<?', // 是否必填
             options: '<?',// 选项
-            appendToBody:'<?',// 是否添加到body TODO（不建议使用，当selec被销毁时，options无法被销毁）
+            appendToBody: '<?',// 是否添加到body
             ngDisabled: '<?', // 是否禁用
             clearable: '<?', // 可清空的
             placeholder: '<?',// 提示文字
             multiple: '<?',// 是否支持多选
             collapseTag: '<?', // 是否显示Tag
             collapseTagTooltip: '<?', // 是否显示Tag工具箱
-            filterable: '<?', // 是否可过滤
+            filterable: '<?', // 是否可过滤 TODO
             filterMethod: '&?', // 过滤方法, TODO 待实现
-            group:'<?',// 是否分组
+            group: '<?',// 是否分组
             /**
              * 下面是tree组件的内容
              */
-            nodeKey:"<?",
-            showCheckbox:"<?",
-            props:"<?",
-            lazy:"<?",
+            nodeKey: "<?",
+            showCheckbox: "<?",
+            props: "<?",
+            lazy: "<?",
             expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
             checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
-            load:"&?",
+            load: "&?",
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
              *  以下写法会报异常：
@@ -527,7 +488,7 @@ app
              *  此时需要通过attachment将对象传入
              *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
              */
-            attachment:"<?",
+            attachment: "<?",
             // Events
             change: '&?',
         },

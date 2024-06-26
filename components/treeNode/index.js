@@ -16,13 +16,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
         }
         this.lazy = this.tree.lazy
         // 初始化每个Node下的checkBox的属性
-        this.data.$node = {
-            check: false,
-            indeterminate: false,
-            left: true,// 是否有叶子节点
-            expand: angular.isUndefined(this.defaultExpandAll) ? false : this.defaultExpandAll,// 是否展开
-            load: angular.isDefined(this.data.children) && this.data.children.length > 0 ? 1 : 0, // 是否需要加载
-        }
     }
 
     this.$onChanges = function (changes) {
@@ -37,14 +30,29 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.$postLink = function () {
         this.initEvent()
     }
+    /**
+     * 获取节点的key
+     * @returns {*}
+     */
+    this.getNodeKeyValue = function (){
+        return _that.data[_that.nodeKey]
+    }
+    /**
+     * 获取节点状态
+     * @returns {*}
+     */
+    this.getNodeStatus = function (){
+        return _that.tree.nodeStatusCache[_that.getNodeKeyValue()]
+    }
 
     this.initEvent = function (){
         $scope.$on("treeNodeRepeatFinish", function (){
+            let nodeStatus = _that.getNodeStatus()
             // 判断是不是动态加载的回调
-            if(_that.data.$node.load !== 2){
+            if(_that.getNodeStatus().load !== 2){
                 return
             }
-            _that.data.$node.load = 1
+            nodeStatus.load = 1
             // $timeout(() => {
             _that.expand()
             // }, 50)
@@ -60,7 +68,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
         //存在子节点时，默认允许展开
         let hasChild = this.data.children && this.data.children.length > 0
         // 是否懒加载。且未加载过
-        let lazy = this.lazy && this.data.$node.load === 0
+        let lazy = this.lazy && this.getNodeStatus().load === 0
         // 如果包含子节点，则允许展开
         return isLeaf && (lazy || hasChild)
     }
@@ -70,21 +78,21 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.changeHandler = function (opt) {
         // 是不是通知给tree，由tree来修改？
         let {value} = opt
-        this.data.$node.check = value
         $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey: _that.data[_that.nodeKey], checked: value})
     }
 
     /**
      * 当节点被点击时
      */
-    this.clickHandler = function (event) {
+    this.clickHandler = function () {
         // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
         if (angular.isUndefined(this.expandOnClickNode) || this.expandOnClickNode) {
             this.canExpand() && this.expandTreeNode()
             return
         }
         if (this.checkOnClickNode) {
-            this.data.$node.check = true
+            let nodeStatus = this.getNodeStatus()
+            this.changeHandler({value: !nodeStatus.check})
             // return;
         }
     }
@@ -99,23 +107,23 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             return;
         }
 
-        if (this.data.$node.load === 0) {// 未加载时，请求加载
-            this.data.$node.load = 2
+        let nodeStatus = this.getNodeStatus()
+        if (nodeStatus.load === 0) {// 未加载时，请求加载
+            nodeStatus.load = 2
             // 调用父类的
             if (angular.isFunction(this.tree.load)) {
                 let deferred = $q.defer();
                 let opt = {node: this.data, deferred: deferred, attachment:this.tree.attachment}
                 this.tree.load({opt: opt}).then(data => {
                     if(angular.isUndefined(data) || data.length === 0){
-                        this.data.$node.load = 1
+                        nodeStatus.load = 1
                         return
                     }
                     // 将节点添加到tree中
+                    this.tree.parseNode(data, this.getNodeKeyValue())
                     this.data.children = data
-                    this.tree.parseNode(data, this.tree.nodeCache, this.data[this.nodeKey])
                 }).catch(err => {
-                    this.data.$node.load = 0
-                    console.log('err', err)
+                    nodeStatus.load = 0
                 })
             }
             return;
@@ -130,7 +138,9 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             return
         }
         let childContent = $element[0].querySelector('.mob-tree-node-children')
-        if (this.data.$node.expand) {
+        let nodeStatus = this.getNodeStatus()
+
+        if (nodeStatus.expand) {
             let {height} = childContent.getBoundingClientRect()
             childContent.style.height = height + 'px'
             childContent.offsetHeight
@@ -144,7 +154,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             childContent.style.display = 'block'
             childContent.style.height = 'auto'
             let {height} = childContent.getBoundingClientRect()
-            console.log(height)
             childContent.style.height = 0
             childContent.offsetHeight
             childContent.style.height = height + 'px'
@@ -154,7 +163,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 childContent.style.height = 'auto'
             }, 300)
         }
-        this.data.$node.expand = !this.data.$node.expand;
+        nodeStatus.expand = !nodeStatus.expand;
     }
 }
 
