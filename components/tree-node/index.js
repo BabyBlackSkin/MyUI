@@ -169,7 +169,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
 
 app
     .component('mobTreeNode', {
-        templateUrl: './components/treeNode/index.html',
+        templateUrl: './components/tree-node/index.html',
         require: {
             'tree': '?^mobTree'
         },

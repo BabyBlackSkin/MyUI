@@ -50,7 +50,7 @@ function controller($scope, $element, $attrs) {
             } = data
             // 将节点的状态改为选中
             let nodeStatus = _that.nodeStatusCache[nodeKey]
-            nodeStatus.check = true
+            nodeStatus.check = checked
 
             if (_that.multiple) {
                 if (checked) {
