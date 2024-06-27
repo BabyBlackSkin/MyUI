@@ -48,6 +48,9 @@ function controller($scope, $element, $attrs) {
                 nodeKey, // key值
                 checked, // 是否选中，true，false
             } = data
+            // 将节点的状态改为选中
+            let nodeStatus = _that.nodeStatusCache[nodeKey]
+            nodeStatus.check = true
 
             if (_that.multiple) {
                 if (checked) {
