@@ -1,36 +1,35 @@
 <div
     class="mob-tree-node"
     ng-class="{
-    'is_expand':$ctrl.getNodeStatus().expand,
-    'is_loading':$ctrl.getNodeStatus().load === 2
+    'is_expand':$ctrl.data.expand,
+    'is_loading':$ctrl.data.load === 2
     }"
 >
-    <div class="mob-tree-node-content" ng-click="$ctrl.clickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.layer + 1) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
+    <div class="mob-tree-node-content" ng-click="$ctrl.clickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.data.level + 1) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
         <!-- icon -->
         <div class="mob-tree-node-expand" stop-bubbling>
 
             <mob-icon-caret-right ng-if="$ctrl.canExpand()" ng-click="$ctrl.expandTreeNode()"></mob-icon-caret-right>
-            <mob-icon-loading ng-if="$ctrl.getNodeStatus().load === 2"></mob-icon-loading>
+            <mob-icon-loading ng-if="$ctrl.data.load === 2"></mob-icon-loading>
         </div>
         <!-- checkBox -->
         <div class="mob-tree-node-operate" stop-bubbling>
             <mob-check-box ng-if="$ctrl.showCheckbox"
-                           ng-model="$ctrl.getNodeStatus().check"
-                           indeterminate="$ctrl.getNodeStatus().indeterminate"
+                           ng-model="$ctrl.data.check"
+                           indeterminate="$ctrl.data.indeterminate"
                            change="$ctrl.changeHandler(opt)"
                            ng-disabled="$ctrl.data.disabled"
             ></mob-check-box>
         </div>
         <div class="mob-tree-node-label">
-            <span ng-bind="$ctrl.data.label"></span>
+            <span ng-bind="$ctrl.data.node.label"></span>
         </div>
     </div>
     <!-- 子节点 -->
     <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
         <mob-tree-node ng-repeat="item in $ctrl.data.children"
                        show-checkbox="$ctrl.showCheckbox"
-                       data="item"
-                       layer="$ctrl.layer + 1"
+                       data="$ctrl.tree.nodeCache[item[$ctrl.nodeKey]]"
                        node-key="$ctrl.nodeKey"
                        expand-on-click-node="$ctrl.expandOnClickNode"
                        check-on-click-node="$ctrl.checkOnClickNode"

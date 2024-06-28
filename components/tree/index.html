@@ -5,13 +5,11 @@
     }"
     ng-click="$ctrl.clickHandle()">
     <mob-tree-node ng-repeat="node in $ctrl.nodeList"
-                   data="node"
+                   data="$ctrl.nodeCache[node[$ctrl.nodeKey]]"
                    node-key="$ctrl.nodeKey"
                    expand-on-click-node="$ctrl.expandOnClickNode"
                    check-on-click-node="$ctrl.checkOnClickNode"
                    show-checkbox="$ctrl.showCheckbox"
                    props="$ctrl.props"
-<!--                   ng-model="$ctrl.ngModel"-->
-                   layer="0"
     >
 </div>

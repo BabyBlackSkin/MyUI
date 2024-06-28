@@ -37,22 +37,14 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.getNodeKeyValue = function (){
         return _that.data[_that.nodeKey]
     }
-    /**
-     * 获取节点状态
-     * @returns {*}
-     */
-    this.getNodeStatus = function (){
-        return _that.tree.nodeStatusCache[_that.getNodeKeyValue()]
-    }
 
     this.initEvent = function (){
         $scope.$on("treeNodeRepeatFinish", function (){
-            let nodeStatus = _that.getNodeStatus()
             // 判断是不是动态加载的回调
-            if(_that.getNodeStatus().load !== 2){
+            if(_that.data.load !== 2){
                 return
             }
-            nodeStatus.load = 1
+            _that.data.load = 1
             // $timeout(() => {
             _that.expand()
             // }, 50)
@@ -68,7 +60,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
         //存在子节点时，默认允许展开
         let hasChild = this.data.children && this.data.children.length > 0
         // 是否懒加载。且未加载过
-        let lazy = this.lazy && this.getNodeStatus().load === 0
+        let lazy = this.lazy && _that.data.load === 0
         // 如果包含子节点，则允许展开
         return isLeaf && (lazy || hasChild)
     }
@@ -78,7 +70,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.changeHandler = function (opt) {
         // 是不是通知给tree，由tree来修改？
         let {value} = opt
-        $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey: _that.data[_that.nodeKey], checked: value})
+        $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey: _that.data.node[_that.nodeKey], checked: value})
     }
 
     /**
@@ -91,8 +83,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             return
         }
         if (this.checkOnClickNode) {
-            let nodeStatus = this.getNodeStatus()
-            this.changeHandler({value: !nodeStatus.check})
+            this.changeHandler({value: !_that.data.check})
             // return;
         }
     }
@@ -107,23 +98,23 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             return;
         }
 
-        let nodeStatus = this.getNodeStatus()
-        if (nodeStatus.load === 0) {// 未加载时，请求加载
-            nodeStatus.load = 2
+
+        if (_that.data.load === 0) {// 未加载时，请求加载
+            this.data.load = 2
             // 调用父类的
             if (angular.isFunction(this.tree.load)) {
                 let deferred = $q.defer();
                 let opt = {node: this.data, deferred: deferred, attachment:this.tree.attachment}
                 this.tree.load({opt: opt}).then(data => {
                     if(angular.isUndefined(data) || data.length === 0){
-                        nodeStatus.load = 1
+                        _that.data.load = 1
                         return
                     }
                     // 将节点添加到tree中
                     this.tree.parseNode(data, this.getNodeKeyValue())
                     this.data.children = data
                 }).catch(err => {
-                    nodeStatus.load = 0
+                    _that.data.load = 0
                 })
             }
             return;
@@ -138,9 +129,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             return
         }
         let childContent = $element[0].querySelector('.mob-tree-node-children')
-        let nodeStatus = this.getNodeStatus()
 
-        if (nodeStatus.expand) {
+        if (_that.data.expand) {
             let {height} = childContent.getBoundingClientRect()
             childContent.style.height = height + 'px'
             childContent.offsetHeight
@@ -163,7 +153,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 childContent.style.height = 'auto'
             }, 300)
         }
-        nodeStatus.expand = !nodeStatus.expand;
+        _that.data.expand = !_that.data.expand;
     }
 }
 
@@ -176,7 +166,6 @@ app
         bindings: {
             // === Props ===
             data: "=?",// 展示数据
-            layer: "<?",// 节点所在层
             nodeKey:"<?",
             /**
              * 节点属性
