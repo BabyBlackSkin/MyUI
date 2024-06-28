@@ -44,7 +44,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 return
             }
             _that.data.load = 1
-            _that.expand()
+            _that.expandOrCollapse()
         })
     }
 
@@ -73,7 +73,11 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     /**
      * 当节点被点击时
      */
-    this.clickHandler = function () {
+    this.nodeClickHandler = function () {
+        if (angular.isFunction(this.tree.nodeClick)) {
+            let opt = {node: this.data.node,  attachment: this.tree.attachment}
+            this.tree.nodeClick({opt: opt})
+        }
         // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
         if (angular.isUndefined(this.expandOnClickNode) || this.expandOnClickNode) {
             this.canExpand() && this.expandTreeNode()
@@ -83,18 +87,31 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             this.changeHandler({value: !_that.data.check})
             // return;
         }
-    }
 
+    }
+    /**
+     * 箭头图标点击事件
+     */
+    this.expandIconClickHandler = function () {
+        if (angular.isFunction(this.tree.nodeClick)) {
+            let opt = {node: this.data.node, attachment: this.tree.attachment}
+            this.tree.nodeClick({opt: opt})
+        }
+        this.expandTreeNode()
+    }
+    /**
+     * checkBox点击事件
+     */
+    this.checkBoxClickHandler = function () {
+        if (angular.isFunction(this.tree.nodeClick)) {
+            let opt = {node: this.data.node, attachment: this.tree.attachment}
+            this.tree.nodeClick({opt: opt})
+        }
+    }
     /**
      * 展开节点
      */
     this.expandTreeNode = function (event) {
-        if (angular.isDefined(event)) {
-            event.preventDefault()
-            event.stopPropagation()
-            return;
-        }
-
 
         if (_that.data.load === 0) {// 未加载时，请求加载
             this.data.load = 2
@@ -117,18 +134,24 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             }
             return;
         }
-        this.expand()
+        this.expandOrCollapse()
     }
     /**
      * 展开节点
      */
-    this.expand = function () {
+    this.expandOrCollapse = function () {
         if (angular.isUndefined(this.data.children) || this.data.children.length === 0) {
             return
         }
         let childContent = $element[0].querySelector('.mob-tree-node-children')
-
         if (_that.data.expand) {
+
+            if (angular.isFunction(this.tree.nodeExpand)) {
+                let opt = {node:_that.data.node, attachment: this.tree.attachment}
+                this.tree.nodeCollapse({opt: opt})
+            }
+
+
             let {height} = childContent.getBoundingClientRect()
             childContent.style.height = height + 'px'
             childContent.offsetHeight
@@ -139,6 +162,10 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             }, 300)
 
         } else {
+            if (angular.isFunction(this.tree.nodeCollapse)) {
+                let opt = {node: _that.data.node, attachment: this.tree.attachment}
+                this.tree.nodeExpand({opt: opt})
+            }
             childContent.style.display = 'block'
             childContent.style.height = 'auto'
             let {height} = childContent.getBoundingClientRect()

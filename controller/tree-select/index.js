@@ -8,6 +8,17 @@ app
             })
         }
 
+
+        $scope.nodeClick = function (opt) {
+            console.log("nodeClick", opt)
+        }
+        $scope.nodeExpand = function (opt) {
+            console.log("nodeExpand", opt)
+        }
+        $scope.nodeCollapse = function (opt) {
+            console.log("nodeCollapse", opt)
+        }
+
         this.optionsBase = [
             {
                 label: "Level one 1",

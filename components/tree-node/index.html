@@ -5,10 +5,10 @@
     'is_loading':$ctrl.data.load === 2
     }"
 >
-    <div class="mob-tree-node-content" ng-click="$ctrl.clickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.data.level + 1) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
+    <div class="mob-tree-node-content" ng-click="$ctrl.nodeClickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.data.level + 1) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
         <!-- icon -->
         <div class="mob-tree-node-expand" stop-bubbling>
-            <mob-icon-caret-right ng-if="$ctrl.canExpand()" ng-click="$ctrl.expandTreeNode()"></mob-icon-caret-right>
+            <mob-icon-caret-right ng-if="$ctrl.canExpand()" ng-click="$ctrl.expandIconClickHandler()"></mob-icon-caret-right>
             <mob-icon-loading ng-if="$ctrl.data.load === 2"></mob-icon-loading>
         </div>
         <!-- checkBox -->
@@ -17,6 +17,7 @@
                            ng-model="$ctrl.data.check"
                            indeterminate="$ctrl.data.indeterminate"
                            change="$ctrl.changeHandler(opt)"
+                           ng-click="$ctrl.checkBoxClickHandler()"
                            ng-disabled="$ctrl.data.disabled"
             ></mob-check-box>
         </div>

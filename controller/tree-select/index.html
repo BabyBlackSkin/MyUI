@@ -40,18 +40,21 @@
                 <p>{{value}}</p>
                 <div class="mob-demo-example-child">
                     <mob-tree-select style="width: 200px;" multiple="true" ng-model="value"
+                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)"
                                      options="treeSelect.optionsBase" node-key="'value'"
                                      show-checkbox="true"></mob-tree-select>
 
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-tree-select style="width: 200px;" multiple="true" ng-model="value"
+                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)"
                                      options="treeSelect.optionsBase" collapse-tag node-key="'value'"
                                      show-checkbox="true"></mob-tree-select>
 
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-tree-select style="width: 200px;" multiple="true" ng-model="value"
+                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)"
                                      options="treeSelect.optionsBase" collapse-tag collapse-tag-tooltip
                                      node-key="'value'" show-checkbox></mob-tree-select>
 

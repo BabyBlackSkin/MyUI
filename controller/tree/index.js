@@ -102,4 +102,14 @@ app
         $scope.treeModel5 = []
         $scope.treeData5 = angular.copy($scope.baseTreeData)
         $scope.treeData5[1].children[1].disabled = true
+
+        $scope.nodeClick = function (opt) {
+            console.log("nodeClick", opt)
+        }
+        $scope.nodeExpand = function (opt) {
+            console.log("nodeExpand", opt)
+        }
+        $scope.nodeCollapse = function (opt) {
+            console.log("nodeCollapse", opt)
+        }
     }])

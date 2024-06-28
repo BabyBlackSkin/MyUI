@@ -8,14 +8,14 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData1" ng-model="treeModel1" node-key="'value'"></mob-tree>
+                <mob-tree data="treeData1" ng-model="treeModel1" node-key="'value'" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" ></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>
                                 <code class="source-code language-markup language-js language-html language-css"
                                 ><!--
                                     <html>
-                                        <mob-tree data="treeData" ng-model="treeModel" node-key="'value'"></mob-tree>
+                                        <mob-tree data="treeData" ng-model="treeModel" node-key="'value'" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" ></mob-tree>
                                     </html>
                                     <script>
                                         $scope.treeData1 = []
@@ -80,14 +80,14 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true"></mob-tree>
+                <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" ></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>
                                 <code class="source-code language-markup language-js language-html language-css"
                                 ><!--
                                     <html>
-                                        <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true"></mob-tree>
+                                        <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" ></mob-tree>
                                     </html>
                                     <script>
                                         $scope.baseTreeData = [
@@ -159,7 +159,7 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeOne(opt)"></mob-tree>
+                <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeOne(opt)" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" >></mob-tree>
 
             </div>
             <div class="meta">
@@ -167,7 +167,10 @@
                                 <code class="source-code language-markup language-js language-html language-css"
                                 ><!--
                                     <html>
-                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTreeOne(opt)"></mob-tree>
+                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true"
+                                        attachment="{result:true}" load="loadTreeOne(opt)"
+                                         node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" >
+                                        ></mob-tree>
                                     </html>
                                     <script>
                                         $scope.loadTree = function (opt) {
@@ -256,14 +259,18 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData4" ng-model="treeModel4" node-key="'value'" show-checkbox="true" lazy="true"load="loadTreeTwo(opt)"></mob-tree>
+                <mob-tree data="treeData4" ng-model="treeModel4" node-key="'value'" show-checkbox="true" lazy="true"load="loadTreeTwo(opt)"
+                          node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" >
+                ></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>
                                 <code class="source-code language-markup language-js language-html language-css"
                                 ><!--
                                     <html>
-                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeTwo(opt)"></mob-tree>
+                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeTwo(opt)"
+                                         node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" >
+                                        ></mob-tree>
                                     </html>
                                     <script>
                                         $scope.loadTree = function (opt) {

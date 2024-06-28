@@ -31,7 +31,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             options: {},
             anyMatch: false
         }
-        console.log($scope.$id, this.collapseTag, this.collapseTagTooltip)
+
+        // props默认值
+        if (angular.isUndefined(this.props)) {
+            this.props = {
+                label: "label", children: "children"
+            }
+        } else {
+            this.props = Object.assign(this.props, {label: "label", children: "children"})
+        }
     }
 
     this.$onChanges = function (changes) {
@@ -144,8 +152,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 show-checkbox="$ctrl.showCheckbox"
                                 lazy="$ctrl.lazy"
                                 attachment="$ctrl.attachment"
-                                load="$ctrl.optionsConfig.load"
                                 multiple="$ctrl.multiple"
+                                load="$ctrl.load"
+                                node-click="$ctrl.nodeClick({opt:opt})"
+                                node-collapse="$ctrl.nodeCollapse({opt:opt})"
+                                node-expand="$ctrl.nodeExpand({opt:opt})"
                              ></mob-tree>
                         </div>
                     </div>
@@ -480,6 +491,9 @@ app
             expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
             checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
             load: "&?",
+            nodeClick:"&?", // 当节点被点击时触发， Function(event, node)
+            nodeExpand:"&?",// 节点被展开时触发， Function(node)
+            nodeCollapse:"&?",//节点被收起时触发， Function(node)
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
              *  以下写法会报异常：

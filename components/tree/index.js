@@ -316,6 +316,9 @@ app
             attachment: "<?",
             // === 方法 ===
             load: "&?", // 加载子节点 Function(node, resolve)
+            nodeClick:"&?", // 当节点被点击时触发， Function(event, node)
+            nodeExpand:"&?",// 节点被展开时触发， Function(node)
+            nodeCollapse:"&?",//节点被收起时触发， Function(node)
             // filterNodeMethod: "&?", // 对树节点进行筛选时执行的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏 Function(value, data, node)
 
         },
