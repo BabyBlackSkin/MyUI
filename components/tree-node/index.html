@@ -5,7 +5,7 @@
     'is_loading':$ctrl.data.load === 2
     }"
 >
-    <div class="mob-tree-node-content" ng-click="$ctrl.nodeClickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.data.level + 1) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
+    <div class="mob-tree-node-content" ng-click="$ctrl.nodeClickHandler($event)" ng-style="{'padding-left': 16 * ($ctrl.data.level) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
         <!-- icon -->
         <div class="mob-tree-node-expand" stop-bubbling>
             <mob-icon-caret-right ng-if="$ctrl.canExpand()" ng-click="$ctrl.expandIconClickHandler()"></mob-icon-caret-right>

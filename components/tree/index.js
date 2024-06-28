@@ -14,8 +14,6 @@ function controller($scope, $element, $attrs, $q) {
         if (angular.isUndefined(this.nodeKey)) {
             this.nodeKey = 'id'
         }
-        // 初始化数据
-        this.initialNodeList()
 
 
         // props默认值
@@ -39,6 +37,8 @@ function controller($scope, $element, $attrs, $q) {
 
 
     this.$postLink = function () {
+        // 初始化数据
+        this.initialNodeList()
         // 初始化事件
         this.initEvent()
         // 初始化watcher
@@ -132,9 +132,9 @@ function controller($scope, $element, $attrs, $q) {
         // 自己的子节点，将子节点的check改为自己的值
         if (angular.isDefined(parentNode.children)) {
             for (let child of parentNode.children) {
-                let childNodeStatus = this.nodeCache[this.getNodeKeyValue(child)]
-                childNodeStatus.check && childCheckNum++
-                childNodeStatus.indeterminate && childIndeterminateSize++
+                let childNode = this.nodeCache[this.getNodeKeyValue(child)]
+                childNode.check && childCheckNum++
+                childNode.indeterminate && childIndeterminateSize++
             }
         }
         // 修改父级节点的状态
@@ -191,7 +191,7 @@ function controller($scope, $element, $attrs, $q) {
                 // 遍历newValue，重新设置样式
                 if (angular.isDefined(oldValue)) {
                     let node = _that.nodeCache[oldValue]
-                    if (angular.isDefined(nodeStatus)) {
+                    if (angular.isDefined(node)) {
                         node.check = false
                         node.indeterminate = false
                     }

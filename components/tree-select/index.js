@@ -153,7 +153,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 lazy="$ctrl.lazy"
                                 attachment="$ctrl.attachment"
                                 multiple="$ctrl.multiple"
-                                load="$ctrl.load"
+                                load="$ctrl.load({opt:opt})"
                                 node-click="$ctrl.nodeClick({opt:opt})"
                                 node-collapse="$ctrl.nodeCollapse({opt:opt})"
                                 node-expand="$ctrl.nodeExpand({opt:opt})"
