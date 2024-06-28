@@ -76,6 +76,6 @@ mob-tree-node .mob-tree-node.is_loading .mob-tree-node-content mob-icon-loading 
         transform: rotate(0deg);
     }
     to {
-        transform: rotate(90deg);
+        transform: rotate(135deg);
     }
 }

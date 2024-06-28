@@ -44,9 +44,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 return
             }
             _that.data.load = 1
-            // $timeout(() => {
             _that.expand()
-            // }, 50)
         })
     }
 
@@ -57,7 +55,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.canExpand = function () {
         let isLeaf = angular.isUndefined(this.data.leaf) || this.data.leaf
         //存在子节点时，默认允许展开
-        let hasChild = this.data.children && this.data.children.length > 0
+        let hasChild = this.data.children && this.data.children.length > 0 && this.data.load !== 2
         // 是否懒加载。且未加载过
         let lazy = this.lazy && _that.data.load === 0
         // 如果包含子节点，则允许展开
@@ -103,7 +101,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             // 调用父类的
             if (angular.isFunction(this.tree.load)) {
                 let deferred = $q.defer();
-                let opt = {node: this.data, deferred: deferred, attachment: this.tree.attachment}
+                let opt = {node: this.data.node, deferred: deferred, attachment: this.tree.attachment}
                 this.tree.load({opt: opt}).then(data => {
                     if (angular.isUndefined(data) || data.length === 0) {
                         _that.data.load = 1
@@ -112,6 +110,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                     // 将节点添加到tree中
                     this.tree.parseNode(data, this.getNodeKeyValue())
                     this.data.children = data
+                    console.log("1")
                 }).catch(err => {
                     _that.data.load = 0
                 })

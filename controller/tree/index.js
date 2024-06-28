@@ -7,6 +7,7 @@ app
 
         $scope.loadTreeOne = function (opt) {
             setTimeout(function () {
+                console.log(opt)
                 if (opt.node.value === "3") {
                     opt.deferred.resolve([
                         {
@@ -92,7 +93,13 @@ app
         }
 
         $scope.treeModel3 = []
-        $scope.treeData3 = angular.copy($scope.baseTreeData)
+        $scope.treeData3 = [
+
+            {
+                label: "Level one 3",
+                value: '3',
+            }
+        ]
 
         $scope.treeModel4 = []
         $scope.treeData4 = angular.copy($scope.baseTreeData)
