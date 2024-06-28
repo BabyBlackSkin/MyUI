@@ -93,13 +93,7 @@ app
         }
 
         $scope.treeModel3 = []
-        $scope.treeData3 = [
-
-            {
-                label: "Level one 3",
-                value: '3',
-            }
-        ]
+        $scope.treeData3 = angular.copy($scope.baseTreeData)
 
         $scope.treeModel4 = []
         $scope.treeData4 = angular.copy($scope.baseTreeData)

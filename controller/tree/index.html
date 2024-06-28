@@ -3,151 +3,151 @@
     <h2>Tree 树形控件</h2>
 
 
-<!--    <div class="mob-doc content" style="position: relative">-->
-<!--        <h3>基础用法</h3>-->
-<!--        <div class="mob-demo-block">-->
+    <div class="mob-doc content" style="position: relative">
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
 
-<!--            <div class="mob-demo-example">-->
-<!--                <mob-tree data="treeData1" ng-model="treeModel1" node-key="'value'"></mob-tree>-->
-<!--            </div>-->
-<!--            <div class="meta">-->
-<!--                        <pre prism>-->
-<!--                                <code class="source-code language-markup language-js language-html language-css"-->
-<!--                                >&lt;!&ndash;-->
-<!--                                    <html>-->
-<!--                                        <mob-tree data="treeData" ng-model="treeModel" node-key="'value'"></mob-tree>-->
-<!--                                    </html>-->
-<!--                                    <script>-->
-<!--                                        $scope.treeModel = []-->
-<!--                                        $scope.treeData = [-->
-<!--                                            {-->
-<!--                                                label: "Level one 1",-->
-<!--                                                value: '1',-->
-<!--                                                leaf: false,-->
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-1",-->
-<!--                                                        value: '1-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-2",-->
-<!--                                                        value: '1-2',-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 2",-->
-<!--                                                value: '2',-->
+            <div class="mob-demo-example">
+                <mob-tree data="treeData1" ng-model="treeModel1" node-key="'value'"></mob-tree>
+            </div>
+            <div class="meta">
+                        <pre prism>
+                                <code class="source-code language-markup language-js language-html language-css"
+                                ><!--
+                                    <html>
+                                        <mob-tree data="treeData" ng-model="treeModel" node-key="'value'"></mob-tree>
+                                    </html>
+                                    <script>
+                                        $scope.treeData1 = []
+                                        $scope.treeModel1 = [
+                                            {
+                                                label: "Level one 1",
+                                                value: '1',
+                                                leaf: false,
+                                                children: [
+                                                    {
+                                                        label: "Level tow 1-1",
+                                                        value: '1-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 1-2",
+                                                        value: '1-2',
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 2",
+                                                value: '2',
 
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-1",-->
-<!--                                                        value: '2-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-2",-->
-<!--                                                        value: '2-2',-->
+                                                children: [
+                                                    {
+                                                        label: "Level tow 2-1",
+                                                        value: '2-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 2-2",
+                                                        value: '2-2',
 
-<!--                                                        children: [-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-1",-->
-<!--                                                                value: '2-2-1',-->
-<!--                                                            },-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-2",-->
-<!--                                                                value: '2-2-2',-->
-<!--                                                            }-->
-<!--                                                        ]-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 3",-->
-<!--                                                value: '3',-->
-<!--                                            }-->
-<!--                                        ]-->
-<!--                                    </script>-->
-<!--                                &ndash;&gt;</code>-->
-<!--                            </pre>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+                                                        children: [
+                                                            {
+                                                                label: "Level three 2-2-1",
+                                                                value: '2-2-1',
+                                                            },
+                                                            {
+                                                                label: "Level three 2-2-2",
+                                                                value: '2-2-2',
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 3",
+                                                value: '3',
+                                            }
+                                        ]
+                                    </script>
+                                --></code>
+                            </pre>
+            </div>
+        </div>
+    </div>
 
 
-<!--    <div class="mob-doc content" style="position: relative">-->
-<!--        <h3>可选择</h3>-->
-<!--        <p>本例还展示了动态加载节点数据的方法。</p>-->
-<!--        <div class="mob-demo-block">-->
+    <div class="mob-doc content" style="position: relative">
+        <h3>可选择</h3>
+        <p>本例还展示了动态加载节点数据的方法。</p>
+        <div class="mob-demo-block">
 
-<!--            <div class="mob-demo-example">-->
-<!--                <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true"></mob-tree>-->
-<!--            </div>-->
-<!--            <div class="meta">-->
-<!--                        <pre prism>-->
-<!--                                <code class="source-code language-markup language-js language-html language-css"-->
-<!--                                >&lt;!&ndash;-->
-<!--                                    <html>-->
-<!--                                        <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true"></mob-tree>-->
-<!--                                    </html>-->
-<!--                                    <script>-->
-<!--                                        $scope.baseTreeData = [-->
-<!--                                            {-->
-<!--                                                label: "Level one 1",-->
-<!--                                                value: '1',-->
-<!--                                                leaf: false,-->
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-1",-->
-<!--                                                        value: '1-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-2",-->
-<!--                                                        value: '1-2',-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 2",-->
-<!--                                                value: '2',-->
+            <div class="mob-demo-example">
+                <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true"></mob-tree>
+            </div>
+            <div class="meta">
+                        <pre prism>
+                                <code class="source-code language-markup language-js language-html language-css"
+                                ><!--
+                                    <html>
+                                        <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true"></mob-tree>
+                                    </html>
+                                    <script>
+                                        $scope.baseTreeData = [
+                                            {
+                                                label: "Level one 1",
+                                                value: '1',
+                                                leaf: false,
+                                                children: [
+                                                    {
+                                                        label: "Level tow 1-1",
+                                                        value: '1-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 1-2",
+                                                        value: '1-2',
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 2",
+                                                value: '2',
 
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-1",-->
-<!--                                                        value: '2-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-2",-->
-<!--                                                        value: '2-2',-->
+                                                children: [
+                                                    {
+                                                        label: "Level tow 2-1",
+                                                        value: '2-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 2-2",
+                                                        value: '2-2',
 
-<!--                                                        children: [-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-1",-->
-<!--                                                                value: '2-2-1',-->
-<!--                                                            },-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-2",-->
-<!--                                                                value: '2-2-2',-->
-<!--                                                            }-->
-<!--                                                        ]-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 3",-->
-<!--                                                value: '3',-->
-<!--                                            }-->
-<!--                                        ]-->
-<!--                                        $scope.treeModel2 = []-->
-<!--                                                $scope.treeData2Load = function (opt) {-->
-<!--                                                    opt.deferred.resolve($scope.baseTreeData)-->
-<!--                                                    return opt.deferred.promise-->
-<!--                                                }-->
-<!--                                    </script>-->
-<!--                                &ndash;&gt;</code>-->
-<!--                            </pre>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+                                                        children: [
+                                                            {
+                                                                label: "Level three 2-2-1",
+                                                                value: '2-2-1',
+                                                            },
+                                                            {
+                                                                label: "Level three 2-2-2",
+                                                                value: '2-2-2',
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 3",
+                                                value: '3',
+                                            }
+                                        ]
+                                        $scope.treeModel2 = []
+                                                $scope.treeData2Load = function (opt) {
+                                                    opt.deferred.resolve($scope.baseTreeData)
+                                                    return opt.deferred.promise
+                                                }
+                                    </script>
+                                --></code>
+                            </pre>
+            </div>
+        </div>
+    </div>
 
 
     <div class="mob-doc content" style="position: relative">
@@ -247,178 +247,177 @@
         </div>
     </div>
 
-<!--    <div class="mob-doc content" style="position: relative">-->
-<!--        <h3>多次懒加载</h3>-->
+    <div class="mob-doc content" style="position: relative">
+        <h3>多次懒加载</h3>
 
-<!--        <p class="mob-doc-desc">-->
-<!--            加载远程节点数据时，懒加载有时可能失败。 在这种情况下，可以调用 reject 以保持节点状态，并允许远程加载继续。-->
-<!--        </p>-->
-<!--        <div class="mob-demo-block">-->
+        <p class="mob-doc-desc">
+            加载远程节点数据时，懒加载有时可能失败。 在这种情况下，可以调用 reject 以保持节点状态，并允许远程加载继续。
+        </p>
+        <div class="mob-demo-block">
 
-<!--            <div class="mob-demo-example">-->
-<!--                <mob-tree data="treeData4" ng-model="treeModel4" node-key="'value'" show-checkbox="true" lazy="true"load="loadTreeTwo(opt)"></mob-tree>-->
-<!--            </div>-->
-<!--            <div class="meta">-->
-<!--                        <pre prism>-->
-<!--                                <code class="source-code language-markup language-js language-html language-css"-->
-<!--                                >&lt;!&ndash;-->
-<!--                                    <html>-->
-<!--                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeTwo(opt)"></mob-tree>-->
-<!--                                    </html>-->
-<!--                                    <script>-->
-<!--                                        $scope.loadTree = function (opt) {-->
-<!--                                            setTimeout(function () {-->
-<!--                                                if (opt.node.value === "3") {-->
-<!--                                                    opt.deferred.resolve([-->
-<!--                                                        {-->
-<!--                                                            label: "Level three 3-1",-->
-<!--                                                            value: '3-1',-->
-<!--                                                            leaf:false-->
-<!--                                                        },-->
-<!--                                                        {-->
-<!--                                                            label: "Level three 3-2",-->
-<!--                                                            value: '3-2',-->
-<!--                                                        }-->
-<!--                                                    ])-->
-<!--                                                } else {-->
-<!--                                                    opt.deferred.reject()-->
-<!--                                                }-->
-<!--                                            }, 3000)-->
-<!--                                            return opt.deferred.promise-->
-<!--                                        }-->
-<!--                                        $scope.treeModel4 = []-->
-<!--                                        $scope.treeData4 = [-->
-<!--                                            {-->
-<!--                                                label: "Level one 1",-->
-<!--                                                value: '1',-->
-<!--                                                leaf: false,-->
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-1",-->
-<!--                                                        value: '1-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-2",-->
-<!--                                                        value: '1-2',-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 2",-->
-<!--                                                value: '2',-->
+            <div class="mob-demo-example">
+                <mob-tree data="treeData4" ng-model="treeModel4" node-key="'value'" show-checkbox="true" lazy="true"load="loadTreeTwo(opt)"></mob-tree>
+            </div>
+            <div class="meta">
+                        <pre prism>
+                                <code class="source-code language-markup language-js language-html language-css"
+                                ><!--
+                                    <html>
+                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeTwo(opt)"></mob-tree>
+                                    </html>
+                                    <script>
+                                        $scope.loadTree = function (opt) {
+                                            setTimeout(function () {
+                                                if (opt.node.value === "3") {
+                                                    opt.deferred.resolve([
+                                                        {
+                                                            label: "Level three 3-1",
+                                                            value: '3-1',
+                                                            leaf:false
+                                                        },
+                                                        {
+                                                            label: "Level three 3-2",
+                                                            value: '3-2',
+                                                        }
+                                                    ])
+                                                } else {
+                                                    opt.deferred.reject()
+                                                }
+                                            }, 3000)
+                                            return opt.deferred.promise
+                                        }
+                                        $scope.treeModel4 = []
+                                        $scope.treeData4 = [
+                                            {
+                                                label: "Level one 1",
+                                                value: '1',
+                                                leaf: false,
+                                                children: [
+                                                    {
+                                                        label: "Level tow 1-1",
+                                                        value: '1-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 1-2",
+                                                        value: '1-2',
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 2",
+                                                value: '2',
 
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-1",-->
-<!--                                                        value: '2-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-2",-->
-<!--                                                        value: '2-2',-->
+                                                children: [
+                                                    {
+                                                        label: "Level tow 2-1",
+                                                        value: '2-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 2-2",
+                                                        value: '2-2',
 
-<!--                                                        children: [-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-1",-->
-<!--                                                                value: '2-2-1',-->
-<!--                                                            },-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-2",-->
-<!--                                                                value: '2-2-2',-->
-<!--                                                            }-->
-<!--                                                        ]-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 3",-->
-<!--                                                value: '3',-->
-<!--                                            }-->
-<!--                                        ]-->
-<!--                                    </script>-->
-<!--                                &ndash;&gt;</code>-->
-<!--                            </pre>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+                                                        children: [
+                                                            {
+                                                                label: "Level three 2-2-1",
+                                                                value: '2-2-1',
+                                                            },
+                                                            {
+                                                                label: "Level three 2-2-2",
+                                                                value: '2-2-2',
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 3",
+                                                value: '3',
+                                            }
+                                        ]
+                                    </script>
+                                --></code>
+                            </pre>
+            </div>
+        </div>
+    </div>
 
 
 
-<!--    <div class="mob-doc content" style="position: relative">-->
-<!--        <h3>禁用复选框</h3>-->
+    <div class="mob-doc content" style="position: relative">
+        <h3>禁用复选框</h3>
 
-<!--        <p class="mob-doc-desc">-->
-<!--            节点的复选框可以设置为禁用。-->
+        <p class="mob-doc-desc">
+            节点的复选框可以设置为禁用。
 
-<!--            在示例中，通过 disabled 设置禁用状态。 相应的复选框已禁用，不能点击。-->
-<!--        </p>-->
-<!--        <div class="mob-demo-block">-->
+            在示例中，通过 disabled 设置禁用状态。 相应的复选框已禁用，不能点击。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-tree data="treeData5" ng-model="treeModel5" node-key="'value'" show-checkbox="true"></mob-tree>
+            </div>
+            <div class="meta">
+                        <pre prism>
+                                <code class="source-code language-markup language-js language-html language-css"
+                                ><!--
+                                    <html>
+                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTree(opt)"></mob-tree>
+                                    </html>
+                                    <script>
+                                        $scope.treeModel5 = []
+                                        $scope.treeData5 = [
+                                            {
+                                                label: "Level one 1",
+                                                value: '1',
+                                                leaf: false,
+                                                children: [
+                                                    {
+                                                        label: "Level tow 1-1",
+                                                        value: '1-1',
+                                                    },
+                                                    {
+                                                        label: "Level tow 1-2",
+                                                        value: '1-2',
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 2",
+                                                value: '2',
 
-<!--            <div class="mob-demo-example">-->
-<!--                <mob-tree data="treeData5" ng-model="treeModel5" node-key="'value'" show-checkbox="true"></mob-tree>-->
-<!--            </div>-->
-<!--            <div class="meta">-->
-<!--                        <pre prism>-->
-<!--                                <code class="source-code language-markup language-js language-html language-css"-->
-<!--                                >&lt;!&ndash;-->
-<!--                                    <html>-->
-<!--                                        <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" attachment="{result:true}" load="loadTree(opt)"></mob-tree>-->
-<!--                                    </html>-->
-<!--                                    <script>-->
-<!--                                        $scope.treeModel5 = []-->
-<!--                                        $scope.treeData5 = [-->
-<!--                                            {-->
-<!--                                                label: "Level one 1",-->
-<!--                                                value: '1',-->
-<!--                                                leaf: false,-->
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-1",-->
-<!--                                                        value: '1-1',-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 1-2",-->
-<!--                                                        value: '1-2',-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 2",-->
-<!--                                                value: '2',-->
+                                                children: [
+                                                    {
+                                                        label: "Level tow 2-1",
+                                                        value: '2-1',
+                                                        disabled:true
+                                                    },
+                                                    {
+                                                        label: "Level tow 2-2",
+                                                        value: '2-2',
 
-<!--                                                children: [-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-1",-->
-<!--                                                        value: '2-1',-->
-<!--                                                        disabled:true-->
-<!--                                                    },-->
-<!--                                                    {-->
-<!--                                                        label: "Level tow 2-2",-->
-<!--                                                        value: '2-2',-->
-
-<!--                                                        children: [-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-1",-->
-<!--                                                                value: '2-2-1',-->
-<!--                                                            },-->
-<!--                                                            {-->
-<!--                                                                label: "Level three 2-2-2",-->
-<!--                                                                value: '2-2-2',-->
-<!--                                                            }-->
-<!--                                                        ]-->
-<!--                                                    }-->
-<!--                                                ]-->
-<!--                                            },-->
-<!--                                            {-->
-<!--                                                label: "Level one 3",-->
-<!--                                                value: '3',-->
-<!--                                            }-->
-<!--                                        ]-->
-<!--                                    </script>-->
-<!--                                &ndash;&gt;</code>-->
-<!--                            </pre>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+                                                        children: [
+                                                            {
+                                                                label: "Level three 2-2-1",
+                                                                value: '2-2-1',
+                                                            },
+                                                            {
+                                                                label: "Level three 2-2-2",
+                                                                value: '2-2-2',
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                label: "Level one 3",
+                                                value: '3',
+                                            }
+                                        ]
+                                    </script>
+                                --></code>
+                            </pre>
+            </div>
+        </div>
+    </div>
 
 
 </section>

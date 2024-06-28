@@ -101,7 +101,7 @@ function controller($scope, $element, $attrs, $q) {
             for (let child of node.children) {
                 let childNode = this.nodeCache[this.getNodeKeyValue(child)]
                 childNode.check = node.check
-                if (syncNgModel) {
+                if (syncNgModel && (angular.isUndefined(childNode.disabled) || !childNode.disabled)) {
                     if (childNode.check) {
                         _that.pushInNgModel(childNode.node[_that.nodeKey])
                     } else {
