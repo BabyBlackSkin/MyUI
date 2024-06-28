@@ -4,7 +4,7 @@
         'is_disabled':$ctrl.ngDisabled,
     }"
     ng-click="$ctrl.clickHandle()">
-    <mob-tree-node ng-repeat="node in $ctrl.nodeList"
+    <mob-tree-node ng-repeat="node in $ctrl.data"
                    data="$ctrl.nodeCache[node[$ctrl.nodeKey]]"
                    node-key="$ctrl.nodeKey"
                    expand-on-click-node="$ctrl.expandOnClickNode"

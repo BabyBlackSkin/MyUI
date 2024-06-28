@@ -1,11 +1,9 @@
-function controller($scope, $element, $attrs) {
+function controller($scope, $element, $attrs, $q) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
         // 定义属性name，用于整个tree的事件通知
         this.name = `mobTree_${$scope.$id}`
-        // 初始化数据
-        this.initialNodeList()
         if (angular.isUndefined(this.multiple)) {
             this.multiple = true
         }
@@ -15,6 +13,18 @@ function controller($scope, $element, $attrs) {
         }
         if (angular.isUndefined(this.nodeKey)) {
             this.nodeKey = 'id'
+        }
+        // 初始化数据
+        this.initialNodeList()
+
+
+        // props默认值
+        if (angular.isUndefined(this.props)) {
+            this.props = {
+                label: "label", children: "children"
+            }
+        } else {
+            this.props = Object.assign(this.props, {label: "label", children: "children"})
         }
     }
 
@@ -197,8 +207,24 @@ function controller($scope, $element, $attrs) {
 
     this.initialNodeList = function () {
         this.nodeCache = {}// 节点缓存
-        this.nodeList = angular.copy(this.data)
-        this.parseNode(this.nodeList)
+        if (angular.isUndefined(this.data)) {
+            if (angular.isFunction(this.load)) {
+                let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
+                this.load({opt: opt}).then(data => {
+                    if (angular.isUndefined(data) || data.length === 0) {
+                        return
+                    }
+                    this.data = data
+                    // 解析节点
+                    this.parseNode(data)
+                }).catch(err => {
+                    _that.data.load = 0
+                })
+            }
+        } else {
+            // 解析节点
+            this.parseNode(this.data)
+        }
     }
 
     /**
@@ -224,7 +250,7 @@ function controller($scope, $element, $attrs) {
 
             // 判断是否
             if (angular.isUndefined(parentNodeKey)) {
-                nodeData.level = 0
+                nodeData.level = 1
             } else {
                 let parentNode = this.nodeCache[parentNodeKey].node
                 nodeData.parentNode = parentNode

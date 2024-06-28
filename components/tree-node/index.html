@@ -22,7 +22,7 @@
             ></mob-check-box>
         </div>
         <div class="mob-tree-node-label">
-            <span ng-bind="$ctrl.data.node.label"></span>
+            <span ng-bind="$ctrl.data.node[$ctrl.props['label']]"></span>
         </div>
     </div>
     <!-- 子节点 -->
@@ -31,6 +31,7 @@
                        show-checkbox="$ctrl.showCheckbox"
                        data="$ctrl.tree.nodeCache[item[$ctrl.nodeKey]]"
                        node-key="$ctrl.nodeKey"
+                       props="$ctrl.props"
                        expand-on-click-node="$ctrl.expandOnClickNode"
                        check-on-click-node="$ctrl.checkOnClickNode"
                        on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>

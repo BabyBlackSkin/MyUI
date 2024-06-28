@@ -86,6 +86,10 @@ app
 
         $scope.treeModel2 = []
         $scope.treeData2 = angular.copy($scope.baseTreeData)
+        $scope.treeData2Load = function (opt) {
+            opt.deferred.resolve($scope.baseTreeData)
+            return opt.deferred.promise
+        }
 
         $scope.treeModel3 = []
         $scope.treeData3 = angular.copy($scope.baseTreeData)

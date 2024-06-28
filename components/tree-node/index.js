@@ -15,7 +15,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             this.checkOnClickNode = false
         }
         this.lazy = this.tree.lazy
-        // 初始化每个Node下的checkBox的属性
     }
 
     this.$onChanges = function (changes) {
@@ -34,14 +33,14 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * 获取节点的key
      * @returns {*}
      */
-    this.getNodeKeyValue = function (){
-        return _that.data[_that.nodeKey]
+    this.getNodeKeyValue = function () {
+        return _that.data.node[_that.nodeKey]
     }
 
-    this.initEvent = function (){
-        $scope.$on("treeNodeRepeatFinish", function (){
+    this.initEvent = function () {
+        $scope.$on("treeNodeRepeatFinish", function () {
             // 判断是不是动态加载的回调
-            if(_that.data.load !== 2){
+            if (_that.data.load !== 2) {
                 return
             }
             _that.data.load = 1
@@ -104,9 +103,9 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             // 调用父类的
             if (angular.isFunction(this.tree.load)) {
                 let deferred = $q.defer();
-                let opt = {node: this.data, deferred: deferred, attachment:this.tree.attachment}
+                let opt = {node: this.data, deferred: deferred, attachment: this.tree.attachment}
                 this.tree.load({opt: opt}).then(data => {
-                    if(angular.isUndefined(data) || data.length === 0){
+                    if (angular.isUndefined(data) || data.length === 0) {
                         _that.data.load = 1
                         return
                     }
@@ -166,15 +165,11 @@ app
         bindings: {
             // === Props ===
             data: "=?",// 展示数据
-            nodeKey:"<?",
+            nodeKey: "<?",
             /**
              * 节点属性
              * label：节点的标签
              * children：子节点
-             * disabled：是否禁用
-             * isLeaf：是否包含叶子节点。由于在点击节点时才进行该层数据的获取，默认情况下 Tree 无法预知某个节点是否为叶子节点，
-             * 所以会为每个节点添加一个下拉按钮，如果节点没有下层数据，则点击后下拉按钮会消失。同时，你也可以提前告知
-             * Tree 某个节点是否为叶子节点，从而避免在叶子节点前渲染下拉按钮。
              *
              */
             props: "<?",//节点属性
