@@ -79,9 +79,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
             if (!_that.multiple) {
                 $scope.placeholder = data.label ? data.label : data.value
+            } else {
+                $scope.collapseTagsList.push({label: data.label, value: data.value})
             }
-            $scope.collapseTagsList.push({label: data.label, value: data.value})
-
         })
 
         // 监听optionsClick事件
