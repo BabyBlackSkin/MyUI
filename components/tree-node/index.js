@@ -2,19 +2,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        this.initial()
-    }
-
-    // 设置参数的默认值
-    this.initial = function () {
-        // 初始化参数
-        if (angular.isUndefined(this.expandOnClickNode)) {
-            this.expandOnClickNode = true
-        }
-        if (angular.isUndefined(this.checkOnClickNode)) {
-            this.checkOnClickNode = false
-        }
-        this.lazy = this.tree.lazy
     }
 
     this.$onChanges = function (changes) {
@@ -78,14 +65,12 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             let opt = {node: this.data.node,  attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
-        // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
-        if (angular.isUndefined(this.expandOnClickNode) || this.expandOnClickNode) {
-            this.canExpand() && this.expandTreeNode()
-            return
-        }
         if (this.checkOnClickNode) {
             this.changeHandler({value: !_that.data.check})
-            // return;
+        }
+        // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
+        if (this.expandOnClickNode) {
+            this.canExpand() && this.expandTreeNode()
         }
 
     }

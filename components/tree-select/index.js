@@ -2,8 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        debugger
-        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "collapseTag", "collapseTagTooltip", "showCheckbox"]
+        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "collapseTag", "collapseTagTooltip", "showCheckbox", "expandOnClickNode", "checkOnClickNode"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -39,6 +38,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         } else {
             this.props = Object.assign(this.props, {label: "label", children: "children"})
+        }
+
+        // 初始化参数
+        if (angular.isUndefined(this.expandOnClickNode)) {
+            this.expandOnClickNode = true
+        }
+        if (angular.isUndefined(this.checkOnClickNode)) {
+            this.checkOnClickNode = false
         }
     }
 
@@ -106,10 +113,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 for (let v of newV) {
                     _that.collapseTagsListUpdate(_that.optionsCache[v])
                 }
+            }else{
+                let node = _that.optionsCache[newV]
+                $scope.placeholder = angular.isDefined(node) ? node[_that.props["label"]] : _that.placeholder
             }
 
             if (angular.isFunction(_that.change)) {
-                let opt = {value: this.ngModel, attachment: this.attachment}
+                let opt = {value: _that.ngModel, attachment: _that.attachment}
                 _that.change({opt: opt})
             }
             // 反向通知group下所有的radio绑定的ngModel TODO
@@ -123,6 +133,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         this.optionsCache = {};
         this.parseOptions(this.options)
     }
+
     this.parseOptions = function (optionsList) {
         let nodeKey = angular.isDefined(this.nodeKey) ? this.nodeKey : "id"
         if (angular.isUndefined(optionsList)) {
@@ -135,6 +146,24 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 this.parseOptions(options.children)
             }
         }
+    }
+
+    this.loadNode = function (treeOpt) {
+        if (!angular.isFunction(this.load)) {
+            return
+        }
+        let deferred = $q.defer();
+        let options = {node: treeOpt.opt.node, deferred: deferred, attachment: treeOpt.opt.attachment}
+        this.load({opt: options}).then(data => {
+            if (angular.isDefined(data) && data.length > 0) {
+                _that.parseOptions(data)
+                treeOpt.opt.deferred.resolve(data)
+            }
+
+        }).catch(err => {
+            treeOpt.opt.deferred.reject()
+        })
+        return treeOpt.opt.deferred.promise
     }
 
     this.dropDownAppendToBody = function () {
@@ -153,7 +182,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 lazy="$ctrl.lazy"
                                 attachment="$ctrl.attachment"
                                 multiple="$ctrl.multiple"
-                                load="$ctrl.load({opt:opt})"
+                                expand-on-click-node="$ctrl.expandOnClickNode"
+                                check-on-click-node="$ctrl.checkOnClickNode"
+                                load="$ctrl.loadNode({opt:opt})"
                                 node-click="$ctrl.nodeClick({opt:opt})"
                                 node-collapse="$ctrl.nodeCollapse({opt:opt})"
                                 node-expand="$ctrl.nodeExpand({opt:opt})"
@@ -211,6 +242,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @param data
      */
     this.changeValueHandler = function (data) {
+
         if (this.multiple) {
             if (angular.isUndefined(this.ngModel)) {
                 this.ngModel = []
@@ -227,7 +259,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         } else {
             this.ngModel = data.value
-            $scope.placeholder = data.label ? data.label : data.value ? data.value : this.placeholder
+            let node = this.optionsCache[data.value]
+            $scope.placeholder = node[this.props["label"]]
+
         }
     }
 

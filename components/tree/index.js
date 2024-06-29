@@ -1,12 +1,12 @@
-function controller($scope, $element, $attrs, $q) {
+function controller($scope, $element, $attrs, $q, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        let abbParams = ["multiple", "lazy", "showCheckbox", "expandOnClickNode", "checkOnClickNode"]
+        attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
+
         // 定义属性name，用于整个tree的事件通知
         this.name = `mobTree_${$scope.$id}`
-        if (angular.isUndefined(this.multiple)) {
-            this.multiple = true
-        }
         // 初始化ngModel
         if (angular.isUndefined(this.ngModel) && this.multiple) {
             this.ngModel = []
@@ -23,6 +23,14 @@ function controller($scope, $element, $attrs, $q) {
             }
         } else {
             this.props = Object.assign(this.props, {label: "label", children: "children"})
+        }
+
+        // 初始化参数
+        if (angular.isUndefined(this.expandOnClickNode)) {
+            this.expandOnClickNode = true
+        }
+        if (angular.isUndefined(this.checkOnClickNode)) {
+            this.checkOnClickNode = false
         }
     }
 

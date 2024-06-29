@@ -16,7 +16,7 @@
     display: none;
     overflow: hidden;
     padding: 5px;
-    max-height: 200px;
+    max-height: var(--mob-popper-max-height) + 'px';
     opacity: 0;
     box-sizing: border-box;
     transform: scaleY(0);
@@ -37,7 +37,7 @@
 }
 .mob-popper .mob-popper__wrapper{
     width: 100%;
-    max-height: 190px;
+    max-height: calc(var(--mob-popper-max-height) - 10px);
     box-sizing: border-box;
     padding: 5px;
     background: #fff;
@@ -48,7 +48,7 @@
     font-size: 90%;
 }
 .mob-popper .mob-popper__wrapper .mob-popper__inner{
-    max-height: 180px;
+    max-height: calc(var(--mob-popper-max-height) - 20px);
     overflow: hidden;
 }
 .mob-popper .mob-popper__wrapper .mob-popper__inner::-webkit-scrollbar {

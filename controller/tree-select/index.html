@@ -5,57 +5,64 @@
     <div class="mob-doc content" style="position: relative">
 
 
-        <!--        <h3>基础用法</h3>-->
-        <!--        <div class="mob-demo-block">-->
-        <!--            <div class="mob-demo-example">-->
-        <!--                <div class="mob-demo-example-child">-->
-        <!--                    <mob-tree-select style="width: 200px;" ng-model="value" options="treeSelect.optionsBase" check-box="true"></mob-tree-select>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="meta">-->
-        <!--                <pre prism>-->
-        <!--                        <code class="source-code language-markup language-js language-html language-css"-->
-        <!--                        >&lt;!&ndash;-->
-        <!--                            <html>-->
-        <!--                                <mob-select style="width: 200px; margin-top: 20px" ng-model="value" options="select.optionsBase"></mob-select>-->
-        <!--                            </html>-->
-        <!--                            <script>-->
-        <!--                                    this.optionsBase = [-->
-        <!--                                        {label: '香港', value: '香港'},-->
-        <!--                                        {label: '澳门', value: '澳门'},-->
-        <!--                                        {label: '北京', value: '北京'},-->
-        <!--                                        {label: '上海', value: '上海'},-->
-        <!--                                        {label: '深圳'},-->
-        <!--                                    ]-->
-        <!--                            </script>-->
-        <!--                        &ndash;&gt;</code>-->
-        <!--                    </pre>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
-
         <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-tree-select style="width: 200px;" ng-model="demoValue"
+                                     check-on-click-node
+                                     options="treeSelect.optionsBase" node-key="'value'"
+                                     show-checkbox></mob-tree-select>
+                </div>
+            </div>
+            <div class="meta">
+                        <pre prism>
+                                <code class="source-code language-markup language-js language-html language-css"
+                                ><!--
+                                    <html>
+                                        <mob-select style="width: 200px; margin-top: 20px" ng-model="value" options="select.optionsBase"></mob-select>
+                                    </html>
+                                    <script>
+                                            this.optionsBase = [
+                                                {label: '香港', value: '香港'},
+                                                {label: '澳门', value: '澳门'},
+                                                {label: '北京', value: '北京'},
+                                                {label: '上海', value: '上海'},
+                                                {label: '深圳'},
+                                            ]
+                                    </script>
+                                --></code>
+                            </pre>
+            </div>
+        </div>
+
+
+        <h3>多选</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <p>{{value}}</p>
                 <div class="mob-demo-example-child">
                     <mob-tree-select style="width: 200px;" multiple="true" ng-model="value"
-                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)"
+                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)"
+                                     node-expand="nodeExpand(opt)"
                                      options="treeSelect.optionsBase" node-key="'value'"
                                      show-checkbox="true"></mob-tree-select>
 
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-tree-select style="width: 200px;" multiple="true" ng-model="value"
-                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)"
+                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)"
+                                     node-expand="nodeExpand(opt)"
                                      options="treeSelect.optionsBase" collapse-tag node-key="'value'"
                                      show-checkbox="true"></mob-tree-select>
 
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-tree-select style="width: 200px;" multiple="true" ng-model="value"
-                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)"
+                                     node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)"
+                                     node-expand="nodeExpand(opt)"
                                      options="treeSelect.optionsBase" collapse-tag collapse-tag-tooltip
+                                     check-on-click-node
                                      node-key="'value'" show-checkbox></mob-tree-select>
 
                 </div>
