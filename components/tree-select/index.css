@@ -221,6 +221,9 @@
     background-color: var(--mob-disabled-background-color);
 }
 
+.mob-tree-select.is_loading mob-icon-loading {
+    animation: mob-circle-loading 1s linear infinite;
+}
 
 /*可过滤的*/
 /*.mob-tree-select.is_filterable .mob-tree-select__selected-item.mob-tree-select__input-wrapper{*/

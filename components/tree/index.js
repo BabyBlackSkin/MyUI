@@ -2,11 +2,16 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        this.$type = "mobTree"
+        this.$attrs = $attrs
         let abbParams = ["multiple", "lazy", "showCheckbox", "expandOnClickNode", "checkOnClickNode"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 定义属性name，用于整个tree的事件通知
         this.name = `mobTree_${$scope.$id}`
+        if (angular.isUndefined(this.multiple)) {
+            this.multiple = true
+        }
         // 初始化ngModel
         if (angular.isUndefined(this.ngModel) && this.multiple) {
             this.ngModel = []
@@ -87,6 +92,32 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
                 }
             }
         })
+
+        // 判断是否懒加载
+        if (this.lazy) {
+            // 如果是包裹在select中的懒加载，则由treeSelect来决定加载的时机
+            if ($scope.$parent.$ctrl && $scope.$parent.$ctrl.$type === 'mobTreeSelect') {
+                $scope.$on(`${$scope.$parent.$ctrl.name}TreeInit`, function (event, opt) {
+                    _that.parseNode(opt.data)
+                    $scope.$emit(`${$scope.$parent.$ctrl.name}TreeInitFinish`)
+                })
+            } else {
+                // 判断是否存在data，如果不存在则load
+                if (angular.isUndefined(this.data) && angular.isFunction(this.load)) {
+                    let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
+                    this.load({opt: opt}).then(data => {
+                        if (angular.isUndefined(data) || data.length === 0) {
+                            return
+                        }
+                        // 解析节点
+                        this.parseNode(data)
+                        console.log(this.nodeList)
+                    }).catch(err => {
+                        _that.data.load = 0
+                    })
+                }
+            }
+        }
     }
 
 
@@ -134,7 +165,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             return;
         }
         // 获取父节点
-        let parentNode = this.nodeCache[this.getNodeKeyValue(node.parentNode)]
+        let parentNode = this.parentNodeCache[this.getNodeKeyValue(node.parentNode)]
         let childCheckNum = 0;
         let childIndeterminateSize = 0;
         // 自己的子节点，将子节点的check改为自己的值
@@ -215,21 +246,9 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
 
     this.initialNodeList = function () {
         this.nodeCache = {}// 节点缓存
-        if (angular.isUndefined(this.data)) {
-            if (angular.isFunction(this.load)) {
-                let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
-                this.load({opt: opt}).then(data => {
-                    if (angular.isUndefined(data) || data.length === 0) {
-                        return
-                    }
-                    this.data = data
-                    // 解析节点
-                    this.parseNode(data)
-                }).catch(err => {
-                    _that.data.load = 0
-                })
-            }
-        } else {
+        this.parentNodeCache = {} // key：节点的value，value：父节点
+        this.nodeList = []// 节点缓存
+        if (angular.isDefined(this.data)) {
             // 解析节点
             this.parseNode(this.data)
         }
@@ -245,33 +264,31 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         for (let node of nodeList) {
             let nodeKey = node[this.nodeKey]
             // 将node的缓存下来
-            let nodeData = {
-                node: node,
-                children: node.children,
-                check: false, // 节点是否选中
-                indeterminate: false,// 是否半选中
-                left: true,// 是否有叶子节点
-                expand: angular.isUndefined(this.defaultExpandAll) ? false : this.defaultExpandAll,// 是否展开
-                load: angular.isDefined(node.children) && node.children.length > 0 ? 1 : 0, // 是否需要加载
-            }
-            this.nodeCache[nodeKey] = nodeData
+            node.check = node.check || false
+            node.indeterminate = node.indeterminate || false
+            node.leaf = node.leaf || true
+            node.expand = node.expand || true
+            node.loadStatus = node.loadStatus || (angular.isDefined(node.children) && node.children.length > 0 ? 1 : 0)
+
+            this.nodeCache[nodeKey] = node
 
             // 判断是否
             if (angular.isUndefined(parentNodeKey)) {
-                nodeData.level = 1
+                node.level = 1
+                _that.nodeList.push(node)
             } else {
                 let parentNode = this.nodeCache[parentNodeKey].node
-                nodeData.parentNode = parentNode
-                nodeData.level = this.nodeCache[parentNodeKey].level + 1
+                this.parentNodeCache[nodeKey] = parentNode
+                node.level = this.nodeCache[parentNodeKey].level + 1
                 // 如果子节点的disabled状态，因跟随父节点
                 if (angular.isDefined(parentNode.disabled)) {
-                    nodeData.disabled = parentNode.disabled
+                    node.disabled = parentNode.disabled
                 }
             }
 
             // 判断是否存在子节点，如果存在构建子节点
-            if (angular.isDefined(nodeData.children) && nodeData.children.length > 0) {
-                this.parseNode(nodeData.children, nodeKey)
+            if (angular.isDefined(node.children) && node.children.length > 0) {
+                this.parseNode(node.children, nodeKey)
             }
         }
     }

@@ -2,14 +2,16 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "collapseTag", "collapseTagTooltip", "showCheckbox", "expandOnClickNode", "checkOnClickNode"]
+        this.$type = "mobTreeSelect"
+        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "multiple", "collapseTag", "collapseTagTooltip", "lazy",  "expandOnClickNode", "checkOnClickNode"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
         if (angular.isUndefined(this.multiple)) {
             this.multiple = false
             this.ngModel = ''
-        } else {
+        }
+        else {
             if (this.multiple) {
                 this.ngModel = []
             }
@@ -36,7 +38,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             this.props = {
                 label: "label", children: "children"
             }
-        } else {
+        }
+        else {
             this.props = Object.assign(this.props, {label: "label", children: "children"})
         }
 
@@ -47,6 +50,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (angular.isUndefined(this.checkOnClickNode)) {
             this.checkOnClickNode = false
         }
+        // 加载状态
+        this.loadStatus = this.lazy ? 0 : 1;
     }
 
     this.$onChanges = function (changes) {
@@ -83,7 +88,36 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initEvent = function () {
 
         $scope.$popper['selectDrown'].focus = async function () {
-            return !_that.ngDisabled
+            // 被禁用时，不显示下拉框
+            if (_that.ngDisabled) {
+                return false
+            }
+            // 已经加载了，直接返回
+            if (_that.loadStatus === 1) {
+                return true
+            }
+            // 开始加载
+            // 状态改为加载中
+            _that.loadStatus = 2;
+            // 定义promise
+            let loadDeferred = $q.defer();
+            let deferred = $q.defer();
+            let opt = {node: {level: 0}, deferred: deferred, attachment: _that.attachment}
+            _that.loadNode({opt: opt}).then(data => {
+                // 监听tree初始化完成
+                $scope.$on(`${_that.name}TreeInitFinish`, function () {
+                    $timeout(function () {
+                        _that.loadStatus = 1;
+                        loadDeferred.resolve(true)
+                    }, 100)
+                })
+                // 通知tree解析节点
+                $scope.$broadcast(`${_that.name}TreeInit`, {data: data})
+            }).catch(err => {
+                _that.loadStatus = 0;
+                loadDeferred.resolve(false)
+            })
+            return loadDeferred.promise
         }
 
         // 标签工具集
@@ -113,7 +147,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 for (let v of newV) {
                     _that.collapseTagsListUpdate(_that.optionsCache[v])
                 }
-            }else{
+            }
+            else {
                 let node = _that.optionsCache[newV]
                 $scope.placeholder = angular.isDefined(node) ? node[_that.props["label"]] : _that.placeholder
             }
@@ -129,8 +164,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     /**
      * 一维化tree
      */
-    this.initOptionsCache = function (){
+    this.initOptionsCache = function (optionsList) {
         this.optionsCache = {};
+        this.options = optionsList || this.options
         this.parseOptions(this.options)
     }
 
@@ -147,19 +183,28 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         }
     }
-
+    /**
+     * 加载load
+     * @param treeOpt
+     * @returns {*}
+     */
     this.loadNode = function (treeOpt) {
-        if (!angular.isFunction(this.load)) {
-            return
+        // 是否定义了load方法
+        if (angular.isUndefined($attrs.load)) {
+            treeOpt.opt.deferred.reject()
+            return treeOpt.opt.deferred.promise
         }
+
         let deferred = $q.defer();
         let options = {node: treeOpt.opt.node, deferred: deferred, attachment: treeOpt.opt.attachment}
         this.load({opt: options}).then(data => {
             if (angular.isDefined(data) && data.length > 0) {
-                _that.parseOptions(data)
+                _that.initOptionsCache(data)
                 treeOpt.opt.deferred.resolve(data)
+                return
             }
-
+            // 没有数据时reject
+            treeOpt.opt.deferred.reject()
         }).catch(err => {
             treeOpt.opt.deferred.reject()
         })
@@ -178,7 +223,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 data="$ctrl.options" 
                                 node-key="$ctrl.nodeKey"
                                 props="$ctrl.props"
-                                show-checkbox="$ctrl.showCheckbox"
+                                show-checkbox="true"
                                 lazy="$ctrl.lazy"
                                 attachment="$ctrl.attachment"
                                 multiple="$ctrl.multiple"
@@ -198,7 +243,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         // 下拉框是否添加到body中
         if (this.appendToBody) {
             $document[0].body.appendChild(selectOptions)
-        } else {
+        }
+        else {
             $element[0].appendChild(selectOptions)
         }
         popperTooltipList.push(selectOptions)
@@ -222,7 +268,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             )($scope)[0]
             if (this.appendToBody) {
                 $document[0].body.appendChild(tooltip)
-            } else {
+            }
+            else {
                 $element[0].appendChild(tooltip)
             }
             popperTooltipList.push(tooltip)
@@ -249,19 +296,26 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
             if (Array.isArray(data) && data.length === 0) {
                 this.ngModel = []
-            } else {
+            }
+            else {
                 // 判断model中是否包含
                 if (this.ngModel.includes(data.value)) {
                     this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
-                } else {
+                }
+                else {
                     this.ngModel.push(data.value)
                 }
             }
-        } else {
+        }
+        else {
             this.ngModel = data.value
             let node = this.optionsCache[data.value]
-            $scope.placeholder = node[this.props["label"]]
-
+            if (angular.isDefined(node)) {
+                $scope.placeholder = node[this.props["label"]]
+            }
+            else {
+                $scope.placeholder = this.placeholder
+            }
         }
     }
 
@@ -274,12 +328,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             return
         }
         let winIndex = $scope.collapseTagsList.findIndex(obj => {
-            return obj.value === data.value
+            return obj[_that.nodeKey] === data[_that.nodeKey]
         })
         // 判断model中是否包含
         if (winIndex > -1) {
             $scope.collapseTagsList.splice(winIndex, 1)
-        } else {
+        }
+        else {
             $scope.collapseTagsList.push(data)
         }
     }
@@ -378,7 +433,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         this.focus()
         if (_that.multiple) {
             _that.changeHandler({value: []})
-        } else {
+        }
+        else {
             _that.changeHandler({value: ''})
         }
     }

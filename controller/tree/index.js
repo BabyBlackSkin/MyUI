@@ -8,7 +8,10 @@ app
         $scope.loadTreeOne = function (opt) {
             setTimeout(function () {
                 console.log(opt)
-                if (opt.node.value === "3") {
+                if (opt.node.level === 0) {
+                    opt.deferred.resolve($scope.baseTreeData)
+                }
+                else if (opt.node.value === "3") {
                     opt.deferred.resolve([
                         {
                             label: "Level three 3-1",
@@ -88,7 +91,12 @@ app
         $scope.treeModel2 = []
         $scope.treeData2 = angular.copy($scope.baseTreeData)
         $scope.treeData2Load = function (opt) {
-            opt.deferred.resolve($scope.baseTreeData)
+            debugger
+            if(!(opt.node.level === 0)){
+                opt.deferred.resolve([])
+            }else{
+                opt.deferred.resolve($scope.baseTreeData)
+            }
             return opt.deferred.promise
         }
 
@@ -101,7 +109,8 @@ app
 
         $scope.treeModel5 = []
         $scope.treeData5 = angular.copy($scope.baseTreeData)
-        $scope.treeData5[1].children[1].disabled = true
+        $scope.treeData5[1].disabled = true
+        console.log($scope.treeData5)
 
         $scope.nodeClick = function (opt) {
             console.log("nodeClick", opt)

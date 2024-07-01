@@ -80,7 +80,14 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree ng-model="treeModel2" load="treeData2Load(opt)" node-key="'value'" show-checkbox="true" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" ></mob-tree>
+                <mob-tree ng-model="treeModel2"
+                          lazy
+                          load="treeData2Load(opt)"
+                          node-key="'value'"
+                          show-checkbox="true"
+                          node-click="nodeClick(opt)"
+                          node-collapse="nodeCollapse(opt)"
+                          node-expand="nodeExpand(opt)"></mob-tree>
             </div>
             <div class="meta">
                         <pre prism>
@@ -159,7 +166,10 @@
         <div class="mob-demo-block">
 
             <div class="mob-demo-example">
-                <mob-tree data="treeData3" ng-model="treeModel3" node-key="'value'" show-checkbox="true" lazy="true" load="loadTreeOne(opt)" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" >></mob-tree>
+                <mob-tree data="treeData3"
+                          ng-model="treeModel3"
+                          node-key="'value'"
+                          show-checkbox="true" lazy="true" load="loadTreeOne(opt)" node-click="nodeClick(opt)" node-collapse="nodeCollapse(opt)" node-expand="nodeExpand(opt)" >></mob-tree>
 
             </div>
             <div class="meta">

@@ -5,6 +5,7 @@
      'is_multiple':$ctrl.multiple,
      'is_collapseTag':$ctrl.collapseTag,
      'is_filterable':$ctrl.filterable,
+     'is_loading':$ctrl.loadStatus === 2
      }"
 >
     <div class="mob-tree-select__wrapper mob_popper__target" popper-group="selectDrown" ng-click="clickHandler()">
@@ -15,23 +16,26 @@
         </div>
 
         <!-- 展示区域 -->
-        <div class="mob-tree-select__selection" >
+        <div class="mob-tree-select__selection">
 
             <!-- 多选select -->
             <!-- 合并 -->
-            <div class="mob-tree-select__selected-item__collapse-contain" ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" stop-bubbling>
-                <div class="mob-tree-select__selected-item__collapse"  ng-repeat="item in collapseTagsList">
-                    <span ng-bind="item.label"></span>
+            <div class="mob-tree-select__selected-item__collapse-contain"
+                 ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" stop-bubbling>
+                <div class="mob-tree-select__selected-item__collapse" ng-repeat="item in collapseTagsList">
+                    <span ng-bind="item[$ctrl.props['label']]"></span>
                     <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)"></mob-icon-close>
                 </div>
 
             </div>
             <!-- 合并，无工具箱 -->
-            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()" stop-bubbling>
+            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()"
+                 stop-bubbling>
                 <!-- 首个tag -->
-                <div class="mob-tree-select__selected-item__collapse" >
-                    <span ng-bind="collapseTagsList[0].label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>
+                <div class="mob-tree-select__selected-item__collapse">
+                    <span ng-bind="collapseTagsList[0][$ctrl.props['label']]"></span>
+                    <mob-icon-close class="mob-icon__close"
+                                    ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
                 <div class="mob-tree-select__selected-item__collapse" ng-if="isCollapseTagsHasRedundant()">
@@ -40,24 +44,31 @@
             </div>
 
             <!-- 合并，有工具箱 -->
-            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()" stop-bubbling>
+            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()"
+                 stop-bubbling>
                 <!-- 首个tag -->
-                <div class="mob-tree-select__selected-item__collapse" >
-                    <span ng-bind="collapseTagsList[0].label"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>
+                <div class="mob-tree-select__selected-item__collapse">
+                    <span ng-bind="collapseTagsList[0][$ctrl.props['label']]"></span>
+                    <mob-icon-close class="mob-icon__close"
+                                    ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>
                 </div>
                 <!-- 未展示tags的数量 -->
-                <div class="mob-tree-select__selected-item__collapse mob_popper__target" popper-group="tooltip"  ng-show="isCollapseTagsHasRedundant()">
+                <div class="mob-tree-select__selected-item__collapse mob_popper__target" popper-group="tooltip"
+                     ng-show="isCollapseTagsHasRedundant()">
                     <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>
 
             </div>
 
-            <div class="mob-tree-select__selected-item mob-tree-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
-                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}" class="mob-input__inner" ng-model="$ctrl.model">
+            <div class="mob-tree-select__selected-item mob-tree-select__input-wrapper"
+                 ng-class="{'is-hidden':$ctrl.filterable }">
+                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}"
+                       class="mob-input__inner custom" ng-model="$ctrl.model">
             </div>
-            <div class="mob-tree-select__selected-item mob-tree-select__filterable-input-wrapper" ng-class="{'is-hidden':!$ctrl.filterable }">
-                <input type="text" autocomplete="off" placeholder="{{placeholder}}" ng-readonly="!$ctrl.filterable"  class="mob-input__inner mob-input-filterable" ng-model="filterableText">
+            <div class="mob-tree-select__selected-item mob-tree-select__filterable-input-wrapper"
+                 ng-class="{'is-hidden':!$ctrl.filterable }">
+                <input type="text" autocomplete="off" placeholder="{{placeholder}}" ng-readonly="!$ctrl.filterable"
+                       class="mob-input__inner mob-input-filterable  custom" ng-model="filterableText">
             </div>
             <div class="mob-tree-select__selected-item mob-tree-select-placeholder" ng-if="isSpanPlaceholder()">
                 <span class="mob-unselect-text" ng-bind="placeholder"></span>
@@ -66,13 +77,16 @@
 
 
         <!-- 右侧的ICON -->
-        <div class="mob-tree-select__suffix" >
-            <span class="mob-tree-select__suffix-inner" ng-class="{'is_hide_able':showClear()}">
-                <mob-icon-down-arrow  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-icon-down-arrow>
-            </span>
+        <div class="mob-tree-select__suffix">
+                <span class="mob-tree-select__suffix-inner" ng-class="{'is_hide_able':showClear()}">
+                    <mob-icon-down-arrow class="mob-icon__down-arrow" ng-if="$ctrl.loadStatus !== 2"
+                                         ng-class="{'is_popper':popperShow}"></mob-icon-down-arrow>
+                    <mob-icon-loading ng-if="$ctrl.loadStatus === 2"></mob-icon-loading>
+                </span>
             <span class="mob-tree-select__suffix-inner mob-icon__clean" ng-if="showClear()">
-                <mob-icon-circle-close ng-class="{'is_popper':popperShow}" ng-click="clean()"></mob-icon-circle-close>
-            </span>
+                    <mob-icon-circle-close ng-class="{'is_popper':popperShow}"
+                                           ng-click="clean()"></mob-icon-circle-close>
+                </span>
         </div>
     </div>
 

@@ -57,7 +57,7 @@
 }
 /* mob组件fontsSize默认为16px */
 [class^='mob']{
-    font-size: 16px;
+    font-size: 14px;
 }
 .mob-icon svg {
     width: var(--mob-icon-size);
@@ -104,18 +104,12 @@ mob-button, mob-check-box {
     font-size: 0;
 
 }
-
-mob-time-picker, mob-select, mob-time-spinner, mob-divider {
+mob-select,mob-tree-select{
+    min-width: 200px;
+}
+mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select {
     display: block;
 }
-/*mob-select{*/
-/*    display: block;*/
-/*}*/
-mob-tree-select {
-    width: 200px;
-    display: inline-block;
-}
-
 
 .mob-scrollbar::-webkit-scrollbar {
     /* 对应纵向滚动条的宽度 */
@@ -138,4 +132,13 @@ mob-tree-select {
 
 .mob-scrollbar::-webkit-scrollbar-thumb:hover{
     background-color: #c5c7cb;
+}
+/* 动画效果 */
+@keyframes mob-circle-loading {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(90deg);
+    }
 }

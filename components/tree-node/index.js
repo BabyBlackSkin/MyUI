@@ -2,6 +2,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        this.$type = "mobTreeNode"
     }
 
     this.$onChanges = function (changes) {
@@ -27,10 +28,10 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.initEvent = function () {
         $scope.$on("treeNodeRepeatFinish", function () {
             // 判断是不是动态加载的回调
-            if (_that.data.load !== 2) {
+            if (_that.data.loadStatus !== 2) {
                 return
             }
-            _that.data.load = 1
+            _that.data.loadStatus = 1
             _that.expandOrCollapse()
         })
     }
@@ -42,11 +43,11 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.canExpand = function () {
         let isLeaf = angular.isUndefined(this.data.leaf) || this.data.leaf
         //存在子节点时，默认允许展开
-        let hasChild = this.data.children && this.data.children.length > 0 && this.data.load !== 2
+        let hasChild = this.data.children && this.data.children.length > 0 && this.data.loadStatus !== 2
         // 是否懒加载。且未加载过
-        let lazy = this.lazy && _that.data.load === 0
+        let notLoad = _that.data.loadStatus === 0
         // 如果包含子节点，则允许展开
-        return isLeaf && (lazy || hasChild)
+        return isLeaf && (notLoad || hasChild)
     }
     /**
      * 节点checkbox的change方法
@@ -67,6 +68,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
         }
         if (this.checkOnClickNode) {
             this.changeHandler({value: !_that.data.check})
+            return
         }
         // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
         if (this.expandOnClickNode) {
@@ -98,25 +100,23 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.expandTreeNode = function (event) {
 
-        if (_that.data.load === 0) {// 未加载时，请求加载
-            this.data.load = 2
+        if (_that.data.loadStatus === 0 && angular.isDefined(this.tree.$attrs.load)) {// 未加载时，请求加载
             // 调用父类的
-            if (angular.isFunction(this.tree.load)) {
-                let deferred = $q.defer();
-                let opt = {node: this.data.node, deferred: deferred, attachment: this.tree.attachment}
-                this.tree.load({opt: opt}).then(data => {
-                    if (angular.isUndefined(data) || data.length === 0) {
-                        _that.data.load = 1
-                        return
-                    }
-                    // 将节点添加到tree中
-                    this.tree.parseNode(data, this.getNodeKeyValue())
-                    this.data.children = data
-                    console.log("1")
-                }).catch(err => {
-                    _that.data.load = 0
-                })
-            }
+            this.data.loadStatus = 2
+            let deferred = $q.defer();
+            let opt = {node: this.data.node, deferred: deferred, attachment: this.tree.attachment}
+            this.tree.load({opt: opt}).then(data => {
+                if (angular.isUndefined(data) || data.length === 0) {
+                    _that.data.loadStatus = 1
+                    return
+                }
+                // 将节点添加到tree中
+                this.tree.parseNode(data, this.getNodeKeyValue())
+                this.data.children = data
+            }).catch(err => {
+                _that.data.loadStatus = 0
+            })
+
             return;
         }
         this.expandOrCollapse()
@@ -125,11 +125,13 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * 展开节点
      */
     this.expandOrCollapse = function () {
+        let isExpand = _that.data.expand ? 1 : 0
+        _that.data.expand = !_that.data.expand;
         if (angular.isUndefined(this.data.children) || this.data.children.length === 0) {
             return
         }
         let childContent = $element[0].querySelector('.mob-tree-node-children')
-        if (_that.data.expand) {
+        if (isExpand === 1) {
 
             if (angular.isFunction(this.tree.nodeExpand)) {
                 let opt = {node:_that.data.node, attachment: this.tree.attachment}
@@ -163,7 +165,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 childContent.style.height = 'auto'
             }, 300)
         }
-        _that.data.expand = !_that.data.expand;
     }
 }
 

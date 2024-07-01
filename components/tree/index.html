@@ -1,10 +1,10 @@
 <div
-    class="mob-tree"
-    ng-class="{
+        class="mob-tree"
+        ng-class="{
         'is_disabled':$ctrl.ngDisabled,
     }"
-    ng-click="$ctrl.clickHandle()">
-    <mob-tree-node ng-repeat="node in $ctrl.data"
+        ng-click="$ctrl.clickHandle()">
+    <mob-tree-node ng-repeat="node in $ctrl.nodeList"
                    data="$ctrl.nodeCache[node[$ctrl.nodeKey]]"
                    node-key="$ctrl.nodeKey"
                    expand-on-click-node="$ctrl.expandOnClickNode"
