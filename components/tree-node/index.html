@@ -2,7 +2,7 @@
         class="mob-tree-node"
         ng-class="{
         'is_expand':$ctrl.data.expand,
-        'is_loading':$ctrl.data.load === 2
+        'is_loading':$ctrl.data.loadStatus === 2
         }"
 >
     <div class="mob-tree-node-content" ng-click="$ctrl.nodeClickHandler($event)"
@@ -11,7 +11,7 @@
         <div class="mob-tree-node-expand" stop-bubbling>
             <mob-icon-caret-right ng-if="$ctrl.canExpand()"
                                   ng-click="$ctrl.expandIconClickHandler()"></mob-icon-caret-right>
-            <mob-icon-loading ng-if="$ctrl.data.load === 2"></mob-icon-loading>
+            <mob-icon-loading ng-if="$ctrl.data.loadStatus === 2"></mob-icon-loading>
         </div>
         <!-- checkBox -->
         <div class="mob-tree-node-operate" stop-bubbling>
@@ -24,14 +24,14 @@
             ></mob-check-box>
         </div>
         <div class="mob-tree-node-label">
-            <span ng-bind="$ctrl.data.node[$ctrl.props['label']]"></span>
+            <span ng-bind="$ctrl.data[$ctrl.props['label']]"></span>
         </div>
     </div>
     <!-- 子节点 -->
     <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
-        <mob-tree-node ng-repeat="item in $ctrl.data.children"
+        <mob-tree-node ng-repeat="node in $ctrl.data.children"
                        show-checkbox="$ctrl.showCheckbox"
-                       data="$ctrl.tree.nodeCache[item[$ctrl.nodeKey]]"
+                       data="node"
                        node-key="$ctrl.nodeKey"
                        props="$ctrl.props"
                        expand-on-click-node="$ctrl.expandOnClickNode"

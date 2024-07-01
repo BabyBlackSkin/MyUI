@@ -142,9 +142,9 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
                 childNode.check = node.check
                 if (syncNgModel && (angular.isUndefined(childNode.disabled) || !childNode.disabled)) {
                     if (childNode.check) {
-                        _that.pushInNgModel(childNode.node[_that.nodeKey])
+                        _that.pushInNgModel(childNode[_that.nodeKey])
                     } else {
-                        _that.removeFromNgModel(childNode.node[_that.nodeKey])
+                        _that.removeFromNgModel(childNode[_that.nodeKey])
                     }
                 }
                 // 继续往下找
@@ -267,7 +267,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             node.check = node.check || false
             node.indeterminate = node.indeterminate || false
             node.leaf = node.leaf || true
-            node.expand = node.expand || true
+            node.expand = node.expand || false
             node.loadStatus = node.loadStatus || (angular.isDefined(node.children) && node.children.length > 0 ? 1 : 0)
 
             this.nodeCache[nodeKey] = node
@@ -277,7 +277,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
                 node.level = 1
                 _that.nodeList.push(node)
             } else {
-                let parentNode = this.nodeCache[parentNodeKey].node
+                let parentNode = this.nodeCache[parentNodeKey]
                 this.parentNodeCache[nodeKey] = parentNode
                 node.level = this.nodeCache[parentNodeKey].level + 1
                 // 如果子节点的disabled状态，因跟随父节点

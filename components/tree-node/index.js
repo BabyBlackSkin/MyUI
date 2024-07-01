@@ -22,7 +22,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * @returns {*}
      */
     this.getNodeKeyValue = function () {
-        return _that.data.node[_that.nodeKey]
+        return _that.data[_that.nodeKey]
     }
 
     this.initEvent = function () {
@@ -55,7 +55,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
     this.changeHandler = function (opt) {
         // 是不是通知给tree，由tree来修改？
         let {value} = opt
-        $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey: _that.data.node[_that.nodeKey], checked: value})
+        $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey: _that.data[_that.nodeKey], checked: value})
     }
 
     /**
@@ -63,7 +63,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.nodeClickHandler = function () {
         if (angular.isFunction(this.tree.nodeClick)) {
-            let opt = {node: this.data.node,  attachment: this.tree.attachment}
+            let opt = {node: this.data,  attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
         if (this.checkOnClickNode) {
@@ -81,7 +81,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.expandIconClickHandler = function () {
         if (angular.isFunction(this.tree.nodeClick)) {
-            let opt = {node: this.data.node, attachment: this.tree.attachment}
+            let opt = {node: this.data, attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
         this.expandTreeNode()
@@ -91,7 +91,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.checkBoxClickHandler = function () {
         if (angular.isFunction(this.tree.nodeClick)) {
-            let opt = {node: this.data.node, attachment: this.tree.attachment}
+            let opt = {node: this.data, attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
     }
@@ -104,7 +104,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             // 调用父类的
             this.data.loadStatus = 2
             let deferred = $q.defer();
-            let opt = {node: this.data.node, deferred: deferred, attachment: this.tree.attachment}
+            let opt = {node: this.data, deferred: deferred, attachment: this.tree.attachment}
             this.tree.load({opt: opt}).then(data => {
                 if (angular.isUndefined(data) || data.length === 0) {
                     _that.data.loadStatus = 1
@@ -150,7 +150,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
 
         } else {
             if (angular.isFunction(this.tree.nodeCollapse)) {
-                let opt = {node: _that.data.node, attachment: this.tree.attachment}
+                let opt = {node: _that.data, attachment: this.tree.attachment}
                 this.tree.nodeExpand({opt: opt})
             }
             childContent.style.display = 'block'
