@@ -268,7 +268,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             node.indeterminate = node.indeterminate || false
             node.leaf = node.leaf || true
             node.expand = node.expand || false
-            node.loadStatus = angular.isDefined(node.children) && node.children.length > 0 ? 1 :0;
+            node.loadStatus = node.loadStatus || angular.isDefined(node.children) && node.children.length > 0 ? 1 :0;
 
             this.nodeCache[nodeKey] = node
 
