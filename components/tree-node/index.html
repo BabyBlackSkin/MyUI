@@ -8,14 +8,15 @@
     <div class="mob-tree-node-content" ng-click="$ctrl.nodeClickHandler($event)"
          ng-style="{'padding-left': 16 * ($ctrl.data.level) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
         <!-- icon -->
-        <div class="mob-tree-node-expand" stop-bubbling>
+        <div class="mob-tree-node-expand">
             <mob-icon-caret-right ng-if="$ctrl.canExpand()"
-                                  ng-click="$ctrl.expandIconClickHandler()"></mob-icon-caret-right>
-            <mob-icon-loading ng-if="$ctrl.data.loadStatus === 2"></mob-icon-loading>
+                                  ng-click="$ctrl.expandIconClickHandler()" stop-bubbling></mob-icon-caret-right>
+            <mob-icon-loading ng-if="$ctrl.data.loadStatus === 2" stop-bubbling></mob-icon-loading>
         </div>
         <!-- checkBox -->
-        <div class="mob-tree-node-operate" stop-bubbling>
-            <mob-check-box ng-if="$ctrl.showCheckbox"
+        <div class="mob-tree-node-operate">
+            <mob-check-box  stop-bubbling
+                    ng-if="$ctrl.showCheckbox"
                            ng-model="$ctrl.data.check"
                            indeterminate="$ctrl.data.indeterminate"
                            change="$ctrl.changeHandler(opt)"

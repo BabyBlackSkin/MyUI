@@ -67,6 +67,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $(`${_that.name}_mob-tree-select-tag-popper`).remove()
     }
 
+    this.getAttrs = function (key){
+        return $attrs[key]
+    }
 
     this.$postLink = function () {
 
@@ -91,6 +94,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             // 被禁用时，不显示下拉框
             if (_that.ngDisabled) {
                 return false
+            }
+            // 未定义加载方法
+            if (angular.isUndefined($attrs.load)) {
+                return true
             }
             // 已经加载了，直接返回
             if (_that.loadStatus === 1) {
@@ -191,7 +198,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.loadNode = function (treeOpt) {
         // 是否定义了load方法
         if (angular.isUndefined($attrs.load)) {
-            treeOpt.opt.deferred.reject()
+            treeOpt.opt.deferred.resolve()
             return treeOpt.opt.deferred.promise
         }
 
