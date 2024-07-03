@@ -103,28 +103,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (_that.loadStatus === 1) {
                 return true
             }
-            // 开始加载
-            // 状态改为加载中
-            _that.loadStatus = 2;
-            // 定义promise
-            let loadDeferred = $q.defer();
-            let deferred = $q.defer();
-            let opt = {node: {level: 0}, deferred: deferred, attachment: _that.attachment}
-            _that.loadNode({opt: opt}).then(data => {
-                // 监听tree初始化完成
-                $scope.$on(`${_that.name}TreeInitFinish`, function () {
-                    $timeout(function () {
-                        _that.loadStatus = 1;
-                        loadDeferred.resolve(true)
-                    }, 100)
-                })
-                // 通知tree解析节点
-                $scope.$broadcast(`${_that.name}TreeInit`, {data: data})
-            }).catch(err => {
-                _that.loadStatus = 0;
-                loadDeferred.resolve(false)
-            })
-            return loadDeferred.promise
+            return _that.initLoad()
         }
 
         // 标签工具集
@@ -148,25 +127,44 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initWatcher = function () {
         $scope.$watchCollection(() => {
             return _that.ngModel
-        }, function (newV, oldV) {
-            if (_that.multiple) {
-                $scope.collapseTagsList = []
-                for (let v of newV) {
-                    _that.collapseTagsListUpdate(_that.optionsCache[v])
+        }, async function (newV, oldV) {
+            if (angular.isUndefined(newV) && angular.isUndefined(oldV)) {
+                return
+            }
+            if (Array.isArray(newV) && Array.isArray(oldV)) {
+                if (newV.length === 0 && oldV.length === 0) {
+                    return;
                 }
             }
+            // 判断当前是否已经加载了load
+            if (_that.loadStatus === 0) {
+                await _that.initLoad()
+                _that.ngModelWatchHandler(newV, oldV)
+            }
             else {
-                let node = _that.optionsCache[newV]
-                $scope.placeholder = angular.isDefined(node) ? node[_that.props["label"]] : _that.placeholder
+                _that.ngModelWatchHandler(newV, oldV)
             }
-
-            if (angular.isFunction(_that.change)) {
-                let opt = {value: _that.ngModel, attachment: _that.attachment}
-                _that.change({opt: opt})
-            }
-            // 反向通知group下所有的radio绑定的ngModel TODO
-            $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
         })
+    }
+
+    this.ngModelWatchHandler = function (newV, oldV){
+        if (this.multiple) {
+            $scope.collapseTagsList = []
+            for (let v of newV) {
+                this.collapseTagsListUpdate(v)
+            }
+        }
+        else {
+            let node = this.optionsCache[newV]
+            $scope.placeholder = angular.isDefined(node) ? node[this.props["label"]] : this.placeholder
+        }
+
+        if (angular.isDefined($attrs.change)) {
+            let opt = {value: this.ngModel, attachment: this.attachment}
+            this.change({opt: opt})
+        }
+        // 反向通知group下所有的radio绑定的ngModel TODO
+        // $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
     }
     /**
      * 一维化tree
@@ -174,7 +172,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initOptionsCache = function (optionsList) {
         this.optionsCache = {};
         this.options = optionsList || this.options
-        this.parseOptions(this.options)
+        this.parseOptions(angular.copy(this.options))
     }
 
     this.parseOptions = function (optionsList) {
@@ -189,6 +187,39 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 this.parseOptions(options.children)
             }
         }
+    }
+    /**
+     * 初始化加载
+     * @returns {*}
+     */
+    this.initLoad = function () {
+        // 开始加载
+        // 状态改为加载中
+        this.loadStatus = 2;
+        // 将tree状态更新为加载中
+        $scope.$refs.tree.$ctrl.loadStatus = 2
+        // 定义promise
+        let loadDeferred = $q.defer();
+        let deferred = $q.defer();
+        let opt = {node: {level: 0}, deferred: deferred, attachment: this.attachment}
+        this.loadNode({opt: opt}).then(data => {
+            // 监听tree初始化完成
+            $scope.$on(`${_that.name}TreeInitFinish`, function () {
+                $timeout(function () {
+                    _that.loadStatus = 1;
+                    // 将tree状态更新为加载中
+                    $scope.$refs.tree.$ctrl.loadStatus = 1
+
+                    loadDeferred.resolve(true)
+                }, 100)
+            })
+            // 通知tree解析节点
+            $scope.$broadcast(`${_that.name}TreeInit`, {data: angular.copy(data)})
+        }).catch(err => {
+            _that.loadStatus = 0;
+            loadDeferred.resolve(false)
+        })
+        return loadDeferred.promise
     }
     /**
      * 加载load
@@ -206,8 +237,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         let options = {node: treeOpt.opt.node, deferred: deferred, attachment: treeOpt.opt.attachment}
         this.load({opt: options}).then(data => {
             if (angular.isDefined(data) && data.length > 0) {
-                _that.initOptionsCache(data)
-                treeOpt.opt.deferred.resolve(data)
+                let optionsList = angular.copy(data);
+                _that.initOptionsCache(optionsList)
+                treeOpt.opt.deferred.resolve(optionsList)
                 return
             }
             // 没有数据时reject
@@ -227,6 +259,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
                             <mob-tree ng-model="$ctrl.ngModel"
+                                ng-ref="'tree'"
                                 data="$ctrl.options" 
                                 node-key="$ctrl.nodeKey"
                                 props="$ctrl.props"
@@ -260,13 +293,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-tree-select-popper mob-tree-select-tag-popper" id="${_that.name}_mob-tree-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-tree-select-popper mob-tree-select-tag-popper" id="${_that.name}_mob-tree-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip"  popper-location="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
-                            <div class="mob-tree-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
-                                <span ng-bind="item.label"></span>
-                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)" stop-bubbling></mob-icon-close>
+                            <div class="mob-tree-select__selected-item__collapse" ng-repeat="item in collapseTagsList" ng-if="!$first">
+                                <span ng-bind="item[$ctrl.props['label']]"></span>
+                                <!-- TreeSelect暂时不支持通过Tag移除 -->
+<!--                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)" stop-bubbling></mob-icon-close>-->
                             </div>
                         </div>
                     </div>
@@ -306,17 +340,17 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
             else {
                 // 判断model中是否包含
-                if (this.ngModel.includes(data.value)) {
-                    this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
+                if (this.ngModel.includes(data[this.nodeKey])) {
+                    this.ngModel.splice(this.ngModel.indexOf(this.nodeKey), 1)
                 }
                 else {
-                    this.ngModel.push(data.value)
+                    this.ngModel.push(data[this.nodeKey])
                 }
             }
         }
         else {
-            this.ngModel = data.value
-            let node = this.optionsCache[data.value]
+            this.ngModel = data[this.nodeKey]
+            let node = this.optionsCache[data[this.nodeKey]]
             if (angular.isDefined(node)) {
                 $scope.placeholder = node[this.props["label"]]
             }
@@ -326,23 +360,33 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
     }
 
-    this.collapseTagsListUpdate = function (data) {
+    /**
+     * 更新工具栏，
+     * @param nodeKey 节点的key
+     */
+    this.collapseTagsListUpdate = function (nodeKey) {
         if (!this.multiple) {
             return
         }
-        if (Array.isArray(data) && data.length === 0) {
+        if (angular.isUndefined($scope.collapseTagsList)) {
             $scope.collapseTagsList = []
             return
         }
+        // 获取node
+        let node = _that.optionsCache[nodeKey]
+        // 判断node是否存在
+        if (angular.isUndefined(node)) {
+            // 判断node是否存在
+        }
         let winIndex = $scope.collapseTagsList.findIndex(obj => {
-            return obj[_that.nodeKey] === data[_that.nodeKey]
+            return obj[_that.nodeKey] === node[_that.nodeKey]
         })
         // 判断model中是否包含
         if (winIndex > -1) {
             $scope.collapseTagsList.splice(winIndex, 1)
         }
         else {
-            $scope.collapseTagsList.push(data)
+            $scope.collapseTagsList.push(node)
         }
     }
 
@@ -439,10 +483,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.clean = function () {
         this.focus()
         if (_that.multiple) {
-            _that.changeHandler({value: []})
+            _that.changeHandler([])
         }
         else {
-            _that.changeHandler({value: ''})
+            _that.changeHandler('')
         }
     }
 

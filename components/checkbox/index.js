@@ -1,8 +1,8 @@
 function controller($scope, $element, $attrs) {
     // 初始化工作
     this.$onInit = function () {
-        if (!this.value) {
-            this.value = true
+        if (!this.checkValue) {
+            this.checkValue = true
             this.unCheckValue = false
         }
     }
@@ -24,8 +24,8 @@ function controller($scope, $element, $attrs) {
         if (!angular.isUndefined(this.checkBoxGroup) && this.checkBoxGroup !== null) {
             // 绑定model
             if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
-                let match = this.checkBoxGroup.ngModel.includes(this.value);
-                this.ngModel = match ? this.value : this.unCheckValue
+                let match = this.checkBoxGroup.ngModel.includes(this.checkValue);
+                this.ngModel = match ? this.checkValue : this.unCheckValue
             }
             // 绑定name
             $attrs.name = this.checkBoxGroup.name
@@ -34,8 +34,8 @@ function controller($scope, $element, $attrs) {
             // 监听多选框组的value的Change事件
             $scope.$on(`${$attrs.name}Change`, function (event, data) {
                 // 判断组内是否包含自己
-                let match = data.includes(_that.value)
-                _that.ngModel = match ? _that.value : _that.unCheckValue
+                let match = data.includes(_that.checkValue)
+                _that.ngModel = match ? _that.checkValue : _that.unCheckValue
             })
         }
     }
@@ -50,11 +50,11 @@ function controller($scope, $element, $attrs) {
     }
 
     this.changeHandler = function () {
-        if (this.ngModel === this.value) {
+        if (this.ngModel === this.checkValue) {
             this.ngModel = this.unCheckValue
         }
         else {
-            this.ngModel = this.value
+            this.ngModel = this.checkValue
         }
 
         if (angular.isFunction(this.change)) {
@@ -62,7 +62,7 @@ function controller($scope, $element, $attrs) {
             this.change({opt: opt})
         }
         else {
-            $scope.$emit(`${$attrs.name}ChildChange`, this.value)
+            $scope.$emit(`${$attrs.name}ChildChange`, this.checkValue)
         }
 
     }
@@ -80,7 +80,7 @@ app
             ngDisabled: '<?',
             name: '<?',
             label: '<?',
-            value: '<?',
+            checkValue: '<?',
             unCheckValue: '<?',// 未选中值
             border: '<?',
             indeterminate: '<?',

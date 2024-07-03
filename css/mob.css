@@ -20,7 +20,7 @@
     --mob-active-text-color: var(--mob-primary-color);
 
     /*背景颜色*/
-    --mob-active-text-color-light: var(--mob-primary-light-color);
+    --mob-active-text-color-light: var(--mob-primary-light-color9);
 
     --mob-text-color-placeholder: #a8abb2;
     --mob-transition-duration: .2s;

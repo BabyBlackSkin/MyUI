@@ -21,21 +21,22 @@
             <!-- 多选select -->
             <!-- 合并 -->
             <div class="mob-tree-select__selected-item__collapse-contain"
-                 ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag" stop-bubbling>
+                 ng-if="$ctrl.multiple && $ctrl.ngModel.length > 0 && !$ctrl.collapseTag">
                 <div class="mob-tree-select__selected-item__collapse" ng-repeat="item in collapseTagsList">
                     <span ng-bind="item[$ctrl.props['label']]"></span>
-                    <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)"></mob-icon-close>
+                    <!-- TreeSelect暂时不支持通过Tag移除 -->
+                    <!--                    <mob-icon-close class="mob-icon__close" stop-bubbling ng-click="collapseRemove(item)"></mob-icon-close>-->
                 </div>
 
             </div>
             <!-- 合并，无工具箱 -->
-            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()"
-                 stop-bubbling>
+            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsNoTooltip()">
                 <!-- 首个tag -->
                 <div class="mob-tree-select__selected-item__collapse">
                     <span ng-bind="collapseTagsList[0][$ctrl.props['label']]"></span>
-                    <mob-icon-close class="mob-icon__close"
-                                    ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>
+                    <!-- TreeSelect暂时不支持通过Tag移除 -->
+                    <!--                    <mob-icon-close class="mob-icon__close"-->
+                    <!--                                    ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>-->
                 </div>
                 <!-- 未展示tags的数量 -->
                 <div class="mob-tree-select__selected-item__collapse" ng-if="isCollapseTagsHasRedundant()">
@@ -44,16 +45,16 @@
             </div>
 
             <!-- 合并，有工具箱 -->
-            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()"
-                 stop-bubbling>
+            <div class="mob-tree-select__selected-item__collapse-contain" ng-show="isCollapseTagsHasTooltip()">
                 <!-- 首个tag -->
                 <div class="mob-tree-select__selected-item__collapse">
                     <span ng-bind="collapseTagsList[0][$ctrl.props['label']]"></span>
-                    <mob-icon-close class="mob-icon__close"
-                                    ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>
+                    <!-- TreeSelect暂时不支持通过Tag移除 -->
+                    <!--                    <mob-icon-close class="mob-icon__close"-->
+                    <!--                                    ng-click="collapseRemove(collapseTagsList[0])"></mob-icon-close>-->
                 </div>
                 <!-- 未展示tags的数量 -->
-                <div class="mob-tree-select__selected-item__collapse mob_popper__target" popper-group="tooltip"
+                <div class="mob-tree-select__selected-item__collapse mob_popper__target" popper-group="tooltip" stop-bubbling
                      ng-show="isCollapseTagsHasRedundant()">
                     <span ng-bind="'+' + (collapseTagsList.length - 1)"></span>
                 </div>

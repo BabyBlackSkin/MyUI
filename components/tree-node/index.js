@@ -41,13 +41,13 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * @returns boolean
      */
     this.canExpand = function () {
-        let isLeaf = angular.isUndefined(this.data.leaf) || this.data.leaf
+        let isLeaf = this.data.leaf
         //存在子节点时，默认允许展开
         let hasChild = this.data.children && this.data.children.length > 0 && this.data.loadStatus !== 2
         // 是否懒加载。且未加载过
         let notLoad = _that.data.loadStatus === 0
         // 如果包含子节点，则允许展开
-        return isLeaf && (notLoad || hasChild)
+        return isLeaf && notLoad || hasChild
     }
     /**
      * 节点checkbox的change方法
@@ -63,7 +63,7 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.nodeClickHandler = function () {
         if (angular.isFunction(this.tree.nodeClick)) {
-            let opt = {node: this.data,  attachment: this.tree.attachment}
+            let opt = {node: this.data, attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
         if (this.checkOnClickNode) {
@@ -94,6 +94,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             let opt = {node: this.data, attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
+
+        this.changeHandler({value: this.data.check})
     }
     /**
      * 展开节点

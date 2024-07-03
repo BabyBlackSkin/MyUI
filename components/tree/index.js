@@ -2,6 +2,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        debugger
         this.$type = "mobTree"
         this.$attrs = $attrs
         let abbParams = ["multiple", "lazy", "showCheckbox", "expandOnClickNode", "checkOnClickNode"]
@@ -37,6 +38,8 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         if (angular.isUndefined(this.checkOnClickNode)) {
             this.checkOnClickNode = false
         }
+        // 加载状态
+        this.loadStatus = this.lazy ? 0 : 1;
     }
 
     this.$onDestroy = function () {
@@ -99,21 +102,23 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             if ($scope.$parent.$ctrl && $scope.$parent.$ctrl.$type === 'mobTreeSelect') {
                 $scope.$on(`${$scope.$parent.$ctrl.name}TreeInit`, function (event, opt) {
                     _that.parseNode(opt.data)
+                    _that.ngModelWatchHandler(_that.ngModel)
                     $scope.$emit(`${$scope.$parent.$ctrl.name}TreeInitFinish`)
                 })
             } else {
                 // 判断是否存在data，如果不存在则load
-                if (angular.isUndefined(this.data) && angular.isFunction(this.load)) {
+                if (angular.isUndefined(this.data) && angular.isDefined($attrs.load)) {
+                    _that.loadStatus = 2
                     let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
                     this.load({opt: opt}).then(data => {
+                        _that.loadStatus = 1
                         if (angular.isUndefined(data) || data.length === 0) {
                             return
                         }
                         // 解析节点
-                        this.parseNode(data)
-                        console.log(this.nodeList)
+                        this.parseNode(angular.copy(data))
                     }).catch(err => {
-                        _that.data.load = 0
+                        _that.loadStatus = 0
                     })
                 }
             }
@@ -161,11 +166,11 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         if (angular.isUndefined(node)) {
             return;
         }
-        if (angular.isUndefined(node.parentNode)) {
+        // 获取父节点
+        let parentNode = this.parentNodeCache[this.getNodeKeyValue(node)]
+        if (angular.isUndefined(parentNode)) {
             return;
         }
-        // 获取父节点
-        let parentNode = this.parentNodeCache[this.getNodeKeyValue(node.parentNode)]
         let childCheckNum = 0;
         let childIndeterminateSize = 0;
         // 自己的子节点，将子节点的check改为自己的值
@@ -182,9 +187,9 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
 
         if (syncNgModel) {
             if (parentNode.check) {
-                _that.pushInNgModel(parentNode.node[_that.nodeKey])
+                _that.pushInNgModel(parentNode[_that.nodeKey])
             } else {
-                _that.removeFromNgModel(parentNode.node[_that.nodeKey])
+                _that.removeFromNgModel(parentNode[_that.nodeKey])
             }
         }
 
@@ -193,13 +198,11 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
     }
 
     this.pushInNgModel = function (nodeKey) {
-        console.log(nodeKey)
         let indexOf = _that.ngModel.indexOf(nodeKey);
         indexOf < 0 && _that.ngModel.push(nodeKey)
     }
 
     this.removeFromNgModel = function (nodeKey) {
-        console.log(nodeKey)
         let indexOf = _that.ngModel.indexOf(nodeKey);
         indexOf > -1 && _that.ngModel.splice(indexOf, 1)
     }
@@ -210,37 +213,67 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newValue, oldValue) {
-            // 重置所有节点的状态
-            if (angular.isDefined(_that.nodeCache)) {// 防止第一次初始化ngmodel时，nodeCache还没有初始化
-                for (let nodeKey in _that.nodeCache) {
-                    let node = _that.nodeCache[nodeKey]
+            if (_that.loadStatus === 0) {
+                // 判断是不是被嵌入到treeSelect中，如果是，则由treeSelect完成回调
+                if ($scope.$parent.$ctrl.$type === 'mobTreeSelect') {
+                    // NoThing To Do
+                    return
+                } else {
+                    _that.loadStatus = 2// 更新状态为加载中
+                    // 定于参数
+                    let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
+                    // 加载
+                    this.load({opt: opt}).then(data => {
+                        _that.loadStatus = 1;// 更新状态为加载完成
+                        if (angular.isUndefined(data) || data.length === 0) {
+                            return
+                        }
+                        // 解析节点
+                        this.parseNode(angular.copy(data))
+                        _that.ngModelWatchHandler(newValue, oldValue);
+                    }).catch(err => {
+                        // 更新状态为未加载
+                        _that.loadStatus = 0;
+                    })
+                }
+            }
+            else if (_that.loadStatus === 1) {
+                _that.ngModelWatchHandler(newValue, oldValue);
+            }
+        })
+    }
+
+    this.ngModelWatchHandler = function (newValue, oldValue){
+        // 重置所有节点的状态
+        if (angular.isDefined(this.nodeCache)) {// 防止第一次初始化ngmodel时，nodeCache还没有初始化
+            for (let nodeKey in this.nodeCache) {
+                let node = this.nodeCache[nodeKey]
+                node.check = false
+                node.indeterminate = false
+            }
+        }
+        if (this.multiple) {
+            // 遍历newValue，重新设置样式
+            for (let nodeKey of newValue) {
+                let node = this.nodeCache[nodeKey]
+                node.check = true
+                this.modifyChildNode(node, false)
+                this.modifyParentNode(node, false)
+            }
+        } else {
+            // 遍历newValue，重新设置样式
+            if (angular.isDefined(oldValue)) {
+                let node = this.nodeCache[oldValue]
+                if (angular.isDefined(node)) {
                     node.check = false
                     node.indeterminate = false
                 }
             }
-            if (_that.multiple) {
-                // 遍历newValue，重新设置样式
-                for (let nodeKey of newValue) {
-                    let node = _that.nodeCache[nodeKey]
-                    node.check = true
-                    _that.modifyChildNode(node, false)
-                    _that.modifyParentNode(node, false)
-                }
-            } else {
-                // 遍历newValue，重新设置样式
-                if (angular.isDefined(oldValue)) {
-                    let node = _that.nodeCache[oldValue]
-                    if (angular.isDefined(node)) {
-                        node.check = false
-                        node.indeterminate = false
-                    }
-                }
-                let node = _that.nodeCache[newValue]
-                if (angular.isDefined(node)) {
-                    node.check = true
-                }
+            let node = this.nodeCache[newValue]
+            if (angular.isDefined(node)) {
+                node.check = true
             }
-        })
+        }
     }
 
 
@@ -250,7 +283,8 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         this.nodeList = []// 节点缓存
         if (angular.isDefined(this.data)) {
             // 解析节点
-            this.parseNode(this.data)
+            this.parseNode(angular.copy(this.data))
+            this.loadStatus = 1
         }
     }
 
@@ -264,11 +298,11 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         for (let node of nodeList) {
             let nodeKey = node[this.nodeKey]
             // 将node的缓存下来
-            node.check = node.check || false
-            node.indeterminate = node.indeterminate || false
-            node.leaf = node.leaf || true
-            node.expand = node.expand || false
-            node.loadStatus = node.loadStatus || angular.isDefined(node.children) && node.children.length > 0 ? 1 :0;
+            node.check = angular.isDefined(node.check) ? node.check : false
+            node.indeterminate = angular.isDefined(node.indeterminate) ? node.indeterminate : false
+            node.leaf = angular.isDefined(node.leaf) ?  node.leaf : angular.isDefined($attrs.load)
+            node.expand = angular.isDefined(node.expand)? node.expand : false
+            node.loadStatus = angular.isDefined(node.loadStatus) ? node.loadStatus : angular.isDefined(node.children) && node.children.length > 0 ? 1 : 0;
 
             this.nodeCache[nodeKey] = node
 

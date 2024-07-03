@@ -75,7 +75,7 @@
 }
 
 .mob-tree-select .mob-input__inner.mob-input-filterable {
-    padding: 12px;
+    /*padding: 12px;*/
     cursor: pointer;
     color: var(--mob-text-color-placeholder);
 }
@@ -151,7 +151,7 @@
 /* 多选 */
 
 .mob-tree-select.is_multiple .mob-tree-select__wrapper{
-    padding: 4px 12px 4px 4px;
+    padding: 0 12px 0 4px
 }
 .mob-tree-select.is_multiple .mob-tree-select__selected-item.mob-tree-select-placeholder{
     padding-left: 8px;

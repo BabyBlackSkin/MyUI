@@ -3,6 +3,7 @@
         ng-class="{
         'is_disabled':$ctrl.ngDisabled,
     }"
+        refs="$ctrl.ngRef"
         ng-click="$ctrl.clickHandle()">
     <mob-tree-node ng-repeat="node in $ctrl.nodeList"
                    data="node"
