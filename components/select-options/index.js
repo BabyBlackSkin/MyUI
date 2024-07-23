@@ -50,6 +50,11 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
             }
         })
 
+        // 监听父组件的清空事件
+        $scope.$on(`${_that.mobSelect.name}Empty`, function (e, data) {
+            $scope.active = false
+        })
+
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
             // 当父组件的过滤字段是undefined时，代表无需过滤，当options是不参与匹配的options时，无需处理

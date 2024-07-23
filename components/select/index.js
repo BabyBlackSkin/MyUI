@@ -120,8 +120,17 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 let opt = {value: this.ngModel, attachment: this.attachment}
                 _that.change({opt: opt})
             }
-            // 反向通知group下所有的radio绑定的ngModel
-            $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
+
+            // 判断是否清空
+            if (angular.isUndefined(newV) || newV === null || newV.length === 0) {
+                // 通知OptionsEmpty
+                let emptyValue = _that.emptyValue()
+                $scope.$broadcast(`${_that.name}Empty`, emptyValue)
+                _that.changeHandler(emptyValue)
+            } else {
+                // 通知OptionsChange
+                $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
+            }
         })
 
         $scope.$watch(() => {
@@ -370,6 +379,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
     }
 
+    this.emptyValue = function (){
+        if (_that.multiple) {
+            return []
+        } else {
+            return ''
+        }
+    }
+
     // 是否显示清除按钮
     $scope.showClear = function () {
         return _that.clearable &&
@@ -381,11 +398,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      */
     $scope.clean = function () {
         this.focus()
-        if (_that.multiple) {
-            _that.changeHandler({value:[]})
-        } else {
-            _that.changeHandler({value:''})
-        }
+        let emptyValue = _that.emptyValue()
+        _that.changeHandler({value:emptyValue})
     }
 
     /**
