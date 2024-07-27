@@ -75,6 +75,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'Icon',
             controllerAs: 'icon',
         })
+        .when('/blog', {
+            templateUrl: './controller/blog/index.html',
+            controller: 'BlogCtrl',
+            controllerAs: 'BlogCtrl',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -94,6 +99,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
     };
 
     $rootScope.menuList = [
+        {label: 'Blog', path: '/blog'},
         {label: '实验性', path: '/experimental', tags: [{title:'experimental', type:'primary'}]},
         {label: 'Home', path: '/home'},
         {label: 'Basic', type: 1},
