@@ -1,4 +1,4 @@
-PlatformIndexApp.directive('refs', ["$parse", refs]);
+app.directive('refs', ["$parse", refs]);
 
 
 function refs($parse) {

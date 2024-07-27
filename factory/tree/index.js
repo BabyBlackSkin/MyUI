@@ -1,4 +1,4 @@
-PlatformIndexApp
+app
     .factory('Tree', ['$compile', function ($compile) {
         return {
             transformTree: function (setting, nodes) {
