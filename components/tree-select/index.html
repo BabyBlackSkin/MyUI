@@ -80,8 +80,8 @@
         <!-- 右侧的ICON -->
         <div class="mob-tree-select__suffix">
                 <span class="mob-tree-select__suffix-inner" ng-class="{'is_hide_able':showClear()}">
-                    <mob-icon-down-arrow class="mob-icon__down-arrow" ng-if="$ctrl.loadStatus !== 2"
-                                         ng-class="{'is_popper':popperShow}"></mob-icon-down-arrow>
+                    <mob-Icon-arrow-down class="mob-icon__down-arrow" ng-if="$ctrl.loadStatus !== 2"
+                                         ng-class="{'is_popper':popperShow}"></mob-Icon-arrow-down>
                     <mob-icon-loading ng-if="$ctrl.loadStatus === 2"></mob-icon-loading>
                 </span>
             <span class="mob-tree-select__suffix-inner mob-icon__clean" ng-if="showClear()">

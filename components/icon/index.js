@@ -58,8 +58,20 @@ app.component('mobIcon', {
         templateUrl: './components/icon/doubleArrowRight.html',
         controller:controller
     })
-    .component('mobIconDownArrow', {
-        templateUrl: './components/icon/downArrow.html',
+    .component('mobIconArrowDown', {
+        templateUrl: './components/icon/arrowDown.html',
+        controller:controller
+    })
+    .component('mobIconArrowLeft', {
+        templateUrl: './components/icon/arrowLeft.html',
+        controller:controller
+    })
+    .component('mobIconArrowRight', {
+        templateUrl: './components/icon/arrowRight.html',
+        controller:controller
+    })
+    .component('mobIconArrowUp', {
+        templateUrl: './components/icon/arrowUp.html',
         controller:controller
     })
     .component('mobIconIncrease', {
