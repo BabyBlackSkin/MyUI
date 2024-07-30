@@ -5,16 +5,27 @@
     --mob-primary-light-color6: #b3d8ff;
     --mob-primary-light-color9: #ecf5ff;
 
-    --mob-fill-color-light:#f5f7fa;
-    --mob-fill-color-light2: #a8abb2;
+    /* text color */
+    --mob-primary-text-color:#303133;
+    --mob-regular-text-color:#606266;
+    --mob-secondary-text-color:#909399;
+    --mob-placeholder-text-color:#A8ABB2;
+    --mob-disabled-text-color:#C0C4CC;
+
+    /*fill color*/
+    --mob-darker-fill-color:#E6E8EB;
+    --mob-dark-fill-color:#EBEDF0;
+    --mob-base-fill-color:#F0F2F5;
+    --mob-light-fill-color:#F5F7FA;
+    --mob-lighter-fill-color:#FAFAFA;
+    --mob-extra-light-fill-color:#FAFCFF;
+    --mob-blank-light-fill-color:#FFFFFF;
+    --mob-lighter-border: #EBEEF5;
 
 
     --mob-input-color: #606266;
     --mob-normal-color: #606266;
-    --mob-disabled-text-color:#c0c4cc;
     --mob-not-allow-text-color:#c0c4cc;
-    --mob-fill-color-dark:#f5f7fa;
-    --mob-active-color-dark:#f5f7fa;
 
     /*文字颜色*/
     --mob-active-text-color: var(--mob-primary-color);
@@ -22,16 +33,13 @@
     /*背景颜色*/
     --mob-active-text-color-light: var(--mob-primary-light-color9);
 
-    --mob-text-color-placeholder: #a8abb2;
     --mob-transition-duration: .2s;
-    --mob-text-backgroud-color-primary: #ffffff;
     --mob-active-fill-color: var(--mob-primary-color);
     --mob-box-shadow-light:0px 0px 12px rgba(0, 0, 0, .12);
     --mob-border-color: #dcdfe6;
     --mob-active-border-color: var(--mob-primary-color);
     --mob-not-allow-background-color:#f5f7fa;
     --mob-disabled-background-color:#f5f7fa;
-    --mob-check-box-checked-icon-color:#ffffff;
     --mob-check-box-disabled-checked-icon-color:#a8abb2;
     --mob-transition-animate: cubic-bezier(.645, .045, .355, 1);
     --mob-ui-title-color:transparent;

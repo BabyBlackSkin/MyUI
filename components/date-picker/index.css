@@ -1,0 +1,70 @@
+.mob-date-picker{
+    background-color: var(--mob-blank-light-fill-color);
+}
+.mob-date-picker>div{
+    position: relative;
+}
+.mob-date-picker>div mob-date-picker{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.mob-date-picker__header {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 5px 10px 5px;
+    border-bottom: 1px solid var(--mob-lighter-border);
+}
+
+.mob-date-picker__header .button {
+    cursor: pointer;
+}
+
+.mob-date-picker__header .button:hover {
+    color: var(--mob-primary-color)
+}
+
+.mob-date-picker__header .content {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.mob-date-picker__header .content:hover {
+    color: var(--mob-primary-color);
+    cursor: pointer;
+}
+
+.mob-date-picker__content {
+    display: grid;
+    grid-template-rows:auto auto auto;
+    grid-template-columns: 25% 25%  25%  25% ;
+    /*grid-template-rows:80px 80px 80px;*/
+    /*grid-template-columns: 60px 60px 60px 60px;*/
+}
+
+.mob-date-picker__content .cell {
+    display: flex;
+    width: 80px;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.mob-date-picker__content .cell span{
+    padding: 5px 12px;
+    border-radius: 12px;
+}
+.mob-date-picker__content .cell.today span {
+    color: var(--mob-active-text-color);
+}
+
+.mob-date-picker__content .cell.active span {
+    background-color: var(--mob-active-text-color);
+    color: white;
+}
+
+.mob-date-picker__content .cell:not(.cell.active):hover {
+    color: var(--mob-active-text-color);
+}

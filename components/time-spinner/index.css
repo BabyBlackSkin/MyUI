@@ -46,7 +46,7 @@
     color: var(--mob-disabled-text-color);
 }
 .mob-time-spinner__selection ul li:hover{
-    background-color: var(--mob-active-color-dark);
+    background-color: var(--mob-light-fill-color);
 }
 .mob-time-spinner__selection ul li {
     display: flex;

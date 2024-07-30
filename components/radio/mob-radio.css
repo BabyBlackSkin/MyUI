@@ -37,7 +37,7 @@
     border: 1px solid var(--mob-border-color);
     border-radius: 50%;
     z-index: 1;
-    
+
 }
 .mob-radio:not(.mob-radio.is_disabled):hover  .mob-radio__circ,
 .mob-radio.is_border:not(.mob-radio.is_disabled):hover .mob-radio__wrapper{
@@ -48,7 +48,7 @@
     content: '';
     display: inline-block;
     position: absolute;
-    background-color: var(--mob-fill-color-light);
+    background-color: var(--mob-light-fill-color);
     top: 50%;
     left: 50%;
     width: 4px;

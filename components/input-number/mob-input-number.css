@@ -9,7 +9,7 @@
 }
 
 .mob-input__number {
-    --mob-input-icon-color: var(--mob-text-color-placeholder)
+    --mob-input-icon-color: var(--mob-placeholder-text-color)
 }
 
 .mob-input__number .mob-input__wrapper {
@@ -100,7 +100,7 @@
 /* 插槽 */
 .mob-input__number .mob-input__slot {
     border-radius: 4px;
-    background-color: var(--mob-fill-color-light);
+    background-color: var(--mob-light-fill-color);
     display: flex;
     align-items: center;
     justify-content: center;

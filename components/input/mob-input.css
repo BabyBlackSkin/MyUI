@@ -6,7 +6,7 @@
 }
 
 .mob-input {
-    --mob-input-icon-color: var(--mob-text-color-placeholder)
+    --mob-input-icon-color: var(--mob-placeholder-text-color)
 }
 
 .mob-input .mob-input__wrapper {
@@ -138,7 +138,7 @@
 /* 插槽 */
 .mob-input .mob-input_prepend,.mob-input .mob-input_append{
     border-radius: 4px;
-    background-color: var(--mob-fill-color-light);
+    background-color: var(--mob-light-fill-color);
     display: flex;
     align-items: center;
     justify-content: center;

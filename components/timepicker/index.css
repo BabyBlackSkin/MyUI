@@ -9,7 +9,7 @@
     /* display: inline-block; */
     vertical-align: middle;
     transition: border-color var(--mob-transition-duration) cubic-bezier(.645, .045, .355, 1);
-    --mob-input-icon-color: var(--mob-text-color-placeholder)
+    --mob-input-icon-color: var(--mob-placeholder-text-color)
 }
 
 .mob-timepicker .mob-timepicker__wrapper:focus-within {
@@ -100,7 +100,7 @@
     flex-wrap: nowrap;
     height: 100%;
     text-align: center;
-    color: var(--mob-text-color-placeholder);
+    color: var(--mob-placeholder-text-color);
     transition: all var(--mob-transition-duration);
 }
 .mob-timepicker .mob-timepicker__suffix-inner{

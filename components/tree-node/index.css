@@ -40,7 +40,7 @@ mob-tree-node .mob-tree-node .mob-tree-node-content .mob-icon {
 }
 
 mob-tree-node .mob-tree-node .mob-tree-node-content mob-icon {
-    color: var(--mob-fill-color-light2);
+    color: var(--mob-placeholder-text-color);
 }
 
 

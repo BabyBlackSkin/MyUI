@@ -34,7 +34,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background-color: var(--mob-text-backgroud-color-primary);
+    background-color: var(--mob-blank-light-fill-color);
     border: 1px solid var(--mob-border-color);
     transition: all var(--mob-transition-duration) var(--mob-transition-animate);
 }
@@ -47,7 +47,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--mob-fill-color-light);
+    color: var(--mob-light-fill-color);
     position: absolute;
     top: 1.5px;
     left: 21px;

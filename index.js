@@ -80,6 +80,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'BlogCtrl',
             controllerAs: 'BlogCtrl',
         })
+        .when('/datePicker', {
+            templateUrl: './controller/date-picker/index.html',
+            controller: 'DatePicker',
+            controllerAs: 'DatePicker',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -117,6 +122,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Timepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Tree树形控件', path: '/tree'},
         {label: 'Form表单', path: '/form', tags: [{title:'developing', type:'danger'}]},
+        {label: 'DatePicker日期选择器', path: '/datePicker'},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

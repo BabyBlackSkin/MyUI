@@ -7,4 +7,8 @@ app
                 {label:'活动时间'},
             ]
         }
+
+        $scope.form = [
+            {label:'名称', }
+        ]
     }])
