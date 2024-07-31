@@ -404,7 +404,7 @@ function controller($scope, $element, $attrs) {
 }
 
 app
-    .component('mobDatePicker', {
+    .component('mobDate', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
             console.log('temp', $attrs.type === 'year')

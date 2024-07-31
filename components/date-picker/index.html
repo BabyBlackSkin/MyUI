@@ -1,14 +1,14 @@
-<div class="mob-date-picker mob-unselect-text">
-    <div class="mob-date-picker-year" ng-if="$ctrl.type == 'year'">
-        <div class="mob-date-picker__container">
-            <div class="mob-date-picker__header">
+<div class="mob-date mob-unselect-text">
+    <div class="mob-date-year" ng-if="$ctrl.type == 'year'">
+        <div class="mob-date__container">
+            <div class="mob-date__header">
                 <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
                 <p class="content">
                     <span ng-bind="startYear + ' - ' + endYear"></span>
                 </p>
                 <mob-icon-double-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-double-arrow-right>
             </div>
-            <div class="mob-date-picker__content">
+            <div class="mob-date__content">
 
                 <div class="row" ng-repeat="yGroup in options">
                     <div class="col" ng-click="$ctrl.select(year)"
@@ -21,28 +21,28 @@
         </div>
     </div>
 
-    <div class="mob-date-picker-month" ng-if="$ctrl.type == 'month'">
-        <div class="mob-date-picker__container">
-            <div class="mob-date-picker__header">
+    <div class="mob-date-month" ng-if="$ctrl.type == 'month'">
+        <div class="mob-date__container">
+            <div class="mob-date__header">
                 <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
                 <p class="content"><span ng-click="$ctrl.showYearDatePicker()" ng-bind="year"></span></p>
                 <mob-icon-double-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-double-arrow-right>
             </div>
-            <div class="mob-date-picker__content">
+            <div class="mob-date__content">
                 <div class="row" ng-repeat="mGroup in options">
                     <div class="col" ng-click="$ctrl.select(m)" ng-class="{'today':m == currentMonth,'active':month === m}" ng-repeat="m in mGroup">
                         <span ng-bind="m"></span>
                     </div>
                 </div>
             </div>
-            <mob-date-picker ng-show="$ctrl.yearDatePickerDisplay" change="$ctrl.changeYear(opt)"
-                             calendar-change="$ctrl.hideYearDatePicker(opt)" type="'year'"></mob-date-picker>
+            <mob-date ng-show="$ctrl.yearDatePickerDisplay" change="$ctrl.changeYear(opt)"
+                             calendar-change="$ctrl.hideYearDatePicker(opt)" type="'year'"></mob-date>
         </div>
     </div>
 
-    <div class="mob-date-picker-date" ng-if="$ctrl.type == 'date'">
-        <div class="mob-date-picker__container">
-            <div class="mob-date-picker__header">
+    <div class="mob-date-date" ng-if="$ctrl.type == 'date'">
+        <div class="mob-date__container">
+            <div class="mob-date__header">
                 <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
                 <mob-icon-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-arrow-left>
                 <p class="content">
@@ -52,7 +52,7 @@
                 <mob-icon-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-arrow-right>
                 <mob-icon-double-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-double-arrow-right>
             </div>
-            <div class="mob-date-picker__content">
+            <div class="mob-date__content">
                 <div class="row">
                     <div class="col">
                         <span>日</span>
@@ -85,10 +85,10 @@
                     </div>
                 </div>
             </div>
-            <mob-date-picker ng-show="$ctrl.yearDatePickerDisplay" change="$ctrl.changeYear(opt)"
-                             calendar-change="$ctrl.hideYearDatePicker(opt)" type="'year'"></mob-date-picker>
-            <mob-date-picker ng-show="$ctrl.monthDatePickerDisplay" change="$ctrl.changeMonth(opt)"
-                             calendar-change="$ctrl.hideMonthDatePicker(opt)" type="'month'"></mob-date-picker>
+            <mob-date ng-show="$ctrl.yearDatePickerDisplay" change="$ctrl.changeYear(opt)"
+                             calendar-change="$ctrl.hideYearDatePicker(opt)" type="'year'"></mob-date>
+            <mob-date ng-show="$ctrl.monthDatePickerDisplay" change="$ctrl.changeMonth(opt)"
+                             calendar-change="$ctrl.hideMonthDatePicker(opt)" type="'month'"></mob-date>
         </div>
     </div>
 </div>

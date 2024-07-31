@@ -64,7 +64,7 @@
     --mob-popper-max-height:300px;
 
     /* date-picker */
-    --mob-date-picker-off-text-color:var(--mob-placeholder-text-color)
+    --mob-date-off-text-color:var(--mob-placeholder-text-color)
 }
 /* mob组件fontsSize默认为16px */
 [class^='mob']{
@@ -118,7 +118,7 @@ mob-button, mob-check-box {
 mob-select,mob-tree-select{
     min-width: 200px;
 }
-mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select,mob-date-picker {
+mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select,mob-date {
     display: block;
 }
 

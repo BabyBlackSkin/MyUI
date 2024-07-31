@@ -1,19 +1,19 @@
-mob-date-picker, .mob-date-picker {
+mob-date, .mob-date {
     width: 320px;
     background-color: var(--mob-blank-light-fill-color);
 }
 
-.mob-date-picker > div {
+.mob-date > div {
     position: relative;
 }
 
-.mob-date-picker > div mob-date-picker {
+.mob-date > div mob-date {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-.mob-date-picker .mob-date-picker__header {
+.mob-date .mob-date__header {
     display: flex;
     position: relative;
     box-sizing: border-box;
@@ -21,37 +21,37 @@ mob-date-picker, .mob-date-picker {
     border-bottom: 1px solid var(--mob-lighter-border);
 }
 
-.mob-date-picker .mob-date-picker__header .button {
+.mob-date .mob-date__header .button {
     cursor: pointer;
 }
 
-.mob-date-picker .mob-date-picker__header .button:hover {
+.mob-date .mob-date__header .button:hover {
     color: var(--mob-primary-color)
 }
 
-.mob-date-picker .mob-date-picker__header .content {
+.mob-date .mob-date__header .content {
     flex-grow: 1;
     margin: 0;
     padding: 0;
     text-align: center;
 }
 
-.mob-date-picker .mob-date-picker__header .content span:hover {
+.mob-date .mob-date__header .content span:hover {
     color: var(--mob-primary-color);
     cursor: pointer;
 }
-.mob-date-picker .mob-date-picker__container  .mob-date-picker__content .row {
+.mob-date .mob-date__container  .mob-date__content .row {
     width: 100%;
     display: grid;;
     box-sizing: border-box;
 }
-.mob-date-picker .mob-date-picker-year > .mob-date-picker__container > .mob-date-picker__content .row ,
-.mob-date-picker .mob-date-picker-month > .mob-date-picker__container > .mob-date-picker__content  .row {
+.mob-date .mob-date-year > .mob-date__container > .mob-date__content .row ,
+.mob-date .mob-date-month > .mob-date__container > .mob-date__content  .row {
     grid-template-rows:auto auto auto;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-.mob-date-picker .mob-date-picker__content .col {
+.mob-date .mob-date__content .col {
     display: flex;
     /*width: 80px;*/
     height: 60px;
@@ -60,47 +60,47 @@ mob-date-picker, .mob-date-picker {
     cursor: pointer;
 }
 
-.mob-date-picker .mob-date-picker__content .col span {
+.mob-date .mob-date__content .col span {
     padding: 5px 12px;
     border-radius: 12px;
 }
-.mob-date-picker .mob-date-picker__content .col.prev span,.mob-date-picker .mob-date-picker__content .col.next span {
-    color: var(--mob-date-picker-off-text-color);
+.mob-date .mob-date__content .col.prev span,.mob-date .mob-date__content .col.next span {
+    color: var(--mob-date-off-text-color);
 }
 
-.mob-date-picker .mob-date-picker__content .col:not(.active,.prev,.next).today span {
+.mob-date .mob-date__content .col:not(.active,.prev,.next).today span {
     color: var(--mob-active-text-color);
 }
 
-.mob-date-picker .mob-date-picker__content .col.active span {
+.mob-date .mob-date__content .col.active span {
     background-color: var(--mob-active-text-color);
     color: white;
 }
 
-.mob-date-picker .mob-date-picker__content .col:not(.active,.prev,.next):hover {
+.mob-date .mob-date__content .col:not(.active,.prev,.next):hover {
     color: var(--mob-active-text-color);
 }
 
-/** mob-date-picker-date 样式 **/
-.mob-date-picker .mob-date-picker-date .mob-date-picker__content .col {
+/** mob-date-date 样式 **/
+.mob-date .mob-date-date .mob-date__content .col {
     width: 40px;
     height: 40px;
 }
-.mob-date-picker .mob-date-picker-date > .mob-date-picker__container > .mob-date-picker__content > .row {
+.mob-date .mob-date-date > .mob-date__container > .mob-date__content > .row {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
-.mob-date-picker .mob-date-picker-date mob-date-picker {
+.mob-date .mob-date-date mob-date {
     width: 100%;
     height: 100%;
 
 }
 
-.mob-date-picker .mob-date-picker-date .mob-date-picker__content .cell {
+.mob-date .mob-date-date .mob-date__content .cell {
     width: 100%;
 }
 
-.mob-date-picker .mob-date-picker-date .mob-date-picker__content .cell span {
+.mob-date .mob-date-date .mob-date__content .cell span {
     padding: 5px 12px;
 
 }
