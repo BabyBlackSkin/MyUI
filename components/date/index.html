@@ -44,14 +44,14 @@
     <div class="mob-date-date" ng-if="$ctrl.type == 'date'">
         <div class="mob-date__container">
             <div class="mob-date__header">
-                <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
-                <mob-icon-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-arrow-left>
+                <mob-icon-double-arrow-left ng-click="$ctrl.decreaseYear()" class="button"></mob-icon-double-arrow-left>
+                <mob-icon-arrow-left ng-click="$ctrl.decreaseMonth()" class="button"></mob-icon-arrow-left>
                 <p class="content">
                     <span ng-click="$ctrl.showYearDatePicker()" ng-bind="year"></span>
                     <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="month"></span>
                 </p>
-                <mob-icon-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-arrow-right>
-                <mob-icon-double-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-double-arrow-right>
+                <mob-icon-arrow-right ng-click="$ctrl.increaseMonth()" class="button"></mob-icon-arrow-right>
+                <mob-icon-double-arrow-right ng-click="$ctrl.increaseYear()" class="button"></mob-icon-double-arrow-right>
             </div>
             <div class="mob-date__content">
                 <div class="row">
@@ -81,10 +81,10 @@
                     <div class="col"
                          ng-click="$ctrl.select(d)"
                          ng-class="{
-                         'today':d.date == currentDate,
+                         'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
                          'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
-                         'prev prev-month':d.month < currentMonth,
-                          'next next-month':d.month > currentMonth,
+                         'prev prev-month':d.month < month,
+                          'next next-month':d.month > month,
                           'disabled':d.disabled
                           }"
                          ng-repeat="d in week">

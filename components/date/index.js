@@ -261,7 +261,7 @@ function dateController($scope, $element, $attrs) {
 
         this.renderOptions()
 
-        this.analyzeNgModelYearMonthDate()
+        this.calculateNgModelYearMonthDate()
 
     }
 
@@ -293,13 +293,12 @@ function dateController($scope, $element, $attrs) {
             }
 
             //
-            _that.analyzeNgModelYearMonthDate()
+            _that.calculateNgModelYearMonthDate()
         })
     }
 
     // 根据年份计算选项
     this.renderOptions = function () {
-        debugger
         let time = dayjs(`${$scope.year}-${$scope.month}`, "YYYY-MM")
         let  startMonth = time.startOf('month')
         let  endMonth = time.endOf('month')
@@ -389,24 +388,29 @@ function dateController($scope, $element, $attrs) {
     // 解析ngModel
     this.analyzeNgModelYearMonthDate = function () {
         if (!this.ngModel) {// 如果未定义ngModel。则year,month, date是一个永远也不可能的值
-            $scope.ngModelYear = -1;
-            $scope.ngModelMonth = -1;
-            $scope.ngModelDate = -1;
-            return
+            return [-1, -1, -1]
         }
         let ngModelArr = this.ngModel.split("-")
-        $scope.ngModelYear = Number(ngModelArr[0]);
-        $scope.ngModelMonth = Number(ngModelArr[1]);
-        $scope.ngModelDate =  Number(ngModelArr[2]);
+        return [Number(ngModelArr[0]),  Number(ngModelArr[1]), Number(ngModelArr[2])]
+    }
+    // 计算ngModelYear，ngModelMonth, ngModelDate
+    this.calculateNgModelYearMonthDate = function (){
+        let ngModeArr = this.analyzeNgModelYearMonthDate()
+        $scope.ngModelYear = ngModeArr[0];
+        $scope.ngModelMonth = ngModeArr[1]
+        $scope.ngModelDate =  ngModeArr[2]
     }
 
+
     // 增加年份
-    this.increase = function () {
-        let newDay = dayjs(`${$scope.year}-${$scope.month}`, "YYYY-MM").add(1, 'month')
+    this.increaseYear = function () {
+        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").add(1, "year")
         // 改变年份
         $scope.year = newDay.year()
         // 改变月份
         $scope.month = newDay.month() + 1
+        // 改变日期
+        $scope.date = newDay.date()
         // 同时改变年月
         $scope.yearMonth = $scope.year + "-" + $scope.month
         this.renderOptions()
@@ -414,12 +418,44 @@ function dateController($scope, $element, $attrs) {
     }
 
     // 减少年份
-    this.decrease = function () {
-        let newDay = dayjs(`${$scope.year}-${$scope.month}`, "YYYY-MM").subtract(1, 'month')
+    this.decreaseYear  = function () {
+        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").subtract(1, "year")
         // 改变年份
         $scope.year = newDay.year()
         // 改变月份
         $scope.month = newDay.month() + 1
+        // 改变日期
+        $scope.date = newDay.date()
+        // 同时改变年月
+        $scope.yearMonth = $scope.year + "-" + $scope.month
+        this.renderOptions()
+        this.panelChangeHandle()
+    }
+
+    // 增加月份
+    this.increaseMonth = function () {
+        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").add(1, "month")
+        // 改变年份
+        $scope.year = newDay.year()
+        // 改变月份
+        $scope.month = newDay.month() + 1
+        // 改变日期
+        $scope.date = newDay.date()
+        // 同时改变年月
+        $scope.yearMonth = $scope.year + "-" + $scope.month
+        this.renderOptions()
+        this.panelChangeHandle()
+    }
+
+    // 减少月份
+    this.decreaseMonth = function () {
+        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").subtract(1, "month")
+        // 改变年份
+        $scope.year = newDay.year()
+        // 改变月份
+        $scope.month = newDay.month() + 1
+        // 改变日期
+        $scope.date = newDay.date()
         // 同时改变年月
         $scope.yearMonth = $scope.year + "-" + $scope.month
         this.renderOptions()
@@ -468,6 +504,13 @@ function dateController($scope, $element, $attrs) {
 
         this.ngModel = $scope.year + "-" + $scope.month + "-" + $scope.date
         this.calendarChangeHandle()
+
+        //
+        let ngModeArr = this.analyzeNgModelYearMonthDate()
+        // 当月变化的，无需重新渲染日历
+        if (!(ngModeArr[0] === $scope.ngModelYear && ngModeArr[1] === $scope.ngModelMonth)) {
+            this.renderOptions()
+        }
     }
 
     this.hideYearDatePicker = function () {
