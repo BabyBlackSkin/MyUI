@@ -40,15 +40,23 @@ mob-date, .mob-date {
     color: var(--mob-primary-color);
     cursor: pointer;
 }
+.mob-date .mob-date__container  .mob-date__content{
+    width: 100%;
+    display: grid;
+    grid-row-gap: 10px;
+}
 .mob-date .mob-date__container  .mob-date__content .row {
     width: 100%;
-    display: grid;;
-    box-sizing: border-box;
+    display: grid;
+    /*box-sizing: border-box;*/
+    gap: 0;
+    grid-gap:0;
+    grid-column-gap:0;
 }
 .mob-date .mob-date-year > .mob-date__container > .mob-date__content .row ,
 .mob-date .mob-date-month > .mob-date__container > .mob-date__content  .row {
     grid-template-rows:auto auto auto;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .mob-date .mob-date__content .col {
@@ -61,6 +69,7 @@ mob-date, .mob-date {
 }
 
 .mob-date .mob-date__content .col span {
+    box-sizing: border-box;
     padding: 5px 12px;
     border-radius: 12px;
 }
@@ -68,26 +77,40 @@ mob-date, .mob-date {
     color: var(--mob-date-off-text-color);
 }
 
-.mob-date .mob-date__content .col:not(.active,.prev,.next).today span {
+.mob-date .mob-date__content .col:not(.disabled,.active,.prev,.next).today span {
     color: var(--mob-active-text-color);
 }
 
-.mob-date .mob-date__content .col.active span {
+.mob-date .mob-date__content .col:not(.disabled).active span {
     background-color: var(--mob-active-text-color);
     color: white;
 }
 
-.mob-date .mob-date__content .col:not(.active,.prev,.next):hover {
+.mob-date .mob-date__content .col.disabled {
+    background-color: var(--mob-light-fill-color);
+    color: var(--mob-date-off-text-color);
+    cursor: not-allowed;
+}
+
+.mob-date .mob-date__content .col:not(.disabled,.active,.prev,.next):hover {
     color: var(--mob-active-text-color);
 }
 
+
+.mob-date-date {
+    width: 100%;
+
+}
+.mob-date > div mob-date {
+    position: relative;
+}
 /** mob-date-date 样式 **/
 .mob-date .mob-date-date .mob-date__content .col {
-    width: 40px;
+    /*width: 40px;*/
     height: 40px;
 }
 .mob-date .mob-date-date > .mob-date__container > .mob-date__content > .row {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .mob-date .mob-date-date mob-date {
@@ -96,11 +119,17 @@ mob-date, .mob-date {
 
 }
 
-.mob-date .mob-date-date .mob-date__content .cell {
+.mob-date .mob-date-date > .mob-date__content .col {
     width: 100%;
 }
 
-.mob-date .mob-date-date .mob-date__content .cell span {
-    padding: 5px 12px;
-
+.mob-date .mob-date-date > .mob-date__content .col:not(.disabled) span {
+    display:inline-block;
+    text-align: center;
+    line-height: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 13px;
+    border-radius: 50%;
 }

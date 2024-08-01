@@ -30,12 +30,13 @@
             </div>
             <div class="mob-date__content">
                 <div class="row" ng-repeat="mGroup in options">
+                    <!-- 存在年份Bug -->
                     <div class="col" ng-click="$ctrl.select(m)" ng-class="{'today':m == currentMonth,'active':month === m}" ng-repeat="m in mGroup">
                         <span ng-bind="m"></span>
                     </div>
                 </div>
             </div>
-            <mob-date ng-show="$ctrl.yearDatePickerDisplay" change="$ctrl.changeYear(opt)"
+            <mob-date ng-show="$ctrl.yearDatePickerDisplay" ng-model="year" change="$ctrl.changeYear(opt)"
                              calendar-change="$ctrl.hideYearDatePicker(opt)" type="'year'"></mob-date>
         </div>
     </div>
@@ -79,15 +80,23 @@
                 <div class="row" ng-repeat="week in options">
                     <div class="col"
                          ng-click="$ctrl.select(d)"
-                         ng-class="{'today':d.date == currentDate,'active':date === d.date && d.month === month,'prev prev-month':d.month < currentMonth, 'next next-month':d.month > currentMonth}"
+                         ng-class="{
+                         'today':d.date == currentDate,
+                         'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
+                         'prev prev-month':d.month < currentMonth,
+                          'next next-month':d.month > currentMonth,
+                          'disabled':d.disabled
+                          }"
                          ng-repeat="d in week">
                         <span ng-bind="d.date"></span>
                     </div>
                 </div>
             </div>
-            <mob-date ng-show="$ctrl.yearDatePickerDisplay" change="$ctrl.changeYear(opt)"
+<!--            ng-show="$ctrl.yearDatePickerDisplay"-->
+            <mob-date change="$ctrl.changeYear(opt)" ng-model="year"
                              calendar-change="$ctrl.hideYearDatePicker(opt)" type="'year'"></mob-date>
-            <mob-date ng-show="$ctrl.monthDatePickerDisplay" change="$ctrl.changeMonth(opt)"
+<!--            ng-show="$ctrl.monthDatePickerDisplay"-->
+            <mob-date  change="$ctrl.changeMonth(opt)" ng-model="yearMonth"
                              calendar-change="$ctrl.hideMonthDatePicker(opt)" type="'month'"></mob-date>
         </div>
     </div>

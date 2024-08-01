@@ -1,4 +1,4 @@
-<section class="mob-doc content" ng-controller="DatePicker as ctrl">
+<section class="mob-doc content" ng-controller="Date as ctrl">
     <h2>DatePicker日期选择器</h2>
 
     <div class="mob-doc content">
@@ -13,9 +13,10 @@
                 <div class="mob-demo-example-child">
                     <mob-date type="'month'" ng-model="value1"></mob-date>
                 </div>
+                <p style="height: 10px;background-color: rebeccapurple"></p>
                 <p>{{value2}}</p>
                 <div class="mob-demo-example-child">
-                    <mob-date type="'date'" ng-model="value2"></mob-date>
+                    <mob-date type="'date'" ng-model="value2" disabled-date="validDate(opt)"></mob-date>
                 </div>
             </div>
         </div>
