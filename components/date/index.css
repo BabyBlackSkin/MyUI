@@ -101,9 +101,6 @@ mob-date, .mob-date {
     width: 100%;
 
 }
-.mob-date > div mob-date {
-    position: relative;
-}
 /** mob-date-date 样式 **/
 .mob-date .mob-date-date .mob-date__content .col {
     /*width: 40px;*/

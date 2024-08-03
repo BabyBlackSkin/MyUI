@@ -184,6 +184,8 @@ function monthController($scope, $element, $attrs) {
     this.increase = function () {
         let newTime = dayjs(`${$scope.year}`, "YYYY").add(1, 'year')
         $scope.year = newTime.year()
+        $scope.tempValue = angular.isUndefined($scope.tempValue) ? 1 : $scope.tempValue - 1
+        console.log($scope.year)
         this.panelChangeHandle()
     }
 
@@ -191,6 +193,8 @@ function monthController($scope, $element, $attrs) {
     this.decrease = function () {
         let newTime = dayjs(`${$scope.year}`, "YYYY").subtract(1, 'year')
         $scope.year = newTime.year()
+        $scope.tempValue = angular.isUndefined($scope.tempValue) ? 1 : $scope.tempValue - 1
+        console.log($scope.year)
         this.panelChangeHandle()
     }
 
