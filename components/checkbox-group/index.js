@@ -26,9 +26,9 @@ function controller($scope, $element, $attrs) {
     }
 
     // ngModel改变时，同时子组件
-    this.change = function () {
-        if (angular.isFunction(this.changeHandle)) {
-            this.changeHandle({value: this.ngModel})
+    this.changeHandle = function () {
+        if (angular.isFunction(this.change)) {
+            this.change({value: this.ngModel})
         }
         // 反向通知group下所有的radio绑定的ngModel
         $scope.$broadcast(`${this.name}Change`, this.ngModel)
@@ -56,7 +56,7 @@ function controller($scope, $element, $attrs) {
                     _that.ngModel.push(data);
                 }
             }
-            _that.change()
+            _that.changeHandle()
         })
     }
 
@@ -64,7 +64,7 @@ function controller($scope, $element, $attrs) {
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newValue, oldValue) {
-            _that.change()
+            _that.changeHandle()
         })
     }
 }
@@ -77,7 +77,7 @@ app
             ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
             min: '<?',
             max: '<?',
-            changeHandle: '&?'
+            change: '&?'
         },
         controller: controller
     })

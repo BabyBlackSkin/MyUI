@@ -102,7 +102,7 @@ mob-check-box * {
     border: 1px solid var(--mob-active-border-color);
 }
 
-.mob-checkbox:not(.mob-checkbox.is_disabled):not(.mob-checkbox.is_indeterminate) .mob-checkbox__original.is_active + .mob-checkbox__square::before {
+.mob-checkbox.is_active:not(.mob-checkbox.is_indeterminate) .mob-checkbox__original.is_active + .mob-checkbox__square::before {
     transform: rotate(45deg) scaleY(1);
 }
 
@@ -148,7 +148,7 @@ mob-check-box * {
     content: '';
     display: inline-block;
     position: absolute;
-    border:1px solid var(--mob-checkbox-disabled-checked-icon-color);
+    border:2px solid var(--mob-disabled-active-color);
     border-left:0;
     border-top:0;
     top: 2px;

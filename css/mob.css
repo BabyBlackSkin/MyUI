@@ -37,6 +37,7 @@
     --mob-active-fill-color: var(--mob-primary-color);
     --mob-box-shadow-light:0px 0px 12px rgba(0, 0, 0, .12);
     --mob-border-color: #dcdfe6;
+    --mob-disabled-active-color: #dcdfe6;
     --mob-active-border-color: var(--mob-primary-color);
     --mob-not-allow-background-color:#f5f7fa;
     --mob-disabled-background-color:#f5f7fa;
