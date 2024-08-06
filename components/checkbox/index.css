@@ -72,10 +72,9 @@ mob-check-box * {
     border:2px solid #FFF;
     border-left:0;
     border-top:0;
-    position: absolute;
     width: 25%;
     height: 55%;
-    bottom: 30%;
+    margin-bottom: 20%;
     transition: all var(--mob-transition-duration) ease-in;
     transform: rotate(45deg) scaleY(0);
 }
@@ -102,7 +101,7 @@ mob-check-box * {
     border: 1px solid var(--mob-active-border-color);
 }
 
-.mob-checkbox.is_active:not(.mob-checkbox.is_indeterminate) .mob-checkbox__original.is_active + .mob-checkbox__square::before {
+.mob-checkbox .mob-checkbox__original.is_active + .mob-checkbox__square::before {
     transform: rotate(45deg) scaleY(1);
 }
 
