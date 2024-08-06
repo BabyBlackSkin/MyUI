@@ -1,0 +1,29 @@
+<div class="mob-date mob-unselect-text">
+    <div class="mob-date-month">
+        <div class="mob-date__container">
+            <div class="mob-date__header">
+                <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
+                <p class="content">
+                    <span ng-click="$ctrl.showYearDatePicker()" ng-bind="year"></span>
+                    <span ng-bind="tempValue"></span>
+                </p>
+                <mob-icon-double-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-double-arrow-right>
+            </div>
+            <div class="mob-date__content">
+                <div class="row" ng-repeat="mGroup in options">
+                    <!-- 存在年份Bug -->
+                    <div class="col" ng-click="$ctrl.select(m)"
+                         ng-class="{'today':m == currentMonth,'active':month === m}" ng-repeat="m in mGroup">
+                        <span ng-bind="m"></span>
+                    </div>
+                </div>
+            </div>
+
+            <mob-date-year type="'year'"
+                      ng-show="$ctrl.yearDatePickerDisplay"
+                      ng-model="year"
+                      change="$ctrl.changeYear(opt)"
+                      calendar-change="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
+        </div>
+    </div>
+</div>
