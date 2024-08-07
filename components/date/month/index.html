@@ -5,7 +5,6 @@
                 <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
                 <p class="content">
                     <span ng-click="$ctrl.showYearDatePicker()" ng-bind="year"></span>
-                    <span ng-bind="tempValue"></span>
                 </p>
                 <mob-icon-double-arrow-right ng-click="$ctrl.increase()" class="button"></mob-icon-double-arrow-right>
             </div>
@@ -19,7 +18,7 @@
                 </div>
             </div>
 
-            <mob-date-year type="'year'"
+            <mob-date-year
                       ng-show="$ctrl.yearDatePickerDisplay"
                       ng-model="year"
                       change="$ctrl.changeYear(opt)"

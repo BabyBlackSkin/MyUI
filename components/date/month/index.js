@@ -5,8 +5,6 @@ function monthController($scope, $element, $attrs) {
     this.$onInit = function () {
         // 年份选择弹框是否显示控制
         this.yearDatePickerDisplay = false;
-        // 当前年份
-        // this.$dayjs = dayjs()
 
         $scope.$dayjs = dayjs()
         // 当前月份
@@ -44,9 +42,7 @@ function monthController($scope, $element, $attrs) {
             if (!newValue && !oldValue) {
                 return
             }
-            // if (newValue === oldValue) {
-            //     return;
-            // }
+
             if (angular.isDefined($attrs.change)) {
                 let opt = {value: newValue, attachment: this.attachment}
                 _that.change({opt: opt})
