@@ -1,9 +1,8 @@
 <div class="mob-date mob-unselect-text">
 
-    <mob-date-year ng-if="$ctrl.type == 'year'"></mob-date-year>
+    <mob-date-year ng-if="$ctrl.type == 'year'" ng-model="$ctrl.ngModel"></mob-date-year>
 
-    <mob-date-month ng-if="$ctrl.type == 'month'"></mob-date-month>
+    <mob-date-month ng-if="$ctrl.type == 'month'" ng-model="$ctrl.ngModel"></mob-date-month>
 
-
-    <mob-date-date ng-if="$ctrl.type == 'date'"></mob-date-date>
+    <mob-date-date ng-if="$ctrl.type == 'date'" ng-model="$ctrl.ngModel"></mob-date-date>
 </div>

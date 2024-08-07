@@ -191,8 +191,30 @@
 
     .main-container {
         width: calc(100% - 300px - 60px);
-        height: 100%;
         padding-left: calc(300px + 60px);
+        display: flex;
+        flex-direction: column;
+        height: 100vh
+    }
+    /*@media (min-width: 1440px) {*/
+    footer {
+        padding: 32px;
+    }
+    /*}*/
+    footer{
+        display: block !important;
+        z-index: 999;
+    }
+    footer .container{
+        margin: 0 auto;
+        max-width: 1140px;
+        text-align: center;
+    }
+    footer .message, footer .copyright{
+        line-height: 24px;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(60, 60, 67, 0.78);
     }
 </style>
 
@@ -213,8 +235,15 @@
     </div>
 
     <div class="main-container">
-        <div ng-view="" class="view-animate-container" style="height: 100%">
+        <div ng-view="" class="view-animate-container" style="flex-shrink: 0;flex-grow: 1;min-height: auto">
         </div>
+            <footer data-v-80147a0d="" data-v-8f7cd5e4="" class="VPFooter" style="z-index: 999">
+                <div data-v-80147a0d="" class="container"><p data-v-80147a0d="" class="message">
+                    <a href="https://beian.miit.gov.cn/">苏ICP备2024078001号-1</a>
+                </p>
+                    <p data-v-80147a0d="" class="copyright">Copyright © 2024-present BabyBlackSkin</p></div>
+            </footer>
+
     </div>
 </div>
 

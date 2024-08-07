@@ -558,7 +558,7 @@ function dateController($scope, $element, $attrs) {
 
 }
 
-function mobDatecontroller($scope, $element, $attrs) {
+function mobDateController($scope, $element, $attrs) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
