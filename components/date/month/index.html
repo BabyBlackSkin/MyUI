@@ -11,7 +11,7 @@
             <div class="mob-date__content">
                 <div class="row" ng-repeat="mGroup in options">
                     <!-- 存在年份Bug -->
-                    <div class="col" ng-click="$ctrl.select(m)"
+                    <div class="col" ng-click="$ctrl.calendarClickHandle(m)"
                          ng-class="{'today':m == currentMonth,'active':month === m}" ng-repeat="m in mGroup">
                         <span ng-bind="m"></span>
                     </div>

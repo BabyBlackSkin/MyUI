@@ -254,6 +254,11 @@ function dateController($scope, $element, $attrs) {
 
     // 选择日期
     this.select = function (date) {
+    }
+
+    // 日历项被点击时触发
+    this.calendarClickHandle = function (date) {
+
         if (date.disabled) {
             return
         }
@@ -274,6 +279,12 @@ function dateController($scope, $element, $attrs) {
         // 当月变化的，无需重新渲染日历
         if (!(ngModeArr[0] === $scope.ngModelYear && ngModeArr[1] === $scope.ngModelMonth)) {
             this.renderOptions()
+        }
+
+
+        if (angular.isDefined($attrs.calendarClick)) {
+            let opt = {value: this.ngModel, attachment: this.attachment}
+            _that.calendarClick({opt: opt})
         }
     }
 
@@ -330,6 +341,7 @@ app
             attachment: "<?",
             change: "&?",
             calendarChange: "&?",
+            calendarClick: "&?",
             panelChange: "&?",
             disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
         },

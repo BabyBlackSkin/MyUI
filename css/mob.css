@@ -116,7 +116,7 @@ mob-button, mob-check-box {
     font-size: 0;
 
 }
-mob-select,mob-tree-select{
+mob-select,mob-tree-select,mob-date-picker{
     min-width: 200px;
 }
 mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select,mob-date {

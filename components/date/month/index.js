@@ -89,12 +89,17 @@ function monthController($scope, $element, $attrs) {
         }
     }
 
-    // 选择月份
-    this.select = function (month) {
+    // 日历项被点击时触发
+    this.calendarClickHandle = function (month) {
         $scope.month = month
         this.ngModel = $scope.year + "-" + month
         this.calendarChangeHandle()
+        if (angular.isDefined($attrs.calendarClick)) {
+            let opt = {value: this.ngModel, attachment: this.attachment}
+            _that.calendarClick({opt: opt})
+        }
     }
+
 
     // 改变年份
     this.changeYear = function (opt) {
@@ -125,6 +130,7 @@ app
             attachment: "<?",
             change: "&?",
             calendarChange: "&?",
+            calendarClick: "&?",
             panelChange: "&?",
             disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
         },
