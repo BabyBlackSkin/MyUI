@@ -133,7 +133,8 @@ app
         },
         bindings: {
             ngModel: '=?',
-            type: "<?",// 选择器类型：year
+            type: "<?",// 选择器类型：type: string
+            shortcuts:"<?",// type: array
             attachment: "<?",
             change: "&?",
             calendarChange: "&?",

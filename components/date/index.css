@@ -45,6 +45,10 @@ mob-date, .mob-date {
     color: var(--mob-primary-color);
     cursor: pointer;
 }
+.mob-date .mob-date__container__wrapper{
+    width: 100%;
+
+}
 
 .mob-date .mob-date__container .mob-date__content {
     width: 100%;

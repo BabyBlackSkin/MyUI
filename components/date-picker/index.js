@@ -21,7 +21,41 @@ function createDatePickerSelectOptions(){
             </div>
          </div>
         `
-    }else{
+    }else if (this.type === 'date'){
+        return `
+        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
+            <div class="mob-popper__wrapper">
+                <span class="mob-popper__arrow"></span>
+                <div class="mob-popper__inner">
+                    <mob-date-date ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-date>
+                </div>
+            </div>
+         </div>
+        `
+    } else if(this.type === 'yearRange') {
+        return `
+        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
+            <div class="mob-popper__wrapper">
+                <span class="mob-popper__arrow"></span>
+                <div class="mob-popper__inner">
+                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-year>
+                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-year>
+                </div>
+            </div>
+         </div>
+        `
+    }else if(this.type === 'monthRange'){
+        return `
+        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
+            <div class="mob-popper__wrapper">
+                <span class="mob-popper__arrow"></span>
+                <div class="mob-popper__inner">
+                    <mob-date-month ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-month>
+                </div>
+            </div>
+         </div>
+        `
+    }else{ // dateRange
         return `
         <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
             <div class="mob-popper__wrapper">
