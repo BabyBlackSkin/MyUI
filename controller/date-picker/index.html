@@ -3,12 +3,20 @@
 
 
     <div class="mob-doc content">
-        <h3>年</h3>
+        <h3>年、月、日</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 值：{{yearModel}}
                 <div class="mob-demo-example-child">
-                    <mob-date-picker ng-model="yearModel"></mob-date-picker>
+                    <mob-date-picker ng-model="yearModel" type="'year'"></mob-date-picker>
+                </div>
+                值：{{monthModel}}
+                <div class="mob-demo-example-child">
+                    <mob-date-picker ng-model="monthModel" type="'month'"></mob-date-picker>
+                </div>
+                值：{{dateModel}}
+                <div class="mob-demo-example-child">
+                    <mob-date-picker ng-model="dateModel" type="'date'"></mob-date-picker>
                 </div>
             </div>
         </div>

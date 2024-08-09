@@ -7,11 +7,11 @@ mob-date, .mob-date {
     position: relative;
 }
 
-/*.mob-date > div mob-date-year,.mob-date > div mob-date-month {*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*}*/
+.mob-date > div mob-date-year,.mob-date > div mob-date-month {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
 .mob-date .mob-date__header {
     display: flex;
