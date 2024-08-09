@@ -85,6 +85,11 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'Date',
             controllerAs: 'Date',
         })
+        .when('/datePicker', {
+            templateUrl: './controller/date-picker/index.html',
+            controller: 'DatePicker',
+            controllerAs: 'DatePicker',
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
