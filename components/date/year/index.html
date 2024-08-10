@@ -2,7 +2,7 @@
     <div class="mob-date-year">
         <div class="mob-date__container__wrapper">
             <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
-                <mob-button type="'text'" ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></mob-button>
+                <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
             </div>
             <div class="mob-date__container">
                 <div class="mob-date__header">

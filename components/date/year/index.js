@@ -115,6 +115,7 @@ function yearController($scope, $element, $attrs, $date) {
 
     // shortcut点击事件
     this.shortcutClickHandle = function (shortcut) {
+        debugger
         let fullYear = $date.getFullYear(shortcut.value);
         fullYear && (this.ngModel = fullYear)
     }

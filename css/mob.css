@@ -6,26 +6,26 @@
     --mob-primary-light-color9: #ecf5ff;
 
     /* text color */
-    --mob-primary-text-color:#303133;
-    --mob-regular-text-color:#606266;
-    --mob-secondary-text-color:#909399;
-    --mob-placeholder-text-color:#A8ABB2;
-    --mob-disabled-text-color:#C0C4CC;
+    --mob-primary-text-color: #303133;
+    --mob-regular-text-color: #606266;
+    --mob-secondary-text-color: #909399;
+    --mob-placeholder-text-color: #A8ABB2;
+    --mob-disabled-text-color: #C0C4CC;
 
     /*fill color*/
-    --mob-darker-fill-color:#E6E8EB;
-    --mob-dark-fill-color:#EBEDF0;
-    --mob-base-fill-color:#F0F2F5;
-    --mob-light-fill-color:#F5F7FA;
-    --mob-lighter-fill-color:#FAFAFA;
-    --mob-extra-light-fill-color:#FAFCFF;
-    --mob-blank-light-fill-color:#FFFFFF;
+    --mob-darker-fill-color: #E6E8EB;
+    --mob-dark-fill-color: #EBEDF0;
+    --mob-base-fill-color: #F0F2F5;
+    --mob-light-fill-color: #F5F7FA;
+    --mob-lighter-fill-color: #FAFAFA;
+    --mob-extra-light-fill-color: #FAFCFF;
+    --mob-blank-light-fill-color: #FFFFFF;
     --mob-lighter-border: #EBEEF5;
 
 
     --mob-input-color: #606266;
     --mob-normal-color: #606266;
-    --mob-not-allow-text-color:#c0c4cc;
+    --mob-not-allow-text-color: #c0c4cc;
 
     /*文字颜色*/
     --mob-active-text-color: var(--mob-primary-color);
@@ -35,42 +35,44 @@
 
     --mob-transition-duration: .2s;
     --mob-active-fill-color: var(--mob-primary-color);
-    --mob-box-shadow-light:0px 0px 12px rgba(0, 0, 0, .12);
+    --mob-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, .12);
     --mob-border-color: #dcdfe6;
     --mob-disabled-active-color: #dcdfe6;
     --mob-active-border-color: var(--mob-primary-color);
-    --mob-not-allow-background-color:#f5f7fa;
-    --mob-disabled-background-color:#f5f7fa;
-    --mob-check-box-disabled-checked-icon-color:#a8abb2;
+    --mob-not-allow-background-color: #f5f7fa;
+    --mob-disabled-background-color: #f5f7fa;
+    --mob-check-box-disabled-checked-icon-color: #a8abb2;
     --mob-transition-animate: cubic-bezier(.645, .045, .355, 1);
-    --mob-ui-title-color:transparent;
-    --mob-ui-title-background:-webkit-linear-gradient(
+    --mob-ui-title-color: transparent;
+    --mob-ui-title-background: -webkit-linear-gradient(
             120deg,
             #bd34fe 30%,
             #41d1ff
     );
-    --mob-ui-title-background-image:linear-gradient(
+    --mob-ui-title-background-image: linear-gradient(
             -45deg,
             #bd34fe 50%,
             #47caff 50%
     );
     /* icon */
     /*--mob-icon-size:1rem;*/
-    --mob-icon-size:16px;
+    --mob-icon-size: 16px;
 
     /* tree树形控件属性 */
     --mob-tree-icon-size: var(--mob-icon-size);
 
     /* popper 控件属性 */
-    --mob-popper-max-height:300px;
+    --mob-popper-max-height: 300px;
 
     /* date-picker */
-    --mob-date-off-text-color:var(--mob-placeholder-text-color)
+    --mob-date-off-text-color: var(--mob-placeholder-text-color)
 }
+
 /* mob组件fontsSize默认为16px */
-[class^='mob']{
+[class^='mob'] {
     font-size: 14px;
 }
+
 .mob-icon svg {
     width: var(--mob-icon-size);
     height: var(--mob-icon-size);
@@ -85,41 +87,52 @@
     transition: all var(--mob-transition-duration);
     /*margin-left: 8px;*/
 }
-.mob-icon__wrapper{
+
+.mob-icon__wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
 
 }
-.mob-unselect-text{
+
+.mob-unselect-text {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard syntax */
 }
 
-.mob-icon.mob_icon__calendar::before{
-    content:' \e667 ';
-    font-family:'iconfont';
+.mob-icon.mob_icon__calendar::before {
+    content: ' \e667 ';
+    font-family: 'iconfont';
     display: block;
 }
-mob-icon,mob-icon-calendar,mob-icon-caret-bottom,mob-icon-caret-left,
-mob-icon-caret-right,mob-icon-caret-top,mob-icon-check,mob-icon-circle-close,mob-icon-clock,
-mob-icon-close,mob-icon-decrease,mob-Icon-arrow-down,mob-icon-increase,mob-icon-invisible,
-mob-icon-loading,mob-icon-search,mob-icon-visible,mob-icon {
+
+mob-icon, mob-icon-calendar, mob-icon-caret-bottom, mob-icon-caret-left,
+mob-icon-caret-right, mob-icon-caret-top, mob-icon-check, mob-icon-circle-close, mob-icon-clock,
+mob-icon-close, mob-icon-decrease, mob-Icon-arrow-down, mob-icon-increase, mob-icon-invisible,
+mob-icon-loading, mob-icon-search, mob-icon-visible, mob-icon {
     /*font-size: 0;*/
     display: flex;
 }
 
-mob-button, mob-check-box {
+mob-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+mob-check-box {
     display: inline-flex;
     font-size: 0;
 
 }
-mob-select,mob-tree-select,mob-date-picker{
+
+mob-select, mob-tree-select, mob-date-picker {
     min-width: 200px;
 }
-mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select,mob-date {
+
+mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date {
     display: block;
 }
 
@@ -130,10 +143,12 @@ mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select,mob-d
     height: 8px;
     background-color: #ffffff;
 }
+
 /* 滚动条上的箭头按钮 */
 .mob-scrollbar::-webkit-scrollbar-button {
     display: none;
 }
+
 /* 滚动条上的滚动滑块 */
 .mob-scrollbar::-webkit-scrollbar-thumb {
     width: 4px;
@@ -142,9 +157,10 @@ mob-time-picker, mob-select, mob-time-spinner, mob-divider,mob-tree-select,mob-d
     cursor: pointer;
 }
 
-.mob-scrollbar::-webkit-scrollbar-thumb:hover{
+.mob-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #c5c7cb;
 }
+
 /* 动画效果 */
 @keyframes mob-circle-loading {
     from {

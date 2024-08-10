@@ -2,7 +2,6 @@ function dateController($scope, $element, $attrs, $date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        console.log('dade')
         // 年份选择弹框是否显示控制
         this.yearDatePickerDisplay = false;
         // 当前年份
