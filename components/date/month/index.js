@@ -1,17 +1,19 @@
 
-function monthController($scope, $element, $attrs) {
+function monthController($scope, $element, $attrs, $date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
         // 年份选择弹框是否显示控制
         this.yearDatePickerDisplay = false;
 
-        $scope.$dayjs = dayjs()
+        $scope.date = new Date()
+        // 当前年份
+        $scope.currentYear = $date.getFullYear($scope.date)
         // 当前月份
-        $scope.currentMonth = $scope.$dayjs.month() + 1
+        $scope.currentMonth = $date.getMonth($scope.date)
 
         // 选择年份
-        $scope.year = $scope.$dayjs.year()
+        $scope.year = $scope.currentYear
         // 选择月份
         $scope.month = $scope.currentMonth;
 
@@ -56,29 +58,14 @@ function monthController($scope, $element, $attrs) {
 
     // 增加年份
     this.increase = function () {
-        let newTime = dayjs(`${$scope.year}`, "YYYY").add(1, 'year')
-        $scope.year = newTime.year()
-        $scope.tempValue = angular.isUndefined($scope.tempValue) ? 1 : $scope.tempValue - 1
-        console.log($scope.year)
+        $scope.year = $date.getFullYear(new Date($scope.year + "")) + 1
         this.panelChangeHandle()
     }
 
     // 减少年份
     this.decrease = function () {
-        let newTime = dayjs(`${$scope.year}`, "YYYY").subtract(1, 'year')
-        $scope.year = newTime.year()
-        $scope.tempValue = angular.isUndefined($scope.tempValue) ? 1 : $scope.tempValue - 1
-        console.log($scope.year)
+        $scope.year = $date.getFullYear(new Date($scope.year + "")) - 1
         this.panelChangeHandle()
-    }
-
-
-    // 日历所选日期变更
-    this.calendarChangeHandle = function () {
-        if (angular.isDefined($attrs.calendarChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
-            _that.calendarChange({opt: opt})
-        }
     }
 
     // 日历所选日期变更 TODO
@@ -93,7 +80,7 @@ function monthController($scope, $element, $attrs) {
     this.calendarClickHandle = function (month) {
         $scope.month = month
         this.ngModel = $scope.year + "-" + month
-        this.calendarChangeHandle()
+        //
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {value: this.ngModel, attachment: this.attachment}
             _that.calendarClick({opt: opt})
@@ -129,7 +116,6 @@ app
             type: "<?",// 选择器类型：year
             attachment: "<?",
             change: "&?",
-            calendarChange: "&?",
             calendarClick: "&?",
             panelChange: "&?",
             disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）

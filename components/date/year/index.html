@@ -1,6 +1,9 @@
 <div class="mob-date mob-unselect-text">
     <div class="mob-date-year">
         <div class="mob-date__container__wrapper">
+            <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
+                <mob-button type="'text'" ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></mob-button>
+            </div>
             <div class="mob-date__container">
                 <div class="mob-date__header">
                     <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>

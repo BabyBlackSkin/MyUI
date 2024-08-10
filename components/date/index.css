@@ -65,8 +65,8 @@ mob-date, .mob-date {
     grid-column-gap: 0;
 }
 
-.mob-date .mob-date-year > .mob-date__container > .mob-date__content .row,
-.mob-date .mob-date-month > .mob-date__container > .mob-date__content .row {
+.mob-date .mob-date-year   .mob-date__container > .mob-date__content .row,
+.mob-date .mob-date-month   .mob-date__container > .mob-date__content .row {
     grid-template-rows:auto auto auto;
     grid-template-columns: repeat(4, 1fr);
 }
@@ -121,7 +121,7 @@ mob-date, .mob-date {
     height: 40px;
 }
 
-.mob-date .mob-date-date > .mob-date__container > .mob-date__content > .row {
+.mob-date .mob-date-date  .mob-date__container > .mob-date__content > .row {
     grid-template-columns: repeat(7, 1fr);
 }
 
@@ -131,11 +131,11 @@ mob-date, .mob-date {
 
 }
 
-.mob-date .mob-date-date > .mob-date__content .col {
+.mob-date .mob-date-date  .mob-date__content .col {
     width: 100%;
 }
 
-.mob-date .mob-date-date > .mob-date__content .col:not(.disabled) span {
+.mob-date .mob-date-date   .mob-date__content .col:not(.disabled) span {
     display: inline-block;
     text-align: center;
     line-height: 24px;

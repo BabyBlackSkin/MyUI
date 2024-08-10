@@ -1,4 +1,4 @@
-function dateController($scope, $element, $attrs) {
+function dateController($scope, $element, $attrs, $date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -8,11 +8,11 @@ function dateController($scope, $element, $attrs) {
         // 当前年份
         // this.$dayjs = dayjs()
 
-        $scope.$dayjs = dayjs()
+        $scope.date = new Date()
         // 当前月份
-        $scope.currentDate = $scope.$dayjs.date()
-        $scope.currentMonth = $scope.$dayjs.month() + 1
-        $scope.currentYear = $scope.$dayjs.year()
+        $scope.currentDate = $date.getDate($scope.date)
+        $scope.currentMonth = $date.getMonth($scope.date)
+        $scope.currentYear = $date.getFullYear($scope.date)
 
         // 选择年份
         $scope.year = $scope.currentYear;
@@ -63,12 +63,9 @@ function dateController($scope, $element, $attrs) {
 
     // 根据年份计算选项
     this.renderOptions = function () {
-        let time = dayjs(`${$scope.year}-${$scope.month}`, "YYYY-MM")
-        let  startMonth = time.startOf('month')
-        let  endMonth = time.endOf('month')
-
-        let startDay = startMonth.date()
-        let endDay = endMonth.date()
+        let time = new Date($scope.year, $scope.month - 1)
+        let  startMonth = $date.getStartOfMonth(time)
+        let  endMonth = $date.getEndOfMonth(time)
 
         $scope.options = []
         // 周索引
@@ -77,18 +74,19 @@ function dateController($scope, $element, $attrs) {
         let lastDateWeek = 0;
 
         // 当前第一天不满一周时，往前推算
-        let startMonthWeekInx = startMonth.day()
+        let startMonthWeekInx = $date.getDay(startMonth)
         if (startMonthWeekInx !== 0) {
             $scope.options[0] = []
-            for (let i = 0; i < startMonthWeekInx; i++) {
-                let date = startMonth.subtract(startMonthWeekInx - i, 'day')
+            for (let i = startMonthWeekInx; i > 0; i--) {
+
+                let date = $date.subtract(startMonth,i, 'date');
                 // 创建日期对象
                 let item = {
-                    timestamp: date.unix(),
-                    year: date.year(),
-                    month: date.month() + 1,
-                    day: date.day(),
-                    date: date.date()
+                    timestamp: $date.getTimeStamp(date),
+                    year:$date.getFullYear(date),
+                    month: $date.getMonth(date),
+                    day: $date.getDay(date),
+                    date: $date.getDate(date)
                 };
                 // 日期是否禁用
                 item.disabled = this.disabledDateHandle(item);
@@ -97,16 +95,18 @@ function dateController($scope, $element, $attrs) {
             }
         }
 
-        for (let i = startDay; i <= endDay; i++) {
-            let date = startMonth.date(i);
+
+        let endDay = $date.getDate(endMonth)
+        for (let i = 0; i < endDay; i++) {
+            let date = $date.add(startMonth, i, 'date');
 
             // 创建日期对象
             let item = {
-                timestamp: date.unix(),
-                year: date.year(),
-                month: date.month() + 1,
-                day: date.day(),
-                date: date.date()
+                timestamp: $date.getTimeStamp(date),
+                year:$date.getFullYear(date),
+                month: $date.getMonth(date),
+                day: $date.getDay(date),
+                date: $date.getDate(date)
             };
             // 日期是否禁用
             item.disabled = this.disabledDateHandle(item);
@@ -128,19 +128,20 @@ function dateController($scope, $element, $attrs) {
         // 最后一天。不满一周
 
         // 当前第一天不满一周时，往前推算
-        let endMonthWeekInx = endMonth.day()
+        let endMonthWeekInx = $date.getDay(endMonth)
         // 判断当月最后一天是不是所在周的最后一天，
         if (endMonthWeekInx !== 6) {
             // 如果不是，则将不在本月的本周日期存入options
-            let nextMonth = endMonth.add(1, 'day')
-            for (let i = 6; i > endMonthWeekInx; i--) {
-                let date = nextMonth.add(6 - i, 'day')
+            let nextMonth = $date.getStartOfMonth($date.add(endMonth, 1, 'date'))
+            let diffWeekNum = 6 - endMonthWeekInx
+            for (let i = 0; i < diffWeekNum; i++) {
+                let date = $date.add(nextMonth, i, 'date')
                 let item = {
-                    timestamp: date.unix(),
-                    year: date.year(),
-                    month: date.month() + 1,
-                    day: date.day(),
-                    date: date.date()
+                    timestamp: $date.getTimeStamp(date),
+                    year:$date.getFullYear(date),
+                    month: $date.getMonth(date),
+                    day: $date.getDay(date),
+                    date: $date.getDate(date)
                 };
                 // 日期是否禁用
                 item.disabled = this.disabledDateHandle(item);
@@ -168,13 +169,13 @@ function dateController($scope, $element, $attrs) {
 
     // 增加年份
     this.increaseYear = function () {
-        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").add(1, "year")
+        let newDay = $date.add(new Date($scope.year, $scope.month - 1, $scope.date), 1, "year")
         // 改变年份
-        $scope.year = newDay.year()
+        $scope.year = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = newDay.month() + 1
+        $scope.month = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = newDay.date()
+        $scope.date = $date.getDate(newDay)
         // 同时改变年月
         $scope.yearMonth = $scope.year + "-" + $scope.month
         this.renderOptions()
@@ -183,13 +184,13 @@ function dateController($scope, $element, $attrs) {
 
     // 减少年份
     this.decreaseYear  = function () {
-        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").subtract(1, "year")
+        let newDay = $date.subtract(new Date($scope.year, $scope.month - 1, $scope.date), 1, "year")
         // 改变年份
-        $scope.year = newDay.year()
+        $scope.year = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = newDay.month() + 1
+        $scope.month = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = newDay.date()
+        $scope.date = $date.getDate(newDay)
         // 同时改变年月
         $scope.yearMonth = $scope.year + "-" + $scope.month
         this.renderOptions()
@@ -198,13 +199,13 @@ function dateController($scope, $element, $attrs) {
 
     // 增加月份
     this.increaseMonth = function () {
-        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").add(1, "month")
+        let newDay = $date.add(new Date($scope.year, $scope.month - 1, $scope.date), 1, "month")
         // 改变年份
-        $scope.year = newDay.year()
+        $scope.year = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = newDay.month() + 1
+        $scope.month = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = newDay.date()
+        $scope.date = $date.getDate(newDay)
         // 同时改变年月
         $scope.yearMonth = $scope.year + "-" + $scope.month
         this.renderOptions()
@@ -213,26 +214,17 @@ function dateController($scope, $element, $attrs) {
 
     // 减少月份
     this.decreaseMonth = function () {
-        let newDay = dayjs(`${$scope.year}-${$scope.month}-${$scope.date}`, "YYYY-MM-dd").subtract(1, "month")
+        let newDay = $date.subtract(new Date($scope.year, $scope.month - 1, $scope.date), 1, "month")
         // 改变年份
-        $scope.year = newDay.year()
+        $scope.year = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = newDay.month() + 1
+        $scope.month = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = newDay.date()
+        $scope.date = $date.getDate(newDay)
         // 同时改变年月
         $scope.yearMonth = $scope.year + "-" + $scope.month
         this.renderOptions()
         this.panelChangeHandle()
-    }
-
-
-    // 日历所选日期变更
-    this.calendarChangeHandle = function () {
-        if (angular.isDefined($attrs.calendarChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
-            _that.calendarChange({opt: opt})
-        }
     }
 
     // 日历所选日期变更 TODO
@@ -272,7 +264,6 @@ function dateController($scope, $element, $attrs) {
         $scope.yearMonth = $scope.year + "-" + $scope.month
 
         this.ngModel = $scope.year + "-" + $scope.month + "-" + $scope.date
-        this.calendarChangeHandle()
 
         //
         let ngModeArr = this.analyzeNgModelYearMonthDate()
@@ -340,7 +331,6 @@ app
             type: "<?",// 选择器类型：year
             attachment: "<?",
             change: "&?",
-            calendarChange: "&?",
             calendarClick: "&?",
             panelChange: "&?",
             disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）

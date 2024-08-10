@@ -1,16 +1,15 @@
-function yearController($scope, $element, $attrs) {
+function yearController($scope, $element, $attrs, $date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
         // 当前年份
-        $scope.$dayjs = dayjs()
+        $scope.date = new Date
         // 当前年份
-        $scope.currentYear = $scope.$dayjs.year()
+        $scope.currentYear = $date.getFullYear($scope.date)
 
-        // 获取个位数（只显示近10年的月份）
-        let singleDigit = $scope.currentYear % 100 % 10;
-        $scope.startYear = $scope.currentYear - singleDigit
-        $scope.endYear = $scope.startYear + 9
+        let timeScope = _that.getStartYearAndEndYear($scope.currentYear)
+        $scope.startYear = timeScope[0]
+        $scope.endYear = timeScope[1]
 
         this.renderOptions()
 
@@ -95,13 +94,6 @@ function yearController($scope, $element, $attrs) {
         this.panelChangeHandle()
     }
 
-    // 日历所选日期变更
-    this.calendarChangeHandle = function () {
-        if (angular.isDefined($attrs.calendarChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
-            _that.calendarChange({opt: opt})
-        }
-    }
 
     // 日历面板变更
     this.panelChangeHandle = function () {
@@ -115,11 +107,16 @@ function yearController($scope, $element, $attrs) {
     // 日历项被点击时触发
     this.calendarClickHandle = function (year) {
         this.ngModel = year
-        this.calendarChangeHandle()
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {value: this.ngModel, attachment: this.attachment}
             _that.calendarClick({opt: opt})
         }
+    }
+
+    // shortcut点击事件
+    this.shortcutClickHandle = function (shortcut) {
+        let fullYear = $date.getFullYear(shortcut.value);
+        fullYear && (this.ngModel = fullYear)
     }
 
 }
@@ -134,10 +131,9 @@ app
         bindings: {
             ngModel: '=?',
             type: "<?",// 选择器类型：type: string
-            shortcuts:"<?",// type: array
+            shortcuts: "<?",// type: array
             attachment: "<?",
             change: "&?",
-            calendarChange: "&?",
             calendarClick: "&?",
             panelChange: "&?",
             disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）

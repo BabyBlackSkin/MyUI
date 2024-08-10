@@ -60,11 +60,11 @@
             ng-show="$ctrl.yearDatePickerDisplay"
             change="$ctrl.changeYear(opt)"
             ng-model="year"
-            calendar-change="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
+            calendar-click="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
 
     <mob-date-month
             ng-show="$ctrl.monthDatePickerDisplay"
             change="$ctrl.changeMonth(opt)"
             ng-model="yearMonth"
-            calendar-change="$ctrl.hideMonthDatePicker(opt)"></mob-date-month>
+            calendar-click="$ctrl.hideMonthDatePicker(opt)"></mob-date-month>
 </div>
