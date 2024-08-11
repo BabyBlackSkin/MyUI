@@ -317,6 +317,16 @@ function dateController($scope, $element, $attrs, $date) {
     }
 
 
+    // shortcut点击事件
+    this.shortcutClickHandle = function (shortcut) {
+        debugger
+        let fullYear = $date.getFullYear(shortcut.value);
+        let month = $date.getMonth(shortcut.value);
+        let date = $date.getDate(shortcut.value);
+        fullYear && month && date && (this.ngModel = fullYear + '-' + month + '-' + date)
+    }
+
+
 }
 
 app
@@ -328,6 +338,7 @@ app
         bindings: {
             ngModel: '=?',
             type: "<?",// 选择器类型：year
+            shortcuts: "<?",// type: array
             attachment: "<?",
             change: "&?",
             calendarClick: "&?",

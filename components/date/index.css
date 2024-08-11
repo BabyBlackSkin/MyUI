@@ -1,5 +1,4 @@
 mob-date, .mob-date {
-    width: 320px;
     background-color: var(--mob-blank-light-fill-color);
     color: var(--mob-regular-text-color);
 }
@@ -55,6 +54,7 @@ mob-date, .mob-date {
     width: 110px;
     overflow: auto;
     padding-top: 6px;
+    border-right: 1px solid var(--mob-secondary-text-color);
 }
 
 .mob-date .mob-date__container__wrapper .mob-date__sidebar button {
@@ -65,12 +65,15 @@ mob-date, .mob-date {
     cursor: pointer;
     text-align: left;
     outline: none;
+    color: var(--mob-regular-text-color);
 }
 .mob-date .mob-date__container__wrapper .mob-date__sidebar button:hover{
     color: var(--mob-primary-color);
 }
 
 .mob-date .mob-date__container {
+    width: 320px;
+    padding: 0 10px;
     flex-grow: 1;
 }
 

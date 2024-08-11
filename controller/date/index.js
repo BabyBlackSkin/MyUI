@@ -17,8 +17,41 @@ app
             }
         ]
 
-        $scope.monthModel = 2019
-        $scope.dateModel = 2019
+        $scope.monthShortcuts = [
+            {
+                text: '上个月',
+                value: $date.subtract(new Date(), 1, 'month')
+            },
+            {
+                text: '下个月',
+                value: $date.add(new Date(), 1, 'month')
+            },
+            {
+                text: 'Last 3 month',
+                value: $date.subtract(new Date(), 3, 'month')
+            }
+        ]
+
+        $scope.monthModel = '2024-08-11';
+
+
+
+        $scope.dateModel = '2024-08-11';
+        $scope.dateShortcuts = [
+            {
+                text: 'last week',
+                value: $date.subtract(new Date(), 1, 'week')
+            },
+            {
+                text: 'next week',
+                value: $date.add(new Date(), 1, 'week')
+            },
+            {
+                text: 'Last 3 week',
+                value: $date.subtract(new Date(), 3, 'week')
+            }
+        ]
+        console.log($scope.dateShortcuts)
 
         $scope.validDate = function (opt) {
             return opt.date.timestamp < 1720972800

@@ -80,6 +80,8 @@ app
                     return new Date(date.getFullYear() + number, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
                 } else if ('month' === type) {
                     return new Date(date.getFullYear(), date.getMonth() + number, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
+                } else if ('week' === type) {
+                    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + ( number * 7 ), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
                 } else if ('date' === type) {
                     return new Date(date.getFullYear(), date.getMonth(), date.getDate() + number, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
                 } else if ('hour' === type) {

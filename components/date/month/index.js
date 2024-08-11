@@ -22,6 +22,8 @@ function monthController($scope, $element, $attrs, $date) {
             [5, 6, 7, 8],
             [9, 10, 11, 12],
         ]
+
+        this.calculateNgModelYearMonthDate()
     }
 
 
@@ -44,6 +46,7 @@ function monthController($scope, $element, $attrs, $date) {
             if (!newValue && !oldValue) {
                 return
             }
+            _that.calculateNgModelYearMonthDate()
 
             if (angular.isDefined($attrs.change)) {
                 let opt = {value: newValue, attachment: this.attachment}
@@ -54,6 +57,16 @@ function monthController($scope, $element, $attrs, $date) {
             // ngModel改变时，获取月份
             $scope.month = Number(newValue.split("-")[1])
         })
+    }
+
+    this.calculateNgModelYearMonthDate = function (){
+        if(!this.ngModel){
+            return
+        }
+        debugger
+        let ngModelArr = this.ngModel.split("-")
+        $scope.ngModelYear = Number(ngModelArr[0])
+        $scope.ngModelMonth = Number(ngModelArr[1])
     }
 
     // 增加年份
@@ -102,6 +115,15 @@ function monthController($scope, $element, $attrs, $date) {
         this.yearDatePickerDisplay = true
     }
 
+    // shortcut点击事件
+    this.shortcutClickHandle = function (shortcut) {
+        debugger
+        let fullYear = $date.getFullYear(shortcut.value);
+        let month = $date.getMonth(shortcut.value);
+        fullYear && month && (this.ngModel = fullYear + '-' + month)
+    }
+
+
 
 }
 
@@ -114,6 +136,7 @@ app
         bindings: {
             ngModel: '=?',
             type: "<?",// 选择器类型：year
+            shortcuts: "<?",// type: array
             attachment: "<?",
             change: "&?",
             calendarClick: "&?",
