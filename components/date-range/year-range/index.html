@@ -1,0 +1,30 @@
+<div class="mob-date mob-unselect-text">
+    <div class="mob-date-year">
+        <div class="mob-date__container__wrapper">
+            <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
+                <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
+            </div>
+            <div class="mob-date__container">
+                <div class="mob-date__header">
+                    <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
+                    <p class="content">
+                        <span ng-bind="startYear + ' - ' + endYear"></span>
+                    </p>
+                    <mob-icon-double-arrow-right ng-click="$ctrl.increase()"
+                                                 class="button"></mob-icon-double-arrow-right>
+                </div>
+                <div class="mob-date__content">
+
+                    <div class="row" ng-repeat="yGroup in options">
+                        <div class="col" ng-click="$ctrl.calendarClickHandle(year)"
+                             ng-class="{'today':year == currentYear,'active':$ctrl.ngModel === year}"
+                             ng-repeat="year in yGroup">
+                            <span ng-bind="year"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
