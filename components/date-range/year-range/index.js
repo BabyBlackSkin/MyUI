@@ -140,7 +140,18 @@ function yearController($scope, $element, $attrs, $date) {
 
     // 日历项被点击时触发
     this.calendarMouseOverHandle = function (year) {
-        console.log(year)
+        if(!this.ngModel || this.ngModel.length < 1){
+            return
+        }
+        if(this.ngModel.length === 2){
+            return;
+        }
+        this.potentialModel = [this.ngModel[0]]
+        if (this.potentialModel[0] <= year) {
+            this.potentialModel.push(year)
+        } else {
+            this.potentialModel.unshift(year)
+        }
     }
 
 
@@ -149,12 +160,19 @@ function yearController($scope, $element, $attrs, $date) {
         debugger
         //
         if (this.ngModel.length === 0) {
-            this.ngModel.push(year)
+            this.ngModel = [year]
+            this.potentialModel = [year]
             this.calendarSelectStatus = 0;
         } else if (this.ngModel.length === 1) {
             this.calendarSelectStatus = 1;
+            if (this.ngModel[0] <= year) {
+                this.ngModel.push(year)
+            } else {
+                this.ngModel.unshift(year)
+            }
         } else {//重新选择
             this.ngModel = [year]
+            this.potentialModel = [year]
             this.calendarSelectStatus = 0;
         }
 

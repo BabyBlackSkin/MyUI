@@ -124,7 +124,7 @@ mob-date, .mob-date {
     color: var(--mob-date-off-text-color);
 }
 
-.mob-date .mob-date__content .col:not(.disabled,.active,.prev,.next).today span {
+.mob-date .mob-date__content .col:not(.disabled,.active,.potential,.prev,.next).today span {
     color: var(--mob-active-text-color);
 }
 
@@ -132,6 +132,14 @@ mob-date, .mob-date {
     background-color: var(--mob-active-text-color);
     color: white;
 }
+.mob-date .mob-date__content .col:not(.disabled,.active).potential span {
+    background-color: var(--mob-primary-light-color6);
+    color: white;
+}
+.mob-date .mob-date__content .col:not(.disabled,.active).potential-active span {
+    background-color: var(--mob-active-text-color);
+}
+
 
 .mob-date .mob-date__content .col.disabled {
     background-color: var(--mob-light-fill-color);

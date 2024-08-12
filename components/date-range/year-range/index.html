@@ -5,6 +5,7 @@
                 <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
             </div>
             {{$ctrl.ngModel}}
+            {{$ctrl.potentialModel}}
             <div class="mob-date__body">
                 <div class="mob-date__container is-left">
                     <div class="mob-date__header">
@@ -21,8 +22,14 @@
                         <div class="row" ng-repeat="yGroup in leftCalendarOptions">
                             <div class="col"
                                  ng-repeat="year in yGroup"
+                                 ng-mousemove="$ctrl.calendarMouseOverHandle(year)"
                                  ng-click="$ctrl.calendarClickHandle(year,'leftCalendar')"
-                                 ng-class="{'today':year == currentYear,'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year)}">
+                                 ng-class="{
+                                 'today':year == currentYear,
+                                 'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year),
+                                 'potential':($ctrl.potentialModel[0] <= year && year <= $ctrl.potentialModel[1]),
+                                 'potential-active': ($ctrl.potentialModel[0] === year || year === $ctrl.potentialModel[1])
+                                 }">
                                 <span ng-bind="year"></span>
                             </div>
                         </div>
@@ -45,7 +52,12 @@
                                  ng-repeat="year in yGroup"
                                  ng-mousemove="$ctrl.calendarMouseOverHandle(year)"
                                  ng-click="$ctrl.calendarClickHandle(year,'rightCalendar')"
-                                 ng-class="{'today':year == currentYear,'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year)}"
+                                 ng-class="{
+                                 'today':year == currentYear,
+                                 'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year),
+                                 'potential':($ctrl.potentialModel[0] <= year && year <= $ctrl.potentialModel[1]),
+                                 'potential-active': ($ctrl.potentialModel[0] === year || year === $ctrl.potentialModel[1])
+                                 }"
 
                             >
                                 <span ng-bind="year"></span>
