@@ -18,7 +18,7 @@ mob-date, .mob-date {
     position: relative;
     box-sizing: border-box;
     padding: 5px 5px 10px 5px;
-    border-bottom: 1px solid var(--mob-lighter-border);
+    border-bottom: 1px solid var(--mob-lighter-border-color);
 }
 
 .mob-date .mob-date__header .button {
@@ -130,14 +130,14 @@ mob-date, .mob-date {
 
 .mob-date .mob-date__content .col:not(.disabled).active span {
     background-color: var(--mob-active-text-color);
-    color: white;
+    color: var(--mob-basic-white-color);
 }
-.mob-date .mob-date__content .col:not(.disabled,.active).potential span {
-    background-color: var(--mob-primary-light-color6);
-    color: white;
+.mob-date .mob-date__content .col:not(.disabled).potential {
+    background-color: var(--mob-extra-lighter-border-color);
 }
 .mob-date .mob-date__content .col:not(.disabled,.active).potential-active span {
     background-color: var(--mob-active-text-color);
+    color: var(--mob-basic-white-color);
 }
 
 
