@@ -7,20 +7,20 @@ function dateController($scope, $element, $attrs, $date) {
         // 当前年份
         // this.$dayjs = dayjs()
 
-        $scope.date = new Date()
+        $scope.calendarDate = new Date()
         // 当前月份
-        $scope.currentDate = $date.getDate($scope.date)
-        $scope.currentMonth = $date.getMonth($scope.date)
-        $scope.currentYear = $date.getFullYear($scope.date)
+        $scope.currentDate = $date.getDate($scope.calendarDate)
+        $scope.currentMonth = $date.getMonth($scope.calendarDate)
+        $scope.currentYear = $date.getFullYear($scope.calendarDate)
 
         // 选择年份
-        $scope.year = $scope.currentYear;
+        $scope.calendarYear = $scope.currentYear;
         // 选择月份
-        $scope.month = $scope.currentMonth;
+        $scope.calendarMonth = $scope.currentMonth;
         // 选择日期
-        $scope.date = $scope.currentDate
+        $scope.calendarDate = $scope.currentDate
         // 选择的年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
 
         this.renderOptions()
 
@@ -62,7 +62,7 @@ function dateController($scope, $element, $attrs, $date) {
 
     // 根据年份计算选项
     this.renderOptions = function () {
-        let time = new Date($scope.year, $scope.month - 1)
+        let time = new Date($scope.calendarYear, $scope.calendarMonth - 1)
         let  startMonth = $date.getStartOfMonth(time)
         let  endMonth = $date.getEndOfMonth(time)
 
@@ -168,60 +168,60 @@ function dateController($scope, $element, $attrs, $date) {
 
     // 增加年份
     this.increaseYear = function () {
-        let newDay = $date.add(new Date($scope.year, $scope.month - 1, $scope.date), 1, "year")
+        let newDay = $date.add(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "year")
         // 改变年份
-        $scope.year = $date.getFullYear(newDay)
+        $scope.calendarYear = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = $date.getMonth(newDay)
+        $scope.calendarMonth = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = $date.getDate(newDay)
+        $scope.calendarDate = $date.getDate(newDay)
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
         this.renderOptions()
         this.panelChangeHandle()
     }
 
     // 减少年份
     this.decreaseYear  = function () {
-        let newDay = $date.subtract(new Date($scope.year, $scope.month - 1, $scope.date), 1, "year")
+        let newDay = $date.subtract(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "year")
         // 改变年份
-        $scope.year = $date.getFullYear(newDay)
+        $scope.calendarYear = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = $date.getMonth(newDay)
+        $scope.calendarMonth = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = $date.getDate(newDay)
+        $scope.calendarDate = $date.getDate(newDay)
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
         this.renderOptions()
         this.panelChangeHandle()
     }
 
     // 增加月份
     this.increaseMonth = function () {
-        let newDay = $date.add(new Date($scope.year, $scope.month - 1, $scope.date), 1, "month")
+        let newDay = $date.add(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "month")
         // 改变年份
-        $scope.year = $date.getFullYear(newDay)
+        $scope.calendarYear = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = $date.getMonth(newDay)
+        $scope.calendarMonth = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = $date.getDate(newDay)
+        $scope.calendarDate = $date.getDate(newDay)
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
         this.renderOptions()
         this.panelChangeHandle()
     }
 
     // 减少月份
     this.decreaseMonth = function () {
-        let newDay = $date.subtract(new Date($scope.year, $scope.month - 1, $scope.date), 1, "month")
+        let newDay = $date.subtract(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "month")
         // 改变年份
-        $scope.year = $date.getFullYear(newDay)
+        $scope.calendarYear = $date.getFullYear(newDay)
         // 改变月份
-        $scope.month = $date.getMonth(newDay)
+        $scope.calendarMonth = $date.getMonth(newDay)
         // 改变日期
-        $scope.date = $date.getDate(newDay)
+        $scope.calendarDate = $date.getDate(newDay)
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
         this.renderOptions()
         this.panelChangeHandle()
     }
@@ -254,15 +254,15 @@ function dateController($scope, $element, $attrs, $date) {
             return
         }
         // 同时改变年份
-        $scope.year = date.year
+        $scope.calendarYear = date.year
         // 改变月份
-        $scope.month = date.month
+        $scope.calendarMonth = date.month
         // 日期
-        $scope.date = date.date
+        $scope.calendarDate = date.date
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
 
-        this.ngModel = $scope.year + "-" + $scope.month + "-" + $scope.date
+        this.ngModel = $scope.calendarYear + "-" + $scope.calendarMonth + "-" + $scope.calendarDate
 
         //
         let ngModeArr = this.analyzeNgModelYearMonthDate()
@@ -300,20 +300,20 @@ function dateController($scope, $element, $attrs, $date) {
     // 改变年份
     this.changeYear = function (opt) {
         // 改变年份
-        $scope.year = opt.value
+        $scope.calendarYear = opt.value
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
     }
 
     // 改变年份
     this.changeMonth = function (opt) {
         let valArr = opt.value.split("-")
         // 同时改变年份
-        $scope.year = Number(valArr[0])
+        $scope.calendarYear = Number(valArr[0])
         // 改变月份
-        $scope.month = Number(valArr[1])
+        $scope.calendarMonth = Number(valArr[1])
         // 同时改变年月
-        $scope.yearMonth = $scope.year + "-" + $scope.month
+        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
     }
 
 
@@ -323,7 +323,18 @@ function dateController($scope, $element, $attrs, $date) {
         let fullYear = $date.getFullYear(shortcut.value);
         let month = $date.getMonth(shortcut.value);
         let date = $date.getDate(shortcut.value);
-        fullYear && month && date && (this.ngModel = fullYear + '-' + month + '-' + date)
+        if (fullYear && month && date) {
+            this.ngModel = fullYear + '-' + month + '-' + date
+            // 同时改变年份
+            $scope.calendarYear = fullYear
+            // 改变月份
+            $scope.calendarMonth = month
+            // 日期
+            $scope.calendarDate = date
+            // 同时改变年月
+            $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+            this.renderOptions()
+        }
     }
 
 

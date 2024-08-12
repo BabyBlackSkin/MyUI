@@ -8,7 +8,7 @@
                 <div class="mob-date__header">
                     <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
                     <p class="content">
-                        <span ng-bind="startYear + ' - ' + endYear"></span>
+                        <span ng-bind="calendarStartYear + ' - ' + calendarEndYear"></span>
                     </p>
                     <mob-icon-double-arrow-right ng-click="$ctrl.increase()"
                                                  class="button"></mob-icon-double-arrow-right>
@@ -16,9 +16,10 @@
                 <div class="mob-date__content">
 
                     <div class="row" ng-repeat="yGroup in options">
-                        <div class="col" ng-click="$ctrl.calendarClickHandle(year)"
-                             ng-class="{'today':year == currentYear,'active':$ctrl.ngModel === year}"
-                             ng-repeat="year in yGroup">
+                        <div class="col"
+                             ng-repeat="year in yGroup"
+                             ng-click="$ctrl.calendarClickHandle(year)"
+                             ng-class="{'today':year == currentYear,'active':$ctrl.ngModel === year}">
                             <span ng-bind="year"></span>
                         </div>
                     </div>

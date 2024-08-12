@@ -11,8 +11,8 @@
                                                 class="button"></mob-icon-double-arrow-left>
                     <mob-icon-arrow-left ng-click="$ctrl.decreaseMonth()" class="button"></mob-icon-arrow-left>
                     <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="year"></span>
-                        <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="month"></span>
+                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="calendarYear"></span>
+                        <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="calendarMonth"></span>
                     </p>
                     <mob-icon-arrow-right ng-click="$ctrl.increaseMonth()" class="button"></mob-icon-arrow-right>
                     <mob-icon-double-arrow-right ng-click="$ctrl.increaseYear()"
@@ -48,8 +48,8 @@
                              ng-class="{
                          'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
                          'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
-                         'prev prev-month':d.month < month,
-                          'next next-month':d.month > month,
+                         'prev prev-month':d.month < calendarMonth,
+                          'next next-month':d.month > calendarMonth,
                           'disabled':d.disabled
                           }"
                              ng-repeat="d in week">
@@ -65,12 +65,12 @@
     <mob-date-year
             ng-show="$ctrl.yearDatePickerDisplay"
             change="$ctrl.changeYear(opt)"
-            ng-model="year"
+            ng-model="calendarYear"
             calendar-click="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
 
     <mob-date-month
             ng-show="$ctrl.monthDatePickerDisplay"
             change="$ctrl.changeMonth(opt)"
-            ng-model="yearMonth"
+            ng-model="calendarYearMonth"
             calendar-click="$ctrl.hideMonthDatePicker(opt)"></mob-date-month>
 </div>

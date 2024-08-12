@@ -13,9 +13,9 @@ function monthController($scope, $element, $attrs, $date) {
         $scope.currentMonth = $date.getMonth($scope.date)
 
         // 选择年份
-        $scope.year = $scope.currentYear
+        $scope.calendarYear = $scope.currentYear
         // 选择月份
-        $scope.month = $scope.currentMonth;
+        $scope.calendarMonth = $scope.currentMonth;
 
         $scope.options = [
             [1, 2, 3, 4],
@@ -53,9 +53,9 @@ function monthController($scope, $element, $attrs, $date) {
                 _that.change({opt: opt})
             }
             // ngModel改变时，获取年份
-            $scope.year = Number(newValue.split("-")[0])
+            $scope.calendarYear = Number(newValue.split("-")[0])
             // ngModel改变时，获取月份
-            $scope.month = Number(newValue.split("-")[1])
+            $scope.calendarMonth = Number(newValue.split("-")[1])
         })
     }
 
@@ -71,13 +71,13 @@ function monthController($scope, $element, $attrs, $date) {
 
     // 增加年份
     this.increase = function () {
-        $scope.year = $date.getFullYear(new Date($scope.year + "")) + 1
+        $scope.calendarYear = $date.getFullYear(new Date($scope.calendarYear + "")) + 1
         this.panelChangeHandle()
     }
 
     // 减少年份
     this.decrease = function () {
-        $scope.year = $date.getFullYear(new Date($scope.year + "")) - 1
+        $scope.calendarYear = $date.getFullYear(new Date($scope.calendarYear + "")) - 1
         this.panelChangeHandle()
     }
 
@@ -91,8 +91,8 @@ function monthController($scope, $element, $attrs, $date) {
 
     // 日历项被点击时触发
     this.calendarClickHandle = function (month) {
-        $scope.month = month
-        this.ngModel = $scope.year + "-" + month
+        $scope.calendarMonth = month
+        this.ngModel = $scope.calendarYear + "-" + month
         //
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {value: this.ngModel, attachment: this.attachment}
@@ -103,7 +103,7 @@ function monthController($scope, $element, $attrs, $date) {
 
     // 改变年份
     this.changeYear = function (opt) {
-        $scope.year = opt.value
+        $scope.calendarYear = opt.value
     }
 
     this.hideYearDatePicker = function () {

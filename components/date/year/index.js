@@ -8,8 +8,8 @@ function yearController($scope, $element, $attrs, $date) {
         $scope.currentYear = $date.getFullYear($scope.date)
 
         let timeScope = _that.getStartYearAndEndYear($scope.currentYear)
-        $scope.startYear = timeScope[0]
-        $scope.endYear = timeScope[1]
+        $scope.calendarStartYear = timeScope[0]
+        $scope.calendarEndYear = timeScope[1]
 
         this.renderOptions()
 
@@ -46,9 +46,9 @@ function yearController($scope, $element, $attrs, $date) {
             // ngModel发生变化时，重新计算startYear和endYear，并重新readerOptions
             // 获取最后一位
             let timeScope = _that.getStartYearAndEndYear(newValue)
-            if ($scope.startYear !== timeScope[0] && $scope.endYear !== timeScope[1]) {
-                $scope.startYear = timeScope[0]
-                $scope.endYear = timeScope[1]
+            if ($scope.calendarStartYear !== timeScope[0] && $scope.calendarEndYear !== timeScope[1]) {
+                $scope.calendarStartYear = timeScope[0]
+                $scope.calendarEndYear = timeScope[1]
                 _that.renderOptions()
             }
         })
@@ -67,7 +67,7 @@ function yearController($scope, $element, $attrs, $date) {
     this.renderOptions = function () {
         let yearGroupInx = 0
         $scope.options = []
-        for (let i = $scope.startYear; i <= $scope.endYear; i++) {
+        for (let i = $scope.calendarStartYear; i <= $scope.calendarEndYear; i++) {
             if (!$scope.options[yearGroupInx]) {
                 $scope.options[yearGroupInx] = []
             } else if ($scope.options[yearGroupInx].length === 4) {
@@ -80,16 +80,16 @@ function yearController($scope, $element, $attrs, $date) {
 
     // 增加年份
     this.increase = function () {
-        $scope.startYear = $scope.startYear + 10
-        $scope.endYear = $scope.startYear + 9
+        $scope.calendarStartYear = $scope.calendarStartYear + 10
+        $scope.calendarEndYear = $scope.calendarStartYear + 9
         this.renderOptions()
         this.panelChangeHandle()
     }
 
     // 减少年份
     this.decrease = function () {
-        $scope.startYear = $scope.startYear - 10
-        $scope.endYear = $scope.startYear + 9
+        $scope.calendarStartYear = $scope.calendarStartYear - 10
+        $scope.calendarEndYear = $scope.calendarStartYear + 9
         this.renderOptions()
         this.panelChangeHandle()
     }
