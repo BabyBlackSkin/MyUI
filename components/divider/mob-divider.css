@@ -5,3 +5,10 @@
     position: relative;
     margin: 24px 0;
 }
+
+.mob-divider.is_vertical{
+    width: 1px;
+    height: 100%;
+    background-color: var(--mob-border-color);
+    position: relative;
+}

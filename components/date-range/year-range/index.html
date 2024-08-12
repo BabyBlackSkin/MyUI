@@ -1,28 +1,58 @@
 <div class="mob-date mob-unselect-text">
-    <div class="mob-date-year">
+    <div class="mob-date-year-range">
         <div class="mob-date__container__wrapper">
             <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
                 <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
             </div>
-            <div class="mob-date__container">
-                <div class="mob-date__header">
-                    <mob-icon-double-arrow-left ng-click="$ctrl.decrease()" class="button"></mob-icon-double-arrow-left>
-                    <p class="content">
-                        <span ng-bind="startYear + ' - ' + endYear"></span>
-                    </p>
-                    <mob-icon-double-arrow-right ng-click="$ctrl.increase()"
-                                                 class="button"></mob-icon-double-arrow-right>
-                </div>
-                <div class="mob-date__content">
+            {{$ctrl.ngModel}}
+            <div class="mob-date__body">
+                <div class="mob-date__container is-left">
+                    <div class="mob-date__header">
+                        <mob-icon-double-arrow-left ng-click="$ctrl.decrease('leftCalendar')" class="button"></mob-icon-double-arrow-left>
+                        <p class="content">
+                            <span ng-bind="leftCalendarStartYear + ' - ' + leftCalendarEndYear"></span>
+                        </p>
+                        <mob-icon-double-arrow-right
+                                ng-click="$ctrl.increase('leftCalendar', true)"
+                                class="button" ng-class="{'is_disabled':$ctrl.isDisabledCalendarChange()}"></mob-icon-double-arrow-right>
+                    </div>
+                    <div class="mob-date__content">
 
-                    <div class="row" ng-repeat="yGroup in options">
-                        <div class="col" ng-click="$ctrl.calendarClickHandle(year)"
-                             ng-class="{'today':year == currentYear,'active':$ctrl.ngModel === year}"
-                             ng-repeat="year in yGroup">
-                            <span ng-bind="year"></span>
+                        <div class="row" ng-repeat="yGroup in leftCalendarOptions">
+                            <div class="col"
+                                 ng-repeat="year in yGroup"
+                                 ng-click="$ctrl.calendarClickHandle(year,'leftCalendar')"
+                                 ng-class="{'today':year == currentYear,'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year)}">
+                                <span ng-bind="year"></span>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <mob-divider vertical="true"></mob-divider>
+                <div class="mob-date__container is-right">
+                    <div class="mob-date__header">
+                        <mob-icon-double-arrow-left ng-click="$ctrl.decrease('rightCalendar', true)" class="button" ng-class="{'is_disabled':$ctrl.isDisabledCalendarChange()}"></mob-icon-double-arrow-left>
+                        <p class="content">
+                            <span ng-bind="rightCalendarStartYear + ' - ' + rightCalendarEndYear"></span>
+                        </p>
+                        <mob-icon-double-arrow-right ng-hover="hoverHandler" ng-click="$ctrl.increase('rightCalendar')"
+                                                     class="button"></mob-icon-double-arrow-right>
+                    </div>
+                    <div class="mob-date__content">
 
+                        <div class="row" ng-repeat="yGroup in rightCalendarOptions">
+                            <div class="col"
+                                 ng-repeat="year in yGroup"
+                                 ng-mousemove="$ctrl.calendarMouseOverHandle(year)"
+                                 ng-click="$ctrl.calendarClickHandle(year,'rightCalendar')"
+                                 ng-class="{'today':year == currentYear,'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year)}"
+
+                            >
+                                <span ng-bind="year"></span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

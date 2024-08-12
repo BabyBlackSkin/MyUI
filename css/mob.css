@@ -125,7 +125,16 @@ mob-button {
 mob-check-box {
     display: inline-flex;
     font-size: 0;
+}
 
+mob-date-year, mob-date-month, mob-date-date {
+    display: block;
+    max-width: 430px;
+}
+
+mob-date-year-range, mob-date-month-range, mob-date-date-range {
+    display: block;
+    max-width: 750px;
 }
 
 mob-select, mob-tree-select, mob-date-picker {

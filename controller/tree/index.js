@@ -91,7 +91,6 @@ app
         $scope.treeModel2 = []
         $scope.treeData2 = angular.copy($scope.baseTreeData)
         $scope.treeData2Load = function (opt) {
-            debugger
             if(!(opt.node.level === 0)){
                 opt.deferred.resolve([])
             }else{

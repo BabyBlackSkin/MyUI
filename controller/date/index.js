@@ -1,6 +1,6 @@
 app
     .controller('Date', ['$scope', '$date', function DatePickerCtrl($scope, $date) {
-    //
+        //
         $scope.yearModel = 2019
         $scope.yearShortcuts = [
             {
@@ -35,7 +35,6 @@ app
         $scope.monthModel = '2024-08-11';
 
 
-
         $scope.dateModel = '2024-08-11';
         $scope.dateShortcuts = [
             {
@@ -51,7 +50,9 @@ app
                 value: $date.subtract(new Date(), 3, 'week')
             }
         ]
-        console.log($scope.dateShortcuts)
+
+
+        $scope.yearModelRange = []
 
         $scope.validDate = function (opt) {
             return opt.date.timestamp < 1720972800

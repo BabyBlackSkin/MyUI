@@ -2,7 +2,6 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        debugger
         this.$type = "mobTree"
         this.$attrs = $attrs
         let abbParams = ["multiple", "lazy", "showCheckbox", "expandOnClickNode", "checkOnClickNode"]

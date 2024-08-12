@@ -63,7 +63,6 @@ function monthController($scope, $element, $attrs, $date) {
         if(!this.ngModel){
             return
         }
-        debugger
         let ngModelArr = this.ngModel.split("-")
         $scope.ngModelYear = Number(ngModelArr[0])
         $scope.ngModelMonth = Number(ngModelArr[1])
@@ -117,7 +116,6 @@ function monthController($scope, $element, $attrs, $date) {
 
     // shortcut点击事件
     this.shortcutClickHandle = function (shortcut) {
-        debugger
         let fullYear = $date.getFullYear(shortcut.value);
         let month = $date.getMonth(shortcut.value);
         fullYear && month && (this.ngModel = fullYear + '-' + month)

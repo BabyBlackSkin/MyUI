@@ -1,6 +1,6 @@
 function controller($scope) {
     this.$onInit = function () {
-        if (angular.isUndefined(this.horizontal)) {
+        if (angular.isUndefined(this.horizontal) && angular.isUndefined(this.vertical)) {
             this.horizontal = true;
         }
     }

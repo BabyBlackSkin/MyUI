@@ -63,7 +63,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     color: var(--mob-secondary-text-color);
     font-size: 1rem;
-    margin: 20px 0;
+    margin: 20px 0!important;
     /*text-align: center;*/
 }
 
@@ -136,10 +136,17 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
-.mob-demo-example-child > * {
-    margin-right: 5px;
+.mob-demo-example-child .block {
+    padding: 30px ;
+    text-align: center;
+    border-right: 1px solid var(--mob-border-color);
+    flex: 1;
+}
+.mob-demo-example-child .block > *{
+    margin: 0 auto;
 }
 
 .child-title {

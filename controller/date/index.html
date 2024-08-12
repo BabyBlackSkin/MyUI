@@ -7,12 +7,26 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    值：{{yearModel}}
-                    <mob-date-year ng-model="yearModel"></mob-date-year>
+                    <div class="block">
+                        <p class="demonstration">默认</p>
+                        <mob-date-year
+                                style="display:block;width: 320px;margin: 0 auto"
+                                ng-model="yearModel"></mob-date-year>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-year ng-model="yearModel"  shortcuts="yearShortcuts"></mob-date-year>
+                    </div>
                 </div>
-                <p class="demonstration">快捷选择</p>
                 <div class="mob-demo-example-child">
-                    <mob-date-year ng-model="yearModel"  shortcuts="yearShortcuts"></mob-date-year>
+                    <div class="block">
+                        <p class="demonstration">默认</p>
+                        <mob-date-year-range
+                                style="margin: 0 auto"
+                                ng-model="yearModelRange"></mob-date-year-range>
+                    </div>
+                </div>
+                <div class="mob-demo-example-child">
                 </div>
                 <div class="mob-demo-example-child">
                 </div>
