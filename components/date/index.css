@@ -1,4 +1,13 @@
-mob-date, .mob-date {
+.mob-date{
+    --mob-date-sider-width:110px;
+    --mob-date-sider-button-line-height: 28px;
+    --mob-date-container: 320px;
+
+    --mob-calendar-col-height:60px;
+    --mob-calendar-col-span-padding:12px;
+    --mob-calendar-col-span-border-radius: 30px;
+}
+.mob-date {
     background-color: var(--mob-blank-light-fill-color);
     color: var(--mob-regular-text-color);
 }
@@ -51,7 +60,7 @@ mob-date, .mob-date {
 }
 
 .mob-date .mob-date__container__wrapper .mob-date__sidebar {
-    width: 110px;
+    width: var(--mob-date-sider-width);
     overflow: auto;
     padding-top: 6px;
     border-right: 1px solid var(--mob-border-color);
@@ -59,7 +68,7 @@ mob-date, .mob-date {
 
 .mob-date .mob-date__container__wrapper .mob-date__sidebar button {
     width: 100%;
-    line-height: 28px;
+    line-height: var(--mob-date-sider-button-line-height);
     border: 0;
     background-color: transparent;
     cursor: pointer;
@@ -72,7 +81,7 @@ mob-date, .mob-date {
 }
 
 .mob-date .mob-date__container {
-    width: 320px;
+    width: var(--mob-date-container);
     padding: 0 10px;
     flex-grow: 1;
 }
@@ -108,7 +117,7 @@ mob-date, .mob-date {
 .mob-date .mob-date__content .col {
     display: flex;
     /*width: 80px;*/
-    height: 60px;
+    height: var(--mob-calendar-col-height);
     justify-content: center;
     align-items: center;
     cursor: pointer;
@@ -116,8 +125,8 @@ mob-date, .mob-date {
 
 .mob-date .mob-date__content .col span {
     box-sizing: border-box;
-    padding: 5px 12px;
-    border-radius: 12px;
+    padding: var(--mob-calendar-col-span-padding);
+    border-radius: var(--mob-calendar-col-span-border-radius);
 }
 
 .mob-date .mob-date__content .col.prev span, .mob-date .mob-date__content .col.next span {
@@ -134,6 +143,12 @@ mob-date, .mob-date {
 }
 .mob-date .mob-date__content .col:not(.disabled).potential {
     background-color: var(--mob-extra-lighter-border-color);
+}
+.mob-date .mob-date__content .col:not(.disabled).potential-active-start {
+    border-radius: var(--mob-calendar-col-span-border-radius) 0 0 var(--mob-calendar-col-span-border-radius);
+}
+.mob-date .mob-date__content .col:not(.disabled).potential-active-end {
+    border-radius: 0 var(--mob-calendar-col-span-border-radius) var(--mob-calendar-col-span-border-radius) 0;
 }
 .mob-date .mob-date__content .col:not(.disabled,.active).potential-active span {
     background-color: var(--mob-active-text-color);

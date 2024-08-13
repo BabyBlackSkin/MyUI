@@ -5,6 +5,8 @@ function yearController($scope, $element, $attrs, $date) {
         if (angular.isUndefined(this.ngModel)) {
             this.ngModel = [];
         }
+        this.seconaryModel = []
+        this.potentialModel = []
         // 当前年份
         $scope.date = new Date
         // 当前年份
@@ -140,13 +142,13 @@ function yearController($scope, $element, $attrs, $date) {
 
     // 日历项被点击时触发
     this.calendarMouseOverHandle = function (year) {
-        if(!this.ngModel || this.ngModel.length < 1){
+        if(!this.seconaryModel || this.seconaryModel.length < 1){
             return
         }
-        if(this.ngModel.length === 2){
+        if(this.seconaryModel.length === 2){
             return;
         }
-        this.potentialModel = [this.ngModel[0]]
+        this.potentialModel = [this.seconaryModel[0]]
         if (this.potentialModel[0] <= year) {
             this.potentialModel.push(year)
         } else {
@@ -159,21 +161,20 @@ function yearController($scope, $element, $attrs, $date) {
     this.calendarClickHandle = function (year, calendarName) {
         debugger
         //
-        if (this.ngModel.length === 0) {
-            this.ngModel = [year]
+        if (this.seconaryModel.length === 0) {
+            this.seconaryModel = [year]
             this.potentialModel = [year]
-            this.calendarSelectStatus = 0;
-        } else if (this.ngModel.length === 1) {
-            this.calendarSelectStatus = 1;
-            if (this.ngModel[0] <= year) {
-                this.ngModel.push(year)
+        } else if (this.seconaryModel.length === 1) {
+            if (this.seconaryModel[0] <= year) {
+                this.seconaryModel.push(year)
             } else {
-                this.ngModel.unshift(year)
+                this.seconaryModel.unshift(year)
             }
+            this.ngModel = this.seconaryModel
         } else {//重新选择
-            this.ngModel = [year]
+            this.ngModel = []
+            this.seconaryModel = [year]
             this.potentialModel = [year]
-            this.calendarSelectStatus = 0;
         }
 
         if (angular.isDefined($attrs.calendarClick)) {
@@ -189,7 +190,11 @@ function yearController($scope, $element, $attrs, $date) {
 
         let leftFullYear = $date.getFullYear(leftCalendarValue);
         let rightFullYear = $date.getFullYear(rightCalendarValue);
-        leftFullYear && rightFullYear && (this.ngModel = [leftFullYear, rightFullYear])
+        if (leftFullYear && rightFullYear) {
+            this.ngModel = [leftFullYear, rightFullYear]
+            this.seconaryModel = [leftFullYear, rightFullYear]
+            this.potentialModel = [leftFullYear, rightFullYear]
+        }
     }
 
 }

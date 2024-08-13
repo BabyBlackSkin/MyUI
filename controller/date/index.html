@@ -15,7 +15,7 @@
                     </div>
                     <div class="block">
                         <p class="demonstration">快捷选择</p>
-                        <mob-date-year ng-model="yearModel"  shortcuts="yearShortcuts"></mob-date-year>
+                        <mob-date-year ng-model="yearModel" shortcuts="yearShortcuts"></mob-date-year>
                     </div>
                 </div>
                 <div class="mob-demo-example-child">
@@ -24,6 +24,12 @@
                         <mob-date-year-range
                                 style="margin: 0 auto"
                                 ng-model="yearModelRange"></mob-date-year-range>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-year-range
+                                style="margin: 0 auto"
+                                ng-model="yearModelRange" shortcuts="yearModelRangeShorcuts"></mob-date-year-range>
                     </div>
                 </div>
                 <div class="mob-demo-example-child">
@@ -46,11 +52,14 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-date-month ng-model="monthModel"></mob-date-month>
-                </div>
-                <p class="demonstration">快捷选择</p>
-                <div class="mob-demo-example-child">
-                    <mob-date-month ng-model="monthModel"  shortcuts="monthShortcuts"></mob-date-month>
+                    <div class="block">
+                        <p class="documentary">默认</p>
+                        <mob-date-month ng-model="monthModel"></mob-date-month>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-month ng-model="monthModel" shortcuts="monthShortcuts"></mob-date-month>
+                    </div>
                 </div>
             </div>
             <div class="meta">
@@ -72,7 +81,8 @@
                 </div>
                 <p class="demonstration">快捷选择</p>
                 <div class="mob-demo-example-child">
-                    <mob-date-date ng-model="value2" disabled-date="validDate(opt)" shortcuts="dateShortcuts"></mob-date-date>
+                    <mob-date-date ng-model="value2" disabled-date="validDate(opt)"
+                                   shortcuts="dateShortcuts"></mob-date-date>
                 </div>
             </div>
             <div class="meta">
