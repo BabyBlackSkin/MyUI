@@ -147,11 +147,6 @@ mob-date-year, mob-date-month, mob-date-date {
     max-width: 430px;
 }
 
-mob-date-year-range, mob-date-month-range, mob-date-date-range {
-    display: block;
-    max-width: 750px;
-}
-
 mob-select, mob-tree-select, mob-date-picker {
     min-width: 200px;
 }

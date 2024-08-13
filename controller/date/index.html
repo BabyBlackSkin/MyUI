@@ -10,6 +10,38 @@
                     <div class="block">
                         <p class="demonstration">默认</p>
                         <mob-date-year
+                                style="margin: 0 auto"
+                                ng-model="yearModel"></mob-date-year>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-year ng-model="yearModel" shortcuts="yearShortcuts"></mob-date-year>
+                    </div>
+                </div>
+                <div class="mob-demo-example-child">
+                    <div class="block">
+                        <p class="demonstration">默认</p>
+                        <mob-date-year-range
+                                style="margin: 0 auto"
+                                ng-model="yearModelRange"></mob-date-year-range>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-year-range
+                                style="margin: 0 0 0 10px"
+                                ng-model="yearModelRange" shortcuts="yearModelRangeShorcuts"></mob-date-year-range>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <div class="block">
+                        <p class="demonstration">默认</p>
+                        <mob-date-year
                                 style="display:block;width: 320px;margin: 0 auto"
                                 ng-model="yearModel"></mob-date-year>
                     </div>
@@ -37,11 +69,6 @@
                 <div class="mob-demo-example-child">
                 </div>
             </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <mob-date-year ng-model="yearModel"></mob-date-year>
                         --></code>
                     </pre>
             </div>
