@@ -12,8 +12,9 @@
     --mob-date-sider-button-line-height: 28px;
 
     --mob-date-container-padding: 10px;
+    --mob-date-yeaer-month-col: 4;
     --mob-date-container-year-month-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)));
-    --mob-date-container-year-month-width: calc(--mob-date-container-year-month-col-width * 4);
+    --mob-date-container-year-month-width: calc(var(--mob-date-container-year-month-col-width) * var(--mob-date-yeaer-month-col));
 
     --mob-date-year-month-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
     --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
@@ -102,12 +103,10 @@
 .mob-date .mob-date__container {
     width: 320px;
     padding: 0 10px;
-    flex-grow: 1;
 }
 .mob-date-year .mob-date__container,.mob-date-year-range .mob-date__container {
-    width: var(--mob-date-container-year-width);
+    width: var(--mob-date-container-year-month-width);
     padding: 0 10px;
-    flex-grow: 1;
 }
 
 .mob-date .mob-date__container .button.is_disabled {
@@ -130,15 +129,17 @@
     grid-column-gap: 0;
 }
 
-.mob-date .mob-date-year .mob-date__container > .mob-date__content .row,
+.mob-date.mob-date-year .mob-date__container > .mob-date__content .row,
 .mob-date.mob-date-year-range .mob-date__container > .mob-date__content .row,
 .mob-date .mob-date-month .mob-date__container > .mob-date__content .row ,
 .mob-date .mob-date-month-range .mob-date__container > .mob-date__content .row {
+    width: var(--mob-date-container-year-month-width);
     grid-template-rows:auto auto auto;
-    grid-template-columns: repeat(4, 100px);
+    grid-template-columns: repeat(var(--mob-date-yeaer-month-col), 100px);
 }
 
 .mob-date .mob-date__content .col {
+    width: var(--mob-date-container-year-month-col-width);
     box-sizing: border-box;
     display: flex;
     padding: var(--mob-calendar-col-padding);
