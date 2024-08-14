@@ -12,12 +12,12 @@ function monthController($scope, $element, $attrs, $date) {
         // 当前月份
         $scope.currentMonth = $date.getMonth($scope.date)
 
-        // 选择年份
+        // 左侧面板
         $scope.leftCalendarYear = $scope.currentYear
-        $scope.rightCalendarYear = $scope.currentYear + 1
-        // 选择月份
         $scope.leftCalendarMonth = $scope.currentMonth;
-        $scope.RightCalendarMonth;
+        // 右侧面板
+        $scope.rightCalendarYear = $scope.currentYear + 1
+        $scope.rightCalendarMonth = $scope.currentMonth;
 
         $scope.options = [
             [1, 2, 3, 4],
@@ -138,10 +138,10 @@ function monthController($scope, $element, $attrs, $date) {
 }
 
 app
-    .component('mobDateMonth', {
+    .component('mobDateMonthRange', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date/month/index.html`
+            return `./components/date-range/month-range/index.html`
         },
         bindings: {
             ngModel: '=?',

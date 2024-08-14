@@ -1,6 +1,14 @@
 <section class="mob-doc content" ng-controller="Date as ctrl">
     <h2>DatePicker日期选择器</h2>
 
+    <div style="display: grid;    grid-template-rows:auto;
+    grid-template-columns: repeat(4, 100px);">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+    </div>
+
 
     <div class="mob-doc content">
         <h3>年</h3>
@@ -38,37 +46,37 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-year
-                                style="display:block;width: 320px;margin: 0 auto"
-                                ng-model="yearModel"></mob-date-year>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-year ng-model="yearModel" shortcuts="yearShortcuts"></mob-date-year>
-                    </div>
-                </div>
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-year-range
-                                style="margin: 0 auto"
-                                ng-model="yearModelRange"></mob-date-year-range>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-year-range
-                                style="margin: 0 auto"
-                                ng-model="yearModelRange" shortcuts="yearModelRangeShorcuts"></mob-date-year-range>
-                    </div>
-                </div>
-                <div class="mob-demo-example-child">
-                </div>
-                <div class="mob-demo-example-child">
-                </div>
-            </div>
+                                <div class="mob-demo-example-child">
+                                    <div class="block">
+                                        <p class="demonstration">默认</p>
+                                        <mob-date-year
+                                                style="display:block;width: 320px;margin: 0 auto"
+                                                ng-model="yearModel"></mob-date-year>
+                                    </div>
+                                    <div class="block">
+                                        <p class="demonstration">快捷选择</p>
+                                        <mob-date-year ng-model="yearModel" shortcuts="yearShortcuts"></mob-date-year>
+                                    </div>
+                                </div>
+                                <div class="mob-demo-example-child">
+                                    <div class="block">
+                                        <p class="demonstration">默认</p>
+                                        <mob-date-year-range
+                                                style="margin: 0 auto"
+                                                ng-model="yearModelRange"></mob-date-year-range>
+                                    </div>
+                                    <div class="block">
+                                        <p class="demonstration">快捷选择</p>
+                                        <mob-date-year-range
+                                                style="margin: 0 auto"
+                                                ng-model="yearModelRange" shortcuts="yearModelRangeShorcuts"></mob-date-year-range>
+                                    </div>
+                                </div>
+                                <div class="mob-demo-example-child">
+                                </div>
+                                <div class="mob-demo-example-child">
+                                </div>
+                            </div>
                         --></code>
                     </pre>
             </div>
@@ -86,6 +94,12 @@
                     <div class="block">
                         <p class="demonstration">快捷选择</p>
                         <mob-date-month ng-model="monthModel" shortcuts="monthShortcuts"></mob-date-month>
+                    </div>
+                </div>
+                <div class="mob-demo-example-child">
+                    <div class="block">
+                        <p class="documentary">默认</p>
+                        <mob-date-month-range ng-model="monthModel"></mob-date-month-range>
                     </div>
                 </div>
             </div>

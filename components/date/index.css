@@ -12,10 +12,11 @@
     --mob-date-sider-button-line-height: 28px;
 
     --mob-date-container-padding: 10px;
-    --mob-date-container-year-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)) * 4);
+    --mob-date-container-year-month-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)));
+    --mob-date-container-year-month-width: calc(--mob-date-container-year-month-col-width * 4);
 
-    --mob-date-year-maxWidth: calc((var(--mob-date-container-year-width) + var(--mob-date-sider-width)));
-    --mob-date-year-range-maxWidth: calc((var(--mob-date-container-year-width) * 2 + var(--mob-date-sider-width)));
+    --mob-date-year-month-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
+    --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
 }
 .mob-date {
     /*max-width: 350px;*/
@@ -23,10 +24,10 @@
     color: var(--mob-regular-text-color);
 }
 .mob-date.mob-date-year {
-    max-width: var(--mob-date-year-maxWidth);
+    max-width: var(--mob-date-year-month-maxWidth);
 }
 .mob-date.mob-date-year-range {
-    max-width: var(--mob-date-year-range-maxWidth);
+    max-width: var(--mob-date-year-month-range-maxWidth);
 }
 
 .mob-date > div {
@@ -134,7 +135,7 @@
 .mob-date .mob-date-month .mob-date__container > .mob-date__content .row ,
 .mob-date .mob-date-month-range .mob-date__container > .mob-date__content .row {
     grid-template-rows:auto auto auto;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 100px);
 }
 
 .mob-date .mob-date__content .col {
