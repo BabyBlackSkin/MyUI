@@ -5,8 +5,8 @@ function yearController($scope, $element, $attrs, $date) {
         if (angular.isUndefined(this.ngModel)) {
             this.ngModel = [];
         }
-        this.seconaryModel = []
-        this.potentialModel = []
+        this.secondaryModel = [] // 对选择的内容进行暂存，当头尾都选择后，保存到ngModel中
+        this.potentialModel = [] // 暂存鼠标移入的内容
         // 当前年份
         $scope.date = new Date
         // 当前年份
@@ -48,6 +48,9 @@ function yearController($scope, $element, $attrs, $date) {
                 let opt = {value: newValue, attachment: this.attachment}
                 _that.change({opt: opt})
             }
+            // TODO 存在问题
+            _that.secondaryModel = [..._that.ngModel]
+            _that.potentialModel = [..._that.ngModel]
 
             // ngModel发生变化时，重新计算startYear和endYear，并重新readerOptions
             // 获取最后一位
@@ -142,13 +145,13 @@ function yearController($scope, $element, $attrs, $date) {
 
     // 日历项被点击时触发
     this.calendarMouseOverHandle = function (year) {
-        if(!this.seconaryModel || this.seconaryModel.length < 1){
+        if(!this.secondaryModel || this.secondaryModel.length < 1){
             return
         }
-        if(this.seconaryModel.length === 2){
+        if(this.secondaryModel.length === 2){
             return;
         }
-        this.potentialModel = [this.seconaryModel[0]]
+        this.potentialModel = [this.secondaryModel[0]]
         if (this.potentialModel[0] <= year) {
             this.potentialModel.push(year)
         } else {
@@ -161,19 +164,19 @@ function yearController($scope, $element, $attrs, $date) {
     this.calendarClickHandle = function (year, calendarName) {
         debugger
         //
-        if (this.seconaryModel.length === 0) {
-            this.seconaryModel = [year]
+        if (this.secondaryModel.length === 0) {
+            this.secondaryModel = [year]
             this.potentialModel = [year]
-        } else if (this.seconaryModel.length === 1) {
-            if (this.seconaryModel[0] <= year) {
-                this.seconaryModel.push(year)
+        } else if (this.secondaryModel.length === 1) {
+            if (this.secondaryModel[0] <= year) {
+                this.secondaryModel.push(year)
             } else {
-                this.seconaryModel.unshift(year)
+                this.secondaryModel.unshift(year)
             }
-            this.ngModel = this.seconaryModel
+            this.ngModel = this.secondaryModel
         } else {//重新选择
             this.ngModel = []
-            this.seconaryModel = [year]
+            this.secondaryModel = [year]
             this.potentialModel = [year]
         }
 
@@ -192,7 +195,7 @@ function yearController($scope, $element, $attrs, $date) {
         let rightFullYear = $date.getFullYear(rightCalendarValue);
         if (leftFullYear && rightFullYear) {
             this.ngModel = [leftFullYear, rightFullYear]
-            this.seconaryModel = [leftFullYear, rightFullYear]
+            this.secondaryModel = [leftFullYear, rightFullYear]
             this.potentialModel = [leftFullYear, rightFullYear]
         }
     }
