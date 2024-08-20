@@ -200,6 +200,14 @@ function yearController($scope, $element, $attrs, $date) {
 
     // ===== 状态方法
 
+    // 是否激活
+    this.isActive = function (val) {
+        if (angular.isUndefined(this.ngModel)) {
+            return false;
+        }
+        return Object.is(this.ngModel[0], val) || Object.is(this.ngModel[1], val)
+    }
+
     // 是否潜在的选中
     this.isPotential = function (val) {
         if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {

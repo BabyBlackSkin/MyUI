@@ -26,7 +26,7 @@
                              ng-click="$ctrl.calendarClickHandle(year,'leftCalendar')"
                              ng-class="{
                                  'today':year == currentYear,
-                                 'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year),
+                                 'active':$ctrl.isActive(year),
                                  'potential':$ctrl.isPotential(year),
                                  'potential-active potential-active-start': $ctrl.isPotentialActiveStart(year),
                                  'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(year)
@@ -60,7 +60,7 @@
                              ng-click="$ctrl.calendarClickHandle(year,'rightCalendar')"
                              ng-class="{
                                  'today':year == currentYear,
-                                 'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year),
+                                 'active':$ctrl.isActive(year),
                                  'potential':$ctrl.isPotential(year),
                                  'potential-active potential-active-start': $ctrl.isPotentialActiveStart(year),
                                  'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(year)
