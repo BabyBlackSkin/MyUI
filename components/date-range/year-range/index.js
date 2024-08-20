@@ -48,9 +48,6 @@ function yearController($scope, $element, $attrs, $date) {
                 let opt = {value: newValue, attachment: this.attachment}
                 _that.change({opt: opt})
             }
-            // TODO 存在问题
-            _that.secondaryModel = [..._that.ngModel]
-            _that.potentialModel = [..._that.ngModel]
 
             // ngModel发生变化时，重新计算startYear和endYear，并重新readerOptions
             // 获取最后一位
@@ -198,6 +195,35 @@ function yearController($scope, $element, $attrs, $date) {
             this.secondaryModel = [leftFullYear, rightFullYear]
             this.potentialModel = [leftFullYear, rightFullYear]
         }
+    }
+
+
+    // ===== 状态方法
+
+    // 是否潜在的选中
+    this.isPotential = function (val) {
+        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
+            return this.ngModel[0] <= val && val <= this.ngModel[1]
+        }
+        return angular.isDefined(this.potentialModel) && this.potentialModel.length === 2 &&
+            this.potentialModel[0] <= val && val <= this.potentialModel[1]
+    }
+    // 是否潜在的选中的开始
+    this.isPotentialActiveStart = function (val) {
+        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
+            return Object.is(this.ngModel[0], val)
+
+        }
+        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[0]) &&
+            Object.is(this.potentialModel[0], val)
+    }
+    // 是否潜在的选中的结束
+    this.isPotentialActiveEnd = function (val) {
+        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
+            return Object.is(this.ngModel[1], val)
+        }
+        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[1]) &&
+            Object.is(this.potentialModel[1], val)
     }
 
 }

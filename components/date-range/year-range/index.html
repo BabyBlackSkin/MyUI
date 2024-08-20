@@ -27,9 +27,9 @@
                              ng-class="{
                                  'today':year == currentYear,
                                  'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year),
-                                 'potential':($ctrl.potentialModel[0] <= year && year <= $ctrl.potentialModel[1]),
-                                 'potential-active potential-active-start': $ctrl.potentialModel[0] === year,
-                                 'potential-active potential-active-end': $ctrl.potentialModel[1] === year
+                                 'potential':$ctrl.isPotential(year),
+                                 'potential-active potential-active-start': $ctrl.isPotentialActiveStart(year),
+                                 'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(year)
                                  }">
                             <span ng-bind="year"></span>
                         </div>
@@ -61,9 +61,9 @@
                              ng-class="{
                                  'today':year == currentYear,
                                  'active':($ctrl.ngModel[0] === year || $ctrl.ngModel[1] === year),
-                                 'potential':($ctrl.potentialModel[0] <= year && year <= $ctrl.potentialModel[1]),
-                                 'potential-active potential-active-start': $ctrl.potentialModel[0] === year,
-                                 'potential-active potential-active-end': $ctrl.potentialModel[1] === year
+                                 'potential':$ctrl.isPotential(year),
+                                 'potential-active potential-active-start': $ctrl.isPotentialActiveStart(year),
+                                 'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(year)
                                  }"
                         >
                             <span ng-bind="year"></span>
