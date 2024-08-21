@@ -140,12 +140,12 @@ function yearController($scope, $element, $attrs, $date) {
         }
     }
 
-    // 日历项被点击时触发
+    // 日历项鼠标移入时触发
     this.calendarMouseOverHandle = function (year) {
-        if(!this.secondaryModel || this.secondaryModel.length < 1){
+        if (!this.secondaryModel || this.secondaryModel.length < 1) {
             return
         }
-        if(this.secondaryModel.length === 2){
+        if (this.secondaryModel.length === 2) {
             return;
         }
         this.potentialModel = [this.secondaryModel[0]]
@@ -194,6 +194,7 @@ function yearController($scope, $element, $attrs, $date) {
             this.ngModel = [leftFullYear, rightFullYear]
             this.secondaryModel = [leftFullYear, rightFullYear]
             this.potentialModel = [leftFullYear, rightFullYear]
+            // TODO 点击快捷方式时，应该更新日历面板。注：需判断是都更新还是仅更新某个面板
         }
     }
 

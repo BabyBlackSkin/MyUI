@@ -1,6 +1,9 @@
 <div class="mob-date mob-unselect-text">
     <div class="mob-date-month">
         <div class="mob-date__container__wrapper">
+            {{$ctrl.secondaryModel}}
+            {{$ctrl.potentialModel}}
+            {{$ctrl.ngModel}}
             <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
                 <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
             </div>
@@ -8,7 +11,7 @@
                 <div class="mob-date__header">
                     <mob-icon-double-arrow-left ng-click="$ctrl.decrease('leftCalendar')" class="button"></mob-icon-double-arrow-left>
                     <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="leftCalendarYear"></span>
+                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="leftCalendar.year"></span>
                     </p>
                     <mob-icon-double-arrow-right
                             class="button"
@@ -16,16 +19,20 @@
                             ng-class="{'is_disabled':$ctrl.isDisabledCalendarChange()}"></mob-icon-double-arrow-right>
                 </div>
                 <div class="mob-date__content">
-                    <div class="row" ng-repeat="mGroup in options">
+                    <div class="row" ng-repeat="mGroup in leftCalendar.options">
                         <!-- 存在年份Bug -->
                         <div class="col"
-                             ng-repeat="m in mGroup"
-                             ng-click="$ctrl.calendarClickHandle(m)"
+                             ng-repeat="option in mGroup"
+                             ng-mousemove="$ctrl.calendarMouseOverHandle(option)"
+                             ng-click="$ctrl.calendarClickHandle(option,'leftCalendar')"
                              ng-class="{
-                             'today':m == currentMonth && leftCalendarYear === currentYear ,
-                             'active': m === ngModelMonth && calendarYear === ngModelYear
+                                'today':month == currentMonth && leftCalendar.year === currentYear,
+                                'active':$ctrl.isActive(option),
+                                'potential':$ctrl.isPotential(option),
+                                'potential-active potential-active-start': $ctrl.isPotentialActiveStart(option),
+                                'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(option)
                               }">
-                            <span ng-bind="m"></span>
+                            <span ng-bind="option.month"></span>
                         </div>
                     </div>
                 </div>
@@ -44,21 +51,25 @@
                             ng-click="$ctrl.decrease('rightCalendar', true)"
                              ng-class="{'is_disabled':$ctrl.isDisabledCalendarChange()}"></mob-icon-double-arrow-left>
                     <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="rightCalendarYear"></span>
+                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="rightCalendar.year"></span>
                     </p>
                     <mob-icon-double-arrow-right ng-click="$ctrl.increase('rightCalendar')" class="button"></mob-icon-double-arrow-right>
                 </div>
                 <div class="mob-date__content">
-                    <div class="row" ng-repeat="mGroup in options">
+                    <div class="row" ng-repeat="mGroup in rightCalendar.options">
                         <!-- 存在年份Bug -->
                         <div class="col"
-                             ng-repeat="m in mGroup"
-                             ng-click="$ctrl.calendarClickHandle(m)"
+                             ng-repeat="option in mGroup"
+                             ng-mousemove="$ctrl.calendarMouseOverHandle(option)"
+                             ng-click="$ctrl.calendarClickHandle(option,'rightCalendar')"
                              ng-class="{
-                             'today':m == currentMonth && rightCalendarYear === currentYear ,
-                             'active': m === ngModelMonth && calendarYear === ngModelYear
+                                'today':month == currentMonth && rightCalendar.year === currentYear ,
+                                'active': $ctrl.isActive(option),
+                                'potential':$ctrl.isPotential(option),
+                                'potential-active potential-active-start': $ctrl.isPotentialActiveStart(option),
+                                'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(option)
                              }">
-                            <span ng-bind="m"></span>
+                            <span ng-bind="option.month"></span>
                         </div>
                     </div>
                 </div>

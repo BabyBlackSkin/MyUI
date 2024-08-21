@@ -67,6 +67,23 @@ app
                 value: [new Date(),$date.add(new Date(), 30, 'year')]
             }]
 
+
+        $scope.monthModelRange = []
+        $scope.monthModelRangeShorcuts = [
+            {
+                text: '过去2年',
+                value: [$date.subtract(new Date(), 2, 'year'),new Date()]
+            },
+            {
+                text: '未来2年',
+                value: [new Date(),$date.add(new Date(), 2, 'year')]
+            },
+            {
+                text: '未来30年',
+                value: [new Date(),$date.add(new Date(), 30, 'year')]
+            }]
+
+
         $scope.validDate = function (opt) {
             return opt.date.timestamp < 1720972800
         }

@@ -3,6 +3,7 @@
     display: flex;
 }
 
-.mob-date-year-range .mob-date__body .mob-date__container{
+.mob-date-year-range .mob-date__body .mob-date__container,
+.mob-date-month-range .mob-date__body .mob-date__container{
     flex-grow: 1;
 }

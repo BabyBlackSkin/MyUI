@@ -104,7 +104,12 @@
     width: 320px;
     padding: 0 10px;
 }
-.mob-date-year .mob-date__container,.mob-date-year-range .mob-date__container {
+
+.mob-date-year .mob-date__container,
+.mob-date-year-range .mob-date__container,
+.mob-date-month .mob-date__container,
+.mob-date-month-range .mob-date__container
+{
     width: var(--mob-date-container-year-month-width);
     padding: 0 10px;
 }

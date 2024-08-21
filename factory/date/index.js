@@ -38,7 +38,7 @@ app
             },
             // 时间戳
             getTimeStamp: function (date) {
-                return this.isDate(date) && date.getTime()
+                return this.isDate(date) && date.getTime() / 1000
             },
             // =========== 下面返回的是一个Date对象 ===========
             // 月

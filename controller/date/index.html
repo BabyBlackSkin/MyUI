@@ -1,18 +1,6 @@
 <section class="mob-doc content" ng-controller="Date as ctrl">
     <h2>DatePicker日期选择器</h2>
 
-    <br>
-    <br>
-    <br>
-    <div style="display: grid;    grid-template-rows:auto;
-    grid-template-columns: repeat(4, 100px);">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-    </div>
-
-
     <div class="mob-doc content">
         <h3>年</h3>
         <div class="mob-demo-block">
@@ -84,14 +72,18 @@
             </div>
         </div>
     </div>
+
+
     <div class="mob-doc content">
         <h3>月</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div class="block">
-                        <p class="documentary">默认</p>
-                        <mob-date-month ng-model="monthModel"></mob-date-month>
+                        <p class="demonstration">默认</p>
+                        <mob-date-month
+                                style="margin: 0 auto"
+                                ng-model="monthModel"></mob-date-month>
                     </div>
                     <div class="block">
                         <p class="demonstration">快捷选择</p>
@@ -100,8 +92,16 @@
                 </div>
                 <div class="mob-demo-example-child">
                     <div class="block">
-                        <p class="documentary">默认</p>
-                        <mob-date-month-range ng-model="monthModel"></mob-date-month-range>
+                        <p class="demonstration">默认</p>
+                        <mob-date-month-range
+                                style="margin: 0 auto"
+                                ng-model="monthModelRange"></mob-date-month-range>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-month-range
+                                style="margin: 0 0 0 10px"
+                                ng-model="monthModelRange" shortcuts="monthModelRangeShorcuts"></mob-date-month-range>
                     </div>
                 </div>
             </div>
