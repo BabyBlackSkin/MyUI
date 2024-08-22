@@ -64,14 +64,19 @@ function monthController($scope, $element, $attrs, $date) {
             if (newValue.length === 0) {
                 return;
             }
-            // ngModel改变时，获取年份
+            // ngModel改变时
             let leftNgModel = newValue[0].split("-")
+            let leftNgModelYear =  Number(leftNgModel[0])
+            let leftNgModelMonth =  Number(leftNgModel[1])
             $scope.leftCalendar.year = Number(leftNgModel[0])
             $scope.leftCalendar.month = Number(leftNgModel[1])
 
             let rightNgModel = newValue[1].split("-")
             $scope.rightCalendar.year = Number(rightNgModel[0])
             $scope.rightCalendar.month = Number(rightNgModel[1])
+
+            // 尝试重新渲染日历
+
         })
     }
 
@@ -223,9 +228,6 @@ function monthController($scope, $element, $attrs, $date) {
         $scope.rightCalendar.month = rightCalendarYear
 
         this.ngModel = [leftCalendarYear + "-" + leftCalendarMonth, rightCalendarYear + "-" + rightCalendarMonth]
-        // TODO 点击快捷方式时，应该更新日历面板。注：需判断是都更新还是仅更新某个面板
-        this.renderOptions('leftCalendar')
-        this.renderOptions('rightCalendar')
     }
 
 
