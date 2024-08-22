@@ -51,21 +51,15 @@ function yearController($scope, $element, $attrs, $date) {
 
             // ngModel发生变化时，重新计算startYear和endYear，并重新readerOptions
             // 获取最后一位
-            if(angular.isDefined(newValue[0]) && ($scope.leftCalendarStartYear <= newValue[0] && newValue[0] <= $scope.leftCalendarEndYear)){
-                let leftCalendarStartYear = _that.getStartYearAndEndYear(newValue[0])
-                if ($scope.leftCalendarStartYear !== leftCalendarStartYear) {
-                    $scope.leftCalendarStartYear = leftCalendarStartYear
-                    $scope.leftCalendarEndYear = $scope.leftCalendarStartYear + 9
-                    _that.renderOptions('leftCalendar')
-                }
+            if(angular.isDefined(newValue[0]) && newValue[0] <= $scope.leftCalendarStartYear){
+                $scope.leftCalendarStartYear = _that.getStartYearAndEndYear(newValue[0])
+                $scope.leftCalendarEndYear = $scope.leftCalendarStartYear + 9
+                _that.renderOptions('leftCalendar')
             }
-            if (angular.isDefined(newValue[1]) && ($scope.rightCalendarStartYear <= newValue[1] && newValue[1] <= $scope.rightCalendarEndYear)) {
-                let rightCalendarStartYear = _that.getStartYearAndEndYear(newValue[1])
-                if ($scope.rightCalendarStartYear !== rightCalendarStartYear) {
-                    $scope.rightCalendarStartYear = rightCalendarStartYear
-                    $scope.rightCalendarEndYear = $scope.rightCalendarStartYear + 9
-                    _that.renderOptions('rightCalendar')
-                }
+            if (angular.isDefined(newValue[1]) && $scope.rightCalendarEndYear <= newValue[1]) {
+                $scope.rightCalendarStartYear = _that.getStartYearAndEndYear(newValue[1])
+                $scope.rightCalendarEndYear = $scope.rightCalendarStartYear + 9
+                _that.renderOptions('rightCalendar')
             }
         })
     }
@@ -194,7 +188,6 @@ function yearController($scope, $element, $attrs, $date) {
             this.ngModel = [leftFullYear, rightFullYear]
             this.secondaryModel = [leftFullYear, rightFullYear]
             this.potentialModel = [leftFullYear, rightFullYear]
-            // TODO 点击快捷方式时，应该更新日历面板。注：需判断是都更新还是仅更新某个面板
         }
     }
 
