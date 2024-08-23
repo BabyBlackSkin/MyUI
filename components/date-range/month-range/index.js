@@ -74,8 +74,9 @@ function monthController($scope, $element, $attrs, $date) {
             let rightNgModel = newValue[1].split("-")
             $scope.rightCalendar.year = Number(rightNgModel[0])
             $scope.rightCalendar.month = Number(rightNgModel[1])
-
-            // 尝试重新渲染日历
+            // 重新渲染
+            _that.renderOptions('leftCalendar')
+            _that.renderOptions('rightCalendar')
 
         })
     }
@@ -221,8 +222,8 @@ function monthController($scope, $element, $attrs, $date) {
         $scope.leftCalendar.year = leftCalendarYear
         $scope.leftCalendar.month = leftCalendarMonth
 
-        let rightCalendarYear = $date.getFullYear(shortcut.value[0])
-        let rightCalendarMonth = $date.getMonth(shortcut.value[0])
+        let rightCalendarYear = $date.getFullYear(shortcut.value[1])
+        let rightCalendarMonth = $date.getMonth(shortcut.value[1])
 
         $scope.rightCalendar.year = rightCalendarYear
         $scope.rightCalendar.month = rightCalendarYear
