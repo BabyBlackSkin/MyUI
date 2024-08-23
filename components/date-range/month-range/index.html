@@ -1,9 +1,6 @@
 <div class="mob-date mob-unselect-text">
     <div class="mob-date-month">
         <div class="mob-date__container__wrapper">
-            {{$ctrl.secondaryModel}}
-            {{$ctrl.potentialModel}}
-            {{$ctrl.ngModel}}
             <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
                 <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
             </div>
