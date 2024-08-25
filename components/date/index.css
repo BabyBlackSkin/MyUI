@@ -2,6 +2,7 @@
     /*--mob-calendar-col-height:60px;*/
     --mob-calendar-col-padding:10px;
     --mob-calendar-col-span-width:80px;
+    --mob-calendardate-col-span-width:40px;
     --mob-calendar-col-span-height:40px;
     --mob-calendar-col-span-border-radius: 30px;
 
@@ -14,6 +15,7 @@
     --mob-date-container-padding: 10px;
     --mob-date-yeaer-month-col: 4;
     --mob-date-container-year-month-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)));
+    --mob-date-container-date-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendardate-col-span-width)));
     --mob-date-container-year-month-width: calc(var(--mob-date-container-year-month-col-width) * var(--mob-date-yeaer-month-col));
 
     --mob-date-year-month-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
@@ -101,7 +103,7 @@
     color: var(--mob-primary-color);
 }
 .mob-date .mob-date__container {
-    width: 320px;
+    /*width: 320px;*/
     padding: 0 10px;
 }
 
@@ -152,7 +154,6 @@
     align-items: center;
     cursor: pointer;
 }
-
 .mob-date .mob-date__content .col span {
     box-sizing: border-box;
     display: flex;
@@ -163,6 +164,24 @@
     border-radius: var(--mob-calendar-col-span-border-radius);
 }
 
+.mob-date .mob-date-date .mob-date__content .col {
+    width: var(--mob-date-container-date-col-width);
+    box-sizing: border-box;
+    display: flex;
+    padding: var(--mob-calendar-col-padding);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.mob-date .mob-date-date .mob-date__content .col span {
+     box-sizing: border-box;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: var(--mob-calendardate-col-span-width);
+     height: var(--mob-calendar-col-span-height);
+     border-radius: var(--mob-calendar-col-span-border-radius);
+ }
 .mob-date .mob-date__content .col.prev span, .mob-date .mob-date__content .col.next span {
     color: var(--mob-date-off-text-color);
 }
@@ -222,9 +241,9 @@
 
 }
 
-.mob-date .mob-date-date .mob-date__content .col {
-    width: 100%;
-}
+/*.mob-date .mob-date-date .mob-date__content .col {*/
+/*    width: 100%;*/
+/*}*/
 
 .mob-date .mob-date-date .mob-date__content .col:not(.disabled) span {
     display: inline-block;
