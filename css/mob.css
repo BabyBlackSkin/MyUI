@@ -142,7 +142,7 @@ mob-check-box {
     font-size: 0;
 }
 
-mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-range,mob-date-date-range {
+mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-range,mob-date-date-range,mob-date-date-range {
     display: inline-block;
 }
 

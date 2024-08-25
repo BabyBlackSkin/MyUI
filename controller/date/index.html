@@ -120,12 +120,32 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
+                    <div class="block">
+                        <p class="demonstration">默认</p>
                     <mob-date-date ng-model="value2" disabled-date="validDate(opt)"></mob-date-date>
+                    </div>
                 </div>
-                <p class="demonstration">快捷选择</p>
                 <div class="mob-demo-example-child">
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
                     <mob-date-date ng-model="value2" disabled-date="validDate(opt)"
                                    shortcuts="dateShortcuts"></mob-date-date>
+                    </div>
+                </div>
+
+                <div class="mob-demo-example-child">
+                    <div class="block">
+                        <p class="demonstration">默认</p>
+                        <mob-date-date-range
+                                style="margin: 0 auto"
+                                ng-model="dateModelRange"></mob-date-date-range>
+                    </div>
+                    <div class="block">
+                        <p class="demonstration">快捷选择</p>
+                        <mob-date-date-range
+                                style="margin: 0 0 0 10px"
+                                ng-model="dateModelRange" shortcuts="dateModelRangeShorcuts"></mob-date-date-range>
+                    </div>
                 </div>
             </div>
             <div class="meta">

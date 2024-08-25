@@ -11,8 +11,8 @@
                                                 class="button"></mob-icon-double-arrow-left>
                     <mob-icon-arrow-left ng-click="$ctrl.decreaseMonth()" class="button"></mob-icon-arrow-left>
                     <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="calendarYear"></span>
-                        <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="calendarMonth"></span>
+                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="leftCalendar.year"></span>
+                        <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="leftCalendar.month"></span>
                     </p>
                     <mob-icon-arrow-right ng-click="$ctrl.increaseMonth()" class="button"></mob-icon-arrow-right>
                     <mob-icon-double-arrow-right ng-click="$ctrl.increaseYear()"
@@ -42,14 +42,14 @@
                             <span>六</span>
                         </div>
                     </div>
-                    <div class="row" ng-repeat="week in options">
+                    <div class="row" ng-repeat="week in leftCalendar.options">
                         <div class="col"
                              ng-click="$ctrl.calendarClickHandle(d)"
                              ng-class="{
                          'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
                          'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
-                         'prev prev-month':d.month < calendarMonth,
-                          'next next-month':d.month > calendarMonth,
+                         'prev prev-month':d.month < leftCalendar.month,
+                          'next next-month':d.month > leftCalendar.month,
                           'disabled':d.disabled
                           }"
                              ng-repeat="d in week">
@@ -96,14 +96,14 @@
                             <span>六</span>
                         </div>
                     </div>
-                    <div class="row" ng-repeat="week in options">
+                    <div class="row" ng-repeat="week in rightCalendar.options">
                         <div class="col"
                              ng-click="$ctrl.calendarClickHandle(d)"
                              ng-class="{
                          'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
                          'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
-                         'prev prev-month':d.month < calendarMonth,
-                          'next next-month':d.month > calendarMonth,
+                         'prev prev-month':d.month < rightCalendar.year,
+                          'next next-month':d.month > rightCalendar.month,
                           'disabled':d.disabled
                           }"
                              ng-repeat="d in week">

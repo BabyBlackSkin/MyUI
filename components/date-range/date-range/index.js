@@ -13,16 +13,23 @@ function dateController($scope, $element, $attrs, $date) {
         $scope.currentMonth = $date.getMonth($scope.calendarDate)
         $scope.currentYear = $date.getFullYear($scope.calendarDate)
 
-        // 选择年份
-        $scope.calendarYear = $scope.currentYear;
-        // 选择月份
-        $scope.calendarMonth = $scope.currentMonth;
-        // 选择日期
-        $scope.calendarDate = $scope.currentDate
-        // 选择的年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+        // 左侧日历
+        $scope.leftCalendar = {
+            year: $scope.currentYear, // 年份
+            month:$scope.currentMonth, // 月份
+            date: $scope.currentDate, // 日期
+            options:[], // 可选项
+        }
+        // 右侧日历
+        $scope.rightCalendar = {
+            year: $scope.currentYear, // 年份
+            month:$scope.currentMonth, // 月份
+            date: $scope.currentDate, // 日期
+            options:[], // 可选项
+        }
 
-        this.renderOptions()
+        this.renderOptions("leftCalendar")
+        this.renderOptions("rightCalendar")
 
         this.calculateNgModelYearMonthDate()
 
@@ -61,12 +68,17 @@ function dateController($scope, $element, $attrs, $date) {
     }
 
     // 根据年份计算选项
-    this.renderOptions = function () {
-        let time = new Date($scope.calendarYear, $scope.calendarMonth - 1)
-        let  startMonth = $date.getStartOfMonth(time)
-        let  endMonth = $date.getEndOfMonth(time)
+    this.renderOptions = function (calendarName) {
+        let calendarYear = $scope[`${calendarName}`].year
+        let calendarMonth = $scope[`${calendarName}`].month - 1
+        let time = new Date(calendarYear, calendarMonth)
 
-        $scope.options = []
+        let startMonth = $date.getStartOfMonth(time)
+        let endMonth = $date.getEndOfMonth(time)
+
+        let options = []
+        $scope[`${calendarName}`].options = options
+
         // 周索引
         let weekInx = 0;
         // 上一个日期的周
@@ -75,7 +87,7 @@ function dateController($scope, $element, $attrs, $date) {
         // 当前第一天不满一周时，往前推算
         let startMonthWeekInx = $date.getDay(startMonth)
         if (startMonthWeekInx !== 0) {
-            $scope.options[0] = []
+            options[0] = []
             for (let i = startMonthWeekInx; i > 0; i--) {
 
                 let date = $date.subtract(startMonth,i, 'date');
@@ -90,7 +102,7 @@ function dateController($scope, $element, $attrs, $date) {
                 // 日期是否禁用
                 item.disabled = this.disabledDateHandle(item);
                 // 存入options
-                $scope.options[0].push(item)
+                options[0].push(item)
             }
         }
 
@@ -102,7 +114,7 @@ function dateController($scope, $element, $attrs, $date) {
             // 创建日期对象
             let item = {
                 timestamp: $date.getTimeStamp(date),
-                year:$date.getFullYear(date),
+                year: $date.getFullYear(date),
                 month: $date.getMonth(date),
                 day: $date.getDay(date),
                 date: $date.getDate(date)
@@ -117,11 +129,11 @@ function dateController($scope, $element, $attrs, $date) {
             // 记录当前日期 所在的周
             lastDateWeek = item.day
             // 初始化当前周的数组
-            if (!$scope.options[weekInx]) {
-                $scope.options[weekInx] = []
+            if (!options[weekInx]) {
+                options[weekInx] = []
             }
             // 存入options
-            $scope.options[weekInx].push(item)
+            options[weekInx].push(item)
         }
 
         // 最后一天。不满一周
@@ -144,18 +156,18 @@ function dateController($scope, $element, $attrs, $date) {
                 };
                 // 日期是否禁用
                 item.disabled = this.disabledDateHandle(item);
-                $scope.options[weekInx].push(item)
+                options[weekInx].push(item)
             }
         }
     }
 
     // 解析ngModel
     this.analyzeNgModelYearMonthDate = function () {
-        if (!this.ngModel) {// 如果未定义ngModel。则year,month, date是一个永远也不可能的值
-            return [-1, -1, -1]
+        if (!this.ngModel || this.ngModel.length === 0) {// 如果未定义ngModel。则year,month, date是一个永远也不可能的值
+            return []
         }
         let ngModelArr = this.ngModel.split("-")
-        return [Number(ngModelArr[0]),  Number(ngModelArr[1]), Number(ngModelArr[2])]
+        return [Number(ngModelArr[0]), Number(ngModelArr[1]), Number(ngModelArr[2])]
     }
     // 计算ngModelYear，ngModelMonth, ngModelDate
     this.calculateNgModelYearMonthDate = function (){
