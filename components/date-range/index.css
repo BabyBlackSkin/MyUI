@@ -1,9 +1,12 @@
-.mob-date-year-range .mob-date__body {
+.mob-date-year-range .mob-date__body,
+.mob-date-month-range .mob-date__body,
+.mob-date-date-range .mob-date__body {
     width: 100%;
     display: flex;
 }
 
 .mob-date-year-range .mob-date__body .mob-date__container,
 .mob-date-month-range .mob-date__body .mob-date__container{
+    position: relative;
     flex-grow: 1;
 }

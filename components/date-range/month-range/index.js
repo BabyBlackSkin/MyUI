@@ -66,18 +66,36 @@ function monthController($scope, $element, $attrs, $date) {
             }
             // ngModel改变时
             let leftNgModel = newValue[0].split("-")
-            let leftNgModelYear =  Number(leftNgModel[0])
-            let leftNgModelMonth =  Number(leftNgModel[1])
-            $scope.leftCalendar.year = Number(leftNgModel[0])
-            $scope.leftCalendar.month = Number(leftNgModel[1])
-
             let rightNgModel = newValue[1].split("-")
-            $scope.rightCalendar.year = Number(rightNgModel[0])
-            $scope.rightCalendar.month = Number(rightNgModel[1])
-            // 重新渲染
-            _that.renderOptions('leftCalendar')
-            _that.renderOptions('rightCalendar')
+            let leftNgModelYear = Number(leftNgModel[0])
+            let leftNgModelMonth = Number(leftNgModel[1])
+            let rightNgModelYear = Number(rightNgModel[0])
+            let rightNgModelMonth = Number(rightNgModel[1])
+            // 判断ngModel的值是否都在当前的日历面板中
+            // 判断是否同一年
+            let sameYear = leftNgModelYear === rightNgModelYear;
+            // 同一年，则判断是左侧面板还是右侧面板
+            if (sameYear) {
+                if ($scope.leftCalendar.year === leftNgModelYear) {
+                    $scope.leftCalendar.year = leftNgModelYear
+                    $scope.leftCalendar.month = leftNgModelMonth
+                    _that.renderOptions('leftCalendar')
+                } else {
+                    $scope.rightCalendar.year = leftNgModelYear
+                    $scope.rightCalendar.month = leftNgModelMonth
+                    _that.renderOptions('rightCalendar')
+                }
+            }
+            // 不是同一年，则分别赋值并渲染
+            else{
+                $scope.leftCalendar.year = leftNgModelYear
+                $scope.leftCalendar.month = leftNgModelMonth
+                _that.renderOptions('leftCalendar')
 
+                $scope.rightCalendar.year = rightNgModelYear
+                $scope.rightCalendar.month = rightNgModelMonth
+                _that.renderOptions('rightCalendar')
+            }
         })
     }
 
@@ -202,17 +220,18 @@ function monthController($scope, $element, $attrs, $date) {
 
 
     // 改变年份
-    this.changeYear = function (opt) {
-        $scope.calendarYear = opt.value
+    this.changeYear = function (calendar, opt) {
+        this.renderOptions(calendar)
+
     }
 
-    this.hideYearDatePicker = function () {
-        this.yearDatePickerDisplay = false
+    this.hideYearDatePicker = function (displaySwitch) {
+        this[displaySwitch] = false
     }
 
     // 显示年份选择框
-    this.showYearDatePicker = function () {
-        this.yearDatePickerDisplay = true
+    this.showYearDatePicker = function (displaySwitch) {
+        this[displaySwitch] = true
     }
 
     // shortcut点击事件

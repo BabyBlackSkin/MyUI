@@ -1,10 +1,13 @@
 .mob-date{
     /*--mob-calendar-col-height:60px;*/
     --mob-calendar-col-padding:10px;
-    --mob-calendar-col-span-width:80px;
-    --mob-calendardate-col-span-width:40px;
+    --mob-calendar-col-span-width:60px;
     --mob-calendar-col-span-height:40px;
     --mob-calendar-col-span-border-radius: 30px;
+    --mob-calendar-date-col-width:45px;
+    --mob-calendar-date-col-padding:4px;
+    --mob-calendar-date-col-span-width:24px;
+    --mob-calendar-date-col-span-fontSize:12px;
 
     --mob-calendar-header-padding:10px;
 
@@ -15,11 +18,11 @@
     --mob-date-container-padding: 10px;
     --mob-date-yeaer-month-col: 4;
     --mob-date-container-year-month-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)));
-    --mob-date-container-date-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendardate-col-span-width)));
+    --mob-date-container-date-col-width: calc((var(--mob-calendar-date-col-padding) * 2 + var(--mob-calendar-date-col-span-width)));
     --mob-date-container-year-month-width: calc(var(--mob-date-container-year-month-col-width) * var(--mob-date-yeaer-month-col));
-
-    --mob-date-year-month-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
-    --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
+    --mob-date-year-month-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
+    --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2));
+    --mob-date-year-month-range-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
 }
 .mob-date {
     /*max-width: 350px;*/
@@ -27,10 +30,16 @@
     color: var(--mob-regular-text-color);
 }
 .mob-date.mob-date-year {
-    max-width: var(--mob-date-year-month-maxWidth);
+    width: var(--mob-date-container-year-month-width);
+}
+.mob-date.mob-date-year.shortcuts {
+    width: var(--mob-date-year-month-shortcuts-maxWidth);
 }
 .mob-date.mob-date-year-range {
     max-width: var(--mob-date-year-month-range-maxWidth);
+}
+.mob-date.mob-date-year-range.shortcuts {
+    max-width: var(--mob-date-year-month-range-shortcuts-maxWidth);
 }
 
 .mob-date > div {
@@ -138,11 +147,11 @@
 
 .mob-date.mob-date-year .mob-date__container > .mob-date__content .row,
 .mob-date.mob-date-year-range .mob-date__container > .mob-date__content .row,
-.mob-date .mob-date-month .mob-date__container > .mob-date__content .row ,
-.mob-date .mob-date-month-range .mob-date__container > .mob-date__content .row {
+.mob-date.mob-date-month .mob-date__container > .mob-date__content .row ,
+.mob-date.mob-date-month-range .mob-date__container > .mob-date__content .row {
     width: var(--mob-date-container-year-month-width);
     grid-template-rows:auto auto auto;
-    grid-template-columns: repeat(var(--mob-date-yeaer-month-col), 100px);
+    grid-template-columns: repeat(var(--mob-date-yeaer-month-col), 1fr);
 }
 
 .mob-date .mob-date__content .col {
@@ -165,10 +174,10 @@
 }
 
 .mob-date .mob-date-date .mob-date__content .col {
-    width: var(--mob-date-container-date-col-width);
+    width: var(--mob-calendar-date-col-width);
     box-sizing: border-box;
     display: flex;
-    padding: var(--mob-calendar-col-padding);
+    padding: var(--mob-calendar-date-col-padding) 0;
     justify-content: center;
     align-items: center;
     cursor: pointer;
@@ -178,9 +187,10 @@
      display: flex;
      justify-content: center;
      align-items: center;
-     width: var(--mob-calendardate-col-span-width);
-     height: var(--mob-calendar-col-span-height);
+     width: var(--mob-calendar-date-col-span-width);
+     height: var(--mob-calendar-date-col-span-width);
      border-radius: var(--mob-calendar-col-span-border-radius);
+    font-size: var(--mob-calendar-date-col-span-fontSize);
  }
 .mob-date .mob-date__content .col.prev span, .mob-date .mob-date__content .col.next span {
     color: var(--mob-date-off-text-color);
@@ -226,10 +236,10 @@
 }
 
 /** mob-date-date 样式 **/
-.mob-date .mob-date-date .mob-date__content .col {
-    /*width: 40px;*/
-    height: 40px;
-}
+/*.mob-date .mob-date-date .mob-date__content .col {*/
+/*    !*width: 40px;*!*/
+/*    height: 40px;*/
+/*}*/
 
 .mob-date .mob-date-date .mob-date__container > .mob-date__content > .row {
     grid-template-columns: repeat(7, 1fr);
@@ -245,13 +255,13 @@
 /*    width: 100%;*/
 /*}*/
 
-.mob-date .mob-date-date .mob-date__content .col:not(.disabled) span {
-    display: inline-block;
-    text-align: center;
-    line-height: 24px;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    font-size: 13px;
-    border-radius: 50%;
-}
+/*.mob-date .mob-date-date .mob-date__content .col:not(.disabled) span {*/
+/*    display: inline-block;*/
+/*    text-align: center;*/
+/*    line-height: 24px;*/
+/*    width: 24px;*/
+/*    height: 24px;*/
+/*    padding: 0;*/
+/*    font-size: 13px;*/
+/*    border-radius: 50%;*/
+/*}*/

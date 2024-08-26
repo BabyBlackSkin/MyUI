@@ -1,4 +1,6 @@
-<div class="mob-date mob-date-year-range mob-unselect-text">
+<div class="mob-date mob-date-year-range mob-unselect-text"
+     ng-class="{'shortcuts':$ctrl.shortcuts && $ctrl.shortcuts.length}">
+
     <div class="mob-date__container__wrapper">
         <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
             <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text"
