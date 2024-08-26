@@ -74,52 +74,52 @@ function yearController($scope, $element, $attrs, $date) {
 
     /**
      * 根据年份计算选项
-     * @param calendarName leftCalendar / rightCalendar
+     * @param calendar leftCalendar / rightCalendar
      */
-    this.renderOptions = function (calendarName) {
+    this.renderOptions = function (calendar) {
         let yearGroupInx = 0
 
-        $scope[`${calendarName}Options`] = []
-        for (let i = $scope[`${calendarName}StartYear`]; i <= $scope[`${calendarName}EndYear`]; i++) {
-            if (!$scope[`${calendarName}Options`][yearGroupInx]) {
-                $scope[`${calendarName}Options`][yearGroupInx] = []
-            } else if ($scope[`${calendarName}Options`][yearGroupInx].length === 4) {
+        $scope[`${calendar}Options`] = []
+        for (let i = $scope[`${calendar}StartYear`]; i <= $scope[`${calendar}EndYear`]; i++) {
+            if (!$scope[`${calendar}Options`][yearGroupInx]) {
+                $scope[`${calendar}Options`][yearGroupInx] = []
+            } else if ($scope[`${calendar}Options`][yearGroupInx].length === 4) {
                 yearGroupInx++
-                $scope[`${calendarName}Options`][yearGroupInx] = []
+                $scope[`${calendar}Options`][yearGroupInx] = []
             }
-            $scope[`${calendarName}Options`][yearGroupInx].push(i)
+            $scope[`${calendar}Options`][yearGroupInx].push(i)
         }
     }
 
     /**
      * 增加年份
-     * @param calendarName  leftCalendar / rightCalendar
+     * @param calendar  leftCalendar / rightCalendar
      * @param needValid 是否需要校验
      */
-    this.increase = function (calendarName, needValid = false) {
+    this.increase = function (calendar, needValid = false) {
         if (needValid && this.isDisabledCalendarChange()) {
             return
         }
-        $scope[`${calendarName}StartYear`]  = $scope[`${calendarName}StartYear`] + 10
-        $scope[`${calendarName}EndYear`]  = $scope[`${calendarName}StartYear`] + 9
-        this.renderOptions(calendarName)
-        this.panelChangeHandle(calendarName)
+        $scope[`${calendar}StartYear`]  = $scope[`${calendar}StartYear`] + 10
+        $scope[`${calendar}EndYear`]  = $scope[`${calendar}StartYear`] + 9
+        this.renderOptions(calendar)
+        this.panelChangeHandle(calendar)
     }
 
     /**
      * 减少年份
-     * @param calendarName  leftCalendar / rightCalendar
+     * @param calendar  leftCalendar / rightCalendar
      * @param needValid 是否需要校验
      */
-    this.decrease = function (calendarName, needValid = false) {
+    this.decrease = function (calendar, needValid = false) {
         if (needValid && this.isDisabledCalendarChange()) {
             return
         }
 
-        $scope[`${calendarName}StartYear`]  = $scope[`${calendarName}StartYear`] - 10
-        $scope[`${calendarName}EndYear`]  = $scope[`${calendarName}StartYear`] + 9
-        this.renderOptions(calendarName)
-        this.panelChangeHandle(calendarName)
+        $scope[`${calendar}StartYear`]  = $scope[`${calendar}StartYear`] - 10
+        $scope[`${calendar}EndYear`]  = $scope[`${calendar}StartYear`] + 9
+        this.renderOptions(calendar)
+        this.panelChangeHandle(calendar)
     }
 
     this.isDisabledCalendarChange = function () {
@@ -127,9 +127,9 @@ function yearController($scope, $element, $attrs, $date) {
     }
 
     // 日历面板变更
-    this.panelChangeHandle = function (calendarName) {
+    this.panelChangeHandle = function (calendar) {
         if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel, calendarName: calendarName, attachment: this.attachment}
+            let opt = {value: this.ngModel, calendar: calendar, attachment: this.attachment}
             _that.panelChange({opt: opt})
         }
     }
@@ -152,7 +152,7 @@ function yearController($scope, $element, $attrs, $date) {
 
 
     // 日历项被点击时触发
-    this.calendarClickHandle = function (year, calendarName) {
+    this.calendarClickHandle = function (year, calendar) {
         debugger
         //
         if (this.secondaryModel.length === 0) {
@@ -172,7 +172,7 @@ function yearController($scope, $element, $attrs, $date) {
         }
 
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: this.ngModel, calendarName: calendarName, attachment: this.attachment}
+            let opt = {value: this.ngModel, calendar: calendar, attachment: this.attachment}
             _that.calendarClick({opt: opt})
         }
     }

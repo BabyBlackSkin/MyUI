@@ -82,27 +82,27 @@ function monthController($scope, $element, $attrs, $date) {
     }
 
     // 计算opt
-    this.renderOptions = function (calendarName) {
+    this.renderOptions = function (calendar) {
         let monthGroupInx = 0
-        $scope[calendarName]['options'] = []
+        $scope[calendar]['options'] = []
 
         for (let i = 1;i <= 12;i++) {
 
-            if (!$scope[calendarName]['options'][monthGroupInx]) {
-                $scope[calendarName]['options'][monthGroupInx] = []
-            } else if ($scope[calendarName]['options'][monthGroupInx].length === 4) {
+            if (!$scope[calendar]['options'][monthGroupInx]) {
+                $scope[calendar]['options'][monthGroupInx] = []
+            } else if ($scope[calendar]['options'][monthGroupInx].length === 4) {
                 monthGroupInx++
-                $scope[calendarName]['options'][monthGroupInx] = []
+                $scope[calendar]['options'][monthGroupInx] = []
             }
 
             // 01,02,03 ... 10,11
             let fullMonth = (i + "").padStart(2,'0')
 
-            $scope[calendarName]['options'][monthGroupInx].push({
-                year: $scope[calendarName].year,
+            $scope[calendar]['options'][monthGroupInx].push({
+                year: $scope[calendar].year,
                 month: i,
-                timestamp: $date.getTimeStamp(new Date($scope[calendarName].year + "-" + i)),
-                modelValue: `${$scope[calendarName].year}-${fullMonth}`
+                timestamp: $date.getTimeStamp(new Date($scope[calendar].year + "-" + i)),
+                modelValue: `${$scope[calendar].year}-${fullMonth}`
             })
         }
 
@@ -123,36 +123,37 @@ function monthController($scope, $element, $attrs, $date) {
     }
 
     // 增加年份
-    this.increase = function (calendarName, needValid = false) {
+    this.increase = function (calendar, needValid = false) {
         if (needValid && this.isDisabledCalendarChange()) {
             return
         }
-        $scope[calendarName].year = $date.getFullYear(new Date($scope[calendarName].year + "")) + 1
+        $scope[calendar].year = $date.getFullYear(new Date($scope[calendar].year + "")) + 1
         // 重新渲染
-        this.renderOptions(calendarName)
-        this.panelChangeHandle(calendarName)
+        this.renderOptions(calendar)
+        this.panelChangeHandle(calendar)
     }
 
     // 减少年份
-    this.decrease = function (calendarName, needValid = false) {
+    this.decrease = function (calendar, needValid = false) {
         if (needValid && this.isDisabledCalendarChange()) {
             return
         }
-        $scope[calendarName].year = $date.getFullYear(new Date($scope[calendarName].year + "")) - 1
+        $scope[calendar].year = $date.getFullYear(new Date($scope[calendar].year + "")) - 1
         // 重新渲染
-        this.renderOptions(calendarName)
+        this.renderOptions(calendar)
         // 触发日历change事件
-        this.panelChangeHandle(calendarName)
+        this.panelChangeHandle(calendar)
     }
 
+    // 判断是否允许变更年份
     this.isDisabledCalendarChange = function () {
         return $scope.leftCalendar.year + 1 >= $scope.rightCalendar.year
     }
 
     // 日历所选日期变更
-    this.panelChangeHandle = function (calendarName) {
+    this.panelChangeHandle = function (calendar) {
         if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel,calendarName:calendarName, attachment: this.attachment}
+            let opt = {value: this.ngModel,calendar:calendar, attachment: this.attachment}
             _that.panelChange({opt: opt})
         }
     }
@@ -174,8 +175,8 @@ function monthController($scope, $element, $attrs, $date) {
     }
 
     // 日历项被点击时触发
-    this.calendarClickHandle = function (val,calendarName) {
-        $scope[calendarName].month = val.month
+    this.calendarClickHandle = function (val,calendar) {
+        $scope[calendar].month = val.month
         //
         if (this.secondaryModel.length === 0) {
             this.secondaryModel = [val.modelValue]
@@ -194,7 +195,7 @@ function monthController($scope, $element, $attrs, $date) {
         }
 
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: this.ngModel, calendarName: calendarName, attachment: this.attachment}
+            let opt = {value: this.ngModel, calendar: calendar, attachment: this.attachment}
             _that.calendarClick({opt: opt})
         }
     }
