@@ -52,6 +52,12 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的清空事件
         $scope.$on(`${_that.mobSelect.name}Empty`, function (e, data) {
+            if ($scope.active) {
+                $scope.$emit(`${_that.mobSelect.name}collapseTagsListUpdate`, {
+                    label: _that.label,
+                    value: _that.getValue()
+                })
+            }
             $scope.active = false
         })
 

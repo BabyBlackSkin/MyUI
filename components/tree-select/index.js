@@ -420,6 +420,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.isCollapseTagsNoTooltip = function () {
         return !_that.ngDisabled &&
             _that.multiple &&
+            angular.isDefined(_that.ngModel) &&
             _that.ngModel.length > 0 &&
             _that.collapseTag &&
             !_that.collapseTagTooltip
@@ -441,6 +442,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.isCollapseTagsHasTooltip = function () {
         return !_that.ngDisabled &&
             _that.multiple &&
+            angular.isDefined(_that.ngModel) &&
             _that.ngModel.length > 0 &&
             _that.collapseTag &&
             _that.collapseTagTooltip
