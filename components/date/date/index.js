@@ -303,6 +303,7 @@ function dateController($scope, $element, $attrs, $date) {
         $scope.calendarYear = opt.value
         // 同时改变年月
         $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+        this.renderOptions()
     }
 
     // 改变年份
@@ -314,6 +315,7 @@ function dateController($scope, $element, $attrs, $date) {
         $scope.calendarMonth = Number(valArr[1])
         // 同时改变年月
         $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+        this.renderOptions()
     }
 
 
