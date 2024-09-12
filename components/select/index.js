@@ -6,10 +6,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
-        if (this.multiple) {
-            $scope.collapseTagsList = [];
-        }
-
+        $scope.collapseTagsList = [];
         if (angular.isUndefined(this.placeholder)) {
             this.placeholder = "请选择"
         }
@@ -109,6 +106,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newV,oldV) {
+            if (!newV && !oldV) {
+                return
+            }
+            if (newV && oldV && newV === oldV) {
+                return;
+            }
             if (_that.filterable) {
                 $scope.filterableText = ''
                 if (_that.multiple) {
@@ -126,7 +129,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 // 通知OptionsEmpty
                 let emptyValue = _that.emptyValue()
                 $scope.$broadcast(`${_that.name}Empty`, emptyValue)
-                _that.changeHandler(emptyValue)
+                _that.changeHandler({value:emptyValue})
             } else {
                 // 通知OptionsChange
                 $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
@@ -195,7 +198,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip">
+                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip" popper-location="selectDrown">
                     <div class="mob-popper__wrapper">
                         <span class="mob-popper__arrow"></span>
                         <div class="mob-popper__inner">
@@ -236,7 +239,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (angular.isUndefined(this.ngModel)) {
                 this.ngModel = []
             }
-            if (Array.isArray(data) && data.length === 0) {
+            if (Array.isArray(data.value) && data.value.length === 0) {
                 this.ngModel = []
             } else {
                 // 判断model中是否包含
@@ -298,7 +301,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 发送过滤操作
      */
     this.filterOptions = function () {
-        $debounce.debounce($scope, () => {
+        $debounce.debounce($scope, $scope.$id, () => {
             let filter = !!$scope.filterableText
             $scope.$broadcast(`${_that.name}Filter`, {
                 filter,
@@ -321,11 +324,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @returns {false|string|boolean|*|boolean}
      */
     $scope.isCollapseTagsNoTooltip = function () {
-        return !_that.ngDisabled &&
-            _that.multiple &&
-            _that.ngModel.length > 0 &&
-            _that.collapseTag &&
-            !_that.collapseTagTooltip
+        return !_that.ngDisabled && // 未禁用
+            _that.multiple &&  // 支持多选
+            (angular.isDefined(_that.collapseTagTooltip) && !_that.collapseTagTooltip || angular.isUndefined(_that.collapseTagTooltip)) // 不开启工具箱
+            && $scope.collapseTagsList && $scope.collapseTagsList.length > 0
     }
     /**
      * 有工具箱的collapse
@@ -342,18 +344,17 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @returns {false|string|boolean|*|boolean}
      */
     $scope.isCollapseTagsHasTooltip = function () {
-        return !_that.ngDisabled &&
-            _that.multiple &&
-            _that.ngModel.length > 0 &&
-            _that.collapseTag &&
-            _that.collapseTagTooltip
+        return  !_that.ngDisabled && // 未禁用
+            _that.multiple &&  // 支持多选
+            angular.isDefined(_that.collapseTagTooltip) && _that.collapseTagTooltip // 开启工具箱
+            && $scope.collapseTagsList && $scope.collapseTagsList.length > 0
     }
 
     /**
      * 是否有多余的tags
      */
     $scope.isCollapseTagsHasRedundant = function () {
-        return _that.multiple && _that.ngModel.length > 1
+        return _that.multiple && angular.isDefined(_that.ngModel) && _that.ngModel.length > 1
     }
 
     /**

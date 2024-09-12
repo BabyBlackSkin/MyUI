@@ -3,7 +3,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化工作
     this.$onInit = function () {
         this.$type = "mobTreeSelect"
-        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "multiple", "collapseTag", "collapseTagTooltip", "lazy",  "expandOnClickNode", "checkOnClickNode"]
+        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "multiple", "collapseTag", "collapseTagTooltip", "lazy", "loadPerExpand", "expandOnClickNode", "checkOnClickNode"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -103,7 +103,18 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (_that.loadStatus === 1) {
                 return true
             }
-            return _that.initLoad()
+
+            if (_that.loadPerExpand) {
+                $scope.reset();
+                return _that.initLoad()
+            }
+            else {
+                // 已经加载了，直接返回
+                if (_that.loadStatus === 1) {
+                    return true
+                }
+                return _that.initLoad()
+            }
         }
 
         // 标签工具集
@@ -604,6 +615,16 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         return !o[render] || o[render]
     }
 
+    /**
+     * reset
+     */
+    $scope.reset = function (){
+        _that.initOptionsCache([])
+        $timeout(function (){
+            $scope.$refs.tree.$ctrl.initialNodeList()
+        })
+    }
+
 }
 
 app
@@ -611,6 +632,7 @@ app
         transclude: true,
         templateUrl: './components/tree-select/index.html',
         bindings: {
+            ref:"<?", // ref
             ngModel: '=?',// 双向数据绑定
             required: '<?', // 是否必填
             options: '<?',// 选项
@@ -624,6 +646,7 @@ app
             filterable: '<?', // 是否可过滤 TODO
             filterMethod: '&?', // 过滤方法, TODO 待实现
             group: '<?',// 是否分组
+            loadPerExpand: "<?",// 每次展示时加载
             /**
              * 下面是tree组件的内容
              */
