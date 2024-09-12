@@ -1,144 +1,133 @@
-<div class="mob-date mob-unselect-text">
-    <div class="mob-date-date" ng-show="!$ctrl.yearDatePickerDisplay && !$ctrl.monthDatePickerDisplay">
-        <div class="mob-date__container__wrapper">
-            <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
-                <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text"
-                        ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
+<div class="mob-date mob-date-range mob-date-date mob-unselect-text">
+    <div class="mob-date__container__wrapper" ng-show="!$ctrl.yearDatePickerDisplay && !$ctrl.monthDatePickerDisplay">
+        <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
+            <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text"
+                    ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
+        </div>
+        <div class="mob-date__container is_left">
+            <div class="mob-date__header">
+                <mob-icon-double-arrow-left ng-click="$ctrl.decreaseYear('leftCalendar')"
+                                            class="button"></mob-icon-double-arrow-left>
+                <mob-icon-arrow-left ng-click="$ctrl.decreaseMonth('leftCalendar')"
+                                     class="button"></mob-icon-arrow-left>
+                <p class="content">
+                    <span ng-bind="leftCalendar.year"></span>
+                    <span ng-bind="leftCalendar.month"></span>
+                </p>
+                <mob-icon-arrow-right class="button"
+                                      ng-click="$ctrl.increaseMonth('leftCalendar', true)"
+                                      ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeMonth()}">
+
+                </mob-icon-arrow-right>
+                <mob-icon-double-arrow-right
+                        class="button"
+                        ng-click="$ctrl.increaseYear('leftCalendar', true)"
+                        ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeYear()}">
+
+                </mob-icon-double-arrow-right>
             </div>
-            <div class="mob-date__container is_left">
-                <div class="mob-date__header">
-                    <mob-icon-double-arrow-left ng-click="$ctrl.decreaseYear('leftCalendar')"
-                                                class="button"></mob-icon-double-arrow-left>
-                    <mob-icon-arrow-left ng-click="$ctrl.decreaseMonth('leftCalendar')" class="button"></mob-icon-arrow-left>
-                    <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="leftCalendar.year"></span>
-                        <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="leftCalendar.month"></span>
-                    </p>
-                    <mob-icon-arrow-right  class="button"
-                                           ng-click="$ctrl.increaseMonth('leftCalendar', true)"
-                                           ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeMonth()}">
-
-                    </mob-icon-arrow-right>
-                    <mob-icon-double-arrow-right
-                            class="button"
-                            ng-click="$ctrl.increaseYear('leftCalendar', true)"
-                            ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeYear()}">
-
-                    </mob-icon-double-arrow-right>
-                </div>
-                <div class="mob-date__content">
-                    <div class="row">
-                        <div class="col">
-                            <span>日</span>
-                        </div>
-                        <div class="col">
-                            <span>一</span>
-                        </div>
-                        <div class="col">
-                            <span>二</span>
-                        </div>
-                        <div class="col">
-                            <span>三</span>
-                        </div>
-                        <div class="col">
-                            <span>四</span>
-                        </div>
-                        <div class="col">
-                            <span>五</span>
-                        </div>
-                        <div class="col">
-                            <span>六</span>
-                        </div>
+            <div class="mob-date__content">
+                <div class="row">
+                    <div class="col">
+                        <span>日</span>
                     </div>
-                    <div class="row" ng-repeat="week in leftCalendar.options">
-                        <div class="col"
-                             ng-click="$ctrl.calendarClickHandle('leftCalendar', d)"
-                             ng-class="{
+                    <div class="col">
+                        <span>一</span>
+                    </div>
+                    <div class="col">
+                        <span>二</span>
+                    </div>
+                    <div class="col">
+                        <span>三</span>
+                    </div>
+                    <div class="col">
+                        <span>四</span>
+                    </div>
+                    <div class="col">
+                        <span>五</span>
+                    </div>
+                    <div class="col">
+                        <span>六</span>
+                    </div>
+                </div>
+                <div class="row" ng-repeat="week in leftCalendar.options">
+                    <div class="col"
+                         ng-click="$ctrl.calendarClickHandle('leftCalendar', d)"
+                         ng-class="{
                          'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
                          'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
                          'prev prev-month':d.month < leftCalendar.month,
                           'next next-month':d.month > leftCalendar.month,
                           'disabled':d.disabled
                           }"
-                             ng-repeat="d in week">
-                            <span ng-bind="d.date"></span>
-                        </div>
+                         ng-repeat="d in week">
+                        <span ng-bind="d.date"></span>
                     </div>
                 </div>
             </div>
-            <mob-divider vertical="true"></mob-divider>
-            <div class="mob-date__container is_right">
-                <div class="mob-date__header">
-                    <mob-icon-double-arrow-left
-                            class="button"
-                            ng-click="$ctrl.decreaseYear('rightCalendar', true)"
-                            ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeYear()}">
-                    </mob-icon-double-arrow-left>
-                    <mob-icon-arrow-left class="button"
-                                         ng-click="$ctrl.decreaseMonth('rightCalendar', true)"
-                                         ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeMonth()}"
-                    ></mob-icon-arrow-left>
-                    <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="rightCalendar.year"></span>
-                        <span ng-click="$ctrl.showMonthDatePicker()" ng-bind="rightCalendar.month"></span>
-                    </p>
-                    <mob-icon-arrow-right ng-click="$ctrl.increaseMonth('rightCalendar')" class="button"></mob-icon-arrow-right>
-                    <mob-icon-double-arrow-right ng-click="$ctrl.increaseYear('rightCalendar')"
-                                                 class="button"></mob-icon-double-arrow-right>
-                </div>
-                <div class="mob-date__content">
-                    <div class="row">
-                        <div class="col">
-                            <span>日</span>
-                        </div>
-                        <div class="col">
-                            <span>一</span>
-                        </div>
-                        <div class="col">
-                            <span>二</span>
-                        </div>
-                        <div class="col">
-                            <span>三</span>
-                        </div>
-                        <div class="col">
-                            <span>四</span>
-                        </div>
-                        <div class="col">
-                            <span>五</span>
-                        </div>
-                        <div class="col">
-                            <span>六</span>
-                        </div>
+
+        </div>
+        <mob-divider vertical="true"></mob-divider>
+        <div class="mob-date__container is_right">
+            <div class="mob-date__header">
+                <mob-icon-double-arrow-left
+                        class="button"
+                        ng-click="$ctrl.decreaseYear('rightCalendar', true)"
+                        ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeYear()}">
+                </mob-icon-double-arrow-left>
+                <mob-icon-arrow-left class="button"
+                                     ng-click="$ctrl.decreaseMonth('rightCalendar', true)"
+                                     ng-class="{'is_disabled':$ctrl.isDisabledCalendarChangeMonth()}"
+                ></mob-icon-arrow-left>
+                <p class="content">
+                    <span ng-bind="rightCalendar.year"></span>
+                    <span ng-bind="rightCalendar.month"></span>
+                </p>
+                <mob-icon-arrow-right ng-click="$ctrl.increaseMonth('rightCalendar')"
+                                      class="button"></mob-icon-arrow-right>
+                <mob-icon-double-arrow-right ng-click="$ctrl.increaseYear('rightCalendar')"
+                                             class="button"></mob-icon-double-arrow-right>
+            </div>
+            <div class="mob-date__content">
+                <div class="row">
+                    <div class="col">
+                        <span>日</span>
                     </div>
-                    <div class="row" ng-repeat="week in rightCalendar.options">
-                        <div class="col"
-                             ng-click="$ctrl.calendarClickHandle('rightCalendar',d)"
-                             ng-class="{
+                    <div class="col">
+                        <span>一</span>
+                    </div>
+                    <div class="col">
+                        <span>二</span>
+                    </div>
+                    <div class="col">
+                        <span>三</span>
+                    </div>
+                    <div class="col">
+                        <span>四</span>
+                    </div>
+                    <div class="col">
+                        <span>五</span>
+                    </div>
+                    <div class="col">
+                        <span>六</span>
+                    </div>
+                </div>
+                <div class="row" ng-repeat="week in rightCalendar.options">
+                    <div class="col"
+                         ng-click="$ctrl.calendarClickHandle('rightCalendar',d)"
+                         ng-class="{
                          'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
                          'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
                          'prev prev-month':d.month < rightCalendar.month,
                           'next next-month':d.month > rightCalendar.month,
                           'disabled':d.disabled
                           }"
-                             ng-repeat="d in week">
-                            <span ng-bind="d.date"></span>
-                        </div>
+                         ng-repeat="d in week">
+                        <span ng-bind="d.date"></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <mob-date-year
-            ng-show="$ctrl.yearDatePickerDisplay"
-            change="$ctrl.changeYear(opt)"
-            ng-model="calendarYear"
-            calendar-click="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
-
-    <mob-date-month
-            ng-show="$ctrl.monthDatePickerDisplay"
-            change="$ctrl.changeMonth(opt)"
-            ng-model="calendarYearMonth"
-            calendar-click="$ctrl.hideMonthDatePicker(opt)"></mob-date-month>
 </div>

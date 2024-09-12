@@ -80,7 +80,7 @@
     font-size: 1.2rem;
 }
 
-.mob-date .mob-date__header .content span:hover {
+.mob-date:not(.mob-date-range) .mob-date__header .content span:hover {
     color: var(--mob-primary-color);
     cursor: pointer;
 }
@@ -145,6 +145,9 @@
     grid-column-gap: 0;
 }
 
+.mob-date.mob-date-date .mob-date__container > .mob-date__content > .row {
+    grid-template-columns: repeat(7, 1fr);
+}
 .mob-date.mob-date-year .mob-date__container > .mob-date__content .row,
 .mob-date.mob-date-year-range .mob-date__container > .mob-date__content .row,
 .mob-date.mob-date-month .mob-date__container > .mob-date__content .row ,
@@ -163,17 +166,8 @@
     align-items: center;
     cursor: pointer;
 }
-.mob-date .mob-date__content .col span {
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: var(--mob-calendar-col-span-width);
-    height: var(--mob-calendar-col-span-height);
-    border-radius: var(--mob-calendar-col-span-border-radius);
-}
 
-.mob-date .mob-date-date .mob-date__content .col {
+.mob-date.mob-date-date .mob-date__content .col {
     width: var(--mob-calendar-date-col-width);
     box-sizing: border-box;
     display: flex;
@@ -182,7 +176,20 @@
     align-items: center;
     cursor: pointer;
 }
-.mob-date .mob-date-date .mob-date__content .col span {
+
+.mob-date.mob-date-year .mob-date__content .col span ,
+.mob-date.mob-date-year-range .mob-date__content .col span ,
+.mob-date.mob-date-month .mob-date__content .col span ,
+.mob-date.mob-date-month-range .mob-date__content .col span {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--mob-calendar-col-span-width);
+    height: var(--mob-calendar-col-span-height);
+    border-radius: var(--mob-calendar-col-span-border-radius);
+}
+.mob-date.mob-date-date  > .mob-date__container__wrapper .mob-date__content .col span {
      box-sizing: border-box;
      display: flex;
      justify-content: center;
@@ -241,11 +248,7 @@
 /*    height: 40px;*/
 /*}*/
 
-.mob-date .mob-date-date .mob-date__container > .mob-date__content > .row {
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.mob-date .mob-date-date mob-date {
+.mob-date.mob-date-date mob-date {
     width: 100%;
     height: 100%;
 

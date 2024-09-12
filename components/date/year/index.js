@@ -39,7 +39,7 @@ function yearController($scope, $element, $attrs, $date) {
                 return;
             }
             if (angular.isDefined($attrs.change)) {
-                let opt = {value: newValue, attachment: this.attachment}
+                let opt = {value: newValue, attachment: _that.attachment}
                 _that.change({opt: opt})
             }
 
@@ -98,7 +98,7 @@ function yearController($scope, $element, $attrs, $date) {
     // 日历面板变更
     this.panelChangeHandle = function () {
         if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: _that.ngModel, attachment: _that.attachment}
             _that.panelChange({opt: opt})
         }
     }
@@ -108,7 +108,7 @@ function yearController($scope, $element, $attrs, $date) {
     this.calendarClickHandle = function (year) {
         this.ngModel = year
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: _that.ngModel, attachment: _that.attachment}
             _that.calendarClick({opt: opt})
         }
     }

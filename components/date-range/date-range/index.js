@@ -321,11 +321,11 @@ function dateController($scope, $element, $attrs, $date) {
             return
         }
         // 同时改变年份
-        $scope.calendarYear = date.year
+        $scope[calendar].year = date.year
         // 改变月份
-        $scope.calendarMonth = date.month
+        $scope[calendar].month = date.month
         // 日期
-        $scope.calendarDate = date.date
+        $scope[calendar].date = date.date
         // 同时改变年月
         $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
 
@@ -333,9 +333,10 @@ function dateController($scope, $element, $attrs, $date) {
 
         //
         let ngModeArr = this.analyzeNgModelYearMonthDate()
+        debugger
         // 当月变化的，无需重新渲染日历
-        if (!(ngModeArr[0] === $scope.ngModelYear && ngModeArr[1] === $scope.ngModelMonth)) {
-            this.renderOptions()
+        if (!(ngModeArr[0] === $scope[calendar].year && ngModeArr[1] === $scope[calendar].month)) {
+            this.renderOptions(calendar)
         }
 
 
@@ -355,32 +356,27 @@ function dateController($scope, $element, $attrs, $date) {
 
 
     // 显示年份选择框
-    this.showYearDatePicker = function () {
-        this.yearDatePickerDisplay = true
+    this.showYearDatePicker = function (calendar) {
+        $scope[calendar].yearDatePickerDisplay = true
     }
 
     // 显示月份选择框
-    this.showMonthDatePicker = function () {
-        this.monthDatePickerDisplay = true
+    this.showMonthDatePicker = function (calendar) {
+        $scope[calendar].monthDatePickerDisplay = true
     }
 
     // 改变年份
     this.changeYear = function (opt) {
-        // 改变年份
-        $scope.calendarYear = opt.value
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+        console.log(opt)
+        // // 改变年份
+        // $scope.calendarYear = opt.value
+        // // 同时改变年月
+        // $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
     }
 
     // 改变年份
     this.changeMonth = function (opt) {
-        let valArr = opt.value.split("-")
-        // 同时改变年份
-        $scope.calendarYear = Number(valArr[0])
-        // 改变月份
-        $scope.calendarMonth = Number(valArr[1])
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+        console.log(opt)
     }
 
 

@@ -49,7 +49,7 @@ function monthController($scope, $element, $attrs, $date) {
             _that.calculateNgModelYearMonthDate()
 
             if (angular.isDefined($attrs.change)) {
-                let opt = {value: newValue, attachment: this.attachment}
+                let opt = {value: newValue, attachment: _that.attachment}
                 _that.change({opt: opt})
             }
             // ngModel改变时，获取年份
@@ -83,7 +83,7 @@ function monthController($scope, $element, $attrs, $date) {
     // 日历所选日期变更 TODO
     this.panelChangeHandle = function () {
         if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: _that.ngModel, attachment: _that.attachment}
             _that.panelChange({opt: opt})
         }
     }
@@ -94,7 +94,7 @@ function monthController($scope, $element, $attrs, $date) {
         this.ngModel = $scope.calendarYear + "-" + month
         //
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: _that.ngModel, attachment: _that.attachment}
             _that.calendarClick({opt: opt})
         }
     }

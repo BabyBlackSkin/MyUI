@@ -51,7 +51,7 @@ function dateController($scope, $element, $attrs, $date) {
                 return;
             }
             if (angular.isDefined($attrs.change)) {
-                let opt = {value: newValue, attachment: this.attachment}
+                let opt = {value: newValue, attachment: _that.attachment}
                 _that.change({opt: opt})
             }
 
