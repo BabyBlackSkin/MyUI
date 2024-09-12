@@ -20,10 +20,13 @@ function dateController($scope, $element, $attrs, $date) {
             date: $scope.currentDate, // 日期
             options:[], // 可选项
         }
+        let rightCalendarMonth = $scope.currentMonth === 12 ? 1 : $scope.currentMonth + 1
+        let rightCalendarYear = $scope.currentMonth === 12 ? $scope.currentYear + 1 : $scope.currentYear
+
         // 右侧日历
         $scope.rightCalendar = {
-            year: $scope.currentYear, // 年份
-            month:$scope.currentMonth, // 月份
+            year: rightCalendarYear, // 年份
+            month:rightCalendarMonth, // 月份
             date: $scope.currentDate, // 日期
             options:[], // 可选项
         }
@@ -65,6 +68,16 @@ function dateController($scope, $element, $attrs, $date) {
             //
             _that.calculateNgModelYearMonthDate()
         })
+    }
+
+
+    // 日历面板变更
+    this.disabledDateHandle = function (date) {
+        if (angular.isDefined($attrs.disabledDate)) {
+            let opt = {date: date, attachment: this.attachment}
+            return _that.disabledDate({opt: opt})
+        }
+        return false
     }
 
     // 根据年份计算选项
@@ -177,82 +190,124 @@ function dateController($scope, $element, $attrs, $date) {
         $scope.ngModelDate =  ngModeArr[2]
     }
 
-
-    // 增加年份
-    this.increaseYear = function () {
-        let newDay = $date.add(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "year")
+    /**
+     * 对年份进行操作
+     * @param calendar 操作的日历
+     * @param num 增减数量
+     * @param needValidate 是否校验
+     */
+    this.increaseOrDecreaseYear = function (calendar, num, needValidate = false){
+        if (needValidate && this.isDisabledCalendarChangeYear()) {
+            return
+        }
+        let year = $scope[calendar].year;
+        let month = $scope[calendar].month - 1;
+        let date = $scope[calendar].date
+        let newDay = $date.add(new Date(year, month, date), num, "year")
         // 改变年份
-        $scope.calendarYear = $date.getFullYear(newDay)
+        $scope[calendar].year = $date.getFullYear(newDay)
         // 改变月份
-        $scope.calendarMonth = $date.getMonth(newDay)
+        $scope[calendar].month = $date.getMonth(newDay)
         // 改变日期
-        $scope.calendarDate = $date.getDate(newDay)
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-        this.renderOptions()
-        this.panelChangeHandle()
+        $scope[calendar].date = $date.getDate(newDay)
+        // 同时改变年月 TODO
+        $scope[calendar].yearMonth = $scope[calendar].year + "-" + $scope[calendar].month
+        this.renderOptions(calendar)
+        this.panelChangeHandle(calendar)
     }
 
-    // 减少年份
-    this.decreaseYear  = function () {
-        let newDay = $date.subtract(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "year")
-        // 改变年份
-        $scope.calendarYear = $date.getFullYear(newDay)
-        // 改变月份
-        $scope.calendarMonth = $date.getMonth(newDay)
-        // 改变日期
-        $scope.calendarDate = $date.getDate(newDay)
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-        this.renderOptions()
-        this.panelChangeHandle()
+
+    /**
+     * 增加年份
+     * @param calendar 日历
+     * @param needValidate 是否校验
+     */
+    this.increaseYear = function (calendar, needValidate = false) {
+        this.increaseOrDecreaseYear(calendar, 1, needValidate);
     }
 
-    // 增加月份
-    this.increaseMonth = function () {
-        let newDay = $date.add(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "month")
-        // 改变年份
-        $scope.calendarYear = $date.getFullYear(newDay)
-        // 改变月份
-        $scope.calendarMonth = $date.getMonth(newDay)
-        // 改变日期
-        $scope.calendarDate = $date.getDate(newDay)
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-        this.renderOptions()
-        this.panelChangeHandle()
+    /**
+     * 减少年份
+     * @param calendar 日历
+     * @param needValidate 年份
+     */
+    this.decreaseYear  = function (calendar, needValidate = false) {
+        this.increaseOrDecreaseYear(calendar, -1, needValidate);
     }
 
-    // 减少月份
-    this.decreaseMonth = function () {
-        let newDay = $date.subtract(new Date($scope.calendarYear, $scope.calendarMonth - 1, $scope.calendarDate), 1, "month")
+    // 判断是否允许变更年份
+    this.isDisabledCalendarChangeYear = function () {
+        if ($scope.leftCalendar.year >= $scope.rightCalendar.year) {
+            return true
+        }
+        // 判断月份
+        let ge = $scope.leftCalendar.month >= $scope.rightCalendar.month
+        return ge && $scope.leftCalendar.year + 1 >= $scope.rightCalendar.year
+    }
+
+
+    /**
+     * 判断是否允许变更月份
+     * @returns {boolean}
+     */
+    this.isDisabledCalendarChangeMonth = function () {
+        // 年份不等，月份不限制
+        if ($scope.leftCalendar.year < $scope.rightCalendar.year) {
+            return false
+        }
+        // 判断月份
+        return $scope.leftCalendar.month + 1 >= $scope.rightCalendar.month
+    }
+
+    /**
+     * 对月份进行操作
+     * @param calendar 操作的日历
+     * @param num 增减数量
+     * @param needValidate 是否校验
+     */
+    this.increaseOrDecreaseMonth = function (calendar, num, needValidate){
+        if (needValidate && this.isDisabledCalendarChangeMonth()) {
+            return
+        }
+        let year = $scope[calendar].year;
+        let month = $scope[calendar].month - 1;
+        let date = $scope[calendar].date
+        let newDay = $date.add(new Date(year, month, date), num, "month")
         // 改变年份
-        $scope.calendarYear = $date.getFullYear(newDay)
+        $scope[calendar].year = $date.getFullYear(newDay)
         // 改变月份
-        $scope.calendarMonth = $date.getMonth(newDay)
+        $scope[calendar].month = $date.getMonth(newDay)
         // 改变日期
-        $scope.calendarDate = $date.getDate(newDay)
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-        this.renderOptions()
-        this.panelChangeHandle()
+        $scope[calendar].date = $date.getDate(newDay)
+        // 同时改变年月 TODO
+        $scope[calendar].yearMonth = $scope[calendar].year + "-" + $scope[calendar].month
+        this.renderOptions(calendar)
+        this.panelChangeHandle(calendar)
+    }
+    /**
+     * 增加月份
+     * @param calendar 日历
+     * @param needValidate 是否校验
+     */
+    this.increaseMonth = function (calendar, needValidate = false) {
+        this.increaseOrDecreaseMonth(calendar, 1, needValidate);
+    }
+
+    /**
+     * 减少月份
+     * @param calendar 日历
+     * @param needValidate 是否校验
+     */
+    this.decreaseMonth = function (calendar, needValidate = false) {
+        this.increaseOrDecreaseMonth(calendar, -1, needValidate);
     }
 
     // 日历所选日期变更 TODO
-    this.panelChangeHandle = function () {
+    this.panelChangeHandle = function (calendar) {
         if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: this.ngModel, calendar:calendar, attachment: this.attachment}
             _that.panelChange({opt: opt})
         }
-    }
-
-    // 日历面板变更
-    this.disabledDateHandle = function (date) {
-        if (angular.isDefined($attrs.disabledDate)) {
-            let opt = {date: date, attachment: this.attachment}
-            return _that.disabledDate({opt: opt})
-        }
-        return false
     }
 
     // 选择日期
@@ -260,7 +315,7 @@ function dateController($scope, $element, $attrs, $date) {
     }
 
     // 日历项被点击时触发
-    this.calendarClickHandle = function (date) {
+    this.calendarClickHandle = function (calendar, date) {
 
         if (date.disabled) {
             return
