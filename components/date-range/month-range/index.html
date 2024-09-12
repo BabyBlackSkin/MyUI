@@ -10,7 +10,7 @@
                     <mob-icon-double-arrow-left ng-click="$ctrl.decrease('leftCalendar')"
                                                 class="button"></mob-icon-double-arrow-left>
                     <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker('leftYearCalendarDisplay')" ng-bind="leftCalendar.year"></span>
+                        <span ng-bind="leftCalendar.year"></span>
                     </p>
                     <mob-icon-double-arrow-right
                             class="button"
@@ -35,12 +35,6 @@
                         </div>
                     </div>
                 </div>
-
-                <mob-date-year
-                        ng-show="$ctrl.leftYearCalendarDisplay"
-                        ng-model="leftCalendar.year"
-                        change="$ctrl.changeYear('leftCalendar', opt)"
-                        calendar-click="$ctrl.hideYearDatePicker('leftYearCalendarDisplay',opt)"></mob-date-year>
             </div>
             <mob-divider vertical="true"></mob-divider>
             <div class="mob-date__container is_right">
@@ -50,7 +44,7 @@
                             ng-click="$ctrl.decrease('rightCalendar', true)"
                             ng-class="{'is_disabled':$ctrl.isDisabledCalendarChange()}"></mob-icon-double-arrow-left>
                     <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker('rightYearCalendarDisplay')" ng-bind="rightCalendar.year"></span>
+                        <span ng-bind="rightCalendar.year"></span>
                     </p>
                     <mob-icon-double-arrow-right ng-click="$ctrl.increase('rightCalendar')"
                                                  class="button"></mob-icon-double-arrow-right>
@@ -73,12 +67,6 @@
                         </div>
                     </div>
                 </div>
-
-                <mob-date-year
-                        ng-show="$ctrl.rightYearCalendarDisplay"
-                        ng-model="rightCalendar.year"
-                        change="$ctrl.changeYear('rightCalendar', opt)"
-                        calendar-click="$ctrl.hideYearDatePicker('rightYearCalendarDisplay', opt)"></mob-date-year>
             </div>
         </div>
     </div>

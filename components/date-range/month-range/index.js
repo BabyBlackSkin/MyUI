@@ -218,17 +218,6 @@ function monthController($scope, $element, $attrs, $date) {
         }
     }
 
-
-    // 改变年份
-    this.changeYear = function (calendar, opt) {
-        this.renderOptions(calendar)
-
-    }
-
-    this.hideYearDatePicker = function (displaySwitch) {
-        this[displaySwitch] = false
-    }
-
     // 显示年份选择框
     this.showYearDatePicker = function (displaySwitch) {
         this[displaySwitch] = true
