@@ -428,7 +428,7 @@ function dateController($scope, $element, $attrs, $date) {
 
     this.calendarClickRender = function (calendar, val){
         if (val.month === $scope['leftCalendar'].month) {
-            return false;
+            return;
         }
         // 同时改变年份
         $scope[calendar].year = val.year
@@ -440,7 +440,6 @@ function dateController($scope, $element, $attrs, $date) {
         $scope[calendar].calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
         // 要不要重新渲染，先判断另外一个日历是否包含当前选择的值
         this.renderOptions(calendar)
-        return true
     }
 
     this.hideYearDatePicker = function () {
