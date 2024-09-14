@@ -218,11 +218,6 @@ function monthController($scope, $element, $attrs, $date) {
         }
     }
 
-    // 显示年份选择框
-    this.showYearDatePicker = function (displaySwitch) {
-        this[displaySwitch] = true
-    }
-
     // shortcut点击事件
     this.shortcutClickHandle = function (shortcut) {
         let leftCalendarYear = $date.getFullYear(shortcut.value[0])

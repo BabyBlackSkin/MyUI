@@ -442,43 +442,16 @@ function dateController($scope, $element, $attrs, $date) {
         this.renderOptions(calendar)
     }
 
-    this.hideYearDatePicker = function () {
-        this.yearDatePickerDisplay = false
-    }
-
-    this.hideMonthDatePicker = function () {
-        this.monthDatePickerDisplay = false
-    }
-
-
-    // 显示年份选择框
-    this.showYearDatePicker = function (calendar) {
-        $scope[calendar].yearDatePickerDisplay = true
-    }
-
-    // 显示月份选择框
-    this.showMonthDatePicker = function (calendar) {
-        $scope[calendar].monthDatePickerDisplay = true
-    }
-
-
     // shortcut点击事件
     this.shortcutClickHandle = function (shortcut) {
-        let fullYear = $date.getFullYear(shortcut.value);
-        let month = $date.getMonth(shortcut.value);
-        let date = $date.getDate(shortcut.value);
-        if (fullYear && month && date) {
-            this.ngModel = fullYear + '-' + month + '-' + date
-            // 同时改变年份
-            $scope.calendarYear = fullYear
-            // 改变月份
-            $scope.calendarMonth = month
-            // 日期
-            $scope.calendarDate = date
-            // 同时改变年月
-            $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-            this.renderOptions()
-        }
+        console.log(shortcut)
+        let start = shortcut.value[0]
+        let end = shortcut.value[1]
+
+        let startDate = $date.getFullYear(start) + "-" + $date.getFullMonth(start) + "-" + $date.getDate(start)
+        let endDate = $date.getFullYear(end) + "-" + $date.getFullMonth(end) + "-" + $date.getDate(end)
+
+        this.ngModel = [startDate, endDate]
     }
 
 

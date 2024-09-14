@@ -8,9 +8,13 @@ app
             getFullYear: function (date) {
                 return this.isDate(date) && date.getFullYear()
             },
-            // 月
+            // 月 1、2、3...10、11、12
             getMonth: function (date) {
                 return this.isDate(date) && date.getMonth() + 1
+            },
+            // 月 01、02、03...10、11、12
+            getFullMonth: function (date) {
+                return this.isDate(date) && ((date.getMonth() + 1) + "").padStart(2,'0')
             },
             // 日
             getDate: function (date) {
