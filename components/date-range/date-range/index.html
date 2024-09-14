@@ -54,11 +54,14 @@
                     <div class="col"
                          ng-click="$ctrl.calendarClickHandle('leftCalendar', d)"
                          ng-class="{
-                         'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
-                         'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
-                         'prev prev-month':d.month < leftCalendar.month,
-                          'next next-month':d.month > leftCalendar.month,
-                          'disabled':d.disabled
+                                'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
+                                'active':d.year === leftCalendar.ngModelYear && d.month === leftCalendar.ngModelMonth && d.date === leftCalendar.ngModelDate,
+                                'prev prev-month':d.month < leftCalendar.month,
+                                'next next-month':d.month > leftCalendar.month,
+                                'disabled':d.disabled,
+                                'potential':$ctrl.isPotential(d),
+                                'potential-active potential-active-start': $ctrl.isPotentialActiveStart(d),
+                                'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(d)
                           }"
                          ng-repeat="d in week">
                         <span ng-bind="d.date"></span>
@@ -116,11 +119,14 @@
                     <div class="col"
                          ng-click="$ctrl.calendarClickHandle('rightCalendar',d)"
                          ng-class="{
-                         'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
-                         'active':d.year === ngModelYear && d.month === ngModelMonth && d.date === ngModelDate,
-                         'prev prev-month':d.month < rightCalendar.month,
-                          'next next-month':d.month > rightCalendar.month,
-                          'disabled':d.disabled
+                                'today':d.year === currentYear && d.month === currentMonth && d.date && d.date == currentDate,
+                                'active':d.year === rightCalendar.ngModelYear && d.month === rightCalendar.ngModelMonth && d.date === rightCalendar.ngModelDate,
+                                'prev prev-month':d.month < rightCalendar.month,
+                                'next next-month':d.month > rightCalendar.month,
+                                'disabled':d.disabled,
+                                'potential':$ctrl.isPotential(d),
+                                'potential-active potential-active-start': $ctrl.isPotentialActiveStart(d),
+                                'potential-active potential-active-end': $ctrl.isPotentialActiveEnd(d)
                           }"
                          ng-repeat="d in week">
                         <span ng-bind="d.date"></span>

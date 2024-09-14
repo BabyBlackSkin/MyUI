@@ -207,20 +207,20 @@
     color: var(--mob-active-text-color);
 }
 
-.mob-date .mob-date__content .col:not(.disabled).active span {
+.mob-date .mob-date__content .col:not(.disabled,.next,.prev).active span {
     background-color: var(--mob-active-text-color);
     color: var(--mob-basic-white-color);
 }
-.mob-date .mob-date__content .col:not(.disabled).potential {
+.mob-date .mob-date__content .col:not(.disabled,.next,.prev).potential {
     background-color: var(--mob-extra-lighter-border-color);
 }
-.mob-date .mob-date__content .col:not(.disabled).potential-active-start {
+.mob-date .mob-date__content .col:not(.disabled,.next,.prev).potential-active-start {
     border-radius: var(--mob-calendar-col-span-border-radius) 0 0 var(--mob-calendar-col-span-border-radius);
 }
-.mob-date .mob-date__content .col:not(.disabled).potential-active-end {
+.mob-date .mob-date__content .col:not(.disabled,.next,.prev).potential-active-end {
     border-radius: 0 var(--mob-calendar-col-span-border-radius) var(--mob-calendar-col-span-border-radius) 0;
 }
-.mob-date .mob-date__content .col:not(.disabled,.active).potential-active span {
+.mob-date .mob-date__content .col:not(.disabled,.active,.next,.prev).potential-active span {
     background-color: var(--mob-active-text-color);
     color: var(--mob-basic-white-color);
 }

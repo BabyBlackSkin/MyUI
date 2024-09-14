@@ -4,8 +4,10 @@ function dateController($scope, $element, $attrs, $date) {
     this.$onInit = function () {
         // 年份选择弹框是否显示控制
         this.yearDatePickerDisplay = false;
-        // 当前年份
-        // this.$dayjs = dayjs()
+        // 对选择的内容进行暂存，当头尾都选择后，保存到ngModel中
+        this.secondaryModel = []
+        // 暂存鼠标移入的内容
+        this.potentialModel = []
 
         $scope.calendarDate = new Date()
         // 当前月份
@@ -82,15 +84,15 @@ function dateController($scope, $element, $attrs, $date) {
 
     // 根据年份计算选项
     this.renderOptions = function (calendarName) {
-        let calendarYear = $scope[`${calendarName}`].year
-        let calendarMonth = $scope[`${calendarName}`].month - 1
+        let calendarYear = $scope[calendarName].year
+        let calendarMonth = $scope[calendarName].month - 1
         let time = new Date(calendarYear, calendarMonth)
 
         let startMonth = $date.getStartOfMonth(time)
         let endMonth = $date.getEndOfMonth(time)
 
         let options = []
-        $scope[`${calendarName}`].options = options
+        $scope[calendarName].options = options
 
         // 周索引
         let weekInx = 0;
@@ -104,13 +106,17 @@ function dateController($scope, $element, $attrs, $date) {
             for (let i = startMonthWeekInx; i > 0; i--) {
 
                 let date = $date.subtract(startMonth,i, 'date');
+
+                let month = $date.getMonth(date);
+                let fullMonth = (month + "").padStart(2,'0')
                 // 创建日期对象
                 let item = {
                     timestamp: $date.getTimeStamp(date),
                     year:$date.getFullYear(date),
-                    month: $date.getMonth(date),
+                    month: month,
                     day: $date.getDay(date),
-                    date: $date.getDate(date)
+                    date: $date.getDate(date),
+                    modelValue: `${$date.getFullYear(date)}-${fullMonth}-${$date.getDate(date)}`
                 };
                 // 日期是否禁用
                 item.disabled = this.disabledDateHandle(item);
@@ -124,13 +130,17 @@ function dateController($scope, $element, $attrs, $date) {
         for (let i = 0; i < endDay; i++) {
             let date = $date.add(startMonth, i, 'date');
 
+            let month = $date.getMonth(date);
+            let fullMonth = (month + "").padStart(2,'0')
+
             // 创建日期对象
             let item = {
                 timestamp: $date.getTimeStamp(date),
                 year: $date.getFullYear(date),
-                month: $date.getMonth(date),
+                month: month,
                 day: $date.getDay(date),
-                date: $date.getDate(date)
+                date: $date.getDate(date),
+                modelValue: `${$date.getFullYear(date)}-${fullMonth}-${$date.getDate(date)}`
             };
             // 日期是否禁用
             item.disabled = this.disabledDateHandle(item);
@@ -160,12 +170,17 @@ function dateController($scope, $element, $attrs, $date) {
             let diffWeekNum = 6 - endMonthWeekInx
             for (let i = 0; i < diffWeekNum; i++) {
                 let date = $date.add(nextMonth, i, 'date')
+
+                let month = $date.getMonth(date);
+                let fullMonth = (month + "").padStart(2,'0')
+
                 let item = {
                     timestamp: $date.getTimeStamp(date),
                     year:$date.getFullYear(date),
-                    month: $date.getMonth(date),
+                    month:month,
                     day: $date.getDay(date),
-                    date: $date.getDate(date)
+                    date: $date.getDate(date),
+                    modelValue: `${$date.getFullYear(date)}-${fullMonth}-${$date.getDate(date)}`
                 };
                 // 日期是否禁用
                 item.disabled = this.disabledDateHandle(item);
@@ -175,19 +190,28 @@ function dateController($scope, $element, $attrs, $date) {
     }
 
     // 解析ngModel
-    this.analyzeNgModelYearMonthDate = function () {
-        if (!this.ngModel || this.ngModel.length === 0) {// 如果未定义ngModel。则year,month, date是一个永远也不可能的值
+    this.analyzeNgModelYearMonthDate = function (val) {
+        if (angular.isUndefined(val)) {// 如果未定义ngModel。则year,month, date是一个永远也不可能的值
             return []
         }
-        let ngModelArr = this.ngModel.split("-")
+
+        let ngModelArr = val.split("-")
         return [Number(ngModelArr[0]), Number(ngModelArr[1]), Number(ngModelArr[2])]
     }
     // 计算ngModelYear，ngModelMonth, ngModelDate
     this.calculateNgModelYearMonthDate = function (){
-        let ngModeArr = this.analyzeNgModelYearMonthDate()
-        $scope.ngModelYear = ngModeArr[0];
-        $scope.ngModelMonth = ngModeArr[1]
-        $scope.ngModelDate =  ngModeArr[2]
+        let leftNgModelArr = this.analyzeNgModelYearMonthDate(this.ngModel[0])
+        if (leftNgModelArr) {
+            $scope['leftCalendar'].ngModelYear = leftNgModelArr[0];
+            $scope['leftCalendar'].ngModelMonth = leftNgModelArr[1];
+            $scope['leftCalendar'].ngModelDate = leftNgModelArr[2];
+        }
+        let rightNgModelArr = this.analyzeNgModelYearMonthDate(this.ngModel[1])
+        if (rightNgModelArr) {
+            $scope['rightCalendar'].ngModelYear = rightNgModelArr[0];
+            $scope['rightCalendar'].ngModelMonth = rightNgModelArr[1];
+            $scope['rightCalendar'].ngModelDate = rightNgModelArr[2];
+        }
     }
 
     /**
@@ -310,40 +334,113 @@ function dateController($scope, $element, $attrs, $date) {
         }
     }
 
-    // 选择日期
-    this.select = function (date) {
+    /**
+     * 判断是否大于指定范围
+     * @param target
+     * @param source
+     * @returns {boolean}
+     */
+    function isGe(target, source){
+        let targetTimeStamp = $date.getTimeStamp(new Date(target))
+        let sourceTimeStamp = $date.getTimeStamp(new Date(source))
+
+        // 如果月份大于等于，则说明在范围内
+        return targetTimeStamp <= sourceTimeStamp
+    }
+
+    /**
+     * 判断是否小于指定时间
+     * @param target
+     * @param source
+     * @returns {boolean}
+     */
+    function isLe(target, source) {
+        let targetTimeStamp = $date.getTimeStamp(new Date(target))
+        let sourceTimeStamp = $date.getTimeStamp(new Date(source))
+        // 如果月份小于等于，则说明在范围内
+        return sourceTimeStamp <= targetTimeStamp
+    }
+
+    /**
+     * 判断是否小于指定时间
+     * @param target
+     * @param source
+     * @returns {boolean}
+     */
+    function eq(target, source) {
+        let targetTimeStamp = $date.getTimeStamp(new Date(target))
+        let sourceTimeStamp = $date.getTimeStamp(new Date(source))
+        // 如果月份小于等于，则说明在范围内
+        return sourceTimeStamp === targetTimeStamp
     }
 
     // 日历项被点击时触发
-    this.calendarClickHandle = function (calendar, date) {
+    this.calendarClickHandle = function (calendar, val) {
 
-        if (date.disabled) {
-            return
-        }
-        // 同时改变年份
-        $scope[calendar].year = date.year
-        // 改变月份
-        $scope[calendar].month = date.month
-        // 日期
-        $scope[calendar].date = date.date
-        // 同时改变年月
-        $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-
-        this.ngModel = $scope.calendarYear + "-" + $scope.calendarMonth + "-" + $scope.calendarDate
-
+        $scope[calendar].date = val.date
         //
-        let ngModeArr = this.analyzeNgModelYearMonthDate()
-        debugger
-        // 当月变化的，无需重新渲染日历
-        if (!(ngModeArr[0] === $scope[calendar].year && ngModeArr[1] === $scope[calendar].month)) {
-            this.renderOptions(calendar)
+        if (this.secondaryModel.length === 0) {
+            this.secondaryModel = [val.modelValue]
+            this.potentialModel = [val.modelValue]
+        } else if (this.secondaryModel.length === 1) {
+            if (isGe(this.secondaryModel[0],val.modelValue)) {
+                this.secondaryModel.push(val.modelValue)
+            } else {
+                this.secondaryModel.unshift(val.modelValue)
+            }
+            this.ngModel = this.secondaryModel
+        } else {//重新选择
+            this.ngModel = []
+            this.secondaryModel = [val.modelValue]
+            this.potentialModel = [val.modelValue]
         }
 
+        // 当只选择了一个的时候
+        if (this.secondaryModel.length === 1) {
+            // 判断选择的是不是当前面板的日期
+            let notCurrent = val.month < $scope[calendar].month || val.month > $scope[calendar].month;
+            // 判断是不是另一个面板的日期
+            let otherCalendar = {
+                leftCalendar:'rightCalendar',
+                rightCalendar:'leftCalendar'
+            }[calendar]
+
+            let notOther = val.month < $scope[otherCalendar].month || val.month > $scope[otherCalendar].month;
+            if (notOther) {// 如果也不是另外一个，则渲染
+                this.calendarClickRender(calendar, val)
+            } else {
+                // 是另外一个无需渲染
+            }
+        } else { // 当存在两个的时候，判断两个是否是一个月的
+            // 如果是一个月的，无需渲染，否则渲染
+            let monthOne = this.analyzeNgModelYearMonthDate(this.secondaryModel[0])[1]
+            let monthTwo = this.analyzeNgModelYearMonthDate(this.secondaryModel[1])[1]
+            if (monthOne != monthTwo) {
+                this.calendarClickRender(calendar, val)
+            }
+        }
 
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {value: this.ngModel, attachment: this.attachment}
             _that.calendarClick({opt: opt})
         }
+    }
+
+    this.calendarClickRender = function (calendar, val){
+        if (val.month === $scope['leftCalendar'].month) {
+            return false;
+        }
+        // 同时改变年份
+        $scope[calendar].year = val.year
+        // // 改变月份
+        $scope[calendar].month = val.month
+        // // 日期
+        $scope[calendar].date = val.date
+        // // 同时改变年月
+        $scope[calendar].calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
+        // 要不要重新渲染，先判断另外一个日历是否包含当前选择的值
+        this.renderOptions(calendar)
+        return true
     }
 
     this.hideYearDatePicker = function () {
@@ -363,20 +460,6 @@ function dateController($scope, $element, $attrs, $date) {
     // 显示月份选择框
     this.showMonthDatePicker = function (calendar) {
         $scope[calendar].monthDatePickerDisplay = true
-    }
-
-    // 改变年份
-    this.changeYear = function (opt) {
-        console.log(opt)
-        // // 改变年份
-        // $scope.calendarYear = opt.value
-        // // 同时改变年月
-        // $scope.calendarYearMonth = $scope.calendarYear + "-" + $scope.calendarMonth
-    }
-
-    // 改变年份
-    this.changeMonth = function (opt) {
-        console.log(opt)
     }
 
 
@@ -399,6 +482,36 @@ function dateController($scope, $element, $attrs, $date) {
         }
     }
 
+
+    // 是否潜在的选中
+    this.isPotential = function (val) {
+        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
+            return isGe(this.ngModel[0], val.modelValue) && isLe(this.ngModel[1], val.modelValue)
+        }
+        if (angular.isUndefined(this.potentialModel) || this.potentialModel.length !== 2) {
+            return false
+        }
+        return isGe(this.potentialModel[0], val.modelValue) && isLe(this.potentialModel[1], val.modelValue)
+    }
+
+    // 是否潜在的选中的开始
+    this.isPotentialActiveStart = function (val) {
+        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
+            return eq(this.ngModel[0], val.modelValue)
+
+        }
+        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[0]) &&
+            eq(this.potentialModel[0], val.modelValue)
+    }
+
+    // 是否潜在的选中的结束
+    this.isPotentialActiveEnd = function (val) {
+        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
+            return eq(this.ngModel[1], val.modelValue)
+        }
+        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[1]) &&
+            eq(this.potentialModel[1], val.modelValue)
+    }
 
 }
 
