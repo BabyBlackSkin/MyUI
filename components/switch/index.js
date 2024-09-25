@@ -1,4 +1,4 @@
-function controller($scope, $element, $compile, $transclude) {
+function controller($scope, $element, $compile, $transclude)  {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -29,7 +29,10 @@ function controller($scope, $element, $compile, $transclude) {
     function initWatcher() {
         $scope.$watch(() => {
             return _that.ngModel
-        }, function (v) {
+        }, function (v,o) {
+            if (angular.isUndefined(v) && angular.isUndefined(o)) {
+                return
+            }
             _that.changeHandle()
         })
     }
@@ -79,9 +82,10 @@ function controller($scope, $element, $compile, $transclude) {
      * 内部文字
      */
     this.inlinePromptText = function () {
-        if (this.ngModel) {
+        if (this.isActive()) {
             return this.activeText
-        } else {
+        }
+        else {
             return this.inactiveText
         }
     }
@@ -122,16 +126,42 @@ function controller($scope, $element, $compile, $transclude) {
      * 点击事件
      */
     this.clickHandle = function () {
-        this.ngModel = !this.ngModel
+        if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
+            if (this.isActive()) {
+                this.ngModel = this.inactiveValue
+            }
+            else {
+                this.ngModel = this.activeValue
+            }
+        }
+        else {
+            this.ngModel = !this.ngModel
+        }
+    }
+    /**
+     * 是否激活
+     * @returns {*|boolean}
+     */
+    this.isActive = function () {
+        if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
+            return this.ngModel === this.activeValue
+        }
+        return this.ngModel
     }
     /**
      * ngModel改变时
      */
     this.changeHandle = function () {
-        if (this.ngModel) {
+        if (this.isActive()) {
             this.setActiveChange()
-        } else {
+        }
+        else {
             this.setInActiveChange()
+        }
+        // 触发change hook
+        if (angular.isFunction(_that.change)) {
+            let opt = {value: this.ngModel, attachment: this.attachment}
+            _that.change({opt: opt})
         }
     }
 }
@@ -150,7 +180,18 @@ app
             inactiveColor: '<?',
             inactiveIcon: '<?',
             inactiveText: '<?',
-            inlinePrompt: '<?'
+            inactiveValue: '<?',
+            inlinePrompt: '<?',
+            /**
+             *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
+             *  以下写法会报异常：
+             *  <mob-checkbox ng-mode="obj.val" change-handle="(value)=>{customChangeHandler(value, obj)}"></mob-checkbox>
+             *
+             *  此时需要通过attachment将对象传入
+             *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
+             */
+            attachment:"<?",
+            change: '&?',
         },
         controller: controller
     })

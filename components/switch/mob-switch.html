@@ -1,6 +1,6 @@
 <div class="mob-switch"
      ng-class="{
-     'is_active':$ctrl.ngModel,
+     'is_active':$ctrl.isActive(),
      'is_disabled':$ctrl.ngDisabled
      }"
 >
@@ -8,22 +8,22 @@
     <input type="checkbox" class="mob-switch__input" ng-disabled="$ctrl.ngDisabled" name="$ctrl.name"
            ng-model="$ctrl.ngModel">
     <!-- 激活文字描述 -->
-    <span class="mob-switch__inactive_text mob-switch__tips_text" ng-class="{'is_active':!$ctrl.ngModel}" ng-bind="$ctrl.inactiveText" ng-if="$ctrl.showInactiveText()"></span>
+    <span class="mob-switch__inactive_text mob-switch__tips_text left" ng-class="{'is_active':!$ctrl.isActive()}" ng-bind="$ctrl.inactiveText" ng-if="$ctrl.showInactiveText()"  ng-click="$ctrl.clickHandle()"></span>
 
-    <span class="mob-switch__inactive_icon mob-switch__tips_icon" ng-class="{'is_active':!$ctrl.ngModel}" ng-show="$ctrl.showInactiveIcon()">
+    <span class="mob-switch__inactive_icon mob-switch__tips_icon left" ng-class="{'is_active':!$ctrl.isActive()}" ng-show="$ctrl.showInactiveIcon()"  ng-click="$ctrl.clickHandle()">
 
     </span>
 
 
     <div class="mob-switch-core" ng-click="$ctrl.clickHandle()">
-        <div class="mob-switch__inner" ng-class="{'is_active':$ctrl.ngModel}" ng-show="$ctrl.inlinePrompt">
+        <div class="mob-switch__inner" ng-class="{'is_active':$ctrl.isActive()}" ng-show="$ctrl.inlinePrompt">
             <span class="mob-switch__inner_prompt mob-unselect-text" ng-bind="$ctrl.inlinePromptText()" ng-if="$ctrl.isInlinePromptText()"></span>
         </div>
     </div>
 
     <!-- 未激活文字描述 -->
-    <span class="mob-switch__active_text mob-switch__tips_text" ng-class="{'is_active':$ctrl.ngModel}" ng-bind="$ctrl.activeText" ng-if="$ctrl.showActiveText()"></span>
+    <span class="mob-switch__active_text mob-switch__tips_text right" ng-class="{'is_active':$ctrl.isActive()}" ng-bind="$ctrl.activeText" ng-if="$ctrl.showActiveText()"  ng-click="$ctrl.clickHandle()"></span>
 
-    <span class="mob-switch__active_icon mob-switch__tips_icon" ng-class="{'is_active':$ctrl.ngModel}" ng-show="$ctrl.showActiveIcon()"></span>
+    <span class="mob-switch__active_icon mob-switch__tips_icon right" ng-class="{'is_active':$ctrl.isActive()}" ng-show="$ctrl.showActiveIcon()"  ng-click="$ctrl.clickHandle()"></span>
 
 </div>

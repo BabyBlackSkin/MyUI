@@ -8,7 +8,7 @@
         <h3>基础用法</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-switch ng-model="value"></mob-switch>
+                <mob-switch style="width: 40px;" ng-model="value"></mob-switch>
             </div>
             <div class="meta">
                 <pre prism>
@@ -32,6 +32,12 @@
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-switch active-text="demoFour.activeText" inactive-text="demoFour.inactiveText" inactive-color="demoFour.inactiveColor" ng-model="demoFour.value" inline-prompt="true"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch style="width: 60px" active-text="'超出部分隐藏'" inactive-text="'超出部分隐藏'" inline-prompt="true"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch active-text="'完整展示多个内容'" inactive-text="'内容'" inline-prompt="true"></mob-switch>
                 </div>
             </div>
             <div class="meta">

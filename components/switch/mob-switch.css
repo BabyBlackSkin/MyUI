@@ -2,7 +2,7 @@
     position: relative;
     align-items: center;
     display: flex;
-
+    width: 100%;
 }
 
 .mob-switch .mob-switch__input {
@@ -14,11 +14,13 @@
     opacity: 0;
 }
 
+
 .mob-switch .mob-switch-core {
     display: inline-flex;
     position: relative;
-    margin: 0 10px;
-    width: 40px;
+    /* margin: 0 10px; */
+    width: min-content;
+    min-width: 100%;
     height: 20px;
     border: 1px solid var(--mob-border-color);
     border-radius: 10px;
@@ -29,7 +31,7 @@
 .mob-switch .mob-switch-core::after {
     content: '';
     position: absolute;
-    top: 1px;
+    top: calc(100% - 16px - 3px);
     left: 1px;
     width: 16px;
     height: 16px;
@@ -40,34 +42,53 @@
 }
 
 .mob-switch.is_active .mob-switch-core::after {
-    left: 21px;
+    left: calc(100% - 16px - 3px);
 }
 
 .mob-switch .mob-switch-core .mob-switch__inner {
+     width: 100%;
+    margin: 0 2px 0 calc(18px + 2px);
+    text-align: left;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--mob-light-fill-color);
-    position: absolute;
-    top: 1.5px;
-    left: 21px;
-    width: 16px;
-    height: 16px;
     transition: all var(--mob-transition-duration) var(--mob-transition-animate);
 }
 
 .mob-switch.is_active .mob-switch-core .mob-switch__inner {
-    left: 4px;
+    margin: 0 calc(18px + 2px) 0 2px;
 }
 
 .mob-switch .mob-switch-core .mob-switch__inner .mob-switch__inner_prompt {
-    font-size: .8rem;
+    text-wrap: nowrap;
+    font-size: .7rem;
+    padding: 2px;
+
+    width: 100%;
+    overflow:hidden;/*内容超出后隐藏*/
+    text-overflow:ellipsis;/*超出内容显示为省略号*/
+    white-space:nowrap;/*文本不进行换行*/
 }
-.mob-switch mob-switch-core .mob-icon svg{
+
+.mob-switch mob-switch-core .mob-icon svg {
     width: .8rem;
     height: .8rem;
 }
 
-/*.mob-switch  .mob-switch__tips_text.is_active{*/
-/*    color: var(--mob-active-text-color);*/
-/*}*/
+.mob-switch .mob-switch__tips_text.left {
+    margin-right: 5px;
+}
+
+.mob-switch .mob-switch__tips_text.right {
+    margin-left: 5px;
+}
+
+.mob-switch .mob-switch__tips_text {
+    cursor: pointer;
+    text-wrap: nowrap;
+}
+
+.mob-switch .mob-switch__tips_text.is_active {
+    color: var(--mob-active-text-color);
+}
