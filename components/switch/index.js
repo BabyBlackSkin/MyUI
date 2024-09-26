@@ -126,6 +126,10 @@ function controller($scope, $element, $compile, $transclude)  {
      * 点击事件
      */
     this.clickHandle = function () {
+        if (this.ngDisabled) {
+            return
+        }
+
         if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
             if (this.isActive()) {
                 this.ngModel = this.inactiveValue

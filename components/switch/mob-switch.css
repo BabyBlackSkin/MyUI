@@ -27,7 +27,6 @@
     cursor: pointer;
     transition: all var(--mob-transition-duration) var(--mob-transition-animate);
 }
-
 .mob-switch .mob-switch-core .mob-switch__action {
     content: '';
     position: absolute;
@@ -43,6 +42,11 @@
 
 .mob-switch.is_active .mob-switch-core .mob-switch__action {
     left: calc(100% - 16px - 3px);
+}
+
+.mob-switch.is_disabled .mob-switch-core{
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .mob-switch .mob-switch-core .mob-switch__inner {
