@@ -3,8 +3,8 @@ function controller($scope, $element, $compile, $transclude)  {
     // 初始化工作
     this.$onInit = function () {
         Object.assign(_that, {
-            activeColor: _that.activeColor ? _that.activeColor : '#13ce66',
-            inactiveColor: _that.inactiveColor ? _that.inactiveColor : '#ff4949',
+            activeColor: _that.activeColor ? _that.activeColor : '#409EFF',
+            inactiveColor: _that.inactiveColor ? _that.inactiveColor : '#DCDFE6',
         })
     }
 
@@ -170,18 +170,18 @@ app
     .component('mobSwitch', {
         templateUrl: './components/switch/mob-switch.html',
         bindings: {
-            ngModel: '=?',
-            ngDisabled: '<?',
-            name: '<?',
-            activeColor: '<?',
-            activeText: '<?',
-            activeIcon: '<?',
-            activeValue: '<?',
-            inactiveColor: '<?',
-            inactiveIcon: '<?',
-            inactiveText: '<?',
-            inactiveValue: '<?',
-            inlinePrompt: '<?',
+            ngModel: '=?',// ngModel
+            ngDisabled: '<?',// 是否禁用
+            activeColor: '<?',// 激活颜色
+            activeText: '<?', // 文字提示
+            activeIcon: '<?',// 激活图标
+            activeValue: '<?',// 激活value
+            inactiveColor: '<?',// 未激活颜色
+            inactiveIcon: '<?',// 未激活图标
+            inactiveText: '<?',// 未激活文字提示
+            inactiveValue: '<?',// 未激活value
+            inlinePrompt: '<?',// 是否为内联提示
+            loading:"=?",// 是否处于加载中
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
              *  以下写法会报异常：

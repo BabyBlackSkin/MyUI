@@ -25,19 +25,19 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value"></mob-switch>
+                    <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value" inactive-color="'#ff4949'"></mob-switch>
                 </div>
                 <div class="mob-demo-example-child">
-                    <mob-switch active-text="demoThree.activeText" inactive-text="demoThree.inactiveText" ng-model="demoThree.value" inline-prompt="true"></mob-switch>
+                    <mob-switch active-text="demoThree.activeText" inactive-text="demoThree.inactiveText" ng-model="demoThree.value" inline-prompt="true" inactive-color="'#ff4949'"></mob-switch>
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-switch active-text="demoFour.activeText" inactive-text="demoFour.inactiveText" inactive-color="demoFour.inactiveColor" ng-model="demoFour.value" inline-prompt="true"></mob-switch>
                 </div>
                 <div class="mob-demo-example-child">
-                    <mob-switch style="width: 60px" active-text="'超出部分隐藏'" inactive-text="'超出部分隐藏'" inline-prompt="true"></mob-switch>
+                    <mob-switch style="width: 60px" active-text="'超出部分隐藏'" inactive-text="'超出部分隐藏'" inline-prompt="true" active-color="'#13ce66'" inactive-color="'#ff4949'" ></mob-switch>
                 </div>
                 <div class="mob-demo-example-child">
-                    <mob-switch active-text="'完整展示多个内容'" inactive-text="'内容'" inline-prompt="true"></mob-switch>
+                    <mob-switch active-text="'完整展示多个内容'" inactive-text="'内容'" inline-prompt="true" active-color="'#13ce66'" inactive-color="'#ff4949'"></mob-switch>
                 </div>
             </div>
             <div class="meta">
@@ -45,14 +45,35 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <html>
-                                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value"></mob-switch>
+                                    <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value" inactive-color="'#ff4949'"></mob-switch>
+
+                                    <mob-switch active-text="demoThree.activeText" inactive-text="demoThree.inactiveText" ng-model="demoThree.value" inline-prompt="true" inactive-color="'#ff4949'"></mob-switch>
+
+                                    <mob-switch active-text="demoFour.activeText" inactive-text="demoFour.inactiveText" inactive-color="demoFour.inactiveColor" ng-model="demoFour.value" inline-prompt="true"></mob-switch>
+
+                                    <mob-switch style="width: 60px" active-text="'超出部分隐藏'" inactive-text="'超出部分隐藏'" inline-prompt="true" active-color="'#13ce66'" inactive-color="'#ff4949'" ></mob-switch>
+
+                                    <mob-switch active-text="'完整展示多个内容'" inactive-text="'内容'" inline-prompt="true" active-color="'#13ce66'" inactive-color="'#ff4949'"></mob-switch>
+
                             </html>
 
                             <script>
-                                 $scope.demoTwo = {
+                                  $scope.demoTwo = {
                                     value:false,
                                     activeText:'包年',
                                     inactiveText:'包月',
+                                }
+
+                                $scope.demoThree = {
+                                    value:false,
+                                    activeText:'Y',
+                                    inactiveText:'N',
+                                }
+                                $scope.demoFour = {
+                                    value:false,
+                                    activeText:'是',
+                                    inactiveText:'否',
+                                    inactiveColor:'#dcdfe6',
                                 }
                             </script>
                         --></code>
@@ -61,7 +82,7 @@
         </div>
 
 
-        <h3>Icon <span class="mob-tag tag-primary">TODO</span></h3>
+        <h3>Icon</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
@@ -78,14 +99,20 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <html>
-                                <mob-switch active-text="demoTwo.activeText" inactive-text="demoTwo.inactiveText" ng-model="demoTwo.value"></mob-switch>
+                                <mob-switch active-icon="demoFive.activeIcon" inactive-icon="demoFive.inactiveIcon"
+                                            ng-model="demoFive.value"></mob-switch>
+
+
+                                <mob-switch active-icon="demoFive.activeIcon" inactive-icon="demoFive.inactiveIcon"
+                                            inline-prompt="true" ng-model="demoFive.value"></mob-switch>
                             </html>
 
                             <script>
-                                 $scope.demoTwo = {
+                                   $scope.demoFive = {
                                     value:false,
-                                    activeText:'包年',
-                                    inactiveText:'包月',
+                                    activeIcon:'mob-icon-check',
+                                    inactiveIcon:'mob-icon-close',
+                                    inactiveColor:'#dcdfe6',
                                 }
                             </script>
                         --></code>
