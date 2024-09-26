@@ -1,4 +1,4 @@
-function controller($scope, $element, $compile, $transclude)  {
+function controller($scope, $element, $compile, $q)  {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -126,21 +126,34 @@ function controller($scope, $element, $compile, $transclude)  {
      * 点击事件
      */
     this.clickHandle = function () {
-        if (this.ngDisabled) {
+        // 处于加载中或者禁用时，阻止点击事件
+        if (this.ngDisabled || this.loading) {
             return
         }
 
-        if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
-            if (this.isActive()) {
-                this.ngModel = this.inactiveValue
-            }
-            else {
-                this.ngModel = this.activeValue
-            }
+        // 触发change hook
+        if (angular.isFunction(_that.beforeChange)) {
+            let opt = {deferred: $q.defer(),value: this.ngModel, attachment: this.attachment}
+            _that.beforeChange({opt: opt}).then(data => {
+                if (!data) {
+                    return
+                }
+                if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
+                    if (this.isActive()) {
+                        this.ngModel = this.inactiveValue
+                    }
+                    else {
+                        this.ngModel = this.activeValue
+                    }
+                }
+                else {
+                    this.ngModel = !this.ngModel
+                }
+            }).catch(err => {
+                console.error(err)
+            })
         }
-        else {
-            this.ngModel = !this.ngModel
-        }
+
     }
     /**
      * 是否激活
@@ -176,6 +189,7 @@ app
         bindings: {
             ngModel: '=?',// ngModel
             ngDisabled: '<?',// 是否禁用
+            loading: "=?",// 加载中
             activeColor: '<?',// 激活颜色
             activeText: '<?', // 文字提示
             activeIcon: '<?',// 激活图标
@@ -185,7 +199,6 @@ app
             inactiveText: '<?',// 未激活文字提示
             inactiveValue: '<?',// 未激活value
             inlinePrompt: '<?',// 是否为内联提示
-            loading:"=?",// 是否处于加载中
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
              *  以下写法会报异常：
@@ -194,8 +207,9 @@ app
              *  此时需要通过attachment将对象传入
              *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
              */
-            attachment:"<?",
-            change: '&?',
+            attachment:"<?",// 携带的属性
+            change: '&?',// chang hook
+            beforeChange: '&?',// beforeChange hook, return boolean
         },
         controller: controller
     })

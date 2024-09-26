@@ -124,7 +124,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <mob-switch ng-disabled="true" ng-model="true"></mob-switch>
+                    <mob-switch ng-disabled="true" ng-model="A"></mob-switch>
                 </div>
                 <div class="mob-demo-example-child">
                     <mob-switch ></mob-switch>
@@ -135,21 +135,43 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <html>
-                                <mob-switch active-icon="demoFive.activeIcon" inactive-icon="demoFive.inactiveIcon"
-                                            ng-model="demoFive.value"></mob-switch>
-
-
-                                <mob-switch active-icon="demoFive.activeIcon" inactive-icon="demoFive.inactiveIcon"
-                                            inline-prompt="true" ng-model="demoFive.value"></mob-switch>
+                                <mob-switch ng-disabled="true" ng-model="true"></mob-switch>
+                                <mob-switch></mob-switch>
                             </html>
 
                             <script>
-                                   $scope.demoFive = {
-                                    value:false,
-                                    activeIcon:'mob-icon-check',
-                                    inactiveIcon:'mob-icon-close',
-                                    inactiveColor:'#dcdfe6',
-                                }
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>加载中</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-switch loading="true" ng-model="B"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch loading="true"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch loading="demoYesIsLoading" before-change="beforeChangeYes(opt)"></mob-switch>
+                </div>
+                <div class="mob-demo-example-child">
+                    <mob-switch loading="demoFalseIsLoading" before-change="beforeChangeFalse(opt)"></mob-switch>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-switch ng-disabled="true" ng-model="true"></mob-switch>
+                                <mob-switch></mob-switch>
+                            </html>
+
+                            <script>
                             </script>
                         --></code>
                     </pre>

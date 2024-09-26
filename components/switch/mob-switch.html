@@ -1,7 +1,8 @@
 <div class="mob-switch"
      ng-class="{
      'is_active':$ctrl.isActive(),
-     'is_disabled':$ctrl.ngDisabled
+     'is_disabled':$ctrl.ngDisabled,
+     'is_loading':$ctrl.loading
      }"
 >
 
@@ -20,7 +21,7 @@
             <span class="mob-switch__inner_prompt mob-unselect-text" ng-bind="$ctrl.inlinePromptText()" ng-if="$ctrl.isInlinePromptText()"></span>
         </div>
         <div class="mob-switch__action">
-
+            <mob-icon-loading ng-if="$ctrl.loading" ng-style="$ctrl.isActive() ? {'color':$ctrl.activeColor} :{'color':$ctrl.inactiveColor}"></mob-icon-loading>
         </div>
     </div>
 

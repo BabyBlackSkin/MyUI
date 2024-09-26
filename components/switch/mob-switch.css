@@ -27,6 +27,7 @@
     cursor: pointer;
     transition: all var(--mob-transition-duration) var(--mob-transition-animate);
 }
+
 .mob-switch .mob-switch-core .mob-switch__action {
     content: '';
     position: absolute;
@@ -42,11 +43,6 @@
 
 .mob-switch.is_active .mob-switch-core .mob-switch__action {
     left: calc(100% - 16px - 3px);
-}
-
-.mob-switch.is_disabled .mob-switch-core{
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .mob-switch .mob-switch-core .mob-switch__inner {
@@ -71,9 +67,9 @@
     padding: 2px;
 
     width: 100%;
-    overflow:hidden;/*内容超出后隐藏*/
-    text-overflow:ellipsis;/*超出内容显示为省略号*/
-    white-space:nowrap;/*文本不进行换行*/
+    overflow: hidden; /*内容超出后隐藏*/
+    text-overflow: ellipsis; /*超出内容显示为省略号*/
+    white-space: nowrap; /*文本不进行换行*/
 }
 
 .mob-switch mob-switch-core .mob-icon svg {
@@ -97,3 +93,25 @@
 .mob-switch .mob-switch__tips_text.is_active {
     color: var(--mob-active-text-color);
 }
+
+
+/**
+禁用状态
+ */
+.mob-switch.is_disabled .mob-switch-core {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/**
+加载中
+ */
+.mob-switch.is_loading .mob-switch-core {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mob-switch.is_loading .mob-switch-core mob-icon-loading {
+    animation: mob-circle-loading 1s linear infinite;
+}
+
