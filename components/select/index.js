@@ -326,6 +326,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.isCollapseTagsNoTooltip = function () {
         return !_that.ngDisabled && // 未禁用
             _that.multiple &&  // 支持多选
+            _that.collapseTag && // 支持工具箱
             (angular.isDefined(_that.collapseTagTooltip) && !_that.collapseTagTooltip || angular.isUndefined(_that.collapseTagTooltip)) // 不开启工具箱
             && $scope.collapseTagsList && $scope.collapseTagsList.length > 0
     }
@@ -346,6 +347,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.isCollapseTagsHasTooltip = function () {
         return  !_that.ngDisabled && // 未禁用
             _that.multiple &&  // 支持多选
+            _that.collapseTag && // 支持工具箱
             angular.isDefined(_that.collapseTagTooltip) && _that.collapseTagTooltip // 开启工具箱
             && $scope.collapseTagsList && $scope.collapseTagsList.length > 0
     }
