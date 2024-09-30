@@ -345,7 +345,7 @@ app
     .component('mobDateDate', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date/date/index.html`
+            return `./components/date-picker/basic/date/date/index.html`
         },
         bindings: {
             ngModel: '=?',

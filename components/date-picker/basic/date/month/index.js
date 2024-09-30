@@ -129,7 +129,7 @@ app
     .component('mobDateMonth', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date/month/index.html`
+            return `./components/date-picker/basic/date/month/index.html`
         },
         bindings: {
             ngModel: '=?',

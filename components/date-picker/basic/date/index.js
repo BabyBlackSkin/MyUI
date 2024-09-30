@@ -27,7 +27,7 @@ app
         transclude: true,
         templateUrl: function ($element, $attrs) {
             // console.log('temp', $attrs.type === 'year')
-            return `./components/date/index.html`
+            return `./components/date-picker/basic/date/index.html`
         },
         bindings: {
             ngModel: '=?',
