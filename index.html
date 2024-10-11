@@ -147,8 +147,9 @@
 
     .navigation {
         position: fixed;
-        padding: 20px 20px 0 0;
-        height: 100%;
+        padding: 20px 20px 30px 0;
+        height: 100vh;
+        overflow: auto;
         background-color: #ffffff;
         margin-right: 20px;
         box-sizing: border-box;
@@ -197,7 +198,7 @@
 
     .main-container {
         width: calc(100% - 300px - 60px);
-        padding-left: calc(300px + 60px);
+        padding-left: calc(300px + 70px);
         display: flex;
         flex-direction: column;
         height: 100vh
@@ -228,16 +229,18 @@
 <div class="contain" style="display: flex;">
 
     <div class="navigation" style="z-index: 1">
-        <div class="nav-item" ng-repeat="item in menuList"
-             ng-class="{'is_active':item.path === routPath, 'group_title':item.type === 1}">
-            <a href="{{'#' + item.path}}" ng-if="item.type !== 1">
-                {{item.label}}
-                <span ng-repeat="tag in item.tags" ng-class="'mob-tag tag-' + tag.type" ng-bind="tag.title"></span>
-            </a>
-            <span class="mob-unselect-text" ng-if="item.type === 1" ng-bind="item.label">
+<!--        <mob-container>-->
+            <div class="nav-item" ng-repeat="item in menuList"
+                 ng-class="{'is_active':item.path === routPath, 'group_title':item.type === 1}">
+                <a href="{{'#' + item.path}}" ng-if="item.type !== 1">
+                    {{item.label}}
+                    <span ng-repeat="tag in item.tags" ng-class="'mob-tag tag-' + tag.type" ng-bind="tag.title"></span>
+                </a>
+                <span class="mob-unselect-text" ng-if="item.type === 1" ng-bind="item.label">
 
             </span>
-        </div>
+            </div>
+<!--        </mob-container>-->
     </div>
 
     <div class="main-container">

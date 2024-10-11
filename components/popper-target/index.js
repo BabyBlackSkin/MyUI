@@ -54,7 +54,7 @@ function controller($scope, $element, $attrs) {
                 }[placement.split('-')[0]];
 
                 Object.assign(tooltipsArrow.style, {
-                    left: '',
+                    left: arrowX != null ? `${arrowX}px` : '',
                     top: arrowY != null ? `${arrowY}px` : '',
                     right: '',
                     bottom: '',
