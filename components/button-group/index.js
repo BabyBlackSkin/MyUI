@@ -2,8 +2,6 @@ function controller($scope, $element, $transclude,$attrs, slot, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['plain','round','circle','ngDisabled']
-        attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
     }
 
 

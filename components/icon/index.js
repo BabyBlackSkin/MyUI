@@ -50,6 +50,18 @@ app.component('mobIcon', {
         templateUrl: './components/icon/decrease.html',
         controller:controller
     })
+    .component('mobIconDelete', {
+        templateUrl: './components/icon/delete.html',
+        controller:controller
+    })
+    .component('mobIconDocument', {
+        templateUrl: './components/icon/document.html',
+        controller:controller
+    })
+    .component('mobIconDocumentAdd', {
+        templateUrl: './components/icon/documentAdd.html',
+        controller:controller
+    })
     .component('mobIconDoubleArrowLeft', {
         templateUrl: './components/icon/doubleArrowLeft.html',
         controller:controller
