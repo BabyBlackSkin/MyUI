@@ -62,16 +62,16 @@ app
 
         $scope.monthModelRangeShorcuts = [
             {
-                text: '过去2年',
-                value: [$date.subtract(new Date(), 2, 'year'),new Date()]
+                text: '过去2月',
+                value: [$date.subtract(new Date(), 2, 'month'),new Date()]
             },
             {
-                text: '未来2年',
-                value: [new Date(),$date.add(new Date(), 2, 'year')]
+                text: '未来2月',
+                value: [new Date(),$date.add(new Date(), 2, 'month')]
             },
             {
-                text: '未来30年',
-                value: [new Date(),$date.add(new Date(), 30, 'year')]
+                text: '未来30月',
+                value: [new Date(),$date.add(new Date(), 30, 'month')]
             }]
 
         $scope.dateModelRangeShorcuts = [

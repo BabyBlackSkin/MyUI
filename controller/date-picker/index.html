@@ -9,13 +9,13 @@
                     <div class="block">
                         <p class="title">默认</p>
                         <div class="content">
-                            <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" ></mob-date-picker>
+                            <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" ></mob-date-picker>
                         </div>
                     </div>
                     <div class="block">
                         <p class="title">快速选择</p>
                         <div class="content">
-                            <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
+                            <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
                         </div>
                     </div>
                 </div>
@@ -28,13 +28,149 @@
                                 <div class="block">
                                     <p class="title">默认</p>
                                     <div class="content">
-                                        <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" ></mob-date-picker>
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" ></mob-date-picker>
                                     </div>
                                 </div>
                                 <div class="block">
                                     <p class="title">快速选择</p>
                                     <div class="content">
-                                        <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
+                                    </div>
+                                </div>
+                            </div>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>其他日期单位</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="example-block">
+                    <div class="block">
+                        <p class="title">年</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleTow" type="'year'" ></mob-date-picker>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <p class="title">月</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleThree" type="'month'" ></mob-date-picker>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <p class="title">日</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleFour" type="'date'" ></mob-date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <div class="example-block">
+                                <div class="block">
+                                    <p class="title">年</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleTow" type="'year'" ></mob-date-picker>
+                                    </div>
+                                </div>
+                                <div class="block">
+                                    <p class="title">月</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleThree" type="'month'" ></mob-date-picker>
+                                    </div>
+                                </div>
+                                <div class="block">
+                                    <p class="title">日</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleFour" type="'date'" ></mob-date-picker>
+                                    </div>
+                                </div>
+                            </div>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>选择月份范围</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="example-block">
+                    <div class="block">
+                        <p class="title">默认</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleFive" type="'monthRange'" ></mob-date-picker>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <p class="title">快捷选择</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleFive" type="'monthRange'" shortcuts="monthModelRangeShorcuts" ></mob-date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <div class="example-block">
+                                <div class="block">
+                                    <p class="title">默认</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleFive" type="'monthRange'" ></mob-date-picker>
+                                    </div>
+                                </div>
+                                <div class="block">
+                                    <p class="title">快捷选择</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleFive" type="'monthRange'" shortcuts="monthModelRangeShorcuts" ></mob-date-picker>
+                                    </div>
+                                </div>
+                            </div>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>选择年份范围</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="example-block">
+                    <div class="block">
+                        <p class="title">默认</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleSix" type="'yearRange'" ></mob-date-picker>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <p class="title">快捷选择</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="exampleSix" type="'yearRange'" shortcuts="yearModelRangeShorcuts" ></mob-date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <div class="example-block">
+                                <div class="block">
+                                    <p class="title">默认</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleSix" type="'yearRange'" ></mob-date-picker>
+                                    </div>
+                                </div>
+                                <div class="block">
+                                    <p class="title">快捷选择</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="exampleSix" type="'yearRange'" shortcuts="yearModelRangeShorcuts" ></mob-date-picker>
                                     </div>
                                 </div>
                             </div>
