@@ -76,7 +76,6 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     width: 200px;
 }
-
 .mob-demo-block .meta {
     width: 100%;
     border-top: 1px solid #ededed;
@@ -132,6 +131,21 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box;
 }
 
+.example-block {
+    display: flex;
+}
+
+.example-block .block {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px 0 40px 0;
+}
+.example-block .block:not(:last-child){
+    border-right: 1px solid var(--mob-border-color)
+}
 .mob-demo-example-child {
     display: flex;
     align-items: center;

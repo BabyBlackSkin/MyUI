@@ -8,11 +8,14 @@
 
         <!-- 展示区域 -->
         <div class="mob-select__selection" >
-            <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
-                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}" class="mob-input__inner" ng-model="$ctrl.model">
-            </div>
+<!--            <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">-->
+<!--                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}" class="mob-input__inner" ng-model="$ctrl.model">-->
+<!--            </div>-->
             <div class="mob-select__selected-item mob-select-placeholder">
-                <span class="mob-unselect-text" ng-bind="placeholder"></span>
+                <input ng-model="$ctrl.ngModel" ng-attr-placeholder="{{placeholder}}" ng-if="!isDateRange()"/>
+                <input ng-value="$ctrl.ngModel[0]" ng-attr-placeholder="{{placeholder}}" ng-if="isDateRange()"/>
+                <span  ng-bind="$ctrl.rangSeparator" ng-if="isDateRange()"/>
+                <input ng-value="$ctrl.ngModel[0]" ng-attr-placeholder="{{placeholder}}" ng-if="isDateRange()"/>
             </div>
         </div>
 

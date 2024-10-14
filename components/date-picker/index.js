@@ -5,7 +5,7 @@ function createDatePickerSelectOptions(){
             <div class="mob-popper__wrapper">
                 <span class="mob-popper__arrow"></span>
                 <div class="mob-popper__inner">
-                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-year>
+                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-year>
                 </div>
             </div>
          </div>
@@ -16,7 +16,7 @@ function createDatePickerSelectOptions(){
             <div class="mob-popper__wrapper">
                 <span class="mob-popper__arrow"></span>
                 <div class="mob-popper__inner">
-                    <mob-date-month ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-month>
+                    <mob-date-month ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-month>
                 </div>
             </div>
          </div>
@@ -27,7 +27,7 @@ function createDatePickerSelectOptions(){
             <div class="mob-popper__wrapper">
                 <span class="mob-popper__arrow"></span>
                 <div class="mob-popper__inner">
-                    <mob-date-date ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-date>
+                    <mob-date-date ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-date>
                 </div>
             </div>
          </div>
@@ -38,8 +38,7 @@ function createDatePickerSelectOptions(){
             <div class="mob-popper__wrapper">
                 <span class="mob-popper__arrow"></span>
                 <div class="mob-popper__inner">
-                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-year>
-                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-year>
+                    <mob-date-year-range ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-year-range>
                 </div>
             </div>
          </div>
@@ -50,7 +49,7 @@ function createDatePickerSelectOptions(){
             <div class="mob-popper__wrapper">
                 <span class="mob-popper__arrow"></span>
                 <div class="mob-popper__inner">
-                    <mob-date-month ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-month>
+                    <mob-date-month-range ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-month-range>
                 </div>
             </div>
          </div>
@@ -61,7 +60,7 @@ function createDatePickerSelectOptions(){
             <div class="mob-popper__wrapper">
                 <span class="mob-popper__arrow"></span>
                 <div class="mob-popper__inner">
-                    <mob-date-date ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)"></mob-date-date>
+                    <mob-date-date-range ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-date-range>
                 </div>
             </div>
          </div>
@@ -208,6 +207,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         _that.change({value:emptyValue, attachment:_that.attachment})
     }
 
+    /**
+     * 是否为范围选择
+     */
+    $scope.isDateRange = function (){
+        return _that.type === 'yearRange' || _that.tpye === 'monthRange' || _that.type === 'dateRange';
+    }
+
 
 }
 
@@ -222,6 +228,10 @@ app
             ngDisabled: '<?', // 是否禁用
             clearable: '<?', // 可清空的
             placeholder: '<?',// 提示文字
+            rangSeparator:'<?',// 范围分割文字
+            startPlaceHolder:'<?',// 开始提示文字
+            endPlaceHolder:'<?',// 结束提示文字
+            shortcuts: "<?",// type: array
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandle中拿到绑定的对象，
              *  以下写法会报异常：
@@ -234,6 +244,8 @@ app
             // Events
             change: '&?',
             calendarClick: "&?",
+            panelChange: "&?", // TODO
+            disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
         },
         controller: controller
     })

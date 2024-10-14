@@ -73,6 +73,8 @@
     /*--mob-icon-size:1rem;*/
     --mob-icon-size: 16px;
 
+    --mob-input-inner-height:40px;
+
     /* tree树形控件属性 */
     --mob-tree-icon-size: var(--mob-icon-size);
 
@@ -152,7 +154,7 @@ mob-select, mob-tree-select, mob-date-picker {
     min-width: 200px;
 }
 
-mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date {
+mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date, mob-date-picker {
     display: block;
 }
 

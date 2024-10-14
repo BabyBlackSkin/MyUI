@@ -1,44 +1,47 @@
 <section class="mob-doc content" ng-controller="DatePicker as ctrl">
     <h2>DatePicker日期选择器</h2>
 
-
     <div class="mob-doc content">
-        <h3>年、月、日</h3>
+        <h3>选择某一天</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                值：{{yearModel}}
-                <div class="mob-demo-example-child">
-                    <mob-date-picker ng-model="yearModel" type="'year'"></mob-date-picker>
-                </div>
-                值：{{monthModel}}
-                <div class="mob-demo-example-child">
-                    <mob-date-picker ng-model="monthModel" type="'month'"></mob-date-picker>
-                </div>
-                值：{{dateModel}}
-                <div class="mob-demo-example-child">
-                    <mob-date-picker ng-model="dateModel" type="'date'"></mob-date-picker>
+                <div class="example-block">
+                    <div class="block">
+                        <p class="title">默认</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" ></mob-date-picker>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <p class="title">快速选择</p>
+                        <div class="content">
+                            <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="meta">
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            值：{{yearModel}}
-                            <div class="mob-demo-example-child">
-                                <mob-date-picker ng-model="yearModel" type="'year'"></mob-date-picker>
-                            </div>
-                            值：{{monthModel}}
-                            <div class="mob-demo-example-child">
-                                <mob-date-picker ng-model="monthModel" type="'month'"></mob-date-picker>
-                            </div>
-                            值：{{dateModel}}
-                            <div class="mob-demo-example-child">
-                                <mob-date-picker ng-model="dateModel" type="'date'"></mob-date-picker>
+                            <div class="example-block">
+                                <div class="block">
+                                    <p class="title">默认</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" ></mob-date-picker>
+                                    </div>
+                                </div>
+                                <div class="block">
+                                    <p class="title">快速选择</p>
+                                    <div class="content">
+                                        <mob-date-picker style="width: 220px;" ng-model="yearModel" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
+                                    </div>
+                                </div>
                             </div>
                         --></code>
                     </pre>
             </div>
         </div>
-
     </div>
+
 </section>

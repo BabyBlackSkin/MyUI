@@ -30,7 +30,7 @@
     color: var(--mob-regular-text-color);
 }
 .mob-date.mob-date-year {
-    width: var(--mob-date-container-year-month-width);
+    width: calc(var(--mob-date-container-year-month-width) + 20px);
 }
 .mob-date.mob-date-year.shortcuts {
     width: var(--mob-date-year-month-shortcuts-maxWidth);
