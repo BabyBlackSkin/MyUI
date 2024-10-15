@@ -120,7 +120,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
 
             if (angular.isFunction(_that.change)) {
-                let opt = {value: this.ngModel, attachment: this.attachment}
+                let opt = {value: newV, attachment: _that.attachment}
                 _that.change({opt: opt})
             }
 
