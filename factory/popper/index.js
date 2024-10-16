@@ -1,5 +1,5 @@
 app
-    .factory('popper', ['uuId', 'floating', 'position', function (uuId, floating, position) {
+    .factory('popper', ['uuId', 'floating', function (uuId, floating) {
 
         function showAutoUpdate(scope, popper, timer = {render: true}) {
             let {target, tooltip} = popper

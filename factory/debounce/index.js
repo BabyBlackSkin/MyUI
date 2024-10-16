@@ -4,7 +4,7 @@ app
         let timeout = new Set()
 
         return {
-            debounce: function (scope, func, wait, immediate) {
+            debounce: function (scope, uuid, func, wait, immediate) {
                 // Create a deferred object that will be resolved when we need to
                 // actually call the func
                 let deferred = $q.defer();
@@ -12,7 +12,7 @@ app
 
                     let context = scope, args = arguments;
                     let later = function () {
-                        timeout[scope.$id] = null;
+                        timeout[uuid] = null;
                         if (!immediate) {
                             // console.log('延迟')
                             deferred.resolve(func.apply(context, args));
@@ -21,15 +21,14 @@ app
                     };
 
 
-                    if (timeout[scope.$id]) {
-                        // console.log('清空')
-                        $timeout.cancel(timeout[scope.$id]);
+                    if (timeout[uuid]) {
+                        $timeout.cancel(timeout[uuid]);
                     }
                     // 创建延迟timeout
                     // console.log('创建')
-                    timeout[scope.$id] = $timeout(later, wait);
+                    timeout[uuid] = $timeout(later, wait);
                     // 是否立即执行？
-                    let callNow = immediate && !timeout[scope.$id];
+                    let callNow = immediate && !timeout[uuid];
                     if (callNow) {
                         // console.log('立即执行')
                         deferred.resolve(func.apply(context, args));

@@ -1,0 +1,33 @@
+<div class="mob-date-picker">
+    <div class="mob-select__wrapper mob_popper__target" popper-group="selectDrown" ng-click="clickHandler()">
+
+        <!-- 右侧的ICON -->
+        <div class="mob-select__suffix" ng-class="{'is_hidden':!$slot.slotSet.has('prefix')}">
+            <mob-icon-calendar></mob-icon-calendar>
+        </div>
+
+        <!-- 展示区域 -->
+        <div class="mob-select__selection" >
+<!--            <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">-->
+<!--                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}" class="mob-input__inner" ng-model="$ctrl.model">-->
+<!--            </div>-->
+            <div class="mob-select__selected-item mob-select-placeholder">
+                <input ng-model="$ctrl.ngModel" ng-attr-placeholder="{{placeholder}}" ng-if="!isDateRange()"/>
+                <input ng-value="$ctrl.ngModel[0]" ng-attr-placeholder="{{placeholder}}" ng-if="isDateRange()"/>
+                <span  ng-bind="$ctrl.rangSeparator" ng-if="isDateRange()"/>
+                <input ng-value="$ctrl.ngModel[0]" ng-attr-placeholder="{{placeholder}}" ng-if="isDateRange()"/>
+            </div>
+        </div>
+
+
+        <!-- 右侧的ICON -->
+        <div class="mob-select__suffix" >
+            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':showClear()}">
+                <mob-Icon-arrow-down  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-Icon-arrow-down>
+            </span>
+            <span class="mob-select__suffix-inner mob-icon__clean" ng-if="showClear()">
+                <mob-icon-circle-close ng-class="{'is_popper':popperShow}" ng-click="clean()"></mob-icon-circle-close>
+            </span>
+        </div>
+    </div>
+</div>

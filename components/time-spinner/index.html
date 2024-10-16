@@ -1,21 +1,31 @@
 <div class="mob-time-spinner">
     <div class="mob-time-spinner__container">
         <div class="mob-time-spinner__wrapper">
+            <div class="show-container"></div>
 <!--            <mob-divider class="top-divider"></mob-divider>-->
 <!--            <mob-divider class="bottom-divider"></mob-divider>-->
-            <div class="mob-time-spinner__selection hour-selection mob-scrollbar">
+            <div class="mob-time-spinner__selection hour-selection mob-scrollbar" ng-scroll="$ctrl.scrollHandler($event, 'hour')">
                 <ul>
-                    <li ng-repeat="h in $options.hour" ng-bind="h"></li>
+                    <li ng-repeat="h in $options.hour"
+                        ng-bind="h.format"
+                        ng-click="$ctrl.selectionClickHandler('hour', h)"
+                        ng-class="{'is_active':h.isActive}"></li>
                 </ul>
             </div>
-            <div class="mob-time-spinner__selection minute-selection mob-scrollbar">
+            <div class="mob-time-spinner__selection minute-selection mob-scrollbar" ng-scroll="$ctrl.scrollHandler($event, 'minute')">
                 <ul>
-                    <li ng-repeat="m in $options.minute" ng-bind="m"></li>
+                    <li ng-repeat="m in $options.minute"
+                        ng-bind="m.format"
+                        ng-click="$ctrl.selectionClickHandler('minute', m)"
+                        ng-class="{'is_active':m.isActive}"></li>
                 </ul>
             </div>
-            <div class="mob-time-spinner__selection second-selection mob-scrollbar">
+            <div class="mob-time-spinner__selection second-selection mob-scrollbar" ng-scroll="$ctrl.scrollHandler($event, 'second')">
                 <ul>
-                    <li ng-repeat="s in $options.second" ng-bind="s"></li>
+                    <li ng-repeat="s in $options.second"
+                        ng-bind="s.format"
+                        ng-click="$ctrl.selectionClickHandler('second', s)"
+                        ng-class="{'is_active':s.isActive}"></li>
                 </ul>
             </div>
         </div>

@@ -150,8 +150,8 @@ mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-
     display: inline-block;
 }
 
-mob-select, mob-tree-select, mob-date-picker {
-    min-width: 200px;
+mob-select, mob-tree-select, mob-date-picker, mob-time-spinner {
+    width: 200px;
 }
 
 mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date, mob-date-picker {

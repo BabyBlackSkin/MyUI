@@ -1,8 +1,17 @@
+mob-date-picker .mob-popper .mob-popper__wrapper {
+    max-height: 380px;
+    /*height: 344px;*/
+}
+
+mob-date-picker .mob-popper .mob-popper__wrapper .mob-popper__inner {
+    max-height: 380px;
+    /*height: 100%;*/
+}
+
+
 
 /* select */
-
-
-.mob-timepicker {
+.mob-date-picker {
     width: 100%;
     position: relative;
     font-size: 14px;
@@ -12,11 +21,11 @@
     --mob-input-icon-color: var(--mob-placeholder-text-color)
 }
 
-.mob-timepicker .mob-timepicker__wrapper:focus-within {
+.mob-date-picker .mob-select__wrapper:focus-within {
     outline: none;
     border-color: var(--mob-active-border-color)
 }
-.mob-timepicker .mob-timepicker__wrapper {
+.mob-date-picker .mob-select__wrapper {
     width: 100%;
     display: flex;
     align-items: center;
@@ -29,11 +38,9 @@
     color: var(--mob-input-color);
     padding: 0 12px;
     cursor: pointer;
-    box-shadow: 0 0 0 1px var(--el-border-color) inset;
-    cursor: pointer;
 }
 
-.mob-timepicker .mob-timepicker__selection{
+.mob-date-picker .mob-select__selection{
     overflow: hidden;
     position: relative;
     box-sizing: border-box;
@@ -43,15 +50,7 @@
     align-items: center;
 }
 
-.mob-timepicker .mob-timepicker__selected-item.mob-timepicker__input-wrapper,
-.mob-timepicker .mob-timepicker__selected-item.is-hidden{
-    width: 1px;
-    overflow: hidden;
-    z-index: 0;
-    height: 40px;
-
-}
-.mob-timepicker .mob-timepicker__selected-item {
+.mob-date-picker .mob-select__selected-item {
     position: relative;
     width: 100%;
     background-color: #fff;
@@ -59,7 +58,19 @@
     line-height: 40px;
     /*z-index: 1;*/
 }
-.mob-timepicker .mob-input__inner {
+.mob-date-picker .mob-select__selected-item input{
+    width: 100%;
+    height: var(--mob-input-inner-height);
+    font-size: inherit;
+    -webkit-appearance:none;
+    border:none;
+    outline: none;
+    margin-left: 5px;
+    color: var(--mob-input-color);
+    padding: 0;
+    flex-grow: 1;
+}
+.mob-date-picker .mob-input__inner {
     background-color: #fff;
     background-image: none;
     border-radius: 4px;
@@ -74,15 +85,22 @@
     /*width: 1px;*/
     width: 100%;
 }
-.mob-timepicker .mob-input__inner.mob-input-filterable{
-    padding: 12px;
+
+.mob-date-picker .mob-input__inner.mob-input-filterable {
+    /*padding: 12px;*/
     cursor: pointer;
+    color: var(--mob-placeholder-text-color);
 }
-.mob-timepicker .mob-timepicker__selected-item.mob-timepicker__input-wrapper .mob-input__inner,
-.mob-timepicker .mob-timepicker__selected-item.is-hidden.mob-timepicker__input-wrapper .mob-input__inner{
+
+.mob-date-picker .mob-input__inner.mob-input-filterable::placeholder {
+    color: var(--mob-input-color);
+}
+
+.mob-date-picker .mob-select__selected-item.mob-select__input-wrapper .mob-input__inner,
+.mob-date-picker .mob-select__selected-item.is-hidden.mob-select__input-wrapper .mob-input__inner{
     width: 1px;
 }
-.mob-timepicker .mob-timepicker__selected-item span{
+.mob-date-picker .mob-select__selected-item span{
     display: inline-block;
     width: 100%;
     height: 100%;
@@ -90,9 +108,10 @@
     text-overflow: ellipsis;
     text-wrap: nowrap;
     white-space: nowrap;
+    text-indent: 5px;
 }
 
-.mob-timepicker .mob-timepicker__suffix{
+.mob-date-picker .mob-select__suffix{
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
@@ -103,71 +122,57 @@
     color: var(--mob-placeholder-text-color);
     transition: all var(--mob-transition-duration);
 }
-.mob-timepicker .mob-timepicker__suffix-inner{
+.mob-date-picker .mob-select__suffix-inner{
     position: relative;
+    display: flex;
 }
-.mob-timepicker  .mob-timepicker__suffix .is_hidden{
+.mob-select  .mob-select__suffix .is_hidden{
     display: none;
 }
-.mob-timepicker .mob-icon__down-arrow.is_popper .mob-icon{
+.mob-date-picker .mob-icon__down-arrow.is_popper .mob-icon{
     transform: rotate(180deg);
 }
-.mob-timepicker .mob-select__wrapper__clearable:hover .mob-icon__clean{
+.mob-date-picker .mob-select__wrapper__clearable:hover .mob-icon__clean{
     display: inline-flex;
 }
-.mob-timepicker .mob-icon__close .mob-icon svg{
+.mob-date-picker .mob-icon__close .mob-icon svg{
     width: 1.2em;
     height: 1.2em;
 }
-.mob-timepicker .mob-icon__close .mob-icon {
+.mob-date-picker .mob-icon__close .mob-icon,.mob-select-popper .mob-icon__close .mob-icon{
     padding: 1px;
     border-radius: 50%;
+    cursor: pointer;
 }
-.mob-timepicker .mob-icon__close  .mob-icon:hover {
+.mob-date-picker .mob-icon__close  .mob-icon:hover,.mob-select-popper .mob-icon__close  .mob-icon:hover {
     background-color: #909399 ;
 }
-.mob-timepicker .mob-icon__close  .mob-icon:hover svg path{
+.mob-date-picker .mob-icon__close  .mob-icon:hover svg path,.mob-select-popper .mob-icon__close  .mob-icon:hover svg path {
     fill: #fff;
 }
-.mob-timepicker .mob-timepicker__suffix-inner.mob-icon__clean{
+.mob-date-picker .mob-select__suffix-inner.mob-icon__clean{
     display: none;
 }
 
-.mob-timepicker:not(.is_disabled) .mob-timepicker__wrapper:hover .mob-timepicker__suffix-inner.is_hide_able {
+.mob-select:not(.is_disabled) .mob-select__wrapper:hover .mob-select__suffix-inner.is_hide_able {
     display: none;
 }
 
-.mob-timepicker:not(.is_disabled) .mob-timepicker__wrapper:hover .mob-timepicker__suffix-inner.mob-icon__clean {
+.mob-select:not(.is_disabled) .mob-select__wrapper:hover .mob-select__suffix-inner.mob-icon__clean {
     display: block;
 }
 
-.mob-timepicker .mob-timepicker__selected-item.mob-timepicker-placeholder {
-    padding-left: 10px;
-}
-
-
 /*禁用状态*/
-.mob-timepicker.is_disabled *{
+.mob-select.is_disabled *{
     cursor: not-allowed;
 }
-.mob-timepicker.is_disabled .mob-timepicker__wrapper {
+.mob-select.is_disabled .mob-select__wrapper {
     background-color: var(--mob-disabled-background-color);
 }
-.mob-timepicker.is_disabled .mob-timepicker__selected-item {
+.mob-select.is_disabled .mob-select__selected-item {
     color: var(--mob-disabled-text-color);
     background-color: var(--mob-disabled-background-color);
 }
-.mob-timepicker.is_disabled .mob-input__inner {
+.mob-select.is_disabled .mob-input__inner {
     background-color: var(--mob-disabled-background-color);
 }
-
-
-/*可过滤的*/
-/*.mob-timepicker.is_filterable .mob-timepicker__selected-item.mob-timepicker__input-wrapper{*/
-/*    width: 100%;*/
-
-/*}*/
-/*.mob-timepicker.is_filterable .mob-input__inner{*/
-/*    text-indent: 8px;*/
-/*    width: 100%;*/
-/*}*/
