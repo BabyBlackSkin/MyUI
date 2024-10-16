@@ -43,18 +43,6 @@
     transition: all .3s ;
 }
 
-/*.mob-time-spinner__selection::before {*/
-/*    content: '';*/
-/*    display: block;*/
-/*    height: 110px;*/
-/*    width: 60px;*/
-/*}*/
-/*.mob-time-spinner__selection::after{*/
-/*    content: '';*/
-/*    display: inline-block;*/
-/*    height: 105px;*/
-/*    width: 60px;*/
-/*}*/
 .mob-time-spinner__selection ul {
     padding: 0;
     margin: 0;
@@ -94,4 +82,13 @@
 
 .mob-time-spinner__selection ul li.is_active {
     font-weight: bolder;
+}
+
+.mob-time-spinner__operation {
+    display: flex;
+
+    justify-content:flex-end;
+}
+.mob-time-spinner__operation mob-button:not(:last-child){
+    margin-right: 20px;
 }

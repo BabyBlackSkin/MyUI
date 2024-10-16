@@ -5,7 +5,7 @@ function controller($scope, $element, $transclude, $attrs, slot, attrHelp) {
         if(!this.nativeType){
             this.nativeType = "button"
         }
-        let abbParams = ['plain', 'round', 'circle', 'ngDisabled', 'text']
+        let abbParams = ['plain', 'round', 'circle', 'ngDisabled', 'text', 'bg','link']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
     }
 
@@ -32,12 +32,15 @@ app
         bindings: {
             type: '<?',
             nativeType:'<?',
+            text:"<?", // 文字按钮
+            bg:"<?", // 文字按钮是否存在背景
+            link:"<?", // 链接按钮
             plain: '<?',
-            round: '<?',
-            circle: '<?',
-            icon: '<?',
-            loading: '<?',
-            ngDisabled: '<?'
+            round: '<?', // 圆角
+            circle: '<?', // 是否圆形
+            icon: '<?', // icon
+            loading: '<?', // 是否处于加载状态
+            ngDisabled: '<?' // 是否禁用
         },
         controller: controller
     })
