@@ -1,5 +1,5 @@
 
-function controller($scope, $element, uuId, $debounce) {
+function controller($scope, $element, uuId, $debounce,$date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -73,6 +73,7 @@ function controller($scope, $element, uuId, $debounce) {
             this.showContainerPosition[type].scrollTop =  activeInx * 32;
             this.lastScrollTop = scrollTop;
 
+            this.setValue(type,$scope.$options[type][activeInx].format)
         }, 300)()
     }
 
@@ -83,6 +84,32 @@ function controller($scope, $element, uuId, $debounce) {
 
         // 根据被激活的元素重新设置滚动条的位置
         this.showContainerPosition[type].scrollTop =  time.inx * 32;
+        this.setValue(type, time.format)
+    }
+
+
+    let ngModelReplaceInx = {hour: 0, minute: 1, second: 2}
+    this.setValue = function (type, val) {
+        // 校验ngModel的格式是否符合规范
+        if (null == this.showModel || '' === this.showModel || undefined === this.showModel || this.showModel.split(':').length !== 3) {
+            let date = new Date()
+            let hour = ($date.getHours(date) + '').padStart(2, "0")
+            let minute = ($date.getMinutes(date) + '').padStart(2, "0")
+            let seconds = ($date.getSeconds(date) + '').padStart(2, "0")
+            this.showModel = `${hour}:${minute}:${seconds}`
+        }
+
+        let arr = this.showModel.split(':');
+        arr[ngModelReplaceInx[type]] = val
+
+        this.showModel = arr.join(':')
+    }
+
+    this.confirmHandler = function () {
+        this.ngModel = this.showModel
+    }
+    this.cancelHandler = function () {
+        this.showModel = this.ngModel
     }
 }
 
@@ -90,9 +117,9 @@ app
     .component('mobTimeSpinner', {
         templateUrl: './components/time-spinner/index.html',
         bindings: {
-            ngDisabled: '<?',
-            ngModel: '=?',
-            noMatchOption: '<?',
+            ngModel: '=?', // 双向绑定的数据
+            showModel: '=?', // 显示的数据
+            ngDisabled: '<?', // 是否禁用
         },
         controller: controller
     })

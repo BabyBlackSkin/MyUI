@@ -85,10 +85,20 @@
 }
 
 .mob-time-spinner__operation {
+    border-top: 1px solid var(--mob-border-color);
     display: flex;
-
     justify-content:flex-end;
+    padding: 10px 0;
 }
-.mob-time-spinner__operation mob-button:not(:last-child){
+.mob-time-spinner__operation button{
+    cursor: pointer;
+    outline: none;
+    border:none;
+    background-color: transparent;
+}
+.mob-time-spinner__operation button.confirm{
+    color: var(--mob-primary-color);
+}
+.mob-time-spinner__operation button:not(:last-child){
     margin-right: 20px;
 }
