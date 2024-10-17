@@ -126,7 +126,7 @@ app
     .component('mobDateYear', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date-picker/basic/date/year/index.html`
+            return `./components/date/year/index.html`
         },
         bindings: {
             ngModel: '=?',

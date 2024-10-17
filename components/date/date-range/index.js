@@ -491,7 +491,7 @@ app
     .component('mobDateDateRange', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date-picker/basic/date-range/date-range/index.html`
+            return `./components/date/date-range/index.html`
         },
         bindings: {
             ngModel: '=?',

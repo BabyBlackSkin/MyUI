@@ -235,7 +235,7 @@ app
     .component('mobDateYearRange', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date-picker/basic/date-range/year-range/index.html`
+            return `./components/date/year-range/index.html`
         },
         bindings: {
             ngModel: '=?',// type Array，length:2, 0: startTime,1: endTime

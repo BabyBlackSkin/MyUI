@@ -82,7 +82,33 @@
     --mob-popper-max-height: 300px;
 
     /* date-picker */
-    --mob-date-off-text-color: var(--mob-placeholder-text-color)
+    --mob-date-off-text-color: var(--mob-placeholder-text-color);
+
+
+    /*--mob-calendar-col-height:60px;*/
+    --mob-calendar-col-padding:10px;
+    --mob-calendar-col-span-width:60px;
+    --mob-calendar-col-span-height:40px;
+    --mob-calendar-col-span-border-radius: 30px;
+    --mob-calendar-date-col-width:45px;
+    --mob-calendar-date-col-padding:4px;
+    --mob-calendar-date-col-span-width:24px;
+    --mob-calendar-date-col-span-fontSize:12px;
+
+    --mob-calendar-header-padding:10px;
+
+
+    --mob-date-sider-width:110px;
+    --mob-date-sider-button-line-height: 28px;
+
+    --mob-date-container-padding: 10px;
+    --mob-date-yeaer-month-col: 4;
+    --mob-date-container-year-month-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)));
+    --mob-date-container-date-col-width: calc((var(--mob-calendar-date-col-padding) * 2 + var(--mob-calendar-date-col-span-width)));
+    --mob-date-container-year-month-width: calc(var(--mob-date-container-year-month-col-width) * var(--mob-date-yeaer-month-col));
+    --mob-date-year-month-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
+    --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2));
+    --mob-date-year-month-range-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
 }
 
 /* mob组件fontsSize默认为16px */

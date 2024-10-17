@@ -360,7 +360,7 @@ app
     .component('mobDateMonthRange', {
         transclude: true,
         templateUrl: function ($element, $attrs) {
-            return `./components/date-picker/basic/date-range/month-range/index.html`
+            return `./components/date/month-range/index.html`
         },
         bindings: {
             ngModel: '=?',
