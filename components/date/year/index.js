@@ -3,16 +3,8 @@ function yearController($scope, $element, $attrs, $date) {
     // 初始化工作
     this.$onInit = function () {
         // 当前年份
-        $scope.date = new Date
-        // 当前年份
-        $scope.currentYear = $date.getFullYear($scope.date)
-
-        let timeScope = _that.getStartYearAndEndYear($scope.currentYear)
-        $scope.calendarStartYear = timeScope[0]
-        $scope.calendarEndYear = timeScope[1]
-
-        this.renderOptions()
-
+        $scope.$date = dayjs()
+        $scope.renderOptions()
     }
 
 
@@ -45,52 +37,61 @@ function yearController($scope, $element, $attrs, $date) {
 
             // ngModel发生变化时，重新计算startYear和endYear，并重新readerOptions
             // 获取最后一位
-            let timeScope = _that.getStartYearAndEndYear(newValue)
-            if ($scope.calendarStartYear !== timeScope[0] && $scope.calendarEndYear !== timeScope[1]) {
-                $scope.calendarStartYear = timeScope[0]
-                $scope.calendarEndYear = timeScope[1]
-                _that.renderOptions()
+            let startYear = _that.getRangeStartYear(newValue)
+            if ($scope.options[0][0].year !== startYear) {
+                $scope.renderOptions()
             }
         })
     }
 
     // 根据value计算年份范围
-    this.getStartYearAndEndYear = function (value) {
+    this.getRangeStartYear = function (value) {
         let lastDigitYear = value % 10
-        let startYear = value - lastDigitYear
-        let endYear = startYear + 9
-        return [startYear, endYear]
+        return value - lastDigitYear
     }
 
 
     // 根据年份计算选项
-    this.renderOptions = function () {
+    $scope.renderOptions = function (y) {
+        if (y) {
+            $scope.$date = dayjs().year(y)
+        }
+        let year = $scope.$date.year();
+        let startYear= year - year % 10
+        let endYear= startYear + 10
+
         let yearGroupInx = 0
+        let perGroupLength = 0
         $scope.options = []
-        for (let i = $scope.calendarStartYear; i <= $scope.calendarEndYear; i++) {
+        for (let i = startYear; i < endYear; i++) {
+            if (perGroupLength === 4) {
+                perGroupLength = 0;
+                yearGroupInx++
+            }
             if (!$scope.options[yearGroupInx]) {
                 $scope.options[yearGroupInx] = []
-            } else if ($scope.options[yearGroupInx].length === 4) {
-                yearGroupInx++
-                $scope.options[yearGroupInx] = []
             }
-            $scope.options[yearGroupInx].push(i)
+            perGroupLength++;
+            let year = dayjs().year(i)
+            $scope.options[yearGroupInx].push({
+                $date: year,
+                year:i,
+                isToday: year.isSame(dayjs(),"year"),
+            })
         }
     }
 
     // 增加年份
-    this.increase = function () {
-        $scope.calendarStartYear = $scope.calendarStartYear + 10
-        $scope.calendarEndYear = $scope.calendarStartYear + 9
-        this.renderOptions()
+    this.increaseHandle = function () {
+        $scope.$date = $scope.options[0][0].$date.add(10,"year")
+        $scope.renderOptions()
         this.panelChangeHandle()
     }
 
     // 减少年份
-    this.decrease = function () {
-        $scope.calendarStartYear = $scope.calendarStartYear - 10
-        $scope.calendarEndYear = $scope.calendarStartYear + 9
-        this.renderOptions()
+    this.decreaseHandle = function () {
+        $scope.$date = $scope.options[0][0].$date.subtract(10,"year")
+        $scope.renderOptions()
         this.panelChangeHandle()
     }
 
@@ -106,14 +107,14 @@ function yearController($scope, $element, $attrs, $date) {
 
     // 日历项被点击时触发
     this.calendarClickHandle = function (year) {
-        this.ngModel = year
+        this.ngModel = year.year
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {value: _that.ngModel, attachment: _that.attachment}
             _that.calendarClick({opt: opt})
         }
     }
 
-    // shortcut点击事件
+    // shortcut点击事件 TODO
     this.shortcutClickHandle = function (shortcut) {
         let fullYear = $date.getFullYear(shortcut.value);
         fullYear && (this.ngModel = fullYear)
@@ -129,7 +130,7 @@ app
             return `./components/date/year/index.html`
         },
         bindings: {
-            ngModel: '=?',
+            ngModel: '=?', // 双向绑定的数据
             type: "<?",// 选择器类型：type: string
             shortcuts: "<?",// type: array
             attachment: "<?",

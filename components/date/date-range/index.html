@@ -1,10 +1,11 @@
 <div class="mob-date mob-date-range mob-date-date mob-unselect-text">
-    <div class="mob-date__container__wrapper" ng-show="!$ctrl.yearDatePickerDisplay && !$ctrl.monthDatePickerDisplay">
+    <div class="mob-date__container__wrapper">
         <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
             <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text"
                     ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
         </div>
         <div class="mob-date__container is_left">
+            <mob-date-date></mob-date-date>
             <div class="mob-date__header">
                 <mob-icon-double-arrow-left ng-click="$ctrl.decreaseYear('leftCalendar')"
                                             class="button"></mob-icon-double-arrow-left>
