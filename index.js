@@ -126,7 +126,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Switch开关', path: '/switch'},
         {label: 'Tree树形控件', path: '/tree'},
         {label: 'Form表单', path: '/form', tags: [{title:'developing', type:'danger'}]},
-        // {label: 'Date日历', path: '/date', tags: [{title:'developing', type:'danger'}]},
+        {label: 'Date日历', path: '/date', tags: [{title:'developing', type:'danger'}]},
         {label: 'DatePicker日期选择器', path: '/datePicker'},
         {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
     ]

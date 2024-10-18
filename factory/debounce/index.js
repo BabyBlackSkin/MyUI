@@ -4,13 +4,22 @@ app
         let timeout = new Set()
 
         return {
-            debounce: function (scope, uuid, func, wait, immediate) {
+            /**
+             * 防抖函数
+             * @param context 上下文
+             * @param uuid 防抖唯一标识
+             * @param func 方法
+             * @param wait 等待
+             * @param immediate 是否 立即执行
+             * @returns {function(): *}
+             */
+            debounce: function (context, uuid, func, wait, immediate) {
                 // Create a deferred object that will be resolved when we need to
                 // actually call the func
                 let deferred = $q.defer();
                 return function () {
 
-                    let context = scope, args = arguments;
+                    let args = arguments;
                     let later = function () {
                         timeout[uuid] = null;
                         if (!immediate) {

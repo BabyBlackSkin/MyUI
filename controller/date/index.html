@@ -5,32 +5,14 @@
         <h3>年</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-year
-                                style="margin: 0 auto"
-                                ng-model="yearModel"></mob-date-year>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-year ng-model="yearModel" shortcuts="yearShortcuts"></mob-date-year>
-                    </div>
-                </div>
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-year-range
-                                style="margin: 0 auto"
-                                ng-model="yearModelRange"></mob-date-year-range>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-year-range
-                                style="margin: 0 0 0 10px"
-                                ng-model="yearModelRange" shortcuts="yearModelRangeShorcuts"></mob-date-year-range>
-                    </div>
-                </div>
+                {{mobDateYearRange}}
+<!--                <p>-->
+<!--                    {{mobDateYear}}-->
+<!--                    {{mobDateYearRange}}</p>-->
+
+
+                    <mob-date-year-range ng-model="mobDateYearRange"></mob-date-year-range>
+<!--                </div>-->
             </div>
             <div class="meta">
                 <pre prism>
@@ -67,92 +49,6 @@
                                 <div class="mob-demo-example-child">
                                 </div>
                             </div>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="mob-doc content">
-        <h3>月</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-month
-                                style="margin: 0 auto"
-                                ng-model="monthModel"></mob-date-month>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-month ng-model="monthModel" shortcuts="monthShortcuts"></mob-date-month>
-                    </div>
-                </div>
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-month-range
-                                style="margin: 0 auto"
-                                ng-model="monthModelRange"></mob-date-month-range>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-month-range
-                                style="margin: 0 0 0 10px"
-                                ng-model="monthModelRange" shortcuts="monthModelRangeShorcuts"></mob-date-month-range>
-                    </div>
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <mob-date type="'month'" ng-model="value1"></mob-date>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-    </div>
-    <div class="mob-doc content">
-        <h3>日</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                    <mob-date-date ng-model="value2" disabled-date="validDate(opt)"></mob-date-date>
-                    </div>
-                </div>
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                    <mob-date-date ng-model="value2" disabled-date="validDate(opt)"
-                                   shortcuts="dateShortcuts"></mob-date-date>
-                    </div>
-                </div>
-
-                <div class="mob-demo-example-child">
-                    <div class="block">
-                        <p class="demonstration">默认</p>
-                        <mob-date-date-range
-                                style="margin: 0 auto"
-                                ng-model="dateModelRange"></mob-date-date-range>
-                    </div>
-                    <div class="block">
-                        <p class="demonstration">快捷选择</p>
-                        <mob-date-date-range
-                                style="margin: 0 0 0 10px"
-                                ng-model="dateModelRange" shortcuts="dateModelRangeShorcuts"></mob-date-date-range>
-                    </div>
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <mob-date-date ng-model="value2" disabled-date="validDate(opt)"></mob-date-date>
                         --></code>
                     </pre>
             </div>

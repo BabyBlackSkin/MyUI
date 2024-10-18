@@ -6,21 +6,31 @@
             </div>
             <div class="mob-date__container">
                 <div class="mob-date__header">
-                    <mob-icon-double-arrow-left ng-click="$ctrl.decreaseHandle()" class="button"></mob-icon-double-arrow-left>
+                    <mob-icon-double-arrow-left
+                            class="button"
+                            ng-click="$ctrl.decreaseYearHandle()"
+                            ng-class="{'is_disabled':$ctrl.decreaseYearDisabled}"
+                    ></mob-icon-double-arrow-left>
                     <p class="content">
                         <span ng-bind="options[0][0].year + ' - ' + options[2][options[2].length -1].year"></span>
                     </p>
-                    <mob-icon-double-arrow-right ng-click="$ctrl.increaseHandle()"
-                                                 class="button"></mob-icon-double-arrow-right>
+                    <mob-icon-double-arrow-right ng-click="$ctrl.increaseYearHandle()"
+                                                 ng-class="{'is_disabled':$ctrl.increaseYearDisabled}"
+                                                 class="button"
+                    ></mob-icon-double-arrow-right>
                 </div>
                 <div class="mob-date__content">
                     <div class="row" ng-repeat="yGroup in options">
                         <div class="col"
                              ng-repeat="y in yGroup"
                              ng-click="$ctrl.calendarClickHandle(y)"
+                             ng-mousemove="$ctrl.calendarHoverHandle(y)"
                              ng-class="{
                              'today':y.isToday,
-                             'active':y.year === $ctrl.ngModel
+                             'active':y.year === $ctrl.ngModel,
+                             'potential':$ctrl.isInRange(y),
+                             'potential-active potential-active-start': $ctrl.isInRangeActiveStart(y),
+                             'potential-active potential-active-end': $ctrl.isInRangeActiveEnd(y)
                              }">
                             <span ng-bind="y.year"></span>
                         </div>

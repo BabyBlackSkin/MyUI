@@ -24,11 +24,11 @@
     position: relative;
 }
 
-.mob-date > div mob-date-year, .mob-date > div mob-date-month {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+/*.mob-date > div mob-date-year, .mob-date > div mob-date-month {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*}*/
 
 .mob-date .mob-date__header {
     display: flex;
@@ -95,7 +95,6 @@
 }
 
 .mob-date-year .mob-date__container,
-.mob-date-year-range .mob-date__container,
 .mob-date-month .mob-date__container,
 .mob-date-month-range .mob-date__container
 {

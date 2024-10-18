@@ -1,25 +1,27 @@
-function yearController($scope, $element, $attrs, $date) {
+function yearController($scope, $element, $attrs, $date, $debounce) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
         if (angular.isUndefined(this.ngModel)) {
             this.ngModel = [];
         }
-        this.secondaryModel = [] // 对选择的内容进行暂存，当头尾都选择后，保存到ngModel中
-        this.potentialModel = [] // 暂存鼠标移入的内容
-        // 当前年份
-        $scope.date = new Date
-        // 当前年份
-        $scope.currentYear = $date.getFullYear($scope.date)
 
-        $scope.leftCalendarStartYear = this.getStartYearAndEndYear($scope.currentYear)
-        $scope.leftCalendarEndYear = $scope.leftCalendarStartYear + 9
-        $scope.rightCalendarStartYear = $scope.leftCalendarStartYear + 10
-        $scope.rightCalendarEndYear = $scope.rightCalendarStartYear + 9
 
-        this.renderOptions("leftCalendar")
-        this.renderOptions("rightCalendar")
+        let year = dayjs().year();
+        let lastDigitYear = year % 10
+        let startYear = year - lastDigitYear
 
+        $scope.leftCalendar = {
+            startYear:startYear,
+            ngModel:startYear
+        }
+        $scope.rightCalendar = {
+            startYear:startYear + 10,
+            ngModel:startYear + 10
+        }
+
+        this.secondaryModel = [$scope.leftCalendar.ngModel, $scope.rightCalendar.ngModel] // 对选择的内容进行暂存，当头尾都选择后，保存到ngModel中
+        this.potentialModel = [$scope.leftCalendar.ngModel, $scope.rightCalendar.ngModel] // 暂存鼠标移入的内容
     }
 
 
@@ -49,18 +51,6 @@ function yearController($scope, $element, $attrs, $date) {
                 _that.change({opt: opt})
             }
 
-            // ngModel发生变化时，重新计算startYear和endYear，并重新readerOptions
-            // 获取最后一位
-            if(angular.isDefined(newValue[0]) && newValue[0] <= $scope.leftCalendarStartYear){
-                $scope.leftCalendarStartYear = _that.getStartYearAndEndYear(newValue[0])
-                $scope.leftCalendarEndYear = $scope.leftCalendarStartYear + 9
-                _that.renderOptions('leftCalendar')
-            }
-            if (angular.isDefined(newValue[1]) && $scope.rightCalendarEndYear <= newValue[1]) {
-                $scope.rightCalendarStartYear = _that.getStartYearAndEndYear(newValue[1])
-                $scope.rightCalendarEndYear = $scope.rightCalendarStartYear + 9
-                _that.renderOptions('rightCalendar')
-            }
         })
     }
 
@@ -69,111 +59,83 @@ function yearController($scope, $element, $attrs, $date) {
         let lastDigitYear = value % 10
         return value - lastDigitYear
     }
-
-
-
     /**
-     * 根据年份计算选项
-     * @param calendar leftCalendar / rightCalendar
+     * 是否禁用增加年份或者减少年份按钮
+     * @returns {boolean}
      */
-    this.renderOptions = function (calendar) {
-        let yearGroupInx = 0
-
-        $scope[`${calendar}Options`] = []
-        for (let i = $scope[`${calendar}StartYear`]; i <= $scope[`${calendar}EndYear`]; i++) {
-            if (!$scope[`${calendar}Options`][yearGroupInx]) {
-                $scope[`${calendar}Options`][yearGroupInx] = []
-            } else if ($scope[`${calendar}Options`][yearGroupInx].length === 4) {
-                yearGroupInx++
-                $scope[`${calendar}Options`][yearGroupInx] = []
-            }
-            $scope[`${calendar}Options`][yearGroupInx].push(i)
-        }
-    }
-
-    /**
-     * 增加年份
-     * @param calendar  leftCalendar / rightCalendar
-     * @param needValid 是否需要校验
-     */
-    this.increase = function (calendar, needValid = false) {
-        if (needValid && this.isDisabledCalendarChange()) {
-            return
-        }
-        $scope[`${calendar}StartYear`]  = $scope[`${calendar}StartYear`] + 10
-        $scope[`${calendar}EndYear`]  = $scope[`${calendar}StartYear`] + 9
-        this.renderOptions(calendar)
-        this.panelChangeHandle(calendar)
-    }
-
-    /**
-     * 减少年份
-     * @param calendar  leftCalendar / rightCalendar
-     * @param needValid 是否需要校验
-     */
-    this.decrease = function (calendar, needValid = false) {
-        if (needValid && this.isDisabledCalendarChange()) {
-            return
-        }
-
-        $scope[`${calendar}StartYear`]  = $scope[`${calendar}StartYear`] - 10
-        $scope[`${calendar}EndYear`]  = $scope[`${calendar}StartYear`] + 9
-        this.renderOptions(calendar)
-        this.panelChangeHandle(calendar)
-    }
-
     this.isDisabledCalendarChange = function () {
-        return $scope.leftCalendarEndYear + 1 >= $scope.rightCalendarStartYear
+        return $scope.leftCalendar.startYear + 10 >= $scope.rightCalendar.startYear
     }
 
-    // 日历面板变更
-    this.panelChangeHandle = function (calendar) {
-        if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel, calendar: calendar, attachment: this.attachment}
-            _that.panelChange({opt: opt})
-        }
+    /**
+     * 鼠标移入处理
+     * @param opt
+     */
+    this.calendarHoverHandle = function (opt){
+        // $debounce.debounce(_that, `${$scope.$id}_calendarHover`, function () {
+            let {
+                value,
+                attachment
+            } = opt;
+            console.log(opt)
+
+            debugger
+            if (!this.secondaryModel || this.secondaryModel.length < 1) {
+                return
+            }
+            if (this.secondaryModel.length === 2) {
+                return;
+            }
+            this.potentialModel = [this.secondaryModel[0]]
+            if (this.potentialModel[0] <= value) {
+                this.potentialModel.push(value)
+            } else {
+                this.potentialModel.unshift(value)
+            }
+        // }  ,50)()
     }
 
-    // 日历项鼠标移入时触发
-    this.calendarMouseOverHandle = function (year) {
-        if (!this.secondaryModel || this.secondaryModel.length < 1) {
-            return
-        }
-        if (this.secondaryModel.length === 2) {
-            return;
-        }
-        this.potentialModel = [this.secondaryModel[0]]
-        if (this.potentialModel[0] <= year) {
-            this.potentialModel.push(year)
-        } else {
-            this.potentialModel.unshift(year)
-        }
+    /**
+     * 鼠标点击处理
+     * @param opt
+     */
+    this.panelChangeHandle = function (opt) {
+        let {
+            startYear,
+            attachment
+        } = opt;
+        $scope[attachment].startYear = startYear
     }
-
 
     // 日历项被点击时触发
-    this.calendarClickHandle = function (year, calendar) {
-        debugger
+    this.calendarClickHandle = function (opt) {
+        let {
+            value, attachment,
+        } = opt
+        // console.log(this.ngModel)
         //
         if (this.secondaryModel.length === 0) {
-            this.secondaryModel = [year]
-            this.potentialModel = [year]
+            this.secondaryModel = [value]
+            this.potentialModel = [value]
         } else if (this.secondaryModel.length === 1) {
-            if (this.secondaryModel[0] <= year) {
-                this.secondaryModel.push(year)
+            if (this.secondaryModel[0] === value) {
+                return
+            }
+            if (this.secondaryModel[0] <= value) {
+                this.secondaryModel.push(value)
             } else {
-                this.secondaryModel.unshift(year)
+                this.secondaryModel.unshift(value)
             }
             this.ngModel = this.secondaryModel
+
+            $scope.leftCalendar.ngModel = this.secondaryModel[0]
+            $scope.rightCalendar.ngModel = this.secondaryModel[1]
         } else {//重新选择
             this.ngModel = []
-            this.secondaryModel = [year]
-            this.potentialModel = [year]
-        }
-
-        if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: this.ngModel, calendar: calendar, attachment: this.attachment}
-            _that.calendarClick({opt: opt})
+            $scope.leftCalendar.ngModel = null
+            $scope.rightCalendar.ngModel = null
+            this.secondaryModel = [value]
+            this.potentialModel = [value]
         }
     }
 

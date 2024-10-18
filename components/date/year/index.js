@@ -2,8 +2,13 @@ function yearController($scope, $element, $attrs, $date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        // 当前年份
-        $scope.$date = dayjs()
+        // 创建$date
+        if (this.ngModel) {
+            $scope.$date = dayjs().year(this.ngModel)
+        } else {
+            $scope.$date = dayjs()
+        }
+        // 生成选择项
         $scope.renderOptions()
     }
 
@@ -81,16 +86,50 @@ function yearController($scope, $element, $attrs, $date) {
         }
     }
 
+    /**
+     * 判断日期是否在范围内
+     * @param y
+     */
+    this.isInRange = function (y) {
+        if (!this.rangeModel || this.rangeModel.length !== 2) {
+            return false
+        }
+        return this.rangeModel[0] <= y.year && y.year <= this.rangeModel[1]
+    }
+
+    // 是否潜在的选中的开始
+    this.isInRangeActiveStart = function (y) {
+        if (!this.rangeModel) {
+            return false
+        }
+        return this.rangeModel[0] === y.year
+    }
+
+    // 是否潜在的选中的结束
+    this.isInRangeActiveEnd = function (y) {
+        if (!this.rangeModel) {
+            return false
+        }
+        return this.rangeModel[1] === y.year
+    }
+
+
     // 增加年份
-    this.increaseHandle = function () {
-        $scope.$date = $scope.options[0][0].$date.add(10,"year")
+    this.increaseYearHandle = function () {
+        if (this.increaseYearDisabled) {
+            return
+        }
+        $scope.$date = $scope.options[0][0].$date.add(10, "year")
         $scope.renderOptions()
         this.panelChangeHandle()
     }
 
     // 减少年份
-    this.decreaseHandle = function () {
-        $scope.$date = $scope.options[0][0].$date.subtract(10,"year")
+    this.decreaseYearHandle = function () {
+        if (this.decreaseYearDisabled) {
+            return
+        }
+        $scope.$date = $scope.options[0][0].$date.subtract(10, "year")
         $scope.renderOptions()
         this.panelChangeHandle()
     }
@@ -99,18 +138,47 @@ function yearController($scope, $element, $attrs, $date) {
     // 日历面板变更
     this.panelChangeHandle = function () {
         if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: _that.ngModel, attachment: _that.attachment}
+            let opt = {
+                value: _that.ngModel,
+                attachment: _that.attachment,
+                startYear:$scope.options[0][0].year,
+                endYear:$scope.options[2][1].year,
+            }
             _that.panelChange({opt: opt})
         }
     }
 
 
-    // 日历项被点击时触发
-    this.calendarClickHandle = function (year) {
-        this.ngModel = year.year
+    /**
+     * 日历项被点击时触发
+     * @param y
+     */
+    this.calendarClickHandle = function (y) {
+        this.ngModel = y.year
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: _that.ngModel, attachment: _that.attachment}
+            let opt = {
+                value: y.year,
+                $date:y.$date,
+                attachment: _that.attachment,
+                startYear:$scope.options[0][0].year,
+                endYear:$scope.options[2][1].year,}
             _that.calendarClick({opt: opt})
+        }
+    }
+
+    /**
+     * 日历项鼠标移入触发
+     * @param y
+     */
+    this.calendarHoverHandle = function (y) {
+        if (angular.isDefined($attrs.calendarHover)) {
+            let opt = {
+                value: y.year,
+                $date:y.$date,
+                attachment: _that.attachment,
+                startYear:$scope.options[0][0].year,
+                endYear:$scope.options[2][1].year,}
+            _that.calendarHover({opt: opt})
         }
     }
 
@@ -131,13 +199,17 @@ app
         },
         bindings: {
             ngModel: '=?', // 双向绑定的数据
+            rangeModel: "<?",// 范围选择数据，用于判断日历选择项是否在范围内
             type: "<?",// 选择器类型：type: string
             shortcuts: "<?",// type: array
             attachment: "<?",
+            increaseYearDisabled:"<?", // 是否禁用增加年份按钮
+            decreaseYearDisabled:"<?", // 是否禁用增加年份按钮
+            // 方法
             change: "&?",
-            calendarClick: "&?",
-            panelChange: "&?",
-            disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
+            calendarClick: "&?",// 日历项点击触发
+            calendarHover: "&?", // 日历项移入触发
+            panelChange: "&?", // 日历面变更hook
         },
         controller: yearController
     })
