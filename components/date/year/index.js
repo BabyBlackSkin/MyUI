@@ -200,7 +200,6 @@ app
         bindings: {
             ngModel: '=?', // 双向绑定的数据
             rangeModel: "<?",// 范围选择数据，用于判断日历选择项是否在范围内
-            type: "<?",// 选择器类型：type: string
             shortcuts: "<?",// type: array
             attachment: "<?",
             increaseYearDisabled:"<?", // 是否禁用增加年份按钮
