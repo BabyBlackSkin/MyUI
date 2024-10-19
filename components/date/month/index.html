@@ -1,33 +1,50 @@
 <div class="mob-date mob-date-month mob-unselect-text">
-    <div class="mob-date__container__wrapper">
-            <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
-                <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text" ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
+    <div class="mob-date__container__wrapper" ng-show="$ctrl.yearDatePickerDisplay === false">
+        <div class="mob-date__sidebar" ng-if="$ctrl.shortcuts">
+            <button ng-repeat="shortcut in $ctrl.shortcuts" ng-bind="shortcut.text"
+                    ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
+        </div>
+        <div class="mob-date__container">
+            <div class="mob-date__header">
+                <mob-icon-double-arrow-left class="button"
+                                            ng-class="{'is_disabled':$ctrl.decreaseYearDisabled}"
+                                            ng-click="$ctrl.decreaseYearHandle()"
+
+                ></mob-icon-double-arrow-left>
+                <p class="content">
+                    <span ng-click="$ctrl.showYearDatePicker()" ng-bind="options[0][0].year"></span>
+                </p>
+                <mob-icon-double-arrow-right class="button"
+                                             ng-class="{'is_disabled':$ctrl.increaseYearDisabled}"
+                                             ng-click="$ctrl.increaseYearHandle()"
+                ></mob-icon-double-arrow-right>
             </div>
-            <div class="mob-date__container">
-                <div class="mob-date__header">
-                    <mob-icon-double-arrow-left ng-click="$ctrl.decreaseHandle()" class="button"></mob-icon-double-arrow-left>
-                    <p class="content">
-                        <span ng-click="$ctrl.showYearDatePicker()" ng-bind="options[0][0].year"></span>
-                    </p>
-                    <mob-icon-double-arrow-right ng-click="$ctrl.increaseHandle()" class="button"></mob-icon-double-arrow-right>
-                </div>
-                <div class="mob-date__content">
-                    <div class="row" ng-repeat="mGroup in options">
-                        <div class="col"
-                             ng-repeat="m in mGroup"
-                             ng-click="$ctrl.calendarClickHandle(m)"
-                             ng-class="{'today':m.isToday ,'active': m.month === ngModelMonth && m.year === ngModelYear }" >
-                            <span ng-bind="m.month"></span>
-                        </div>
+            <div class="mob-date__content">
+                <div class="row" ng-repeat="mGroup in options">
+                    <div class="col"
+                         ng-repeat="m in mGroup"
+                         ng-click="$ctrl.calendarClickHandle(m)"
+                         ng-mousemove="$ctrl.calendarHoverHandle(m)"
+                         ng-class="
+                         {
+                         'today':m.isToday ,
+                         'active': m.month === ngModelMonth && m.year === ngModelYear,
+                         'potential':$ctrl.isInRange(m),
+                         'potential-active potential-active-start': $ctrl.isInRangeActiveStart(m),
+                         'potential-active potential-active-end': $ctrl.isInRangeActiveEnd(m)
+                         }">
+                        <span ng-bind="m.month"></span>
                     </div>
                 </div>
-
-                <mob-date-year
-                        ref="'mobDateYear'"
-                        ng-show="$ctrl.yearDatePickerDisplay"
-                        ng-model="ngModelYear"
-                        change="$ctrl.changeYearHandle(opt)"
-                        calendar-click="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
             </div>
         </div>
+    </div>
+
+
+    <mob-date-year
+            ref="'mobDateYear'"
+            ng-show="$ctrl.yearDatePickerDisplay"
+            ng-model="ngModelYear"
+            change="$ctrl.changeYearHandle(opt)"
+            calendar-click="$ctrl.hideYearDatePicker(opt)"></mob-date-year>
 </div>

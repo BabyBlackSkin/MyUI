@@ -10,26 +10,21 @@ function monthController($scope, $element, $attrs, $date) {
         // 暂存鼠标移入的内容
         this.potentialModel = []
 
-        $scope.date = new Date()
+        $scope.$date = dayjs()
         // 当前年份
-        $scope.currentYear = $date.getFullYear($scope.date)
-        // 当前月份
-        $scope.currentMonth = $date.getMonth($scope.date)
+        let leftNgModel = $scope.$date.format("YYYY-MM")
+        let rightNgModel = $scope.$date.year($scope.$date.year() + 1).format("YYYY-MM")
 
         // 左侧面板
         $scope.leftCalendar = {
-            year: $scope.currentYear,
-            month: $scope.currentMonth,
-            options:[]
+            year: $scope.$date.year(),
+            ngModel: leftNgModel
         }
         // 右侧面板
         $scope.rightCalendar = {
-            year: $scope.currentYear + 1,
-            month: $scope.currentMonth,
-            options:[]
+            year:$scope.$date.year() + 1,
+            ngModel: rightNgModel
         }
-        this.renderOptions('leftCalendar')
-        this.renderOptions('rightCalendar')
 
         this.calculateNgModelYearMonthDate()
     }
@@ -65,65 +60,7 @@ function monthController($scope, $element, $attrs, $date) {
                 return;
             }
             // ngModel改变时
-            let leftNgModel = newValue[0].split("-")
-            let rightNgModel = newValue[1].split("-")
-            let leftNgModelYear = Number(leftNgModel[0])
-            let leftNgModelMonth = Number(leftNgModel[1])
-            let rightNgModelYear = Number(rightNgModel[0])
-            let rightNgModelMonth = Number(rightNgModel[1])
-            // 判断ngModel的值是否都在当前的日历面板中
-            // 判断是否同一年
-            let sameYear = leftNgModelYear === rightNgModelYear;
-            // 同一年，则判断是左侧面板还是右侧面板
-            if (sameYear) {
-                if ($scope.leftCalendar.year === leftNgModelYear) {
-                    $scope.leftCalendar.year = leftNgModelYear
-                    $scope.leftCalendar.month = leftNgModelMonth
-                    _that.renderOptions('leftCalendar')
-                } else {
-                    $scope.rightCalendar.year = leftNgModelYear
-                    $scope.rightCalendar.month = leftNgModelMonth
-                    _that.renderOptions('rightCalendar')
-                }
-            }
-            // 不是同一年，则分别赋值并渲染
-            else{
-                $scope.leftCalendar.year = leftNgModelYear
-                $scope.leftCalendar.month = leftNgModelMonth
-                _that.renderOptions('leftCalendar')
-
-                $scope.rightCalendar.year = rightNgModelYear
-                $scope.rightCalendar.month = rightNgModelMonth
-                _that.renderOptions('rightCalendar')
-            }
         })
-    }
-
-    // 计算opt
-    this.renderOptions = function (calendar) {
-        let monthGroupInx = 0
-        $scope[calendar]['options'] = []
-
-        for (let i = 1;i <= 12;i++) {
-
-            if (!$scope[calendar]['options'][monthGroupInx]) {
-                $scope[calendar]['options'][monthGroupInx] = []
-            } else if ($scope[calendar]['options'][monthGroupInx].length === 4) {
-                monthGroupInx++
-                $scope[calendar]['options'][monthGroupInx] = []
-            }
-
-            // 01,02,03 ... 10,11
-            let fullMonth = (i + "").padStart(2,'0')
-
-            $scope[calendar]['options'][monthGroupInx].push({
-                year: $scope[calendar].year,
-                month: i,
-                timestamp: $date.getTimeStamp(new Date($scope[calendar].year + "-" + i)),
-                modelValue: `${$scope[calendar].year}-${fullMonth}`
-            })
-        }
-
     }
 
 
@@ -133,34 +70,11 @@ function monthController($scope, $element, $attrs, $date) {
         }
         let leftCalendarArr = this.ngModel[0].split("-")
         let rightCalendarArr = this.ngModel[1].split("-")
-        $scope.leftCalendar['ngModelYear'] = Number(leftCalendarArr[0])
-        $scope.leftCalendar['ngModelMonth'] = Number(leftCalendarArr[1])
-
-        $scope.rightCalendar['ngModelYear'] = Number(rightCalendarArr[0])
-        $scope.rightCalendar['ngModelMonth'] = Number(rightCalendarArr[1])
-    }
-
-    // 增加年份
-    this.increase = function (calendar, needValid = false) {
-        if (needValid && this.isDisabledCalendarChange()) {
-            return
-        }
-        $scope[calendar].year = $date.getFullYear(new Date($scope[calendar].year + "")) + 1
-        // 重新渲染
-        this.renderOptions(calendar)
-        this.panelChangeHandle(calendar)
-    }
-
-    // 减少年份
-    this.decrease = function (calendar, needValid = false) {
-        if (needValid && this.isDisabledCalendarChange()) {
-            return
-        }
-        $scope[calendar].year = $date.getFullYear(new Date($scope[calendar].year + "")) - 1
-        // 重新渲染
-        this.renderOptions(calendar)
-        // 触发日历change事件
-        this.panelChangeHandle(calendar)
+        // $scope.leftCalendar['ngModelYear'] = Number(leftCalendarArr[0])
+        // $scope.leftCalendar['ngModelMonth'] = Number(leftCalendarArr[1])
+        //
+        // $scope.rightCalendar['ngModelYear'] = Number(rightCalendarArr[0])
+        // $scope.rightCalendar['ngModelMonth'] = Number(rightCalendarArr[1])
     }
 
     // 判断是否允许变更年份
@@ -176,8 +90,15 @@ function monthController($scope, $element, $attrs, $date) {
         }
     }
 
+    this.calendarHoverHandle = function (opt) {
+        let {
+            value,
+            calendarItem,
+            attachment
+        }= opt
 
-    this.calendarMouseOverHandle = function (val) {
+        let item = {value:value,timestamp:calendarItem.timestamp,calendar:attachment};
+
         if (!this.secondaryModel || this.secondaryModel.length < 1) {
             return
         }
@@ -185,55 +106,75 @@ function monthController($scope, $element, $attrs, $date) {
             return;
         }
         this.potentialModel = [this.secondaryModel[0]]
-        if (isGe(this.potentialModel[0],val.modelValue)) {
-            this.potentialModel.push(val.modelValue)
+        if (this.potentialModel[0].timestamp <= item.timestamp) {
+            this.potentialModel.push(item)
         } else {
-            this.potentialModel.unshift(val.modelValue)
+            this.potentialModel.unshift(item)
         }
     }
 
     // 日历项被点击时触发
-    this.calendarClickHandle = function (val,calendar) {
-        $scope[calendar].month = val.month
-        //
+    this.calendarClickHandle = function (opt) {
+        let {
+            value,
+            calendarItem,
+            attachment,
+        } = opt
+        $scope[attachment].year = calendarItem.year
+
+        console.log(opt)
+        debugger
+        let item = {value:value,timestamp:calendarItem.timestamp,calendar:attachment};
         if (this.secondaryModel.length === 0) {
-            this.secondaryModel = [val.modelValue]
-            this.potentialModel = [val.modelValue]
+            this.secondaryModel = [item]
+            this.potentialModel = [item]
         } else if (this.secondaryModel.length === 1) {
-            if (isGe(this.secondaryModel[0],val.modelValue)) {
-                this.secondaryModel.push(val.modelValue)
+            if (this.secondaryModel[0].timestamp > calendarItem.timestamp) {
+                this.secondaryModel.unshift(item)
             } else {
-                this.secondaryModel.unshift(val.modelValue)
+                this.secondaryModel.push(item)
             }
-            this.ngModel = this.secondaryModel
+            this.ngModel = [this.secondaryModel[0].value, this.secondaryModel[1].value]
+            if (this.secondaryModel[0].calendar === this.secondaryModel[1].calendar) {
+                if ("leftCalendar" === attachment) {
+                    $scope.rightCalendar.ngModel = null
+                } else {
+                    $scope.leftCalendar.ngModel = null
+                }
+            }
         } else {//重新选择
             this.ngModel = []
-            this.secondaryModel = [val.modelValue]
-            this.potentialModel = [val.modelValue]
+            $scope.leftCalendar.ngModel = null
+            $scope.rightCalendar.ngModel = null
+            this.secondaryModel = [item]
+            this.potentialModel = [item]
         }
 
+        console.log($scope.leftCalendar)
+        console.log($scope.rightCalendar)
+
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: this.ngModel, calendar: calendar, attachment: this.attachment}
+            let opt = {value: _that.ngModel,attachment: _that.attachment}
             _that.calendarClick({opt: opt})
         }
     }
 
     // shortcut点击事件
-    this.shortcutClickHandle = function (shortcut) {
-        let leftCalendarYear = $date.getFullYear(shortcut.value[0])
-        let leftCalendarMonth = $date.getMonth(shortcut.value[0])
-
-        $scope.leftCalendar.year = leftCalendarYear
-        $scope.leftCalendar.month = leftCalendarMonth
-
-        let rightCalendarYear = $date.getFullYear(shortcut.value[1])
-        let rightCalendarMonth = $date.getMonth(shortcut.value[1])
-
-        $scope.rightCalendar.year = rightCalendarYear
-        $scope.rightCalendar.month = rightCalendarYear
-
-        this.ngModel = [leftCalendarYear + "-" + leftCalendarMonth, rightCalendarYear + "-" + rightCalendarMonth]
-    }
+    // this.shortcutClickHandle = function (shortcut) {
+    //     let leftCalendarYear = $date.getFullYear(shortcut.value[0])
+    //     let leftCalendarMonth = $date.getMonth(shortcut.value[0])
+    //
+    //     $scope.leftCalendar.year = leftCalendarYear
+    //     $scope.leftCalendar.month = leftCalendarMonth
+    //
+    //     let rightCalendarYear = $date.getFullYear(shortcut.value[1])
+    //     let rightCalendarMonth = $date.getMonth(shortcut.value[1])
+    //
+    //     $scope.rightCalendar.year = rightCalendarYear
+    //     $scope.rightCalendar.month = rightCalendarYear
+    //
+    //     this.ngModel = [leftCalendarYear + "-" + leftCalendarMonth, rightCalendarYear + "-" + rightCalendarMonth]
+    // }
 
 
     // 是否激活

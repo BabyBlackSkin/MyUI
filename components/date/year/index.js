@@ -158,7 +158,7 @@ function yearController($scope, $element, $attrs, $date) {
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {
                 value: y.year,
-                $date:y.$date,
+                calendarItem:y,
                 attachment: _that.attachment,
                 startYear:$scope.options[0][0].year,
                 endYear:$scope.options[2][1].year,}
