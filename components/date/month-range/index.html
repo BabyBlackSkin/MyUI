@@ -12,8 +12,9 @@
                 <mob-date-month
                         ng-model="leftCalendar.ngModel"
                         range-model="$ctrl.potentialModel"
-                        increase-year-disabled="$ctrl.isDisabledCalendarChange()"
                         attachment="'leftCalendar'"
+                        increase-year-disabled="$ctrl.isDisabledCalendarChange()"
+                        panel-change="$ctrl.panelChangeHandle(opt)"
                         calendar-click="$ctrl.calendarClickHandle(opt)"
                         calendar-hover="$ctrl.calendarHoverHandle(opt)"
                 ></mob-date-month>
@@ -24,6 +25,7 @@
                         ng-model="rightCalendar.ngModel"
                         range-model="$ctrl.potentialModel"
                         attachment="'rightCalendar'"
+                        panel-change="$ctrl.panelChangeHandle(opt)"
                         decrease-year-disabled="$ctrl.isDisabledCalendarChange()"
                         calendar-click="$ctrl.calendarClickHandle(opt)"
                         calendar-hover="$ctrl.calendarHoverHandle(opt)"

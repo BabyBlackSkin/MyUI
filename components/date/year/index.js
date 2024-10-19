@@ -84,6 +84,17 @@ function yearController($scope, $element, $attrs, $date) {
                 isToday: year.isSame(dayjs(),"year"),
             })
         }
+
+
+        if (angular.isDefined($attrs.panelChange)) {
+            let opt = {
+                value: _that.ngModel,
+                attachment: _that.attachment,
+                startYear:$scope.options[0][0].year,
+                endYear:$scope.options[2][1].year,
+            }
+            _that.panelChange({opt: opt})
+        }
     }
 
     /**
@@ -121,7 +132,6 @@ function yearController($scope, $element, $attrs, $date) {
         }
         $scope.$date = $scope.options[0][0].$date.add(10, "year")
         $scope.renderOptions()
-        this.panelChangeHandle()
     }
 
     // 减少年份
@@ -131,21 +141,6 @@ function yearController($scope, $element, $attrs, $date) {
         }
         $scope.$date = $scope.options[0][0].$date.subtract(10, "year")
         $scope.renderOptions()
-        this.panelChangeHandle()
-    }
-
-
-    // 日历面板变更
-    this.panelChangeHandle = function () {
-        if (angular.isDefined($attrs.panelChange)) {
-            let opt = {
-                value: _that.ngModel,
-                attachment: _that.attachment,
-                startYear:$scope.options[0][0].year,
-                endYear:$scope.options[2][1].year,
-            }
-            _that.panelChange({opt: opt})
-        }
     }
 
 

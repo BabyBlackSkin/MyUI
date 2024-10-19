@@ -93,6 +93,16 @@ function monthController($scope, $element, $attrs, $date) {
             })
 
         }
+
+
+        if (angular.isDefined($attrs.panelChange)) {
+            let opt = {
+                value: _that.ngModel,
+                attachment: _that.attachment,
+                year:$scope.options[0][0].year
+            }
+            _that.panelChange({opt: opt})
+        }
     }
 
     /**
@@ -172,7 +182,10 @@ function monthController($scope, $element, $attrs, $date) {
         }
     }
 
-    // 改变年份
+    /**
+     * 年份组件变更
+     * @param opt
+     */
     this.changeYearHandle = function (opt) {
         if(!opt || !opt.value){
             return

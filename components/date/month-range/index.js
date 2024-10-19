@@ -90,6 +90,10 @@ function monthController($scope, $element, $attrs, $date) {
         }
     }
 
+    /**
+     * 鼠标移入时触发
+     * @param opt
+     */
     this.calendarHoverHandle = function (opt) {
         let {
             value,
@@ -97,11 +101,12 @@ function monthController($scope, $element, $attrs, $date) {
             attachment
         }= opt
 
-        let item = {value:value,timestamp:calendarItem.timestamp,calendar:attachment};
-
         if (!this.secondaryModel || this.secondaryModel.length < 1) {
             return
         }
+
+        let item = {value:value,timestamp:calendarItem.timestamp,calendar:attachment};
+
         if (this.secondaryModel.length === 2) {
             return;
         }
@@ -113,6 +118,18 @@ function monthController($scope, $element, $attrs, $date) {
         }
     }
 
+    /**
+     * 鼠标点击处理
+     * @param opt
+     */
+    this.panelChangeHandle = function (opt) {
+        let {
+            year,
+            attachment
+        } = opt;
+        $scope[attachment].year = year
+    }
+
     // 日历项被点击时触发
     this.calendarClickHandle = function (opt) {
         let {
@@ -122,8 +139,6 @@ function monthController($scope, $element, $attrs, $date) {
         } = opt
         $scope[attachment].year = calendarItem.year
 
-        console.log(opt)
-        debugger
         let item = {value:value,timestamp:calendarItem.timestamp,calendar:attachment};
         if (this.secondaryModel.length === 0) {
             this.secondaryModel = [item]
@@ -150,9 +165,6 @@ function monthController($scope, $element, $attrs, $date) {
             this.potentialModel = [item]
         }
 
-        console.log($scope.leftCalendar)
-        console.log($scope.rightCalendar)
-
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {value: _that.ngModel,attachment: _that.attachment}
             _that.calendarClick({opt: opt})
@@ -175,125 +187,6 @@ function monthController($scope, $element, $attrs, $date) {
     //
     //     this.ngModel = [leftCalendarYear + "-" + leftCalendarMonth, rightCalendarYear + "-" + rightCalendarMonth]
     // }
-
-
-    // 是否激活
-    this.isActive = function (val) {
-        if (angular.isUndefined(this.ngModel)) {
-            return false;
-        }
-        return val === $scope.ngModelMonth && $scope.calendarYear === $scope.ngModelYear
-    }
-
-    /**
-     * 判断是否大于指定范围
-     * @param target
-     * @param source
-     * @returns {boolean}
-     */
-    function isGe(target, source){
-        let targetArr = target.split("-")
-        let targetYear = Number(targetArr[0])
-        let targetMonth = Number(targetArr[1])
-
-        let sourceArr = source.split("-")
-        let sourceYear = Number(sourceArr[0])
-        let sourceMonth = Number(sourceArr[1])
-
-        // 如果年份小于，则说明不在范围内
-        if (targetYear > sourceYear) {
-            return false
-        }
-        // 如果年份大于，则说明在范围内
-        if (targetYear < sourceYear) {
-            return true
-        }
-        // 如果月份大于等于，则说明在范围内
-        return targetMonth <= sourceMonth
-    }
-    /**
-     * 判断是否小于指定时间
-     * @param target
-     * @param source
-     * @returns {boolean}
-     */
-    function isLe(target, source) {
-        let targetArr = target.split("-")
-        let targetYear = Number(targetArr[0])
-        let targetMonth = Number(targetArr[1])
-
-        let sourceArr = source.split("-")
-        let sourceYear = Number(sourceArr[0])
-        let sourceMonth = Number(sourceArr[1])
-
-        // 如果年份大于，则说明不在范围内
-        if (sourceYear > targetYear) {
-            return false
-        }
-        // 如果年份小于，则说明在范围内
-        if (sourceYear < targetYear) {
-            return true
-        }
-
-        // 如果月份小于等于，则说明在范围内
-        return sourceMonth <= targetMonth
-    }
-
-    /**
-     * 判断是否小于指定时间
-     * @param target
-     * @param source
-     * @returns {boolean}
-     */
-    function eq(target, source) {
-        let targetArr = target.split("-")
-        let targetYear = Number(targetArr[0])
-        let targetMonth = Number(targetArr[1])
-
-        let sourceArr = source.split("-")
-        let sourceYear = Number(sourceArr[0])
-        let sourceMonth = Number(sourceArr[1])
-
-        // 如果年份大于，则说明不在范围内
-        if (sourceYear !== targetYear) {
-            return false
-        }
-
-        // 如果月份小于等于，则说明在范围内
-        return sourceMonth === targetMonth
-    }
-
-    // 是否潜在的选中
-    this.isPotential = function (val) {
-        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
-            return isGe(this.ngModel[0], val.modelValue) && isLe(this.ngModel[1], val.modelValue)
-        }
-        if (angular.isUndefined(this.potentialModel) || this.potentialModel.length !== 2) {
-            return false
-        }
-        return isGe(this.potentialModel[0], val.modelValue) && isLe(this.potentialModel[1], val.modelValue)
-    }
-
-    // 是否潜在的选中的开始
-    this.isPotentialActiveStart = function (val) {
-        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
-            return eq(this.ngModel[0], val.modelValue)
-
-        }
-        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[0]) &&
-            eq(this.potentialModel[0], val.modelValue)
-    }
-
-    // 是否潜在的选中的结束
-    this.isPotentialActiveEnd = function (val) {
-        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
-            return eq(this.ngModel[1], val.modelValue)
-        }
-        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[1]) &&
-            eq(this.potentialModel[1], val.modelValue)
-    }
-
-
 
 }
 
