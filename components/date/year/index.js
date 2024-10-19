@@ -193,10 +193,10 @@ function yearController($scope, $element, $attrs, $date) {
 
 app
     .component('mobDateYear', {
-        transclude: true,
         templateUrl: function ($element, $attrs) {
             return `./components/date/year/index.html`
         },
+        controller: yearController,
         bindings: {
             ngModel: '=?', // 双向绑定的数据
             rangeModel: "<?",// 范围选择数据，用于判断日历选择项是否在范围内
@@ -210,5 +210,4 @@ app
             calendarHover: "&?", // 日历项移入触发
             panelChange: "&?", // 日历面变更hook
         },
-        controller: yearController
     })
