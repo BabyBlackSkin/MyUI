@@ -53,12 +53,7 @@ function yearController($scope, $element, $attrs, $date, $debounce) {
 
         })
     }
-
-    // 根据value计算年份范围
-    this.getStartYearAndEndYear = function (value) {
-        let lastDigitYear = value % 10
-        return value - lastDigitYear
-    }
+    
     /**
      * 是否禁用增加年份或者减少年份按钮
      * @returns {boolean}
@@ -150,44 +145,6 @@ function yearController($scope, $element, $attrs, $date, $debounce) {
             this.potentialModel = [leftFullYear, rightFullYear]
         }
     }
-
-
-    // ===== 状态方法
-
-    // 是否激活
-    this.isActive = function (val) {
-        if (angular.isUndefined(this.ngModel)) {
-            return false;
-        }
-        return Object.is(this.ngModel[0], val) || Object.is(this.ngModel[1], val)
-    }
-
-    // 是否潜在的选中
-    this.isPotential = function (val) {
-        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
-            return this.ngModel[0] <= val && val <= this.ngModel[1]
-        }
-        return angular.isDefined(this.potentialModel) && this.potentialModel.length === 2 &&
-            this.potentialModel[0] <= val && val <= this.potentialModel[1]
-    }
-    // 是否潜在的选中的开始
-    this.isPotentialActiveStart = function (val) {
-        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
-            return Object.is(this.ngModel[0], val)
-
-        }
-        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[0]) &&
-            Object.is(this.potentialModel[0], val)
-    }
-    // 是否潜在的选中的结束
-    this.isPotentialActiveEnd = function (val) {
-        if (angular.isDefined(this.ngModel) && this.ngModel.length === 2) {
-            return Object.is(this.ngModel[1], val)
-        }
-        return angular.isDefined(this.potentialModel) && angular.isDefined(this.potentialModel[1]) &&
-            Object.is(this.potentialModel[1], val)
-    }
-
 }
 
 
