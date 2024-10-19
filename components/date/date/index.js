@@ -49,13 +49,6 @@ function dateController($scope, $element, $attrs, $date) {
     }
 
     /**
-     * isInRange是否范围内
-     * 是否为潜在的日期选择项，
-     */
-    this.isPotential = function (date) {
-        // TODO
-    }
-    /**
      * 根据当前选择的年份/月份重新渲染日历
      */
     this.renderOptions = function () {
@@ -119,6 +112,11 @@ function dateController($scope, $element, $attrs, $date) {
                 this.createOptions(weekInx, date, {isNextMonth: true});
             }
         }
+
+        if (angular.isDefined($attrs.panelChange)) {
+            let opt = {value: _that.ngModel, attachment: _that.attachment}
+            _that.panelChange({opt: opt})
+        }
     }
 
     /**
@@ -158,50 +156,80 @@ function dateController($scope, $element, $attrs, $date) {
             $scope.ngModelYear = $scope.$date.year()
             $scope.ngModelMonth = $scope.$date.month() + 1
             $scope.ngModelDate = $scope.$date.date()
-            // 更新年份选择器的model
-            $scope.mobDateYear = $scope.$date.year()
-            // 更新月份选择器的model
-            $scope.mobDateMonth = $scope.$date.format("YYYY-MM")
         } else {
             $scope.$date = dayjs()
+
+            $scope.ngModelYear = null
+            $scope.ngModelMonth = null
+            $scope.ngModelDate = null
         }
+        // 更新年份选择器的model
+        $scope.mobDateYear = $scope.$date.year()
+        // 更新月份选择器的model
+        $scope.mobDateMonth = $scope.$date.format("YYYY-MM")
     }
 
 
+
+    // 是否潜在的选中
+    this.isInRange = function (d) {
+        if (!this.rangeModel || this.rangeModel.length !== 2) {
+            return false
+        }
+        // console.log(22222)
+        return this.rangeModel[0].timestamp <= d.timestamp && d.timestamp <= this.rangeModel[1].timestamp
+    }
+
+    // 是否潜在的选中的开始
+    this.isInRangeActiveStart = function (d) {
+        if (!this.rangeModel || this.rangeModel.length === 0) {
+            return false
+        }
+        return this.rangeModel[0].timestamp === d.timestamp
+    }
+
+    // 是否潜在的选中的结束
+    this.isInRangeActiveEnd = function (d) {
+        if (!this.rangeModel || this.rangeModel.length <2) {
+            return false
+        }
+        return this.rangeModel[1].timestamp === d.timestamp
+    }
+
     // 增加年份
     this.increaseYearHandle = function () {
+        if (this.increaseYearDisabled) {
+            return
+        }
         $scope.$date = $scope.$date.add(1, "year")
         this.renderOptions()
-        this.panelChangeHandle()
     }
 
     // 减少年份
     this.decreaseYearHandle = function () {
+        if (this.decreaseYearDisabled) {
+            return
+        }
         $scope.$date = $scope.$date.subtract(1, "year")
         this.renderOptions()
-        this.panelChangeHandle()
     }
 
     // 增加月份
     this.increaseMonthHandle = function () {
+        if (this.increaseMonthDisabled) {
+            return
+        }
         $scope.$date = $scope.$date.add(1, "month")
         this.renderOptions()
-        this.panelChangeHandle()
     }
 
     // 减少月份
     this.decreaseMonthHandle = function () {
+        if (this.decreaseYearDisabled) {
+            return
+        }
         $scope.$date = $scope.$date.subtract(1, "month")
         this.renderOptions()
-        this.panelChangeHandle()
-    }
-
-    // 日历所选日期变更 TODO
-    this.panelChangeHandle = function () {
-        if (angular.isDefined($attrs.panelChange)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
-            _that.panelChange({opt: opt})
-        }
     }
 
     /**
@@ -231,10 +259,30 @@ function dateController($scope, $element, $attrs, $date) {
 
 
         if (angular.isDefined($attrs.calendarClick)) {
-            let opt = {value: _that.ngModel, attachment: _that.attachment}
+            let opt = {
+                value: _that.ngModel,
+                calendarItem:date,
+                attachment: _that.attachment
+            }
             _that.calendarClick({opt: opt})
         }
     }
+
+    /**
+     * 日历项鼠标移入触发
+     * @param d
+     */
+    this.calendarHoverHandle = function (d) {
+        if (angular.isDefined($attrs.calendarHover)) {
+            let opt = {
+                value: d.date,
+                calendarItem:d,
+                attachment: _that.attachment,
+            }
+            _that.calendarHover({opt: opt})
+        }
+    }
+
 
     this.hideYearDatePicker = function () {
         this.yearDatePickerDisplay = false
@@ -304,17 +352,22 @@ app
         templateUrl: function ($element, $attrs) {
             return `./components/date/date/index.html`
         },
+        controller: dateController,
         bindings: {
             ngModel: '=?',// 双向绑定的model
             rangeModel: '<?', // 选择范围i的model,
             type: "<?",// 选择器类型：year
             shortcuts: "<?",// type: array
             attachment: "<?",
+            disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
+            increaseYearDisabled:"<?", // 是否禁用增加年份按钮
+            decreaseYearDisabled:"<?", // 是否禁用增加年份按钮
+            increaseMonthDisabled:"<?", // 是否禁用增加年份按钮
+            decreaseMonthDisabled:"<?", // 是否禁用增加年份按钮
             // 方法
             change: "&?",
-            calendarClick: "&?",
-            panelChange: "&?",
-            disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
+            calendarClick: "&?",// 日历项点击触发
+            calendarHover: "&?", // 日历项移入触发
+            panelChange: "&?", // 日历面变更hook
         },
-        controller: dateController
     })

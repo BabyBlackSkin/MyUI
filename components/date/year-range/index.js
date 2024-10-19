@@ -53,7 +53,7 @@ function yearController($scope, $element, $attrs, $date, $debounce) {
 
         })
     }
-    
+
     /**
      * 是否禁用增加年份或者减少年份按钮
      * @returns {boolean}
@@ -162,7 +162,6 @@ app
             change: "&?",
             calendarClick: "&?",
             panelChange: "&?",
-            disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
         },
         controller: yearController
     })

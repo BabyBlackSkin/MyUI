@@ -6,16 +6,32 @@
         </div>
         <div class="mob-date__container">
             <div class="mob-date__header">
-                <mob-icon-double-arrow-left ng-click="$ctrl.decreaseYearHandle()"
-                                            class="button"></mob-icon-double-arrow-left>
-                <mob-icon-arrow-left ng-click="$ctrl.decreaseMonthHandle()" class="button"></mob-icon-arrow-left>
+                <mob-icon-double-arrow-left
+                        class="button"
+                        ng-class="{'is_disabled':$ctrl.decreaseYearDisabled}"
+                        ng-click="$ctrl.decreaseYearHandle()"
+                ></mob-icon-double-arrow-left>
+                <mob-icon-arrow-left
+                        class="button"
+                        ng-class="{'is_disabled':$ctrl.decreaseMonthDisabled}"
+                        ng-click="$ctrl.decreaseMonthHandle()"
+                ></mob-icon-arrow-left>
                 <p class="content">
                     <span ng-click="$ctrl.showYearDatePickerHandle()" ng-bind="year"></span>
                     <span ng-click="$ctrl.showMonthDatePickerHandle()" ng-bind="month"></span>
                 </p>
-                <mob-icon-arrow-right ng-click="$ctrl.increaseMonthHandle()" class="button"></mob-icon-arrow-right>
-                <mob-icon-double-arrow-right ng-click="$ctrl.increaseYearHandle()"
-                                             class="button"></mob-icon-double-arrow-right>
+                <mob-icon-arrow-right
+                        class="button"
+                        ng-class="{'is_disabled':$ctrl.increaseMonthDisabled}"
+                        ng-click="$ctrl.increaseMonthHandle()"
+                ></mob-icon-arrow-right>
+                <mob-icon-double-arrow-right
+                        ng-click="$ctrl.increaseYearHandle()"
+                        class="button"
+                        ng-class="{'is_disabled':$ctrl.increaseYearDisabled}"
+                >
+
+                </mob-icon-double-arrow-right>
             </div>
             <div class="mob-date__content">
                 <div class="row">
@@ -45,12 +61,16 @@
                     <div class="col"
                          ng-repeat="d in week"
                          ng-click="$ctrl.calendarClickHandle(d)"
+                         ng-mousemove="$ctrl.calendarHoverHandle(d)"
                          ng-class="{
                          'today':d.isToday,
                          'active':$ctrl.isActive(d),
                          'prev prev-month':d.isPrevMonth,
-                          'next next-month':d.isNextMonth,
-                          'disabled':d.disabled
+                         'next next-month':d.isNextMonth,
+                         'disabled':d.disabled,
+                         'potential':$ctrl.isInRange(d),
+                         'potential-active potential-active-start': $ctrl.isInRangeActiveStart(d),
+                         'potential-active potential-active-end': $ctrl.isInRangeActiveEnd(d)
                           }">
                         <span ng-bind="d.date"></span>
                     </div>
