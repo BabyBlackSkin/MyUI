@@ -7,7 +7,6 @@ app
 
         $scope.loadTreeOne = function (opt) {
             setTimeout(function () {
-                console.log(opt)
                 if (opt.node.level === 0) {
                     opt.deferred.resolve($scope.baseTreeData)
                 }

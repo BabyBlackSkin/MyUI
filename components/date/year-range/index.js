@@ -77,9 +77,7 @@ function yearController($scope, $element, $attrs, $date, $debounce) {
                 value,
                 attachment
             } = opt;
-            console.log(opt)
 
-            debugger
             if (!this.secondaryModel || this.secondaryModel.length < 1) {
                 return
             }
