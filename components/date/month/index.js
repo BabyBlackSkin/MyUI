@@ -38,7 +38,6 @@ function monthController($scope, $element, $attrs, $date) {
     }
 
     this.calculateNgModelYearMonthDate = function (){
-        debugger
         if (this.ngModel) {
             // 计算出ngModel的dayJs对象
             $scope.$date = dayjs(this.ngModel)

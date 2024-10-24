@@ -122,13 +122,13 @@
     grid-column-gap: 0;
 }
 
-.mob-date.mob-date-date .mob-date__container > .mob-date__content > .row {
+.mob-date.mob-date-date .mob-date__container .mob-date__content > .row {
     grid-template-columns: repeat(7, 1fr);
 }
-.mob-date.mob-date-year .mob-date__container > .mob-date__content .row,
-.mob-date.mob-date-year-range .mob-date__container > .mob-date__content .row,
-.mob-date.mob-date-month .mob-date__container > .mob-date__content .row ,
-.mob-date.mob-date-month-range .mob-date__container > .mob-date__content .row {
+.mob-date.mob-date-year .mob-date__container  .mob-date__content .row,
+.mob-date.mob-date-year-range .mob-date__container  .mob-date__content .row,
+.mob-date.mob-date-month .mob-date__container  .mob-date__content .row ,
+.mob-date.mob-date-month-range .mob-date__container  .mob-date__content .row {
     width: var(--mob-date-container-year-month-width);
     grid-template-rows:auto auto auto;
     grid-template-columns: repeat(var(--mob-date-yeaer-month-col), 1fr);

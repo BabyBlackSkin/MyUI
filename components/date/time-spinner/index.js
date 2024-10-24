@@ -44,7 +44,6 @@ function controller($scope, $element, uuId, $debounce,$date) {
         let hour =  $element[0].querySelector('.hour-selection');
         let minute =  $element[0].querySelector('.minute-selection');
         let second =  $element[0].querySelector('.second-selection');
-        console.log(hour)
         this.showContainerPosition = {
             hour,
             minute,
@@ -115,7 +114,7 @@ function controller($scope, $element, uuId, $debounce,$date) {
 
 app
     .component('mobTimeSpinner', {
-        templateUrl: './components/time-spinner/index.html',
+        templateUrl: './components/date/time-spinner/index.html',
         bindings: {
             ngModel: '=?', // 双向绑定的数据
             showModel: '=?', // 显示的数据
