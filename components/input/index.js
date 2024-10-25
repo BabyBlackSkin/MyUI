@@ -5,7 +5,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
             this.placeholder = '请输入内容'
         }
         // 动态插槽实现
-        slot.replace($scope, $element, $transclude)
+        slot.transclude($scope, $element, $transclude)
         // 通过class配置icon
         compilePrefix(this.prefixIcon);
         compileSuffix(this.suffixIcon);

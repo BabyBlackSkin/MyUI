@@ -7,11 +7,11 @@ clearable:'<' -->
     'is_clearable':$ctrl.clearable,
     'is_disabled':$ctrl.ngDisabled,
     'is_showPassword':$ctrl.showPassword,
-    'is_append_slot':$slot.slotSet.has('append'),
-    'is_prepend_slot':$slot.slotSet.has('prepend')
+    'is_append_slot':$slot.slot['append'],
+    'is_prepend_slot':$slot.slot['prepend']
 }">
 
-    <div class="mob-input_prepend" ng-class="{'is_hidden':!$slot.slotSet.has('prepend')}">
+    <div class="mob-input_prepend" ng-class="{'is_hidden':!$slot.slot['prepend']}">
         <slot name="prepend"></slot>
     </div>
 
@@ -59,7 +59,7 @@ clearable:'<' -->
         </span>
     </div>
 
-    <div class="mob-input_append" ng-class="{'is_hidden':!$slot.slotSet.has('append')}">
+    <div class="mob-input_append" ng-class="{'is_hidden':!$slot.slot['append']}">
         <slot name="append"></slot>
     </div>
 

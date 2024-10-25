@@ -120,6 +120,10 @@
     <script src="./components/divider/index.js"></script>
     <link rel="stylesheet" href="components/divider/mob-divider.css">
 
+    <!--dropDown-->
+    <script src="./components/drop-down/index.js"></script>
+    <link rel="stylesheet" href="components/drop-down/index.css">
+
     <script src="./components/icon/index.js"></script>
     <script src="./components/popper-target/index.js"></script>
 
@@ -136,6 +140,7 @@
     <script src="./directive/formValid/index.js"></script>
     <script src="./directive/repeatRenderFinish/index.js"></script>
     <script src="./directive/ngScroll/index.js"></script>
+    <script src="./directive/slot/index.js"></script>
 
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
@@ -368,78 +373,6 @@
 
 
     app
-        .factory('slot', ['$compile', function ($compile) {
-            return {
-                replace: function (scope, element, transcludeFn) {
-                    transcludeFn(scope, function (clone) {
-                        if (!clone) {
-                            return
-                        }
-                        if (!scope.$slot) {
-                            scope.$slot = {}
-                        }
-                        if(!scope.$slot.slotSet ){
-                            scope.$slot.slotSet = new Set()
-                        }
-
-                        let slotMap = new Map();
-                        for (let e of clone) {
-                            if (!angular.isFunction(e.getAttribute)) {
-                                continue;
-                            }
-                            let slotName = e.getAttribute('slot-name')
-                            slotMap.set(slotName, e);
-                            scope.$slot.slotSet.add(slotName)
-                        }
-
-                        let slotList = element[0].querySelectorAll("slot")
-                        if (!slotList || slotList.length === 0) {
-                            return;
-                        }
-
-                        for (innerSlot of slotList) {
-                            // 获取组件内部的插槽
-                            let slotName = innerSlot.getAttribute('name')
-                            if (!slotName || slotName.length === 0) {
-                                return
-                            }
-                            // 根据名称获取外部传入的插槽
-                            let slot = slotMap.get(slotName)
-                            if (!slot) {
-                                continue;
-                            }
-                            slot = $compile(slot)(scope)[0];
-                            innerSlot.parentNode.replaceChild(slot, innerSlot);
-                        }
-                    })
-                },
-                appendChild: function (scope, element, slotList) {
-                    if (null == element) {
-                        return
-                    }
-                    let slotTemplate = element.querySelectorAll('slot');
-                    if (!slotTemplate) {
-                        return;
-                    }
-                    if (!scope.$slot) {
-                        scope.$slot = {}
-                    }
-                    if(!scope.$slot.slotSet ){
-                        scope.$slot.slotSet = new Set()
-                    }
-                    angular.forEach(slotTemplate, function (slot) {
-                        let slotName = slot.getAttribute('name')
-                        let outSlot = slotList[slotName];
-                        if (!outSlot) {
-                            return
-                        }
-                        console.log(slotName)
-                        scope.$slot.slotSet.add(slotName)
-                        slot.parentNode.replaceChild($compile(outSlot)(scope)[0], slot);
-                    })
-                }
-            }
-        }])
         .factory('attrHelp', [function () {
             return {
                 expose: function (ctrl, attrs) {
