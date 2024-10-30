@@ -54,13 +54,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化事件监听
     this.initEvent = function () {
 
-        $scope.$popper['selectDrown'].focus = async function () {
+        $scope.$popper[`selectDrown_${$scope.$id}`].focus = async function () {
             return !_that.ngDisabled
         }
 
         // 标签工具集
         if (this.collapseTagTooltip) {
-            $scope.$popper['tooltip'].focusOut = function (e) {
+            $scope.$popper[`tooltip_${$scope.$id}`].focusOut = function (e) {
                 return new Promise(resolve => {
                     // 判断点击的是否是tooltip
                     let isTooltip = this.tooltip.contains(e.target)
@@ -172,10 +172,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         } else {
             selectOptions = $compile(
                 `
-                <div class="mob-popper mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
-                    <div class="mob-popper__wrapper">
-                        <span class="mob-popper__arrow"></span>
-                        <div class="mob-popper__inner">
+                <div class="mob-popper-down mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                    <div class="mob-popper-down__wrapper">
+                        <span class="mob-popper-down__arrow"></span>
+                        <div class="mob-popper-down__inner">
                             <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
                             <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
@@ -198,10 +198,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip" popper-location="selectDrown">
-                    <div class="mob-popper__wrapper">
-                        <span class="mob-popper__arrow"></span>
-                        <div class="mob-popper__inner">
+                <div class="mob-popper-down mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip" popper-location="selectDrown">
+                    <div class="mob-popper-down__wrapper">
+                        <span class="mob-popper-down__arrow"></span>
+                        <div class="mob-popper-down__inner">
                             <div class="mob-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
                                 <span ng-bind="item.label"></span>
                                 <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
@@ -271,7 +271,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $scope.$on(`get${optionId}ParamCallBack`, function (e, data) {
             let val = data.key === 'ngDisabled' ? !!!data.value : data.value
             if (val) {
-                $scope.$popper['selectDrown'].hide()
+                $scope.$popper[`selectDrown_${$scope.$id}`].hide()
             }
         })
         // 调用子组件方法

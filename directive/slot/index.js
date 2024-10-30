@@ -30,7 +30,6 @@ app
                         let slotName = slot.name || 'anonymous'
                         map[slotName] = slot
                     }
-                    console.log(map)
 
                     // 获取插槽实际的作用域
                     let compileScope = getHeadScope(tranScope.$parent);
@@ -51,6 +50,7 @@ app
 
                         // 获取插槽名称
                         let slotName = node.slot || 'anonymous'
+                        // let appendToBody = node.getAttribute('append-to-body') || false
                         // 将插槽设置为开启
                         scope.$slot.slot[slotName] = true
                         // 将自己标记为true，创建链式调用
@@ -59,7 +59,12 @@ app
                         node = $compile(node)(compileScope)[0];
                         // console.log(compileScope.$id)
                         // map[slotName].appendChild(node)
-                        map[slotName].replaceWith(node);
+                        // if (appendToBody) {
+                            // $document[0].body.appendChild(node)
+                            // document.body.appendChild(node)
+                        // } else {
+                            map[slotName].replaceWith(node);
+                        // }
                     }
                 })
             },

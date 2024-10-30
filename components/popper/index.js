@@ -1,38 +1,32 @@
-function controller($scope, $element, $attrs, $timeout, uuId) {
+function controller($scope, $element, $attrs, $transclude, slot, popper) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        this.id = uuId.newUUID()
+        slot.transclude($scope, $element, $transclude)
+
     }
 
-
     this.$onChanges = function (changes) {
-
     }
 
     this.$onDestroy = function () {
-
     }
 
 
     this.$postLink = function () {
-        $scope.$on(`${_that.id}TooltipPostLink`, function (e, data) {
-            $scope.$broadcast(`${_that.id}TooltipRenderFinish`, Object.assign(data, {
-                trigger: _that.trigger
-            }))
-        })
+        let targetList = $element[0].querySelectorAll('.popper-target');
+        let popperTooltipList = $element[0].querySelectorAll('.popper-down');
+        popper.popper($scope, targetList, popperTooltipList)
     }
 }
 
+/**
+ * dropDown组件，下拉框组件
+ */
 app
     .component('mobPopper', {
-        transclude: {
-            popperTarget: 'mobPopperTarget',
-            popperTooltip: 'mobPopperTooltip'
-        },
-        templateUrl: './components/popper/mob-popper.html',
-        bindings: {
-            trigger: '<?'
-        },
+        transclude: true,
+        templateUrl: `./components/popper/index.html`,
+        bindings: {},
         controller: controller
     })

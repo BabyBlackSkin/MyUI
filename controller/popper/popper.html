@@ -8,28 +8,28 @@
         <div class="mob-demo-example">
             <div class="mob-demo-example-child">
                 <mob-popper trigger="'click'">
-                    <mob-popper-target>
+                    <mob-popper-target slot="popperTarget">
                         <mob-button>Click</mob-button>
                     </mob-popper-target>
-                    <mob-popper-tooltip>
-                        <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
+                    <mob-popper-down slot="popperDown">
+<!--                        <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>-->
                         <mob-container>
                             <div role="tooltip">My tooltip
                             </div>
                         </mob-container>
-                    </mob-popper-tooltip>
+                    </mob-popper-down>
                 </mob-popper>
 
                 <mob-popper style="margin-left: 50px">
-                    <mob-popper-target>
+                    <mob-popper-target slot="popperTarget">
                         <mob-button>Hover</mob-button>
                     </mob-popper-target>
-                    <mob-popper-tooltip>
+                    <mob-popper-down slot="popperDown">
                         <mob-popper-tooltip-arrow></mob-popper-tooltip-arrow>
                         <mob-container>
                             <div role="tooltip">My tooltip </div>
                         </mob-container>
-                    </mob-popper-tooltip>
+                    </mob-popper-down>
                 </mob-popper>
             </div>
             <mob-divider></mob-divider>

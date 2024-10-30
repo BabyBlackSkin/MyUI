@@ -9,13 +9,13 @@ app
             popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, timer.render)
             timer.render = false
             timer.tooltipCss = setTimeout(() => {
-                tooltip.querySelector('.mob-popper__inner').style.overflow = 'auto';
+                tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'auto';
             }, 300)
         }
 
         function hide(scope, popper, timer = {render: true}) {
             let {target, tooltip} = popper
-            tooltip.querySelector('.mob-popper__inner').style.overflow = 'hidden';
+            tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'hidden';
             tooltip.style.opacity = 0;
             tooltip.style.transform = 'scaleY(0)';
             popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
@@ -39,8 +39,8 @@ app
                 let popperConfig = {}
                 // 先获取target
                 angular.forEach(targetList, function (target) {
-                    let popperRole = target.getAttribute('popper-group');
-                    let popperTrigger = target.getAttribute('popper-trigger');
+                    let popperRole = target.getAttribute('popper-group') + `_${scope.$id}`;
+                    let popperTrigger = target.getAttribute('popper-trigger') + `_${scope.$id}`;
                     if (popperRole) {
                         let roles = popperRole.split(",");
                         angular.forEach(roles, function (role) {
@@ -54,7 +54,7 @@ app
                 // 获取工具tooltip
                 angular.forEach(popperTooltipList, function (tooltip) {
                     if (tooltip.getAttribute('popper-group')) {
-                        popperConfig[tooltip.getAttribute('popper-group')].tooltip = tooltip
+                        popperConfig[tooltip.getAttribute('popper-group') + `_${scope.$id}`].tooltip = tooltip
                     }
                 })
                 scope.$popper = {}

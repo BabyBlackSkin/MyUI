@@ -11,16 +11,16 @@
 </style>
 <section class="mob-doc content" ng-controller="Experimental as ctrl">
 
-    <form name="form" action="#" onsubmit="return false;">
-        <input type="text" ng-model="value" form-validate>
-        <select ng-model="value" form-validate>
-            <option value="1">1</option>
-        </select>
-        <mob-input ng-required="true" ng-model="value" form-validate ></mob-input>
-        <button type="submit">提交</button>
+<!--    <form name="form" action="#" onsubmit="return false;">-->
+<!--        <input type="text" ng-model="value" form-validate>-->
+<!--        <select ng-model="value" form-validate>-->
+<!--            <option value="1">1</option>-->
+<!--        </select>-->
+<!--        <mob-input ng-required="true" ng-model="value" form-validate ></mob-input>-->
+<!--        <button type="submit">提交</button>-->
 
-        {{form}}
-    </form>
+<!--        {{form}}-->
+<!--    </form>-->
 
 <!--        {{form}}-->
 <!--    </form>-->
@@ -30,16 +30,17 @@
 <!--        <button ng-click="click()">测试</button>-->
 <!--    </drop-down>-->
 
-<!--    <drop-down>-->
-<!--            <button ng-click="click()" slot="one">测试</button>-->
-<!--    </drop-down>-->
+    <mob-popper>
+        <mob-popper-target slot="popperTarget">
+            <mob-input></mob-input>
+        </mob-popper-target>
+        <mob-popper-down slot="popperDown">
+            <div>
+                <button ng-click="click('tail-head')" slot="head">头</button>
+                <button ng-click="click('tail-mid')" slot="mid">中</button>
+                <button ng-click="click('tail-tail')" slot="tail">尾</button>
+            </div>
+        </mob-popper-down>
+    </mob-popper>
 
-
-    <mob-input style="display:block;width: 400px;">
-
-        <mob-input style="display:block;width: 400px;" slot="prepend">
-            <button ng-click="click()"  slot="prepend">测试</button>
-        </mob-input>
-<!--        <button ng-click="click()"  slot="prepend">测试</button>-->
-    </mob-input>
 </section>

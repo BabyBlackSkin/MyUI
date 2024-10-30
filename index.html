@@ -106,26 +106,20 @@
     <!-- switch组件 -->
     <script src="./components/switch/index.js"></script>
     <link rel="stylesheet" href="components/switch/mob-switch.css">
-    <!-- popper-tooltip -->
-    <script src="./components/popper-tooltip/index.js"></script>
-    <link rel="stylesheet" href="components/popper-tooltip/mob-popper-tooltip.css">
-    <!-- popper-tooltip-arrow -->
-    <script src="./components/popper-tooltip-arrow/index.js"></script>
-    <link rel="stylesheet" href="components/popper-tooltip-arrow/mob-popper-tooltip-arrow.css">
-    <!-- popper -->
-    <script src="./components/popper/index.js"></script>
-    <link rel="stylesheet" href="components/popper/mob-popper.css">
 
     <!-- divider -->
     <script src="./components/divider/index.js"></script>
     <link rel="stylesheet" href="components/divider/mob-divider.css">
 
     <!--dropDown-->
-    <script src="./components/drop-down/index.js"></script>
-    <link rel="stylesheet" href="components/drop-down/index.css">
+    <script src="components/popper/index.js"></script>
+    <link rel="stylesheet" href="components/popper/index.css">
+    <script src="components/popper-target/index.js"></script>
+    <link rel="stylesheet" href="components/popper-target/index.css">
+    <script src="./components/popper-down/index.js"></script>
+    <link rel="stylesheet" href="components/popper-down/index.css">
 
     <script src="./components/icon/index.js"></script>
-    <script src="./components/popper-target/index.js"></script>
 
     <!-- factory -->
     <script src="./factory/popper/index.js"></script>
@@ -466,7 +460,7 @@
 
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
-                let arrowElement = floating.querySelector('.mob-popper__arrow');
+                let arrowElement = floating.querySelector('.mob-popper-down__arrow');
 
                 setFloatingHeight(scope, target, floating);
 

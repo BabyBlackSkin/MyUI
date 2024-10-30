@@ -1,4 +1,4 @@
-.mob-popper {
+.mob-popper-down {
     /*必要css属性*/
     width: max-content;
     position: absolute;
@@ -29,13 +29,13 @@
 .mob-tag-popper{
     height: auto
 }
-.mob-popper *{
+.mob-popper-down *{
     margin: 0;
     padding: 0;
     list-style: none;
     text-decoration: none;
 }
-.mob-popper .mob-popper__wrapper{
+.mob-popper-down .mob-popper-down__wrapper {
     width: 100%;
     max-height: calc(var(--mob-popper-max-height) - 10px);
     box-sizing: border-box;
@@ -47,11 +47,11 @@
     border-radius: 4px;
     font-size: 90%;
 }
-.mob-popper .mob-popper__wrapper .mob-popper__inner{
+.mob-popper-down .mob-popper-down__wrapper .mob-popper-down__inner{
     max-height: calc(var(--mob-popper-max-height) - 20px);
     overflow: hidden;
 }
-.mob-popper .mob-popper__wrapper .mob-popper__inner::-webkit-scrollbar {
+.mob-popper-down .mob-popper-down__wrapper .mob-popper-down__inner::-webkit-scrollbar {
     /* 对应纵向滚动条的宽度 */
     width: 8px;
     /* 对应横向滚动条的宽度 */
@@ -59,22 +59,22 @@
     background-color: #ffffff;
 }
 /* 滚动条上的箭头按钮 */
-.mob-popper .mob-popper__wrapper .mob-popper__inner::-webkit-scrollbar-button {
+.mob-popper-down .mob-popper-down__wrapper .mob-popper-down__inner::-webkit-scrollbar-button {
     display: none;
 }
 /* 滚动条上的滚动滑块 */
-.mob-popper .mob-popper__wrapper .mob-popper__inner::-webkit-scrollbar-thumb {
+.mob-popper-down .mob-popper-down__wrapper .mob-popper-down__inner::-webkit-scrollbar-thumb {
     width: 4px;
     border-radius: 4px;
     background-color: #e4e7ed;
     cursor: pointer;
 }
 
-.mob-popper .mob-popper__wrapper .mob-popper__inner::-webkit-scrollbar-thumb:hover{
+.mob-popper-down .mob-popper-down__wrapper .mob-popper-down__inner::-webkit-scrollbar-thumb:hover{
     background-color: #c5c7cb;
 }
 
-.mob-popper .mob-popper__arrow {
+.mob-popper-down .mob-popper-down__arrow {
     position: absolute;
     background: #fff;
     width: 8px;
@@ -82,23 +82,23 @@
     transform: rotate(45deg);
 }
 
-.mob-popper .mob-popper__arrow.top {
+.mob-popper-down .mob-popper-down__arrow.top {
     border-left: 1px solid #e4e7ed;
     border-top: 1px solid #e4e7ed;
 }
 
 
-.mob-popper .mob-popper__arrow.right {
+.mob-popper-down .mob-popper-down__arrow.right {
     border-top: 1px solid #e4e7ed;
     border-right: 1px solid #e4e7ed;
 }
 
-.mob-popper .mob-popper__arrow.bottom {
+.mob-popper-down .mob-popper-down__arrow.bottom {
     border-bottom: 1px solid #e4e7ed;
     border-right: 1px solid #e4e7ed;
 }
 
-.mob-popper .mob-popper__arrow.left {
+.mob-popper-down .mob-popper-down__arrow.left {
     border-bottom: 1px solid #e4e7ed;
     border-left: 1px solid #e4e7ed;
 }

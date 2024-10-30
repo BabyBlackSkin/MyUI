@@ -1,0 +1,14 @@
+<div class="mob-popper">
+    <div class="mob-popper-target popper-target" popper-group="drop-down-{{$id}}">
+        <slot name="popperTarget"></slot>
+    </div>
+
+    <div class="mob-popper-down popper-down" popper-group="drop-down-{{$id}}">
+        <div class="mob-popper-down__wrapper">
+            <span class="mob-popper-down__arrow"></span>
+            <div class="mob-popper-down__inner">
+                <slot  name="popperDown"></slot>
+            </div>
+        </div>
+    </div>
+</div>

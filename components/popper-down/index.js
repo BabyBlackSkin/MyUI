@@ -1,4 +1,4 @@
-function controller($scope, $element, $attrs,  $transclude, slot,) {
+function controller($scope, $element, $attrs,  $transclude, slot) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -9,8 +9,7 @@ function controller($scope, $element, $attrs,  $transclude, slot,) {
 
     this.$onDestroy = function () {}
 
-    this.$postLink = function () {
-    }
+    this.$postLink = function () {}
 
 }
 
@@ -18,10 +17,10 @@ function controller($scope, $element, $attrs,  $transclude, slot,) {
  * dropDown组件，下拉框组件
  */
 app
-    .component('mobPopperTarget', {
+    .component('mobPopperDown', {
         transclude: true,
         controller: controller,
-        templateUrl: `./components/popper-target/index.html`,
+        templateUrl: `./components/popper-down/index.html`,
         bindings: {
             popperGroup:'=?'
         },
