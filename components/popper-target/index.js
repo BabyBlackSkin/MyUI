@@ -1,8 +1,7 @@
-function controller($scope, $element, $attrs,  $transclude, slot,) {
+function controller($scope, $element, $attrs,  $transclude) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        slot.transclude($scope, $element, $transclude)
     }
 
     this.$onChanges = function (changes) {}

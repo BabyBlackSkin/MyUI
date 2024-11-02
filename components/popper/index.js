@@ -1,8 +1,7 @@
-function controller($scope, $element, $attrs, $transclude, slot, popper) {
+function controller($scope, $element, $attrs, $transclude, popper) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        slot.transclude($scope, $element, $transclude)
 
     }
 
@@ -21,11 +20,17 @@ function controller($scope, $element, $attrs, $transclude, slot, popper) {
 }
 
 /**
- * dropDown组件，下拉框组件
+ * prop 组件，下拉框组件
+ * ngTransclude 导致双向数据绑定失效的问题
+ * https://github.com/angular/angular.js/issues/3928
+ * https://stackoverflow.com/questions/14481610/two-way-binding-not-working-in-directive-with-transcluded-scope
  */
 app
     .component('mobPopper', {
-        transclude: true,
+        transclude: {
+            'popperTarget':'mobPopperTarget',
+            'popperDown':'mobPopperDown'
+        },
         templateUrl: `./components/popper/index.html`,
         bindings: {},
         controller: controller

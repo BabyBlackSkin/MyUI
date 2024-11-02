@@ -25,22 +25,16 @@
 <!--        {{form}}-->
 <!--    </form>-->
 
-{{$id}}
 <!--    <drop-down>-->
 <!--        <button ng-click="click()">测试</button>-->
 <!--    </drop-down>-->
 
-    <mob-popper>
-        <mob-popper-target slot="popperTarget">
-            <mob-input></mob-input>
+    <mob-popper style="display: inline-block;width: 200px;">
+        <mob-popper-target>
+            <mob-input ng-model="popper.ngModel"></mob-input>
         </mob-popper-target>
-        <mob-popper-down slot="popperDown">
-            <div>
-                <button ng-click="click('tail-head')" slot="head">头</button>
-                <button ng-click="click('tail-mid')" slot="mid">中</button>
-                <button ng-click="click('tail-tail')" slot="tail">尾</button>
-            </div>
+        <mob-popper-down>
+            <mob-time-spinner show-model="popper.showValue" ng-model="popper.ngModel"></mob-time-spinner>
         </mob-popper-down>
     </mob-popper>
-
 </section>

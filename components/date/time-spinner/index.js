@@ -1,5 +1,5 @@
 
-function controller($scope, $element, uuId, $debounce,$date) {
+function controller($scope, $element, $attrs, uuId, $debounce,$date) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -49,6 +49,27 @@ function controller($scope, $element, uuId, $debounce,$date) {
             minute,
             second
         }
+        initWatcher()
+    }
+
+    /**
+     * 创建watcher
+     */
+    function initWatcher() {
+        $scope.$watchCollection(() => {
+            return _that.ngModel
+        }, function (newValue, oldValue) {
+            if (!newValue && !oldValue) {
+                return
+            }
+            if (newValue === oldValue) {
+                return;
+            }
+            if (angular.isDefined($attrs.change)) {
+                let opt = {value: newValue, attachment: _that.attachment}
+                _that.change({opt: opt})
+            }
+        })
     }
 
     // 上一次scrollTop
@@ -107,6 +128,7 @@ function controller($scope, $element, uuId, $debounce,$date) {
     this.confirmHandler = function () {
         this.ngModel = this.showModel
     }
+
     this.cancelHandler = function () {
         this.showModel = this.ngModel
     }
@@ -118,7 +140,8 @@ app
         bindings: {
             ngModel: '=?', // 双向绑定的数据
             showModel: '=?', // 显示的数据
-            ngDisabled: '<?', // 是否禁用
+            ngDisabled: '<?', // 是否禁用,
+            change:"&"// change方法
         },
         controller: controller
     })

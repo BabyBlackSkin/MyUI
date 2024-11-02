@@ -1,6 +1,6 @@
 app
 .controller('Experimental', ['$scope', function ExperimentalCtrl($scope) {
-    $scope.value = ""
+    $scope.popper ={ ngModel:'',showValue:''}
 
     $scope.click = function (log){
         log = log || "11"

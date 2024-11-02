@@ -1,13 +1,13 @@
 <div class="mob-popper">
-    <div class="mob-popper-target popper-target" popper-group="drop-down-{{$id}}">
-        <slot name="popperTarget"></slot>
+    <div class="mob-popper-target popper-target" popper-group="drop-down">
+        <ng-transclude ng-transclude-slot="popperTarget"></ng-transclude>
     </div>
 
-    <div class="mob-popper-down popper-down" popper-group="drop-down-{{$id}}">
+    <div class="mob-popper-down popper-down" popper-group="drop-down">
         <div class="mob-popper-down__wrapper">
             <span class="mob-popper-down__arrow"></span>
             <div class="mob-popper-down__inner">
-                <slot  name="popperDown"></slot>
+                <ng-transclude ng-transclude-slot="popperDown"></ng-transclude>
             </div>
         </div>
     </div>
