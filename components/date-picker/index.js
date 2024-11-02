@@ -1,77 +1,35 @@
-function createDatePickerSelectOptions(){
+function createDatePickerSelectOptions() {
+    let target = null;
     if (this.type === 'year') {
-        return `
-        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
-            <div class="mob-popper__wrapper">
-                <span class="mob-popper__arrow"></span>
-                <div class="mob-popper__inner">
-                    <mob-date-year ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-year>
-                </div>
-            </div>
-         </div>
-        `
-    }else if(this.type === 'month'){
-        return `
-        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
-            <div class="mob-popper__wrapper">
-                <span class="mob-popper__arrow"></span>
-                <div class="mob-popper__inner">
-                    <mob-date-month ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-month>
-                </div>
-            </div>
-         </div>
-        `
-    }else if (this.type === 'date'){
-        return `
-        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
-            <div class="mob-popper__wrapper">
-                <span class="mob-popper__arrow"></span>
-                <div class="mob-popper__inner">
-                    <mob-date-date ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-date>
-                </div>
-            </div>
-         </div>
-        `
-    } else if(this.type === 'yearRange') {
-        return `
-        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
-            <div class="mob-popper__wrapper">
-                <span class="mob-popper__arrow"></span>
-                <div class="mob-popper__inner">
-                    <mob-date-year-range ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-year-range>
-                </div>
-            </div>
-         </div>
-        `
-    }else if(this.type === 'monthRange'){
-        return `
-        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
-            <div class="mob-popper__wrapper">
-                <span class="mob-popper__arrow"></span>
-                <div class="mob-popper__inner">
-                    <mob-date-month-range ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-month-range>
-                </div>
-            </div>
-         </div>
-        `
-    }else{ // dateRange
-        return `
-        <div class="mob-popper mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
-            <div class="mob-popper__wrapper">
-                <span class="mob-popper__arrow"></span>
-                <div class="mob-popper__inner">
-                    <mob-date-date-range ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></mob-date-date-range>
-                </div>
-            </div>
-         </div>
-        `
+        target = 'mob-date-year'
+    } else if (this.type === 'month') {
+        target = 'mob-date-month'
+    } else if (this.type === 'date') {
+        target = 'mob-date-date'
+    } else if (this.type === 'yearRange') {
+        target = 'mob-date-year-range'
+    } else if (this.type === 'monthRange') {
+        target = 'mob-date-month-range'
+    } else { // dateRange
+        target = 'mob-date-date-range'
     }
+    return `
+        <div class="mob-popper-down mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
+            <div class="mob-popper-down__wrapper">
+                <span class="mob-popper-down__arrow"></span>
+                <div class="mob-popper-down__inner">
+                    <${target} ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></${target}>
+                </div>
+            </div>
+         </div>
+        `
 }
+
 function controller($scope, $element, $timeout, $document, $compile, $attrs, $debounce, $transclude, $q, uuId, popper, cross, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody','clearable', 'filterable']
+        let abbParams = ['appendToBody', 'clearable', 'filterable']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -131,7 +89,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         cross.put(this.name, this)
         let selectOptions = $compile(createDatePickerSelectOptions.apply(this))($scope)[0]
         // 下拉框是否添加到body中
-        this.appendToBody ?  $document[0].body.appendChild(selectOptions) : $element[0].appendChild(selectOptions)
+        this.appendToBody ? $document[0].body.appendChild(selectOptions) : $element[0].appendChild(selectOptions)
         return selectOptions
     }
 
@@ -168,7 +126,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @param data
      * @returns {undefined|string}
      */
-    this.changeStyleHandle = function (data) {}
+    this.changeStyleHandle = function (data) {
+    }
 
     /**
      * 点击事件
@@ -188,7 +147,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         input.focus()
     }
 
-    this.emptyValue = function (){
+    this.emptyValue = function () {
         return ''
     }
 
@@ -204,13 +163,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.clean = function () {
         this.focus()
         let emptyValue = _that.emptyValue()
-        _that.change({value:emptyValue, attachment:_that.attachment})
+        _that.change({value: emptyValue, attachment: _that.attachment})
     }
 
     /**
      * 是否为范围选择
      */
-    $scope.isDateRange = function (){
+    $scope.isDateRange = function () {
         return _that.type === 'yearRange' || _that.tpye === 'monthRange' || _that.type === 'dateRange';
     }
 
@@ -223,14 +182,14 @@ app
         templateUrl: './components/date-picker/index.html',
         bindings: {
             ngModel: '=?',// 双向数据绑定
-            type:'<?',// 类型
+            type: '<?',// 类型
             appendToBody: '<?',// 是否添加到body
             ngDisabled: '<?', // 是否禁用
             clearable: '<?', // 可清空的
             placeholder: '<?',// 提示文字
-            rangSeparator:'<?',// 范围分割文字
-            startPlaceHolder:'<?',// 开始提示文字
-            endPlaceHolder:'<?',// 结束提示文字
+            rangSeparator: '<?',// 范围分割文字
+            startPlaceHolder: '<?',// 开始提示文字
+            endPlaceHolder: '<?',// 结束提示文字
             shortcuts: "<?",// type: array
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandle中拿到绑定的对象，
