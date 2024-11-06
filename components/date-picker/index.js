@@ -1,24 +1,32 @@
 function createDatePickerSelectOptions() {
     let target = null;
+
+    let attr =  []
     if (this.type === 'year') {
         target = 'mob-date-year'
     } else if (this.type === 'month') {
         target = 'mob-date-month'
     } else if (this.type === 'date') {
         target = 'mob-date-date'
+        if (this.dateTime) {
+            attr.push('date-time')
+        }
     } else if (this.type === 'yearRange') {
         target = 'mob-date-year-range'
     } else if (this.type === 'monthRange') {
         target = 'mob-date-month-range'
     } else { // dateRange
         target = 'mob-date-date-range'
+        if (this.dateTime) {
+            attr.push('date-time')
+        }
     }
     return `
         <div class="mob-popper-down mob-select-popper" id="${this.name}_mob-select-popper" popper-group="selectDrown">
             <div class="mob-popper-down__wrapper">
                 <span class="mob-popper-down__arrow"></span>
                 <div class="mob-popper-down__inner">
-                    <${target} ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></${target}>
+                    <${target} ${attr.join(" ")} ng-model="$ctrl.ngModel" change="$ctrl.changeHandle(opt)" calendar-click="$ctrl.calendarClickHandle(opt)" shortcuts="$ctrl.shortcuts"></${target}>
                 </div>
             </div>
          </div>
@@ -183,6 +191,7 @@ app
         bindings: {
             ngModel: '=?',// 双向数据绑定
             type: '<?',// 类型
+            dateTime: "<?",// 是否为时间选择器，仅当type为：date，或者dateRange时有效
             appendToBody: '<?',// 是否添加到body
             ngDisabled: '<?', // 是否禁用
             clearable: '<?', // 可清空的

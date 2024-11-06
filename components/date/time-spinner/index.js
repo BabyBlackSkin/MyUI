@@ -1,49 +1,34 @@
-
-function controller($scope, $element, $attrs, uuId, $debounce,$date) {
+function controller($scope, $element, $attrs, uuId, $debounce, $timeout) {
     const _that = this
+    const ngModelReplaceInx = {hour: 0, minute: 1, second: 2}
     // 初始化工作
     this.$onInit = function () {
-        let h = []
-        for (let i = 0; i < 24; i++) {
-            h.push({
-                format: (i+'').padStart(2,"0"),
-                value:i,
-                inx:i
-            })
+        if (angular.isUndefined(this.ngModel) && null != this.ngModel) {
+            this.showModel = this.ngModel
         }
-        let m = []
-        for (let i = 1; i <= 60; i++) {
-            m.push({
-                format: (i+'').padStart(2,"0"),
-                value:i,
-                inx:i - 1
-            })
-        }
-        let s = []
-        for (let i = 1; i <= 60; i++) {
-            s.push({
-                format: (i+'').padStart(2,"0"),
-                value:i,
-                inx:i - 1
-            })
-        }
+        this.defaultTime = this.defaultTime || '00:00:00'
 
-
+        $scope.$date = dayjs();
         this.id = uuId.newUUID()
-        $scope.$options = {
-            hour: h,
-            minute: m,
-            second: s,
-        }
     }
 
     this.$onDestroy = function () {
     }
 
     this.$postLink = function () {
-        let hour =  $element[0].querySelector('.hour-selection');
-        let minute =  $element[0].querySelector('.minute-selection');
-        let second =  $element[0].querySelector('.second-selection');
+        let hour = $element[0].querySelector('.hour-selection');
+        let minute = $element[0].querySelector('.minute-selection');
+        let second = $element[0].querySelector('.second-selection');
+
+        let arr = (this.showModel || this.defaultTime ).split(':').map(item => parseInt(item))
+        this.renderOptions(arr)
+
+        // 没办法初始化scrollTop
+        // hour.scrollTop = 32 * arr[ngModelReplaceInx['hour']]
+        // minute.scrollTop = 32 * arr[ngModelReplaceInx['minute']]
+        // second.scrollTop = 32 * arr[ngModelReplaceInx['second']]
+
+
         this.showContainerPosition = {
             hour,
             minute,
@@ -56,6 +41,7 @@ function controller($scope, $element, $attrs, uuId, $debounce,$date) {
      * 创建watcher
      */
     function initWatcher() {
+        // 监听ngModel的变动
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newValue, oldValue) {
@@ -65,11 +51,49 @@ function controller($scope, $element, $attrs, uuId, $debounce,$date) {
             if (newValue === oldValue) {
                 return;
             }
-            if (angular.isDefined($attrs.change)) {
-                let opt = {value: newValue, attachment: _that.attachment}
-                _that.change({opt: opt})
-            }
+
+            angular.isDefined($attrs.change) && _that.change({opt: {value: newValue, attachment: _that.attachment}})
+
+            _that.uptShowModel()
+
         })
+    }
+
+    /**
+     * 小时渲染
+     * @param activeArr
+     */
+    this.renderOptions = function (activeArr) {
+        let h = []
+        for (let i = 0; i < 24; i++) {
+            h.push({
+                format: (i + '').padStart(2, "0"),
+                value: i,
+                inx: i,
+                isActive: activeArr[ngModelReplaceInx['hour']] === i
+            })
+        }
+        let m = []
+        let s = []
+        for (let i = 0; i < 60; i++) {
+            m.push({
+                format: (i + '').padStart(2, "0"),
+                value: i,
+                inx: i,
+                isActive: activeArr[ngModelReplaceInx['minute']] === i
+            })
+            s.push({
+                format: (i + '').padStart(2, "0"),
+                value: i,
+                inx: i,
+                isActive: activeArr[ngModelReplaceInx['second']] === i
+            })
+        }
+        $scope.$options = {
+            hour: h,
+            minute: m,
+            second: s,
+        }
     }
 
     // 上一次scrollTop
@@ -77,7 +101,7 @@ function controller($scope, $element, $attrs, uuId, $debounce,$date) {
 
     // 面板滚动事件
     this.scrollHandler = function ($event, type) {
-        $debounce.debounce($scope, `${$scope.$id}_scrollHandler`, () => {
+        $debounce.debounce($scope, `${$scope.$id}_scrollHandler_${type}`, () => {
             // 滚动条距离顶部的高度
             let scrollTop = Math.round($event.target.scrollTop)
             if (this.lastScrollTop === scrollTop) {
@@ -86,51 +110,68 @@ function controller($scope, $element, $attrs, uuId, $debounce,$date) {
 
             // 根据滚动条计算应该被激活的元素
             let activeInx = Math.round(scrollTop / 32)
-            $scope.$options[type].map(h=>{h.isActive=false})
+            $scope.$options[type].map(h => {
+                h.isActive = false
+            })
             $scope.$options[type][activeInx].isActive = true
 
             // 根据被激活的元素重新设置滚动条的位置
-            this.showContainerPosition[type].scrollTop =  activeInx * 32;
+            this.showContainerPosition[type].scrollTop = activeInx * 32;
             this.lastScrollTop = scrollTop;
 
-            this.setValue(type,$scope.$options[type][activeInx].format)
+            this.uptShowModel(type, $scope.$options[type][activeInx].format)
         }, 300)()
     }
 
-    // 元素点击事件
-    this.selectionClickHandler = function (type, time){
-        $scope.$options[type].map(h=>{h.isActive=false})
+    /**
+     * 选择回调函数
+     * @param type
+     * @param time
+     */
+    this.selectionClickHandler = function (type, time) {
+        $scope.$options[type].map(h => {
+            h.isActive = false
+        })
         time.isActive = true;
 
         // 根据被激活的元素重新设置滚动条的位置
-        this.showContainerPosition[type].scrollTop =  time.inx * 32;
-        this.setValue(type, time.format)
+        this.showContainerPosition[type].scrollTop = time.inx * 32;
+        this.uptShowModel(type, time.format)
     }
 
-
-    let ngModelReplaceInx = {hour: 0, minute: 1, second: 2}
-    this.setValue = function (type, val) {
-        // 校验ngModel的格式是否符合规范
-        if (null == this.showModel || '' === this.showModel || undefined === this.showModel || this.showModel.split(':').length !== 3) {
-            let date = new Date()
-            let hour = ($date.getHours(date) + '').padStart(2, "0")
-            let minute = ($date.getMinutes(date) + '').padStart(2, "0")
-            let seconds = ($date.getSeconds(date) + '').padStart(2, "0")
-            this.showModel = `${hour}:${minute}:${seconds}`
+    /**
+     * 更新showModel的值
+     * @param type 类型：[hour, minute, second]
+     * @param val 值
+     */
+    this.uptShowModel = function (type, val) {
+        if (angular.isUndefined(type)) {
+            this.showModel = this.ngModel
+        } else {
+            // 获取选择的时间
+            let time = this.showModel || this.defaultTime
+            // 按类型替换值
+            let arr = time.split(':');
+            arr[ngModelReplaceInx[type]] = val
+            // 重新赋值
+            this.showModel = arr.join(':')
         }
-
-        let arr = this.showModel.split(':');
-        arr[ngModelReplaceInx[type]] = val
-
-        this.showModel = arr.join(':')
     }
 
+    /**
+     * 确认回调函数
+     */
     this.confirmHandler = function () {
         this.ngModel = this.showModel
+        console.log($scope)
+        angular.isDefined($attrs.confirm) && _that.confirm({opt: {value: _that.ngModel, attachment: _that.attachment}})
     }
-
+    /**
+     * 取消回调函数
+     */
     this.cancelHandler = function () {
         this.showModel = this.ngModel
+        angular.isDefined($attrs.cancel) && _that.cancel({opt: {value: _that.ngModel, attachment: _that.attachment}})
     }
 }
 
@@ -140,8 +181,11 @@ app
         bindings: {
             ngModel: '=?', // 双向绑定的数据
             showModel: '=?', // 显示的数据
+            defaultTime:'<?',// 默认时间
             ngDisabled: '<?', // 是否禁用,
-            change:"&"// change方法
+            change: "&",/// change方法
+            confirm: "&",//确认方法
+            cancel: "&",//取消方法,
         },
         controller: controller
     })

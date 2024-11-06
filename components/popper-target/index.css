@@ -1,1 +1,6 @@
-
+.mob-popper .drop-target{
+    width: 100%;
+}
+.mob-popper .drop-target *{
+    width: inherit;
+}

@@ -6,6 +6,8 @@
         </div>
         <div class="mob-date__container is_left">
             <mob-date-date
+                    render-date="leftCalendar.renderDate"
+                    date-time="$ctrl.dateTime ? $ctrl.dateTime : false "
                     ng-model="leftCalendar.ngModel"
                     range-model="$ctrl.potentialModel"
                     attachment="'leftCalendar'"
@@ -15,11 +17,14 @@
                     panel-change="$ctrl.panelChangeHandle(opt)"
                     calendar-click="$ctrl.calendarClickHandle(opt)"
                     calendar-hover="$ctrl.calendarHoverHandle(opt)"
+                    time-spinner-change="$ctrl.calendarTimeChangeHandle(opt)"
             ></mob-date-date>
         </div>
         <mob-divider vertical="true"></mob-divider>
         <div class="mob-date__container is_right">
             <mob-date-date
+                    render-date="rightCalendar.renderDate"
+                    date-time="$ctrl.dateTime ? $ctrl.dateTime : false "
                     ng-model="rightCalendar.ngModel"
                     range-model="$ctrl.potentialModel"
                     attachment="'rightCalendar'"
@@ -29,6 +34,7 @@
                     panel-change="$ctrl.panelChangeHandle(opt)"
                     calendar-click="$ctrl.calendarClickHandle(opt)"
                     calendar-hover="$ctrl.calendarHoverHandle(opt)"
+                    time-spinner-change="$ctrl.calendarTimeChangeHandle(opt)"
             ></mob-date-date>
         </div>
     </div>

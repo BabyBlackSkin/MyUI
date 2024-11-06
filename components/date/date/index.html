@@ -5,7 +5,25 @@
                     ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
         </div>
         <div class="mob-date__container">
-<!--            <mob-time-spinner></mob-time-spinner>-->
+            <div class="mob-date__header__wrapper" ng-if="$ctrl.dateTime">
+                <div>
+                    <input class="mob-date-time-input" ng-model="$ctrl.dateModel"/>
+                </div>
+                <div>
+                    <mob-popper class="mob-date-time-wrapper" ref="'timeSpinner'">
+                        <mob-popper-target>
+                            <input class="mob-date-time-input" ng-change="$ctrl.timeShowModelChangeHandle()" ng-click="$ctrl.timeShowModelClickHandle()" ng-model="$ctrl.timeModel.showModel"/>
+                        </mob-popper-target>
+                        <mob-popper-down>
+                            <mob-time-spinner
+                                    show-model="$ctrl.timeModel.showModel"
+                                    ng-model="$ctrl.timeModel.ngModel"
+                                    confirm="$ctrl.timeSpinnerConfirmHandle(opt)"
+                                    cancel="$ctrl.timeSpinnerCancelHandle(opt)"></mob-time-spinner>
+                        </mob-popper-down>
+                    </mob-popper>
+                </div>
+            </div>
             <div class="content">
                 <div class="mob-date__header">
                     <mob-icon-double-arrow-left
