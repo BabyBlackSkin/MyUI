@@ -11,7 +11,7 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         this.renderOptions()
 
         // date.model YYYY-MM-DD
-        this.dateModel = ''
+        this.dateModel = {}
         // time model HH:mm:ss
         this.timeModel = {}
 
@@ -37,11 +37,23 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
             if (!newValue && !oldValue) {
                 return
             }
-            // change hook
-            angular.isDefined($attrs.change) && _that.change({opt: {value: newValue, attachment: _that.attachment}})
 
             // 解析ngModel，得到年、月、日、时、分、秒
             _that.calculateNgModelYearMonthDate()
+
+            angular.isDefined($attrs.change) && _that.change(
+                {
+                    opt: {
+                        value: newValue, attachment: _that.attachment,
+                        year: $scope.$date.year(),
+                        month: $scope.$date.month() + 1,
+                        date: $scope.$date.date(),
+                        hour: $scope.$date.hour(),
+                        minute: $scope.$date.minute(),
+                        second: $scope.$date.second(),
+                        timestamp: $scope.$date.unix()
+                    }
+                })
             // 重新渲染
             _that.renderOptions()
         })
@@ -54,7 +66,30 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
                 return
             }
             // change hook
-            angular.isDefined($attrs.timeSpinnerChange) && _that.timeSpinnerChange({opt: {value: _that.ngModel, attachment: _that.attachment, time:newValue}})
+            angular.isDefined($attrs.timeChange) && _that.timeChange({
+                opt: {
+                    value: _that.ngModel,
+                    attachment: _that.attachment,
+                    time: newValue
+                }
+            })
+        })
+
+        // 监听dateModel.ngModel
+        $scope.$watchCollection(() => {
+            return _that.dateModel.ngModel
+        }, function (newValue, oldValue) {
+            if (!newValue && !oldValue) {
+                return
+            }
+            // change hook
+            angular.isDefined($attrs.dateChange) && _that.dateChange({
+                opt: {
+                    value: _that.ngModel,
+                    attachment: _that.attachment,
+                    date: newValue
+                }
+            })
         })
     }
 
@@ -135,9 +170,9 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         if (angular.isDefined($attrs.panelChange)) {
             let opt = {
                 value: _that.ngModel, attachment: _that.attachment,
-                calendar:{
+                calendar: {
                     year: $scope.year,
-                    month:$scope.month
+                    month: $scope.month
                 }
             }
             _that.panelChange({opt: opt})
@@ -181,7 +216,8 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
             $scope.ngModelYear = $scope.$date.year()
             $scope.ngModelMonth = $scope.$date.month() + 1
             $scope.ngModelDate = $scope.$date.date()
-            this.dateModel = $scope.$date.format("YYYY-MM-DD")
+            this.dateModel.ngModel = $scope.$date.format("YYYY-MM-DD")
+            this.dateModel.showModel = $scope.$date.format("YYYY-MM-DD")
             this.timeModel.ngModel = $scope.$date.format("HH:mm:ss")
         } else {
             $scope.$date = this.renderDate ? dayjs(this.renderDate) : dayjs()
@@ -195,7 +231,6 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         // 更新月份选择器的model
         $scope.mobDateMonth = $scope.$date.format("YYYY-MM")
     }
-
 
 
     // 是否潜在的选中
@@ -216,7 +251,7 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
 
     // 是否潜在的选中的结束
     this.isInRangeActiveEnd = function (d) {
-        if (!this.rangeModel || this.rangeModel.length <2) {
+        if (!this.rangeModel || this.rangeModel.length < 2) {
             return false
         }
         return this.rangeModel[1].timestamp === d.timestamp
@@ -279,7 +314,8 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         // 更新日期
         $scope.$date = date.$date
         // 更新dateModel
-        this.dateModel = date.format
+        this.dateModel.ngModel = date.format
+        this.dateModel.showModel = date.format
         this.uptNgModel()
         // 如果点击的不是本月的，则重新渲染
         if (date.isPrevMonth || date.isNextMonth) {
@@ -290,7 +326,7 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         if (angular.isDefined($attrs.calendarClick)) {
             let opt = {
                 value: _that.ngModel,
-                calendarItem:date,
+                calendarItem: date,
                 attachment: _that.attachment
             }
             _that.calendarClick({opt: opt})
@@ -300,18 +336,18 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
     /**
      * 更新ngModel
      */
-    this.uptNgModel = function (){
+    this.uptNgModel = function () {
         if (angular.isUndefined((this.timeModel.ngModel)) || null == this.timeModel.ngModel || '' === this.timeModel.ngModel) {
             this.timeModel.ngModel = dayjs().format("HH:mm:ss")
         }
-        if (angular.isUndefined((this.dateModel)) || null == this.dateModel|| '' === this.dateModel) {
-            this.dateModel = dayjs().format("YYYY-MM-DD")
+        if (angular.isUndefined((this.dateModel.ngModel)) || null == this.dateModel.ngModel || '' === this.dateModel.ngModel) {
+            this.dateModel.ngModel = dayjs().format("YYYY-MM-DD")
         }
         // 判断是否为time选择器
         if (this.dateTime) {
-            this.ngModel = this.dateModel + " " + this.timeModel.ngModel
+            this.ngModel = this.dateModel.ngModel + " " + this.timeModel.ngModel
         } else {
-            this.ngModel = this.dateModel
+            this.ngModel = this.dateModel.ngModel
         }
     }
 
@@ -323,7 +359,7 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         if (angular.isDefined($attrs.calendarHover)) {
             let opt = {
                 value: d.date,
-                calendarItem:d,
+                calendarItem: d,
                 attachment: _that.attachment,
             }
             _that.calendarHover({opt: opt})
@@ -400,21 +436,31 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         // 隐藏
         $timeSpinner.$popper[`drop-down_${$timeSpinner.$id}`].hide()
         // 更新ng
-        $timeout(function (){
+        $timeout(function () {
             _that.uptNgModel()
-            angular.isDefined($attrs.timeSpinnerConfirm) && _that.timeSpinnerConfirm({opt: {value: _that.ngModel, attachment: _that.attachment}})
+            angular.isDefined($attrs.timeSpinnerConfirm) && _that.timeSpinnerConfirm({
+                opt: {
+                    value: _that.ngModel,
+                    attachment: _that.attachment
+                }
+            })
         })
     }
     /**
      * timeSpinner 取消函数
      * @param opt
      */
-    this.timeSpinnerCancelHandle = function (opt){
+    this.timeSpinnerCancelHandle = function (opt) {
         // 获取timeSpinner
         let $timeSpinner = $scope.$refs['timeSpinner']
         // 隐藏
         $timeSpinner.$popper[`drop-down_${$timeSpinner.$id}`].hide()
-        angular.isDefined($attrs.timeSpinnerCancel) && _that.timeSpinnerCancel({opt: {value: _that.ngModel, attachment: _that.attachment}})
+        angular.isDefined($attrs.timeSpinnerCancel) && _that.timeSpinnerCancel({
+            opt: {
+                value: _that.ngModel,
+                attachment: _that.attachment
+            }
+        })
     }
     /**
      * timeSpinner click事件
@@ -430,6 +476,24 @@ function dateController($scope, $element, $attrs, $date, $timeout, $debounce, at
         _that.uptNgModel()
     }
 
+    this.dateModelChangeHandle = function () {
+        $debounce.debounce($scope, `${$scope.$id}_editDateModel`, () => {
+            if (!this.dateModel.showModel) {
+                this.dateModel.showModel = this.dateModel.ngModel
+                return
+            }
+            let arr = this.dateModel.showModel.split("-");
+            debugger
+            if (arr.length !== 3) { // 非法格式
+                this.dateModel.showModel = this.dateModel.ngModel
+                return;
+            }
+            this.dateModel.showModel = dayjs(this.dateModel.showModel).format("YYYY-MM-DD")
+            this.dateModel.ngModel = this.dateModel.showModel
+            // 合法的日期格式
+            _that.uptNgModel()
+        }, 500)()
+    }
     /**
      * timeSpinner input chang 事件
      */
@@ -485,23 +549,24 @@ app
         bindings: {
             ngModel: '=?',// 双向绑定的model
             rangeModel: '<?', // 选择范围i的model,
-            renderDate:"<?",// 面板渲染的日期
+            renderDate: "<?",// 面板渲染的日期
             dateTime: "<?",// 是否为时间选择器
             shortcuts: "<?",// type: array
             attachment: "<?",
             disabledDate: "&?", // 日期是否可选，入参：日期（目前仅支持在类型为date时启用）
-            increaseYearDisabled:"<?", // 是否禁用增加年份按钮
-            decreaseYearDisabled:"<?", // 是否禁用增加年份按钮
-            increaseMonthDisabled:"<?", // 是否禁用增加年份按钮
-            decreaseMonthDisabled:"<?", // 是否禁用增加年份按钮
+            increaseYearDisabled: "<?", // 是否禁用增加年份按钮
+            decreaseYearDisabled: "<?", // 是否禁用增加年份按钮
+            increaseMonthDisabled: "<?", // 是否禁用增加年份按钮
+            decreaseMonthDisabled: "<?", // 是否禁用增加年份按钮
             // 方法
             change: "&?",
             calendarClick: "&?",// 日历项点击触发
             calendarHover: "&?", // 日历项移入触发
-            panelChange: "&?", // 日历面变更hook
-            timeSpinnerConfirm:"&", // 时间选择器confirm事件
-            timeSpinnerCancel:"&", // 时间选择器cancel事件
-            timeSpinnerChange:"&", // 时间选择器change事件
+            panelChange: "&?", // 日历面重新渲染的hook
+            dateChange: "&?", // 年月日文本框的change时间
+            timeSpinnerConfirm: "&", // 时间选择器confirm事件
+            timeSpinnerCancel: "&", // 时间选择器cancel事件
+            timeChange: "&", // 时间选择器change事件
 
         },
     })

@@ -7,12 +7,12 @@
         <div class="mob-date__container">
             <div class="mob-date__header__wrapper" ng-if="$ctrl.dateTime">
                 <div>
-                    <input class="mob-date-time-input" ng-model="$ctrl.dateModel"/>
+                    <input class="mob-date-time-input" placeholder="年-月-日" ng-change="$ctrl.dateModelChangeHandle()"  ng-model="$ctrl.dateModel.showModel"/>
                 </div>
                 <div>
                     <mob-popper class="mob-date-time-wrapper" ref="'timeSpinner'">
                         <mob-popper-target>
-                            <input class="mob-date-time-input" ng-change="$ctrl.timeShowModelChangeHandle()" ng-click="$ctrl.timeShowModelClickHandle()" ng-model="$ctrl.timeModel.showModel"/>
+                            <input class="mob-date-time-input" placeholder="时:分:秒" ng-change="$ctrl.timeShowModelChangeHandle()" ng-click="$ctrl.timeShowModelClickHandle()" ng-model="$ctrl.timeModel.showModel"/>
                         </mob-popper-target>
                         <mob-popper-down>
                             <mob-time-spinner

@@ -1,4 +1,4 @@
-function dateController($scope, $element, $attrs, $date, attrHelp) {
+function dateController($scope, $element, $attrs, $date, $debounce, attrHelp) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
@@ -9,6 +9,17 @@ function dateController($scope, $element, $attrs, $date, attrHelp) {
 
         $scope.$date = dayjs()
 
+        // 日期和时间input框的model
+        this.dateTimeModel = {
+            startTime: {
+                dateModel: {},
+                timeModel: {}
+            },
+            endTime: {
+                dateModel: {},
+                timeModel: {}
+            },
+        }
         // 左侧日历
         $scope.leftCalendar = {
             renderDate:$scope.$date.format("YYYY-MM-DD"),
@@ -98,6 +109,7 @@ function dateController($scope, $element, $attrs, $date, attrHelp) {
      * @returns {boolean}
      */
     this.isDisabledCalendarChangeMonth = function () {
+        debugger
         // 年份相差2年以上，允许修改
         if ($scope.leftCalendar.year + 1 < $scope.rightCalendar.year) {
             return false
@@ -191,7 +203,7 @@ function dateController($scope, $element, $attrs, $date, attrHelp) {
             return;
         }
 
-        let item = {value: value, timestamp: calendarItem.timestamp, calendar: attachment};
+        let item = {value: value, timestamp: calendarItem.timestamp};
 
         this.potentialModel = [this.secondaryModel[0]]
         if (this.potentialModel[0].timestamp <= item.timestamp) {
@@ -201,7 +213,74 @@ function dateController($scope, $element, $attrs, $date, attrHelp) {
         }
     }
 
-    // shortcut点击事件
+    /**
+     * 日期input change事件
+     */
+    this.dateModelChangeHandle = function (opt) {
+        $debounce.debounce($scope, `${$scope.$id}_dateModelChangeHandle`, () => {
+            let d = dayjs(this.dateTimeModel[opt].dateModel.showModel)
+            // 还原
+            let inx = 'startTime' === opt ? 0 : 1
+            // 非法日期
+            if (!d.isValid()) {
+                console.log('非法')
+                this.dateTimeModel[opt].dateModel.showModel = dayjs(this.ngModel[inx]).format("YYYY-MM-DD")
+            } else {
+                this.dateTimeModel[opt].dateModel.showModel = d.format('YYYY-MM-DD')
+                this.ngModel[inx] = this.dateTimeModel[opt].dateModel.showModel + " " + dayjs(this.ngModel[inx]).format("HH:mm:ss")
+
+                this.potentialModel[inx] = {value: d.format('YYYY-MM-DD HH:mm:ss'), timestamp: d.unix()};
+            }
+            console.log(this.potentialModel)
+        }, 500)()
+    }
+
+    /**
+     * 时间选择器变更
+     * @param opt
+     */
+    this.timeShowModelClickHandle = function () {
+        if (angular.isDefined(this.ngModel)) {
+            return
+        }
+        this.updateDateTimeModel('startTime', $scope.$date)
+        let next = $scope.$date.add(1, 'month');
+        this.updateDateTimeModel('endTime', next)
+
+        let value = $scope.$date.format("YYYY-MM-DD HH:mm:ss")
+        let nextMonth = next.format("YYYY-MM-DD HH:mm:ss")
+
+        this.ngModel = [value, nextMonth]
+        let left = {value: this.ngModel[0], timestamp: dayjs(this.ngModel[0]).startOf('day').unix()}
+        let right = {value: this.ngModel[1], timestamp: dayjs(this.ngModel[1]).startOf('day').unix()}
+        this.secondaryModel = [left, right]
+        this.potentialModel = [left, right]
+    }
+
+    /**
+     * 更新日期时间
+     * @param inx
+     * @param dateTime
+     */
+    this.updateDateTimeModel = function (inx, dateTime){
+        let date = dateTime.format("YYYY-MM-DD")
+        let time = dateTime.format("HH:mm:ss")
+
+        this.dateTimeModel[inx] = {
+            dateModel: {
+                showModel:date
+            },
+            timeModel: {
+                ngModel:time // showModel交由timeSpinner去更新了
+            }
+        }
+    }
+
+
+    /**
+     * 快捷选择
+     * @param shortcut
+     */
     this.shortcutClickHandle = function (shortcut) {
         console.log(shortcut)
         let start = shortcut.value[0]
@@ -209,39 +288,7 @@ function dateController($scope, $element, $attrs, $date, attrHelp) {
 
         let startDate = $date.getFullYear(start) + "-" + $date.getFullMonth(start) + "-" + $date.getDate(start)
         let endDate = $date.getFullYear(end) + "-" + $date.getFullMonth(end) + "-" + $date.getDate(end)
-
         this.ngModel = [startDate, endDate]
-    }
-
-    /**
-     * 时间选择器变更
-     * @param opt
-     */
-    this.calendarTimeChangeHandle = function (opt) {
-        console.log(opt)
-        let {value, attachment} = opt
-        if (angular.isUndefined(this.ngModel)) {
-            if ('leftCalendar' === attachment) {
-                let nextMonth = dayjs(value).add(1, 'month').format("YYYY-MM-DD HH:mm:ss")
-                this.ngModel = [value, nextMonth]
-                $scope['rightCalendar'].ngModel = nextMonth
-            } else {
-                let prevMonth = dayjs(value).subtract(1, 'month').format("YYYY-MM-DD HH:mm:ss")
-                this.ngModel = [prevMonth, value]
-                $scope['leftCalendar'].ngModel = prevMonth
-            }
-        } else {
-            if ('leftCalendar' === attachment) {
-                this.ngModel[0] = value
-            } else {
-                this.ngModel[1] = value
-            }
-        }
-
-        let left = {value: this.ngModel[0], calendar: 'leftCalendar', timestamp:dayjs(this.ngModel[0]).startOf('day').unix()}
-        let right = {value: this.ngModel[1], calendar: 'rightCalendar', timestamp:dayjs(this.ngModel[1]).startOf('day').unix()}
-        this.secondaryModel = [left, right]
-        this.potentialModel = [left, right]
     }
 
 }

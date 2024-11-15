@@ -5,9 +5,27 @@
                     ng-click="$ctrl.shortcutClickHandle(shortcut)"></button>
         </div>
         <div class="mob-date__container is_left">
+            <div class="mob-date__header__wrapper" ng-if="$ctrl.dateTime">
+                <div>
+                    <input class="mob-date-time-input" placeholder="年-月-日" ng-change="$ctrl.dateModelChangeHandle('startTime')"  ng-model="$ctrl.dateTimeModel.startTime.dateModel.showModel"/>
+                </div>
+                <div>
+                    <mob-popper class="mob-date-time-wrapper" ref="'timeSpinner'">
+                        <mob-popper-target>
+                            <input class="mob-date-time-input" placeholder="时:分:秒" ng-change="$ctrl.timeShowModelChangeHandle()" ng-click="$ctrl.timeShowModelClickHandle()" ng-model="$ctrl.dateTimeModel.startTime.timeModel.showModel"/>
+                        </mob-popper-target>
+                        <mob-popper-down>
+                            <mob-time-spinner
+                                    show-model="$ctrl.dateTimeModel.startTime.timeModel.showModel"
+                                    ng-model="$ctrl.dateTimeModel.startTime.timeModel.ngModel"
+                                    confirm="$ctrl.timeSpinnerConfirmHandle(opt)"
+                                    cancel="$ctrl.timeSpinnerCancelHandle(opt)"></mob-time-spinner>
+                        </mob-popper-down>
+                    </mob-popper>
+                </div>
+            </div>
             <mob-date-date
                     render-date="leftCalendar.renderDate"
-                    date-time="$ctrl.dateTime ? $ctrl.dateTime : false "
                     ng-model="leftCalendar.ngModel"
                     range-model="$ctrl.potentialModel"
                     attachment="'leftCalendar'"
@@ -17,14 +35,31 @@
                     panel-change="$ctrl.panelChangeHandle(opt)"
                     calendar-click="$ctrl.calendarClickHandle(opt)"
                     calendar-hover="$ctrl.calendarHoverHandle(opt)"
-                    time-spinner-change="$ctrl.calendarTimeChangeHandle(opt)"
             ></mob-date-date>
         </div>
         <mob-divider vertical="true"></mob-divider>
         <div class="mob-date__container is_right">
+            <div class="mob-date__header__wrapper" ng-if="$ctrl.dateTime">
+                <div>
+                    <input class="mob-date-time-input" placeholder="年-月-日" ng-change="$ctrl.dateModelChangeHandle('endTime')"  ng-model="$ctrl.dateTimeModel.endTime.dateModel.showModel"/>
+                </div>
+                <div>
+                    <mob-popper class="mob-date-time-wrapper" ref="'timeSpinner'">
+                        <mob-popper-target>
+                            <input class="mob-date-time-input" placeholder="时:分:秒" ng-change="$ctrl.timeShowModelChangeHandle()" ng-click="$ctrl.timeShowModelClickHandle()" ng-model="$ctrl.dateTimeModel.endTime.timeModel.showModel"/>
+                        </mob-popper-target>
+                        <mob-popper-down>
+                            <mob-time-spinner
+                                    show-model="$ctrl.dateTimeModel.endTime.timeModel.showModel"
+                                    ng-model="$ctrl.dateTimeModel.endTime.timeModel.ngModel"
+                                    confirm="$ctrl.timeSpinnerConfirmHandle(opt)"
+                                    cancel="$ctrl.timeSpinnerCancelHandle(opt)"></mob-time-spinner>
+                        </mob-popper-down>
+                    </mob-popper>
+                </div>
+            </div>
             <mob-date-date
                     render-date="rightCalendar.renderDate"
-                    date-time="$ctrl.dateTime ? $ctrl.dateTime : false "
                     ng-model="rightCalendar.ngModel"
                     range-model="$ctrl.potentialModel"
                     attachment="'rightCalendar'"
@@ -34,7 +69,6 @@
                     panel-change="$ctrl.panelChangeHandle(opt)"
                     calendar-click="$ctrl.calendarClickHandle(opt)"
                     calendar-hover="$ctrl.calendarHoverHandle(opt)"
-                    time-spinner-change="$ctrl.calendarTimeChangeHandle(opt)"
             ></mob-date-date>
         </div>
     </div>
