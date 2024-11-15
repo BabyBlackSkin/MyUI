@@ -6,10 +6,24 @@
         <h3>基础用法 <span class="mob-tag tag-"></span></h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                {{value}}
-                {{value2}}
-                <mob-time-spinner style="width: 200px" ng-model="value" show-model="value2"></mob-time-spinner>
+                <mob-date-date date-time ng-model="value"></mob-date-date>
+            </div>
+            <div class="meta">
+                        <pre prism>
+                                <code class="source-code language-markup language-js language-html language-css"
+                                ><!--
+                                    <mob-time-picker style="width: 250px;" picker-options="{start: '08:40:00',end: '13:00:00', step: '15:00'}"></mob-time-picker>
+                                --></code>
+                            </pre>
+            </div>
+        </div>
+    </div>
 
+    <div class="mob-doc content" style="position: relative">
+        <h3>时间范围 <span class="mob-tag tag-"></span></h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-date-date-range date-time ng-model="value2"></mob-date-date-range>
             </div>
             <div class="meta">
                         <pre prism>
