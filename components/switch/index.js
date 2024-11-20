@@ -131,6 +131,24 @@ function controller($scope, $element, $compile, $q)  {
             return
         }
 
+        console.log(angular.isFunction(_that.beforeChange))
+        // 触发change hook
+        if (angular.isFunction(_that.beforeChange)) {
+            let opt = {deferred: $q.defer(),value: this.ngModel, attachment: this.attachment}
+            _that.beforeChange({opt: opt}).then(data => {
+                if (!data) {
+                    return
+                }
+                this.clickHandleInner()
+            }).catch(err => {
+                console.error(err)
+            })
+        }else{
+            this.clickHandleInner()
+        }
+    }
+
+    this.clickHandleInner = function (){
         if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
             if (this.isActive()) {
                 this.ngModel = this.inactiveValue
@@ -142,7 +160,6 @@ function controller($scope, $element, $compile, $q)  {
         else {
             this.ngModel = !this.ngModel
         }
-
     }
     /**
      * 是否激活
@@ -198,6 +215,7 @@ app
              */
             attachment:"<?",// 携带的属性
             change: '&?',// chang hook
+            beforeChange:'&?'
         },
         controller: controller
     })
