@@ -1,9 +1,8 @@
 function controller($scope, $element, $transclude, $attrs, $compile, slot) {
     // 初始化工作
     this.$onInit = function () {
-        if (angular.isUndefined(this.placeholder)) {
-            this.placeholder = '请输入内容'
-        }
+        this.placeholder = this.placeholder || '请输入内容'
+
         // 动态插槽实现
         slot.transclude($scope, $element, $transclude)
         // 通过class配置icon

@@ -2,7 +2,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
     // 初始化工作
     this.$onInit = function () {
         // 动态插槽实现
-        slot.replace($scope, $element, $transclude)
+        slot.transclude($scope, $element, $transclude)
         // 获取步长
         this.calculateStep();
     }

@@ -16,6 +16,5 @@ app
             model: '=',
             label: '<',
             prop: '<'
-        },
-        controller: controller
+        }
     })

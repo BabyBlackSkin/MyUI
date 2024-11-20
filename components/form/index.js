@@ -10,8 +10,8 @@ app
         transclude: true,
         templateUrl: './components/form/mob-form.html',
         bindings: {
-            model: '=',
-            formItem: '<'
-        },
-        controller: controller
+            ngModel: '=',
+            formItem: '<',
+            options:'<?'
+        }
     })

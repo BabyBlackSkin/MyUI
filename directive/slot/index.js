@@ -1,5 +1,5 @@
 app
-    .factory('slot', ['$compile', function ($compile) {
+    .factory('slot', ['$compile','$parse', function ($compile, $parse) {
 
         function getHeadScope($scope) {
             // 不存在则返回null
@@ -23,20 +23,29 @@ app
 
         return {
             transclude: function (scope, element, transcludeFn) {
-                transcludeFn(scope, function (tranEl, tranScope) {
+                transcludeFn(scope.$parent, function (tranEl, $scope) {
                     let dom = element[0].querySelectorAll("slot")
                     let map = {};
+                    debugger
                     for (let slot of dom) {
-                        let slotName = slot.name || 'anonymous'
+                        let scope1 = angular.element(slot).scope()
+                        let slotName = $parse(slot.name)(scope1)
+                        if (!slotName) {
+                            slotName = slot.name || 'anonymous'
+                        }
+                        console.log(slot.name +'', dom, scope1)
+                        if(!slotName){
+                            slotName = $parse(slotName)(scope1)
+                        }
+                        // console.log($parse(slotName)(scope.$parent))
                         map[slotName] = slot
                     }
 
                     // 获取插槽实际的作用域
-                    let compileScope = getHeadScope(tranScope.$parent);
-                    if(!compileScope){
-                        return
-                    }
-
+                    // let compileScope = getHeadScope(tranScope.$parent);
+                    // if(!compileScope){
+                    //     return
+                    // }
                     scope.$slot = {
                         slot:{},
                     }
@@ -54,16 +63,22 @@ app
                         // 将插槽设置为开启
                         scope.$slot.slot[slotName] = true
                         // 将自己标记为true，创建链式调用
-                        scope.$slot.transclude = true
+                        // scope.$slot.transclude = true
 
-                        node = $compile(node)(compileScope)[0];
+                        // node = $compile(node)(compileScope)[0];
+                        // console.log(compileScope)
                         // console.log(compileScope.$id)
                         // map[slotName].appendChild(node)
                         // if (appendToBody) {
                             // $document[0].body.appendChild(node)
                             // document.body.appendChild(node)
                         // } else {
-                            map[slotName].replaceWith(node);
+                            let needBeReplact = map[slotName];
+                            if (needBeReplact) {
+                                needBeReplact.replaceWith(node)
+                            }else{
+                                console.warn(slotName + " is undefined")
+                            }
                         // }
                     }
                 })

@@ -3,7 +3,7 @@ function controller($scope, $element, $compile, $q)  {
     // 初始化工作
     this.$onInit = function () {
         Object.assign(_that, {
-            activeColor: _that.activeColor ? _that.activeColor : '#409EFF',
+            activeColor: _that.activeColor ? _that.activeColor : '#13CE66',
             inactiveColor: _that.inactiveColor ? _that.inactiveColor : '#DCDFE6',
         })
     }
@@ -131,27 +131,16 @@ function controller($scope, $element, $compile, $q)  {
             return
         }
 
-        // 触发change hook
-        if (angular.isFunction(_that.beforeChange)) {
-            let opt = {deferred: $q.defer(),value: this.ngModel, attachment: this.attachment}
-            _that.beforeChange({opt: opt}).then(data => {
-                if (!data) {
-                    return
-                }
-                if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
-                    if (this.isActive()) {
-                        this.ngModel = this.inactiveValue
-                    }
-                    else {
-                        this.ngModel = this.activeValue
-                    }
-                }
-                else {
-                    this.ngModel = !this.ngModel
-                }
-            }).catch(err => {
-                console.error(err)
-            })
+        if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
+            if (this.isActive()) {
+                this.ngModel = this.inactiveValue
+            }
+            else {
+                this.ngModel = this.activeValue
+            }
+        }
+        else {
+            this.ngModel = !this.ngModel
         }
 
     }
@@ -209,7 +198,6 @@ app
              */
             attachment:"<?",// 携带的属性
             change: '&?',// chang hook
-            beforeChange: '&?',// beforeChange hook, return boolean
         },
         controller: controller
     })

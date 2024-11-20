@@ -6,8 +6,20 @@
         <h3>基础用法</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <div style="width: 200px;">
-                    <mob-form form-item="ctrl.formItem" model="ctrl.form"></mob-form>
+                {{form}}
+                <div>
+                    <mob-form form-item="demoOne.formItem" ng-model="form">
+
+                        <div slot="slotOne">
+                            我是第一个slot
+                            <mob-input ng-model="form.slotOne"></mob-input>
+                        </div>
+
+                        <div slot="slotTow">
+                            我是第二个slot
+                            <mob-input></mob-input>
+                        </div>
+                    </mob-form>
                 </div>
             </div>
             <div class="meta">
