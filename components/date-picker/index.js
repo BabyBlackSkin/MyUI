@@ -88,7 +88,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化事件监听
     this.initEvent = function () {
 
-        $scope.$popper['selectDrown'].focus = async function () {
+        $scope.$popper[`selectDrown_${$scope.$id}`].focus = async function () {
             return !_that.ngDisabled
         }
     }
@@ -103,7 +103,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
     // 日历点击事件
     this.calendarClickHandle = function () {
-        $scope.$popper['selectDrown'].hide()
+        $scope.$popper[`selectDrown_${$scope.$id}`].hide()
         if ($attrs.calendarClick) {
             _that.change({data: value, attachment: this.attachment})
         }

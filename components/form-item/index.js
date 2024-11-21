@@ -11,9 +11,9 @@ function controller() {
 app
     .component('mobFormItem', {
         transclude: true,
-        templateUrl: './components/mob-form-item.html',
+        templateUrl: './components/form-item/index.html',
+        controller: controller,
         bindings: {
-            model: '=',
             label: '<',
             prop: '<'
         }
