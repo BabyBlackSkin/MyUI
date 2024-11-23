@@ -5,12 +5,13 @@ function controller($scope, $element, $transclude, $timeout, $attrs, $compile, s
 }
 
 app
-    .component('mobFormItem', {
+    .component('mobFormTableItem', {
         transclude: true,
-        templateUrl: './components/form-item/index.html',
+        templateUrl: './components/form-table-item/index.html',
         controller: controller,
         bindings: {
-            label: '<',
-            prop: '<'
+            ngModel: '=?',
+            col: '<?',
+            data:'<?'
         }
     })

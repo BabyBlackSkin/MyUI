@@ -106,3 +106,8 @@ app.component('mobIcon', {
         templateUrl: './components/icon/visible.html',
         controller:controller
     })
+    .component('mobIconWarning', {
+        templateUrl: './components/icon/warning.html',
+        controller:controller
+    })
+

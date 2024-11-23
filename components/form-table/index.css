@@ -1,0 +1,24 @@
+.mob-form-table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #EBEEF5;
+}
+.mob-form-table thead {
+    color: #909399
+}
+
+.mob-form-table tr {
+    background-color: #FFFFFF;
+}
+.mob-form-table tr td{
+    height: 1px;
+}
+.mob-form-table .mob-input .mob-input__wrapper {
+    border: none;
+    /*border-top: none;*/
+    /*border-left: none;*/
+    /*border-right: none;*/
+}
+.mob-form-table .mob-input .mob-input__wrapper,.mob-form-table .mob-input .mob-input__inner {
+    background-color: #f6f6f6;
+}

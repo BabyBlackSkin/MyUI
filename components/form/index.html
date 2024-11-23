@@ -1,39 +1,75 @@
 <div class="mob-form">
     <form>
-        <div ng-repeat="item in $ctrl.formItem" class="mob-form-item-template">
-            <mob-form-item ng-if="item.type === 'input' || !item.type" label="item.label" prop="item.prop">
-                <mob-input ng-model="$ctrl.ngModel[item.prop]" clearable="item.options.clearable"
-                           ng-disabled="item.options.disabled" show-password="item.options.showPassword">
-                </mob-input>
-            </mob-form-item>
-            <mob-form-item ng-if="item.type === 'select'" label="item.label" prop="item.prop">
-                <mob-select
-                        ng-model="$ctrl.ngModel[item.prop]"
-                        clearable="item.attrs.clearable || false"
-                        multiple="item.attrs.multiple || false"
-                        collapse-tag="item.attrs.multiple || false"
-                        collapse-tag-tooltip="item.attrs.collapseTagTooltip || false"
-                        options="item.options.data"
-                        options-config="$ctrl.options['select'].optionsConfig">
-                </mob-select>
-            </mob-form-item>
-            <mob-form-item ng-if="item.type === 'checkBox'" label="item.label" prop="item.prop">
-                <mob-check-box-group  name="$ctrl.formName + '_' + item.type + '_' + item.prop" ng-model="$ctrl.ngModel[item.prop]">
-                    <mob-check-box name="$ctrl.formName + '_' + item.type + '_' + item.prop" ng-repeat="d in item.options.data" label="d.label" check-value="d.checkValue"></mob-check-box>
-                </mob-check-box-group>
-            </mob-form-item>
-            <mob-form-item ng-if="item.type === 'radio'" label="item.label" prop="item.prop">
-                <mob-radio-group ng-model="$ctrl.ngModel[item.prop]">
-                    <mob-radio ng-repeat="d in item.options.data" label="d.label" value="d.value"></mob-radio>
-                </mob-radio-group>
-            </mob-form-item>
-            <mob-form-item ng-if="item.type === 'switch'" label="item.label" prop="item.prop">
-                <mob-switch ng-model="$ctrl.ngModel[item.prop]" active-text="item.attrs.activeText" inactive-text="item.attrs.inactiveText" active-value="item.attrs.activeValue" inactive-value="item.attrs.inactiveValue"></mob-switch>
-            </mob-form-item>
+        <mob-form-item
+                ng-repeat="item in $ctrl.formItem"
+                data-form-item-type="{{item.type || 'input'}}"
+                ng-class="{'table':item.type==='table'}"
+                label="item.label" prop="item.prop">
+            <mob-input ng-if="item.type === 'input' || !item.type"  ng-model="$ctrl.ngModel[item.prop]" clearable="item.options.clearable"
+                       ng-disabled="item.options.disabled" show-password="item.options.showPassword">
+            </mob-input>
+
+            <mob-select
+                    ng-if="item.type === 'select'"
+                    ng-model="$ctrl.ngModel[item.prop]"
+                    clearable="item.attrs.clearable || false"
+                    multiple="item.attrs.multiple || false"
+                    collapse-tag="item.attrs.multiple || false"
+                    collapse-tag-tooltip="item.attrs.collapseTagTooltip || false"
+                    options="item.options.data"
+                    options-config="$ctrl.options['select'].optionsConfig">
+            </mob-select>
+            <mob-check-box-group ng-if="item.type === 'checkBox'"  name="$ctrl.formName + '_' + item.type + '_' + item.prop" ng-model="$ctrl.ngModel[item.prop]">
+                <mob-check-box name="$ctrl.formName + '_' + item.type + '_' + item.prop" ng-repeat="d in item.options.data" label="d.label" check-value="d.checkValue"></mob-check-box>
+            </mob-check-box-group>
+            <mob-radio-group ng-if="item.type === 'radio'"  ng-model="$ctrl.ngModel[item.prop]">
+                <mob-radio ng-repeat="d in item.options.data" label="d.label" value="d.value"></mob-radio>
+            </mob-radio-group>
+            <mob-switch ng-if="item.type === 'switch'"  ng-model="$ctrl.ngModel[item.prop]" active-text="item.attrs.activeText" inactive-text="item.attrs.inactiveText" active-value="item.attrs.activeValue" inactive-value="item.attrs.inactiveValue"></mob-switch>
+
+            <mob-form-table ng-if="item.type === 'table'"  ng-model="$ctrl.ngModel[item.prop]" data="item.options.data" columns="item.options.columns" row-type="item.attrs.rowType" allow-add="item.attrs.allowAdd"></mob-form-table>
 
             <div ng-if="item.type === 'slot'">
                 <slot name="item.slot"></slot>
             </div>
-        </div>
+        </mob-form-item>
+
+        <!--            <div ng-repeat="item in $ctrl.formItem" class="mob-form-item-template">-->
+        <!--                <mob-form-item data-form-item-type="input" class="input" ng-if="item.type === 'input' || !item.type" label="item.label" prop="item.prop">-->
+        <!--                    <mob-input ng-model="$ctrl.ngModel[item.prop]" clearable="item.options.clearable"-->
+        <!--                        ng-disabled="item.options.disabled" show-password="item.options.showPassword">-->
+        <!--                    </mob-input>-->
+        <!--                </mob-form-item>-->
+        <!--                <mob-form-item data-form-item-type="select" class="select" ng-if="item.type === 'select'" label="item.label" prop="item.prop">-->
+        <!--                        <mob-select -->
+        <!--                        ng-model="$ctrl.ngModel[item.prop]" -->
+        <!--                        clearable="item.attrs.clearable || false"-->
+        <!--                        multiple="item.attrs.multiple || false" -->
+        <!--                        collapse-tag="item.attrs.multiple || false"-->
+        <!--                        collapse-tag-tooltip="item.attrs.collapseTagTooltip || false"-->
+        <!--                        options="item.options.data" -->
+        <!--                        options-config="$ctrl.options['select'].optionsConfig">-->
+        <!--                        </mob-select>-->
+        <!--                </mob-form-item>-->
+        <!--                <mob-form-item data-form-item-type="checkBox" class="checkBox" ng-if="item.type === 'checkBox'" label="item.label" prop="item.prop">-->
+        <!--                    <mob-check-box-group  name="$ctrl.formName + '_' + item.type + '_' + item.prop" ng-model="$ctrl.ngModel[item.prop]">-->
+        <!--                        <mob-check-box name="$ctrl.formName + '_' + item.type + '_' + item.prop" ng-repeat="d in item.options.data" label="d.label" check-value="d.checkValue"></mob-check-box>-->
+        <!--                    </mob-check-box-group>-->
+        <!--                </mob-form-item>-->
+        <!--                <mob-form-item data-form-item-type="radio" class="radio" ng-if="item.type === 'radio'" label="item.label" prop="item.prop">-->
+        <!--                    <mob-radio-group ng-model="$ctrl.ngModel[item.prop]">-->
+        <!--                        <mob-radio ng-repeat="d in item.options.data" label="d.label" value="d.value"></mob-radio>-->
+        <!--                    </mob-radio-group>-->
+        <!--                </mob-form-item>-->
+        <!--                <mob-form-item data-form-item-type="switch" class="switch" ng-if="item.type === 'switch'" label="item.label" prop="item.prop">-->
+        <!--                    <mob-switch ng-model="$ctrl.ngModel[item.prop]" active-text="item.attrs.activeText" inactive-text="item.attrs.inactiveText" active-value="item.attrs.activeValue" inactive-value="item.attrs.inactiveValue"></mob-switch>-->
+        <!--                </mob-form-item>-->
+        <!--                <mob-form-item data-form-item-type="table" class="table" ng-if="item.type === 'table'" label="item.label" prop="item.prop">-->
+        <!--                    <mob-form-table ng-model="$ctrl.ngModel[item.prop]" data="item.options.data" columns="item.options.columns" row-type="item.attrs.rowType" allow-add="item.attrs.allowAdd"></mob-form-table>-->
+        <!--                </mob-form-item>-->
+        <!--                <div ng-if="item.type === 'slot'">-->
+        <!--                    <slot name="item.slot"></slot>-->
+        <!--                </div>-->
+        <!--            </div>-->
     </form>
 </div>

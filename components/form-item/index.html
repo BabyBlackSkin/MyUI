@@ -1,8 +1,14 @@
 <div class="mob-form-item">
     <div class="mob-form-item__label">
         <label for="#" ng-bind="$ctrl.label"></label>
+        <mob-popper style="margin: auto 5px; width: 14px;color:var(--mob-secondary-text-color);">
+            <mob-popper-target>
+                <mob-icon-warning></mob-icon-warning>
+            </mob-popper-target>
+            <mob-popper-down>我是提示</mob-popper-down>
+        </mob-popper>
     </div>
     <div class="mob-form-item__content">
-        <div ng-transclude></div>
+        <div ng-transclude class="mob-scrollbar"></div>
     </div>
 </div>

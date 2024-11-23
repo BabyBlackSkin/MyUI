@@ -1,0 +1,74 @@
+<table class="mob-form-table ">
+    <colgroup>
+        <col ng-repeat="col in $ctrl.columns" name="{{col.prop}}" width="{{col.width}}">
+        <col style="width:50px">
+    </colgroup>
+    <thead>
+    <tr>
+        <th ng-repeat="col in $ctrl.columns">
+            <div class="mob-form-table-item cell" ng-bind="col.label"></div>
+        </th>
+        <th>
+            <div class="mob-form-table-item cell">操作</div>
+        </th>
+    </tr>
+    </thead>
+    <!-- 每行是基本数据类型 -->
+    <tbody ng-if="$ctrl.rowType === 'basicDataType'">
+    <tr ng-repeat="($rowInx, row) in $ctrl.ngModel track by $index">
+        <td ng-repeat="($colInx, col) in $ctrl.columns track by $index">
+            <mob-form-table-item ng-model="$ctrl.ngModel[$rowInx]" col="col" ></mob-form-table-item>
+        </td>
+        <td>
+            <div class="mob-form-table-item cell">
+                <mob-button
+                        style="width: 100%"
+                        type="'danger'"
+                        icon="'mob-icon-delete'"
+                        ng-click="$ctrl.deleteRow($index)">
+                </mob-button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="{{$ctrl.columns.length + 1}}">
+            <div class="mob-form-table-item cell" ng-if="$ctrl.allowAdd">
+                <mob-button
+                        style="width: 100%;"
+                        type="'primary'"
+                        icon="'mob-icon-increase'"
+                        ng-click="$ctrl.addRow()">
+                </mob-button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+    <!-- 每行是对象 -->
+    <tbody ng-if="$ctrl.rowType === 'object'">
+    <tr ng-repeat="($rowInx, row) in $ctrl.ngModel track by $index">
+        <td ng-repeat="($colInx, col) in $ctrl.columns track by $index">
+            <mob-form-table-item ng-model="$ctrl.ngModel[$rowInx][col.prop]" col="col" ></mob-form-table-item>
+        </td>
+        <td>
+            <div class="mob-form-table-item cell">
+                <mob-button
+                        style="width: 100%"
+                        type="'danger'"
+                        icon="'mob-icon-delete'" ng-click="$ctrl.deleteRow($index)">
+                </mob-button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="{{$ctrl.columns.length + 1}}">
+            <div class="mob-form-table-item cell" ng-if="$ctrl.allowAdd">
+                <mob-button
+                        style="width: 100%;"
+                        type="'primary'"
+                        icon="'mob-icon-increase'"
+                        ng-click="$ctrl.addRow()"></mob-button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

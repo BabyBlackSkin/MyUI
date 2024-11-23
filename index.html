@@ -45,6 +45,11 @@
     <link rel="stylesheet" href="./components/form/index.css">
     <script src="./components/form-item/index.js"></script>
     <link rel="stylesheet" href="./components/form-item/index.css">
+    <script src="./components/form-table/index.js"></script>
+    <link rel="stylesheet" href="./components/form-table/index.css">
+    <script src="./components/form-table-item/index.js"></script>
+    <link rel="stylesheet" href="./components/form-table-item/index.css">
+
 
     <!-- input组件 -->
     <script src="./components/input/index.js"></script>
@@ -133,7 +138,6 @@
 
     <!-- directive -->
     <script src="./directive/refs/index.js"></script>
-    <script src="./directive/ngSlot/index.js"></script>
     <script src="./directive/stopBubbling/index.js"></script>
     <script src="./directive/formValid/index.js"></script>
     <script src="./directive/repeatRenderFinish/index.js"></script>
@@ -444,29 +448,33 @@
 
             function setFloatingWidth(scope, target, floating) {
                 const {width: targetWidth} = target.getBoundingClientRect()
-                floating.style.minWidth = (targetWidth + 10) + 'px';
+                floating.style.width = (targetWidth + 10) + 'px';
             }
 
             function setFloatingHeight(scope, target, floating) {
                 floating.style.transform = 'scaleY(1)';
                 floating.style.opacity = 1;
-                const {
-                    bottom: targetBottom,
-                } = target.getBoundingClientRect();
-
-                // 尝试通过 placement决定显示的动画
-                if (window.innerHeight - targetBottom < 200) {
-                    floating.style.transformOrigin= 'center bottom'
-                } else {
-                    floating.style.transformOrigin= 'center top'
-                }
+                // const {
+                //     bottom: targetBottom,
+                // } = target.getBoundingClientRect();
+                //
+                // // 尝试通过 placement决定显示的动画
+                // if (window.innerHeight - targetBottom < 300) {
+                //     floating.style.transformOrigin= 'center bottom'
+                // } else {
+                //     floating.style.transformOrigin= 'center top'
+                // }
             }
 
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
-                let arrowElement = floating.querySelector('.mob-popper-down__arrow');
+                let arrowElement = floating.querySelector('.mob-popper__arrow');
 
                 setFloatingHeight(scope, target, floating);
+
+                const {
+                    top: targetTop,
+                } = target.getBoundingClientRect();
 
 
                 window.FloatingUIDOM.computePosition(target, floating, {
@@ -481,10 +489,18 @@
                         ]
                     }
                 ).then(({x, y, placement, middlewareData}) => {
+                    let transformOrigin = {
+                        transformOrigin: 'center bottom'
+                    }
+                    if (y > 0) {
+                        transformOrigin = {
+                            transformOrigin: 'center top'
+                        }
+                    }
                     Object.assign(floating.style, {
                         left: `${x - 5}px`, // -5px 抵消padding，不知道为什么shift不起作用
                         top: `${y}px`,
-                    });
+                    }, transformOrigin);
 
                     const {x: arrowX, y: arrowY} = middlewareData.arrow;
 
@@ -533,19 +549,20 @@
                  * @param scope 范围
                  * @param target 目标
                  * @param floating 浮动元素
+                 * @param location 定位元素元素
                  * @param render 是否需要重绘
                  * @returns {*}
                  */
-                autoUpdateComputePosition: function (scope, target, floating, render = true) {
+                autoUpdateComputePosition: function (scope, target, floating, location, render = true) {
                     if (render) {
-                        setFloatingWidth(scope, target, floating)
+                        setFloatingWidth(scope, location, floating)
                     }
                     // 需要判断是从下面还是从上面打开
                     return window.FloatingUIDOM.autoUpdate(
                         target,
                         floating,
                         () => {
-                            computePosition(scope, target, floating, true)
+                            computePosition(scope, location, floating, true)
                         }
                     );
                 }

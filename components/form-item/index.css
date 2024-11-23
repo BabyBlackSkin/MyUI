@@ -1,17 +1,34 @@
+mob-form-item {
+    display: inline-flex;
+}
+/*table占一行*/
+mob-form-item.table{
+    display: flex;
+}
+mob-form-item.table .mob-form-item__content {
+    flex: 1;
+}
 .mob-form-item {
+    width: 100%;
     display: flex;
     margin: 0 32px 18px 0;
 }
 
 .mob-form-item__label {
+    display: flex;
+    flex: 0 0 auto;
     width: 80px;
 }
 
 .mob-form-item__label label {
-    width: 100%;
+    /*width: 100%;*/
     height: 100%;
     display: flex;
     align-items: center;
+}
+.mob-form-item__label mob-popper{
+    margin: auto;
+    min-width: 14px;
 }
 
 .mob-form-item__label label.left {
@@ -26,6 +43,7 @@
     justify-content: flex-end;
 }
 
-.mob-form-item__content{
-    width: 200px;
+.mob-form-item__content {
+    display: flex;
+    min-width: 200px;
 }

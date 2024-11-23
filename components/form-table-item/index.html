@@ -1,0 +1,54 @@
+<div class="mob-form-table-item cell" ng-style="{'width': $ctrl.col.width}">
+
+    <mob-input
+            ng-if="$ctrl.col.type === 'input' || !$ctrl.col.type"
+            ng-model="$ctrl.ngModel"
+            clearable="$ctrl.col.options.clearable"
+            ng-disabled="$ctrl.col.options.disabled"
+            show-password="$ctrl.col.options.showPassword">
+    </mob-input>
+
+
+    <mob-select ng-if="$ctrl.col.type === 'select'"
+                ng-model="$ctrl.ngModel"
+                clearable="$ctrl.col.attrs.clearable || false"
+                multiple="$ctrl.col.attrs.multiple || false"
+                collapse-tag="$ctrl.col.attrs.multiple || false"
+                collapse-tag-tooltip="$ctrl.col.attrs.collapseTagTooltip || false"
+                options="item.options.data"
+                options-config="$ctrl.options['select'].optionsConfig">
+    </mob-select>
+
+
+    <mob-check-box-group
+            ng-if="$ctrl.col.type === 'checkBox'"
+            name="$ctrl.formName + '_' + item.type + '_' + item.prop"
+            ng-model="$ctrl.ngModel">
+        <mob-check-box name="$ctrl.formName + '_' + $ctrl.col.type + '_' + $ctrl.col.prop"
+                       ng-repeat="d in $ctrl.col.options.data" label="d.label"
+                       check-value="d.checkValue"></mob-check-box>
+    </mob-check-box-group>
+
+
+    <mob-radio-group ng-if="$ctrl.col.type === 'radio'"
+                     ng-model="$ctrl.ngModel">
+        <mob-radio ng-repeat="d in $ctrl.col.options.data" label="d.label" value="d.value"></mob-radio>
+    </mob-radio-group>
+
+
+    <mob-switch ng-if="$ctrl.col.type === 'switch'"
+                ng-model="$ctrl.ngModel"
+                active-text="$ctrl.col.attrs.activeText"
+                inactive-text="$ctrl.col.attrs.inactiveText"
+                active-value="$ctrl.col.attrs.activeValue"
+                inactive-value="$ctrl.col.attrs.inactiveValue"></mob-switch>
+
+
+    <mob-form-table
+            ng-if="$ctrl.col.type === 'table'"
+            ng-model="$ctrl.ngModel"
+            columns="$ctrl.col.options.columns"
+            row-type="$ctrl.col.attrs.rowType"
+            allow-add="$ctrl.col.attrs.allowAdd">
+    </mob-form-table>
+</div>

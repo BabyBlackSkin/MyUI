@@ -184,6 +184,19 @@ mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob
     display: block;
 }
 
+mob-form-item div[ng-transclude] {
+    width: 100%;
+    padding: 0;
+    overflow:auto;
+}
+
+mob-form-table {
+    display: flex;
+    width: 100%;
+}
+
+
+
 .mob-scrollbar::-webkit-scrollbar {
     /* 对应纵向滚动条的宽度 */
     width: 8px;

@@ -2,51 +2,12 @@ app
     .controller('FormCtrl', ['$scope', '$timeout', function MultipleCheckBoxGroupCtrl($scope, $timeout) {
 
         $scope.$watch('form', function (newValue, oldValue) {
-            console.log('change了')
-        },true)
+            // console.log('change了')
+        }, true)
         $scope.demoOne = {
-            formItem: [
-                {
-                    label: '门店', prop: 'mallId', type: 'select',
-                    attrs: {clearable:true, multiple:true},
-                    options: {
-                        data: [
-                            {label: 'a', value: '砂之船'},
-                            {label: 'b', value: '正弘城'},
-                            {label: 'c', value: '东百', disabled: true},
-                        ]
-                    }
-                },
-                {
-                    label: '姓名', prop: 'name',
-                },
-                {
-                    label: '性别',
-                    prop: 'sex',
-                    type: 'radio',
-                    options: {data: [{label: '男', value: 1}, {label: '女', value: 2}]}
-                },
-                {
-                    label: '爱好',
-                    prop: 'hobby',
-                    type: 'checkBox',
-                    options: {data: [{label: '篮球', value: 1}, {label: '足球', value: 2}]}
-                },
-                {
-                    label: '注册时间',
-                    prop: 'registerTime',
-                    type: 'dateTimePicker',
-                    options:{
-                        type:'date'
-                    }
-                },
-                {
-                    label:'自定义1',
-                    type:'slot',
-                    slot:'slotOne'
-                }
-            ]
+            formItem: [{"label":"接口地址","prop":"apiHost","type":"input"},{"label":"生效时间","prop":"takeEffectTime","type":"input"},{"label":"是否开启授权二维码","prop":"booToOpenAuthQrcode","type":"switch","attrs":{"activeText":"开启","activeValue":false,"inactiveText":"默认"}},{"label":"是否打印积分小票","prop":"booToPrintSelfCreditQrcode","type":"switch","attrs":{"activeText":"打印","activeValue":false,"inactiveText":"默认"}},{"label":"销售退货小票标题","prop":"printSaleTitle","type":"input"},{"label":"交易凭证小票标题","prop":"tradeSmallNoteTitle","type":"input"},{"label":"副屏默认地址","prop":"secondScreenImg","type":"input"},{"label":"备案号显示内容","prop":"showICPRemark","type":"input"},{"label":"订单助手实时刷新前多少天","prop":"orderLinkLastLimitDay","type":"input"},{"label":"订单助手是否限制商户","prop":"orderLinkNeedLimitShop","type":"switch","attrs":{"activeText":"限制","activeValue":false,"inactiveText":"不限制"}},{"label":"跨商户订单按门店还是商户展示","prop":"orderLinkCrossShopOrder","type":"radio","options":{"data":[{"label":"门店","value":"mall"},{"label":"商户","value":"shop"}]}},{"label":"脱敏数据","prop":"maskData","type":"input"},{"label":"配送订单延时打印小时数","prop":"dispatchDelayHours","type":"input"},{"label":"小票样式","prop":"ticketStyle","type":"radio","options":{"data":[{"label":"超市样式","value":"superMarket"},{"label":"商城通用","value":"eshopNormal"}]}},{"label":"显示额外信息","prop":"showExtraInfo","type":"input"},{"label":"订单助手是否显示订单编号二维码","prop":"orderLinkShowOrderSnQr","type":"switch","attrs":{"activeText":"显示","activeValue":false,"inactiveText":"不显示"}},{"label":"订单助手小票提示语","prop":"orderLinkSmallNoteTips","type":"table","attrs":{"allowAdd":true,"rowType":"basicDataType"},"options":{"columns":[{"label":"提示语","type":"input"}]}},{"label":"排除的提货方式","prop":"notPickMethods","type":"table","attrs":{"allowAdd":true,"rowType":"basicDataType"},"options":{"columns":[{"label":"提货方式","type":"input"}]}},{"label":"订单助手打印小票标题","prop":"orderLinkNoteTitles","type":"table","attrs":{"allowAdd":true,"rowType":"object"},"options":{"columns":[{"label":"状态","prop":"key","type":"input"},{"label":"标题","prop":"value","type":"input"}]}},{"label":"订单助手数据源类型","prop":"orderLinkSourceTypes","type":"table","attrs":{"allowAdd":true,"rowType":"object"},"options":{"columns":[{"label":"数据来源","prop":"key","type":"input"},{"label":"翻译","prop":"value","type":"input"}],"data":[{}]}},{"label":"无单退款支付项配置","prop":"wudanRefundPayCodes","type":"table","attrs":{"allowAdd":true,"rowType":"object"},"options":{"columns":[{"label":"订单类型","prop":"key","type":"input"},{"label":"是否支持","prop":"value","type":"switch","width":180,"attrs":{"activeText":"支持","activeValue":"yes","inactiveText":"不支持","inActiveValue":"no"}}]}}]
         }
 
-        $scope.form = {}
+        $scope.form = {
+        }
     }])

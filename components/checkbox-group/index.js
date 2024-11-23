@@ -22,7 +22,7 @@ function controller($scope, $element, $attrs) {
         // 创建事件订阅与监听
         initEvent()
         initWatcher()
-        console.log('父组件 link')
+        // console.log('父组件 link')
     }
 
     // ngModel改变时，同时子组件

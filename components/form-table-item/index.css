@@ -1,0 +1,30 @@
+mob-form-table-item {
+    display: block;
+    height: 100%;
+}
+
+.mob-form-table .cell {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-wrap: break-word;
+    line-height: 23px;
+    padding: 0 12px;
+}
+
+.mob-form-table .mob-form-table-item.cell {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: background-color .25s ease;
+    color: #606266;
+    box-sizing: border-box;
+    border-bottom: 1px solid #EBEEF5;
+    border-right: none;
+    padding: 8px 8px;
+}
+
+.mob-form-table .mob-form-table-item.cell mob-input {
+    width: 100%;
+}

@@ -26,14 +26,14 @@ app
                 transcludeFn(scope.$parent, function (tranEl, $scope) {
                     let dom = element[0].querySelectorAll("slot")
                     let map = {};
-                    debugger
+
                     for (let slot of dom) {
                         let scope1 = angular.element(slot).scope()
                         let slotName = $parse(slot.name)(scope1)
                         if (!slotName) {
                             slotName = slot.name || 'anonymous'
                         }
-                        console.log(slot.name +'', dom, scope1)
+                        // console.log(slot.name +'', dom, scope1)
                         if(!slotName){
                             slotName = $parse(slotName)(scope1)
                         }
