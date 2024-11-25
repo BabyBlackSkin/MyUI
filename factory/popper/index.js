@@ -1,12 +1,12 @@
 app
-    .factory('popper', ['uuId', 'floating', function (uuId, floating) {
+    .factory('popper', ['uuId', 'floating','$debounce', function (uuId, floating, $debounce) {
 
         function showAutoUpdate(scope, popper, timer = {render: true}) {
-            let {target, tooltip} = popper
+            let {target, tooltip, location} = popper
             tooltip.style.display = 'block';
-            tooltip.style.zIndex = '100';
+            tooltip.style.zIndex = '9999';
             // scope.popper[name].showAutoUpdateCleanUp
-            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, timer.render)
+            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, location, timer.render)
             timer.render = false
             timer.tooltipCss = setTimeout(() => {
                 tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'auto';
@@ -53,8 +53,13 @@ app
                 })
                 // 获取工具tooltip
                 angular.forEach(popperTooltipList, function (tooltip) {
-                    if (tooltip.getAttribute('popper-group')) {
-                        popperConfig[tooltip.getAttribute('popper-group') + `_${scope.$id}`].tooltip = tooltip
+                    let popperGroup = tooltip.getAttribute('popper-group')
+                    if (popperGroup) {
+                        let key = tooltip.getAttribute('popper-group') + `_${scope.$id}`;
+                        popperConfig[key].tooltip = tooltip
+                        let properLocation = (tooltip.getAttribute('popper-location') || popperGroup)  + `_${scope.$id}`
+
+                        popperConfig[key].location = popperConfig[properLocation].target
                     }
                 })
                 scope.$popper = {}
@@ -71,9 +76,14 @@ app
                         console.warn(`${name} tooltip is undefined`)
                         continue;
                     }
+                    let location = popperConfig[name].location;
+                    if (angular.isUndefined(location)) {
+                        location = target
+                    }
                     scope.$popper[name] = {
                         target,
                         tooltip,
+                        location,
                         hide: function (timer = {render: true}) {
                             this.popperShow = false
                             hide(scope, this, timer)
@@ -84,39 +94,42 @@ app
                     tooltip.id = uuId.newUUID()
                     // 给目标元素绑定唯一id
                     target.setAttribute('popper-id', tooltip.id)
-                    scope.$popperId = tooltip.id
+                    // scope.$popperId = tooltip.id
 
                     // 判断触发方式
-                    target.addEventListener('click', async function (e) {
-                        let res = !scope.$popper[name].focus || scope.$popper[name].focus && await scope.$popper[name].focus(e)
-                        if (!res) {
-                            return
-                        }
-                        scope.$popper[name].popperShow = !scope.$popper[name].popperShow
-                        // 有点问题
-                        if (scope.$popper[name].popperShow && res) {
-                            showAutoUpdate(scope, scope.$popper[name])
-                        } else {
-                            scope.$popper[name].hide()
-                        }
-
+                    target.addEventListener('click', function (e) {
+                        $debounce.debounce(scope, `${tooltip.id}_targetClick`, async () => {
+                            let res = !scope.$popper[name].focus || scope.$popper[name].focus && await scope.$popper[name].focus(e)
+                            if (!res) {
+                                return
+                            }
+                            scope.$popper[name].popperShow = !scope.$popper[name].popperShow
+                            // 有点问题
+                            if (scope.$popper[name].popperShow && res) {
+                                showAutoUpdate(scope, scope.$popper[name])
+                            } else {
+                                scope.$popper[name].hide()
+                            }
+                        }, 50)()
                     })
 
-                    document.addEventListener('click', async function (e) {
-                        // 点击的目标自己，不做处理
-                        if (target.contains(e.target)) {
-                            return
-                        }
+                    document.addEventListener('click', function (e) {
+                        $debounce.debounce(scope, `${tooltip.id}_documentClick`, async () => {
+                            // 点击的目标自己，不做处理
+                            if (target.contains(e.target)) {
+                                return
+                            }
 
-                        // 点击的是tooltip自己，不做处理
-                        if(tooltip.contains(e.target)){
-                            return
-                        }
+                            // 点击的是tooltip自己，不做处理
+                            if (tooltip.contains(e.target)) {
+                                return
+                            }
 
-                        let res = scope.$popper[name].focusOut && await scope.$popper[name].focusOut(e)
-                        if (angular.isUndefined(res) || res) {
-                            scope.$popper[name].hide()
-                        }
+                            let res = scope.$popper[name].focusOut && await scope.$popper[name].focusOut(e)
+                            if (angular.isUndefined(res) || res) {
+                                scope.$popper[name].hide()
+                            }
+                        }, 50)()
                     })
                 }
             }
