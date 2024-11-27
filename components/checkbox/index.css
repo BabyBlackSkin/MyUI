@@ -11,7 +11,8 @@ mob-check-box {
 }
 
 mob-check-box .mob-checkbox {
-    display: inline-block;
+    display: inline-flex;
+    height: 32px;
 }
 mob-check-box * {
     margin: 0;

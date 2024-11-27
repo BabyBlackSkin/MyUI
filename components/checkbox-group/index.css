@@ -4,7 +4,9 @@
 
 .mob-checkbox-group>div[ng-transclude] {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    padding: 0 5px;
 }
 
 .mob-checkbox-group mob-check-box {
