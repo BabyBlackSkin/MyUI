@@ -109,7 +109,6 @@ function dateController($scope, $element, $attrs, $date, $debounce, attrHelp) {
      * @returns {boolean}
      */
     this.isDisabledCalendarChangeMonth = function () {
-        debugger
         // 年份相差2年以上，允许修改
         if ($scope.leftCalendar.year + 1 < $scope.rightCalendar.year) {
             return false
