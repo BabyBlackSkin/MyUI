@@ -1,14 +1,15 @@
-<div class="mob-form-item">
-    <div class="mob-form-item__label">
+<div class="mob-form-item"
+     ng-class="{
+    'mob-form-item--label-left':($ctrl.labelPosition || $ctrl.mobForm.labelPosition) === 'left',
+    'mob-form-item--label-middle':($ctrl.labelPosition || $ctrl.mobForm.labelPosition) === 'middle',
+    'mob-form-item--label-right':($ctrl.labelPosition || $ctrl.mobForm.labelPosition) === 'right',
+    'mob-form-item--label-top':($ctrl.labelPosition || $ctrl.mobForm.labelPosition) === 'top'
+    }"
+>
+    <div class="mob-form-item__label" ng-if="$ctrl.label">
         <label for="#" ng-bind="$ctrl.label"></label>
-        <mob-popper style="margin: auto 5px; width: 14px;color:var(--mob-secondary-text-color);">
-            <mob-popper-target>
-                <mob-icon-warning></mob-icon-warning>
-            </mob-popper-target>
-            <mob-popper-down>我是提示</mob-popper-down>
-        </mob-popper>
     </div>
     <div class="mob-form-item__content">
-        <div ng-transclude class="mob-scrollbar"></div>
+        <div ng-transclude class="mob-scrollbar mob-form-transclude"></div>
     </div>
 </div>

@@ -1,6 +1,13 @@
 mob-form-item {
     display: inline-flex;
 }
+
+mob-form-item .mob-form-transclude {
+    width: 100%;
+    padding: 0;
+    overflow:auto;
+}
+
 /*table占一行*/
 mob-form-item.table{
     display: flex;
@@ -17,31 +24,40 @@ mob-form-item.table .mob-form-item__content {
 .mob-form-item__label {
     display: flex;
     flex: 0 0 auto;
-    width: 80px;
+    width: 150px;
 }
 
 .mob-form-item__label label {
-    width: 100%;
     height: 32px;
     line-height: 32px;
+    /*width: 100%;*/
     /*height: 100%;*/
     /*display: flex;*/
     /*align-items: center;*/
 }
 
-.mob-form-item__label label.left {
-    justify-content: flex-start;
+.mob-form-item.mob-form-item--label-left .mob-form-item__label label {
+    /*justify-content: flex-start;*/
 }
 
-.mob-form-item__label label.middle {
-    justify-content: center;
+.mob-form-item.mob-form-item--label-middle .mob-form-item__label  label{
+    width: 100%;
+    text-align-last: justify;
+    padding-right: 12px;
 }
 
-.mob-form-item__label label.right {
-    justify-content: flex-end;
+.mob-form-item.mob-form-item--label-right .mob-form-item__label label {
+    /*justify-content: flex-end;*/
+    margin-left: auto;
+    padding-right: 12px;
 }
+.mob-form-item.mob-form-item--label-top {
+    display: block;
+}
+
 
 .mob-form-item__content {
     display: flex;
     min-width: 200px;
+    width: 100%;
 }

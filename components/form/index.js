@@ -7,10 +7,7 @@ function controller($scope, $element, $transclude, $timeout, $attrs, $compile, s
     }
 
     $scope.$on('formItemRepeatFinish',function(){
-        // 动态插槽实现
-        // $timeout(function (){
         slot.transclude($scope, $element, $transclude)
-        // }, 5000)
     })
 }
 
@@ -22,6 +19,9 @@ app
         bindings: {
             ngModel: '=',
             formItem: '<',
-            options:'<?'
+            options:'<?',
+            inline:'<?',
+            labelWidth:'<?',// label宽度
+            labelPosition:'<?'
         }
     })

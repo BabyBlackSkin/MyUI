@@ -21,6 +21,7 @@
     display: inline-flex;
     width: 77px;
     height: 40px;
+    box-sizing: border-box;
     border-top: 1px solid var(--mob-border-color);
     border-right: 1px solid var(--mob-border-color);
     border-bottom: 1px solid var(--mob-border-color);

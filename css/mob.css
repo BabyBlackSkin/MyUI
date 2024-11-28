@@ -177,19 +177,13 @@ mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-
 }
 
 mob-select, mob-tree-select, mob-date-picker, mob-time-spinner {
-    width: 200px;
+    min-width: 200px;
+    width: 100%;
 }
 
 mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date, mob-date-picker {
     display: block;
 }
-
-mob-form-item div[ng-transclude] {
-    width: 100%;
-    padding: 0;
-    overflow:auto;
-}
-
 mob-form-table {
     display: flex;
     width: 100%;

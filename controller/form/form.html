@@ -3,22 +3,108 @@
 
 
     <div class="mob-doc content">
-        <h3>基础用法</h3>
+        <h3>典型表单</h3>
+        <p>最基础的表单包括各种输入表单项，比如input、select、radio、checkbox等。</p>
+
+        <p>在每一个 form 组件中，你需要一个 form-item 字段作为输入项的容器，用于获取值与验证值。</p>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                {{form}}
                 <div>
-                    <mob-form form-item="demoOne.formItem" ng-model="form">
+                    <mob-form ng-model="form" style="width: 600px">
+                        <mob-form-item label="'Activity name'">
+                            <mob-input ng-model="form.activityName"></mob-input>
+                        </mob-form-item>
+                        <mob-form-item label="'Activity time'">
+                            <mob-date-picker ng-model="form.activityTime" type="'dateTime'"></mob-date-picker>
+                        </mob-form-item>
+                        <mob-form-item label="'Instant delivery'">
+                            <mob-switch ng-model="form.instantDelivery" active-value="true"
+                                        inactive-value="false"></mob-switch>
+                        </mob-form-item>
+                        <mob-form-item label="'Activity type'">
+                            <mob-check-box-group ng-model="form.activityType">
+                                <mob-check-box label="'Online activities'" check-value="1"></mob-check-box>
+                                <mob-check-box label="'Promotion activities'" check-value="2"></mob-check-box>
+                                <mob-check-box label="'Offline activities'" check-value="3"></mob-check-box>
+                                <mob-check-box label="'Simple brand exposure'" check-value="4"></mob-check-box>
+                            </mob-check-box-group>
+                        </mob-form-item>
 
-                        <div slot="slotOne">
-                            我是第一个slot
-                            <mob-input ng-model="form.slotOne"></mob-input>
-                        </div>
+                        <mob-form-item label="'Resources'">
+                            <mob-radio-group ng-model="form.activityType">
+                                <mob-radio label="'sponsor'" value="'sponsor'"></mob-radio>
+                                <mob-radio label="'venue'" value="'venue'"></mob-radio>
+                            </mob-radio-group>
+                        </mob-form-item>
+                        <mob-form-item>
+                            <mob-button type="'primary'" ng-click="submit()">提交</mob-button>
+                            <mob-button>取消</mob-button>
+                        </mob-form-item>
+                    </mob-form>
 
-                        <div slot="slotTow">
-                            我是第二个slot
-                            <mob-input></mob-input>
-                        </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                         <mob-form ng-model="form" style="display:flex;width: 600px">
+                            <mob-form-item label="'Activity name'">
+                                <mob-input ng-model="form.activityName"></mob-input>
+                            </mob-form-item>
+                            <mob-form-item label="'Activity time'">
+                                <mob-date-picker ng-model="form.activityTime" type="'dateTime'"></mob-date-picker>
+                            </mob-form-item>
+                            <mob-form-item label="'Instant delivery'">
+                                <mob-switch ng-model="form.instantDelivery" active-value="true"
+                                            inactive-value="false"></mob-switch>
+                            </mob-form-item>
+                            <mob-form-item label="'Activity type'">
+                                <mob-check-box-group ng-model="form.activityType">
+                                    <mob-check-box label="'Online activities'" check-value="1"></mob-check-box>
+                                    <mob-check-box label="'Promotion activities'" check-value="2"></mob-check-box>
+                                    <mob-check-box label="'Offline activities'" check-value="3"></mob-check-box>
+                                    <mob-check-box label="'Simple brand exposure'" check-value="4"></mob-check-box>
+                                </mob-check-box-group>
+                            </mob-form-item>
+
+                            <mob-form-item label="'Resources'">
+                                <mob-radio-group ng-model="form.activityType">
+                                    <mob-radio label="'sponsor'" value="'sponsor'"></mob-radio>
+                                    <mob-radio label="'venue'" value="'venue'"></mob-radio>
+                                </mob-radio-group>
+                            </mob-form-item>
+                            <mob-form-item>
+                                <mob-button type="'primary'" ng-click="submit()">提交</mob-button>
+                                <mob-button>取消</mob-button>
+                            </mob-form-item>
+                        </mob-form>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>行内表单</h3>
+        <p>当垂直方向空间受限且表单较简单时，可以在一行内放置表单。</p>
+        <p>通过设置 inline 属性为 true 可以让表单域变为行内的表单域。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div>
+                    <mob-form inline="true" ng-model="form">
+                        <mob-form-item label="'Approved by'">
+                            <mob-input ng-model="form.approvedBy"></mob-input>
+                        </mob-form-item>
+                        <mob-form-item label="'Activity zone'">
+                            <mob-input ng-model="form.approvedZone"></mob-input>
+                        </mob-form-item>
+                        <mob-form-item label="'Activity time'">
+                            <mob-date-picker ng-model="form.activityTime" type="'dateTime'"></mob-date-picker>
+                        </mob-form-item>
+                        <mob-form-item>
+                            <mob-button type="'primary'" ng-click="submit()">提交</mob-button>
+                            <mob-button>取消</mob-button>
+                        </mob-form-item>
                     </mob-form>
                 </div>
             </div>
@@ -26,11 +112,124 @@
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
+                         <mob-form ng-model="form" style="display:flex;width: 600px">
+                            <mob-form-item label="'Activity name'">
+                                <mob-input ng-model="form.activityName"></mob-input>
+                            </mob-form-item>
+                            <mob-form-item label="'Activity time'">
+                                <mob-date-picker ng-model="form.activityTime" type="'dateTime'"></mob-date-picker>
+                            </mob-form-item>
+                            <mob-form-item label="'Instant delivery'">
+                                <mob-switch ng-model="form.instantDelivery" active-value="true"
+                                            inactive-value="false"></mob-switch>
+                            </mob-form-item>
+                            <mob-form-item label="'Activity type'">
+                                <mob-check-box-group ng-model="form.activityType">
+                                    <mob-check-box label="'Online activities'" check-value="1"></mob-check-box>
+                                    <mob-check-box label="'Promotion activities'" check-value="2"></mob-check-box>
+                                    <mob-check-box label="'Offline activities'" check-value="3"></mob-check-box>
+                                    <mob-check-box label="'Simple brand exposure'" check-value="4"></mob-check-box>
+                                </mob-check-box-group>
+                            </mob-form-item>
 
+                            <mob-form-item label="'Resources'">
+                                <mob-radio-group ng-model="form.activityType">
+                                    <mob-radio label="'sponsor'" value="'sponsor'"></mob-radio>
+                                    <mob-radio label="'venue'" value="'venue'"></mob-radio>
+                                </mob-radio-group>
+                            </mob-form-item>
+                            <mob-form-item>
+                                <mob-button type="'primary'" ng-click="submit()">提交</mob-button>
+                                <mob-button>取消</mob-button>
+                            </mob-form-item>
+                        </mob-form>
                         --></code>
                     </pre>
             </div>
         </div>
 
+        <h3>对齐方式</h3>
+        <p>根据你们的设计情况，来选择最佳的标签对齐方式。</p>
+        <p>可以分别设置 mob-form-item 的label-position 如果值为空, 则会使用 mob-form的label-position。</p>
+        <p>通过设置 label-position 属性可以改变表单域标签的位置，可选值为 top、left, 当设为 top 时标签会置于表单域的顶部</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div>
+                    <mob-form ng-model="form" label-position="form.formLabelPosition">
+
+                        <mob-form-item label="'Form Align'">
+                            <mob-radio-group ng-model='form.formLabelPosition'>
+                                <mob-radio-button label="'Empty'"></mob-radio-button>
+                                <mob-radio-button label="'Left'" value="'left'"></mob-radio-button>
+                                <mob-radio-button label="'Right'" value="'right'"></mob-radio-button>
+                                <mob-radio-button label="'Middle'" value="'middle'"></mob-radio-button>
+                            </mob-radio-group>
+                        </mob-form-item>
+
+                        <mob-form-item label="'Form Item Align'">
+                            <mob-radio-group ng-model='form.formItemLabelPosition'>
+                                <mob-radio-button label="'Empty'"></mob-radio-button>
+                                <mob-radio-button label="'Left'" value="'left'"></mob-radio-button>
+                                <mob-radio-button label="'Right'" value="'right'"></mob-radio-button>
+                                <mob-radio-button label="'Middle'" value="'middle'"></mob-radio-button>
+                                <mob-radio-button label="'Top'" value="'top'"></mob-radio-button>
+                            </mob-radio-group>
+                        </mob-form-item>
+
+                        <mob-form-item label="'Approved by'" label-position="form.formItemLabelPosition">
+                            <mob-input ng-model="form.approvedBy"></mob-input>
+                        </mob-form-item>
+                        <mob-form-item label="'Activity zone'" label-position="form.formItemLabelPosition">
+                            <mob-input ng-model="form.approvedZone"></mob-input>
+                        </mob-form-item>
+                        <mob-form-item label="'Activity time'" label-position="form.formItemLabelPosition">
+                            <mob-date-picker ng-model="form.activityTime" type="'dateTime'"></mob-date-picker>
+                        </mob-form-item>
+                        <mob-form-item>
+                            <mob-button type="'primary'" ng-click="submit()">提交</mob-button>
+                            <mob-button>取消</mob-button>
+                        </mob-form-item>
+                    </mob-form>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                         <mob-form ng-model="form" style="display:flex;width: 600px">
+                            <mob-form-item label="'Activity name'">
+                                <mob-input ng-model="form.activityName"></mob-input>
+                            </mob-form-item>
+                            <mob-form-item label="'Activity time'">
+                                <mob-date-picker ng-model="form.activityTime" type="'dateTime'"></mob-date-picker>
+                            </mob-form-item>
+                            <mob-form-item label="'Instant delivery'">
+                                <mob-switch ng-model="form.instantDelivery" active-value="true"
+                                            inactive-value="false"></mob-switch>
+                            </mob-form-item>
+                            <mob-form-item label="'Activity type'">
+                                <mob-check-box-group ng-model="form.activityType">
+                                    <mob-check-box label="'Online activities'" check-value="1"></mob-check-box>
+                                    <mob-check-box label="'Promotion activities'" check-value="2"></mob-check-box>
+                                    <mob-check-box label="'Offline activities'" check-value="3"></mob-check-box>
+                                    <mob-check-box label="'Simple brand exposure'" check-value="4"></mob-check-box>
+                                </mob-check-box-group>
+                            </mob-form-item>
+
+                            <mob-form-item label="'Resources'">
+                                <mob-radio-group ng-model="form.activityType">
+                                    <mob-radio label="'sponsor'" value="'sponsor'"></mob-radio>
+                                    <mob-radio label="'venue'" value="'venue'"></mob-radio>
+                                </mob-radio-group>
+                            </mob-form-item>
+                            <mob-form-item>
+                                <mob-button type="'primary'" ng-click="submit()">提交</mob-button>
+                                <mob-button>取消</mob-button>
+                            </mob-form-item>
+                        </mob-form>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
     </div>
 </section>
