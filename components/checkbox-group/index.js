@@ -1,11 +1,9 @@
 function controller($scope, $element, $attrs) {
+    const _that = this
+
     // 初始化工作
     this.$onInit = function () {
-        if (!this.ngModel) {
-            this.ngModel = []
-        }
-        this.name = `mobCheckBoxGroup_${$scope.$id}`
-        console.log('父组件')
+        this.uuid = `mobCheckBoxGroup_${$scope.$id}`
     }
 
     this.$onChanges = function (changes) {
@@ -22,7 +20,6 @@ function controller($scope, $element, $attrs) {
         // 创建事件订阅与监听
         initEvent()
         initWatcher()
-        // console.log('父组件 link')
     }
 
     // ngModel改变时，同时子组件
@@ -31,18 +28,18 @@ function controller($scope, $element, $attrs) {
             this.change({value: this.ngModel})
         }
         // 反向通知group下所有的radio绑定的ngModel
-        $scope.$broadcast(`${this.name}Change`, this.ngModel)
+        $scope.$broadcast(`${_that.uuid}Change`, this.ngModel)
     }
-
-
-    const _that = this
 
     /**
      * 初始化事件监听
      */
     function initEvent() {
         // 监听子组件的change事件
-        $scope.$on(`${_that.name}ChildChange`, function (event, data) {
+        $scope.$on(`${_that.uuid}ChildChange`, function (event, data) {
+            if (!_that.ngModel) {
+                _that.ngModel = []
+            }
             if (_that.ngModel.includes(data)) {
                 let undefinedMin = angular.isUndefined(_that.min)
                 let definedMin = angular.isDefined(_that.min)

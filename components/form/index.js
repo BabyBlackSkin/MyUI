@@ -1,7 +1,6 @@
 function controller($scope, $element, $transclude, $timeout, $attrs, $compile, slot){
 
     this.$onInit = function () {
-        this.formName = `mobForm_${$scope.$id}`
     }
     this.$postLink = function () {
     }

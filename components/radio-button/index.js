@@ -1,14 +1,12 @@
 function controller($scope, $element, $attrs) {
+    const _that = this
     // 初始化工作
     this.$onInit = function () {
         if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
             // 绑定model
             this.ngModel = this.radioGroup.ngModel
-            // 绑定name，一个组内的radio应该互斥
-            this.name = this.radioGroup.name
 
-            const _that = this
-            $scope.$on(`${this.name}Change`, function (event, data) {
+            $scope.$on(`${_that.radioGroup.uuid}Change`, function (event, data) {
                 _that.ngModel = data
             })
         }
@@ -44,7 +42,7 @@ function controller($scope, $element, $attrs) {
         if (angular.isFunction(this.changeHandle)) {
             this.changeHandle({value: this.value})
         } else {
-            $scope.$emit(`${this.name}ChildChange`, this.value)
+            $scope.$emit(`${_that.radioGroup.uuid}ChildChange`, this.value)
         }
 
     }

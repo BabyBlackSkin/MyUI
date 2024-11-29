@@ -1,4 +1,5 @@
 function controller($scope, $element, $transclude, $attrs, $compile, slot) {
+    const _that = this
     // 初始化工作
     this.$onInit = function () {
         this.placeholder = this.placeholder || '请输入内容'
@@ -106,6 +107,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
 app.component('mobInput', {
     transclude: true,
     templateUrl: './components/input/mob-input.html',
+    controller: controller,
     bindings: {
         ngModel: '=?',
         ngDisabled: '<?',
@@ -118,5 +120,4 @@ app.component('mobInput', {
         showWordLimit: '<?',
         handleChange: '&'
     },
-    controller: controller
 })

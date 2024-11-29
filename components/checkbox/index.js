@@ -1,6 +1,15 @@
-function controller($scope, $element, $attrs) {
+function controller($scope, $element, $attrs, $parse) {
+    const _that = this
+
     // 初始化工作
     this.$onInit = function () {
+        if (!this.checkValue) {
+            this.checkValue = $parse($attrs.checkValue)($scope.$parent)
+        }
+        if (!this.unCheckValue) {
+            this.unCheckValue = $parse($attrs.unCheckValue)($scope.$parent)
+        }
+        // 默认true、false
         if (!this.checkValue) {
             this.checkValue = true
             this.unCheckValue = false
@@ -27,12 +36,8 @@ function controller($scope, $element, $attrs) {
                 let match = this.checkBoxGroup.ngModel.includes(this.checkValue);
                 this.ngModel = match ? this.checkValue : this.unCheckValue
             }
-            // 绑定name
-            $attrs.name = this.checkBoxGroup.name
-
-            const _that = this
             // 监听多选框组的value的Change事件
-            $scope.$on(`${$attrs.name}Change`, function (event, data) {
+            $scope.$on(`${_that.checkBoxGroup.uuid}Change`, function (event, data) {
                 // 判断组内是否包含自己
                 let match = data.includes(_that.checkValue)
                 _that.ngModel = match ? _that.checkValue : _that.unCheckValue
@@ -62,7 +67,7 @@ function controller($scope, $element, $attrs) {
             this.change({opt: opt})
         }
         else {
-            $scope.$emit(`${$attrs.name}ChildChange`, this.checkValue)
+            $scope.$emit(`${_that.checkBoxGroup.uuid}ChildChange`, this.checkValue)
         }
 
     }
@@ -78,7 +83,6 @@ app
         bindings: {
             ngModel: '=?',
             ngDisabled: '<?',
-            name: '<?',
             label: '<?',
             checkValue: '<?',
             unCheckValue: '<?',// 未选中值

@@ -21,8 +21,8 @@ clearable:'<' -->
                 <slot name="prefixIcon"></slot>
             </span>
         </span>
-        <input ng-if="!$ctrl.showPassword"
-               type="text"
+        <input
+               type="{{$ctrl.showPassword ? 'password' :'text'}}"
                autocomplete="off"
                placeholder="{{$ctrl.placeholder}}"
                class="mob-input__inner"
@@ -31,8 +31,6 @@ clearable:'<' -->
                maxlength="{{$ctrl.ngMaxlength}}"
                ng-maxlength="$ctrl.ngMaxlength"
         >
-        <input ng-if="$ctrl.showPassword" type="password" autocomplete="off" placeholder="请输入输入内容"
-               class="mob-input__inner" ng-model="$ctrl.ngModel" ng-disabled="$ctrl.ngDisabled">
 
         <span class="mob-input__suffix">
             <span class="mob-input__suffix-inner">

@@ -2,7 +2,7 @@ function controller($scope, $element, $attrs) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        this.name = `mobRadioGroup_${$scope.$id}`
+        this.uuid = `mobRadioGroup_${$scope.$id}`
     }
 
 
@@ -18,7 +18,7 @@ function controller($scope, $element, $attrs) {
     }
 
     function initEvent() {
-        $scope.$on(`${_that.name}ChildChange`, function (event, data) {
+        $scope.$on(`${_that.uuid}ChildChange`, function (event, data) {
             _that.ngModel = data
             _that.change()
         })
@@ -34,10 +34,10 @@ function controller($scope, $element, $attrs) {
 
     this.change = function () {
         if (angular.isFunction(this.changeHandle)) {
-            this.changeHandle({value: this.ngModel})
+            this.changeHandle({opt: {value: this.ngModel}})
         }
         // 反向通知group下所有的radio绑定的ngModel
-        $scope.$broadcast(`${this.name}Change`, this.ngModel)
+        $scope.$broadcast(`${_that.uuid}Change`, this.ngModel)
     }
 }
 
@@ -47,6 +47,7 @@ app
         templateUrl: './components/radio-group/mob-radio-group.html',
         bindings: {
             ngModel: '=?',
+            name:'<?',
             changeHandle: '&?'
         },
         controller: controller
