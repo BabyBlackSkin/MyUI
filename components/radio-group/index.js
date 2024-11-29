@@ -15,6 +15,7 @@ function controller($scope, $element, $attrs) {
 
     this.$postLink = function () {
         initEvent()
+        initWatcher()
     }
 
     function initEvent() {

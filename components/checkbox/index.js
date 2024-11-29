@@ -41,7 +41,7 @@ function controller($scope, $element, $attrs, $parse) {
             // 监听多选框组的value的Change事件
             $scope.$on(`${$attrs.name}Change`, function (event, data) {
                 // 判断组内是否包含自己
-                let match = data.includes(_that.checkValue)
+                let match = angular.isDefined(data) && data.includes(_that.checkValue)
                 _that.ngModel = match ? _that.checkValue : _that.unCheckValue
             })
         }
