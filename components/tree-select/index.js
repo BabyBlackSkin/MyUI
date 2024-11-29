@@ -90,7 +90,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化事件监听
     this.initEvent = function () {
 
-        $scope.$popper['selectDrown'].focus = async function () {
+        $scope.$popper[`selectDrown_${$scope.$id}`].focus = async function () {
             // 被禁用时，不显示下拉框
             if (_that.ngDisabled) {
                 return false
@@ -119,7 +119,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
         // 标签工具集
         if (this.collapseTagTooltip) {
-            $scope.$popper['tooltip'].focusOut = function (e) {
+            $scope.$popper[`tooltip_${$scope.$id}`].focusOut = function (e) {
                 return new Promise(resolve => {
                     // 判断点击的是否是tooltip
                     let isTooltip = this.tooltip.contains(e.target)
@@ -265,10 +265,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         let popperTooltipList = []
         let selectOptions = $compile(
             `
-                <div class="mob-popper mob-tree-select-popper" id="${_that.name}_mob-tree-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
-                    <div class="mob-popper__wrapper">
-                        <span class="mob-popper__arrow"></span>
-                        <div class="mob-popper__inner">
+                <div class="mob-popper-down mob-tree-select-popper" id="${_that.name}_mob-tree-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                    <div class="mob-popper-down__wrapper">
+                        <span class="mob-popper-down__arrow"></span>
+                        <div class="mob-popper-down__inner">
                             <mob-tree ng-model="$ctrl.ngModel"
                                 ng-ref="'tree'"
                                 data="$ctrl.options" 
@@ -304,10 +304,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper mob-tree-select-popper mob-tree-select-tag-popper" id="${_that.name}_mob-tree-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip"  popper-location="selectDrown">
-                    <div class="mob-popper__wrapper">
-                        <span class="mob-popper__arrow"></span>
-                        <div class="mob-popper__inner">
+                <div class="mob-popper-down mob-tree-select-popper mob-tree-select-tag-popper" id="${_that.name}_mob-tree-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip"  popper-location="selectDrown">
+                    <div class="mob-popper-down__wrapper">
+                        <span class="mob-popper-down__arrow"></span>
+                        <div class="mob-popper-down__inner">
                             <div class="mob-tree-select__selected-item__collapse" ng-repeat="item in collapseTagsList" ng-if="!$first">
                                 <span ng-bind="item[$ctrl.props['label']]"></span>
                                 <!-- TreeSelect暂时不支持通过Tag移除 -->

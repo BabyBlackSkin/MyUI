@@ -9,8 +9,8 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         $scope.active = false
         $scope.$data = this.data // 绑定data，给container使用
         if (!this.mobSelect) {// 如果select是appendToBody时，要通过cross服务来获取父级作用域
-            let name = $element[0].getAttribute("select-name")
-            this.mobSelect = cross.get(name)
+            let selectUUID = $element[0].getAttribute("select-uuid")
+            this.mobSelect = cross.get(selectUUID)
         }
     }
 
@@ -28,7 +28,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     this.initValue = function () {
         let hasChange = this.change(this.mobSelect.ngModel);
         if (hasChange) {
-            $scope.$emit(`${_that.mobSelect.name}OptionsInitValue`, {label: this.label, value: _that.getValue()})
+            $scope.$emit(`${_that.mobSelect.uuid}OptionsInitValue`, {label: this.label, value: _that.getValue()})
         }
 
         $scope.$on(`get${_that.id}Param`, function (e, key) {
@@ -39,11 +39,11 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     this.initEvent = function () {
 
         // 监听父组件的通知事件
-        $scope.$on(`${_that.mobSelect.name}Change`, function (e, data) {
+        $scope.$on(`${_that.mobSelect.uuid}Change`, function (e, data) {
             let hasChange = _that.change(data);
             // 通知父组件更新ngModel的cache
             if (hasChange) {
-                $scope.$emit(`${_that.mobSelect.name}collapseTagsListUpdate`, {
+                $scope.$emit(`${_that.mobSelect.uuid}collapseTagsListUpdate`, {
                     label: _that.label,
                     value: _that.getValue()
                 })
@@ -51,9 +51,9 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         })
 
         // 监听父组件的清空事件
-        $scope.$on(`${_that.mobSelect.name}Empty`, function (e, data) {
+        $scope.$on(`${_that.mobSelect.uuid}Empty`, function (e, data) {
             if ($scope.active) {
-                $scope.$emit(`${_that.mobSelect.name}collapseTagsListUpdate`, {
+                $scope.$emit(`${_that.mobSelect.uuid}collapseTagsListUpdate`, {
                     label: _that.label,
                     value: _that.getValue()
                 })
@@ -62,7 +62,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         })
 
         // 监听父组件的过滤事件
-        $scope.$on(`${_that.mobSelect.name}Filter`, function (e, data) {
+        $scope.$on(`${_that.mobSelect.uuid}Filter`, function (e, data) {
             // 当父组件的过滤字段是undefined时，代表无需过滤，当options是不参与匹配的options时，无需处理
             if (typeof data.value == 'undefined' || _that.notJoinMatchOption) {
                 $scope.hidden = false
@@ -70,7 +70,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
             }
             $scope.hidden = _that.label.indexOf(data.value) < 0
 
-            $scope.$emit(`${_that.mobSelect.name}FilterResult`, {
+            $scope.$emit(`${_that.mobSelect.uuid}FilterResult`, {
                 key: $scope.$id,
                 value: !$scope.hidden
             })
@@ -107,7 +107,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         }
         let val = this.getValue()
 
-        $scope.$emit(`${_that.mobSelect.name}OptionsClick`, {label: this.label, value: val, $id: _that.id,})
+        $scope.$emit(`${_that.mobSelect.uuid}OptionsClick`, {label: this.label, value: val, $id: _that.id,})
     }
 }
 

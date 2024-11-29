@@ -28,8 +28,10 @@ function controller($scope, $element, $attrs) {
             if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
                 this.ngModel = this.checkBoxGroup.ngModel.includes(this.checkValue)
             }
+            // 绑定name
+            $attrs.name = this.checkBoxGroup.uuid
             // 监听多选框组的value的Change事件
-            $scope.$on(`${_that.checkBoxGroup.uuid}Change`, function (event, data) {
+            $scope.$on(`${$attrs.name}Change`, function (event, data) {
                 // 判断组内是否包含自己
                 _that.ngModel = data.includes(_that.checkValue)
             })
@@ -56,7 +58,7 @@ function controller($scope, $element, $attrs) {
         if (angular.isFunction(this.changeHandle)) {
             this.changeHandle({value: this.ngModel})
         } else {
-            $scope.$emit(`${_that.checkBoxGroup.uuid}ChildChange`, this.checkValue)
+            $scope.$emit(`${$attrs.name}ChildChange`, this.checkValue)
         }
 
     }
@@ -72,6 +74,7 @@ app
         bindings: {
             ngModel: '=?',
             ngDisabled: '<?',
+            name: '<?',
             label: '<?',
             checkValue: '<?',
             unCheckValue: '<',// 未选中值

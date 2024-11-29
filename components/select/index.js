@@ -12,7 +12,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
         $scope.placeholder = this.placeholder
 
-        this.name = `mobSelect_${$scope.$id}`
+        this.uuid = `mobSelect_${$scope.$id}`
         // 当开启过滤时，每个options的匹配结果
         $scope.filterResult = {
             options: {},
@@ -28,10 +28,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 需要支持appendToBody了 TODO
      */
     this.$onDestroy = function () {
-        cross.delete(this.name)
+        cross.delete(this.uuid)
         // 将创建的select和tag销毁
-        $(`${_that.name}_mob-select-popper`).remove()
-        $(`${_that.name}_mob-select-tag-popper`).remove()
+        $(`${_that.uuid}_mob-select-popper`).remove()
+        $(`${_that.uuid}_mob-select-tag-popper`).remove()
     }
 
 
@@ -73,7 +73,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
 
         // 监听optionsInitValue事件
-        $scope.$on(`${_that.name}OptionsInitValue`, function (e, data) {
+        $scope.$on(`${_that.uuid}OptionsInitValue`, function (e, data) {
             if (!_that.multiple) {
                 $scope.placeholder = data.label ? data.label : data.value
             } else {
@@ -82,17 +82,17 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         })
 
         // 监听optionsClick事件
-        $scope.$on(`${_that.name}OptionsClick`, function (e, data) {
+        $scope.$on(`${_that.uuid}OptionsClick`, function (e, data) {
             _that.changeHandler(data)
         })
 
         // 监听collapseTagsListUpdate事件
-        $scope.$on(`${_that.name}collapseTagsListUpdate`, function (e, data) {
+        $scope.$on(`${_that.uuid}collapseTagsListUpdate`, function (e, data) {
             _that.collapseTagsListUpdate(data)
         })
 
         // 监听filter结果
-        $scope.$on(`${_that.name}FilterResult`, function (e, data) {
+        $scope.$on(`${_that.uuid}FilterResult`, function (e, data) {
             $scope.filterResult.options[data.key] = data.value
             _that.filterHasMatched()
         })
@@ -128,11 +128,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (angular.isUndefined(newV) || newV === null || newV.length === 0) {
                 // 通知OptionsEmpty
                 let emptyValue = _that.emptyValue()
-                $scope.$broadcast(`${_that.name}Empty`, emptyValue)
+                $scope.$broadcast(`${_that.uuid}Empty`, emptyValue)
                 _that.changeHandler({value:emptyValue})
             } else {
                 // 通知OptionsChange
-                $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
+                $scope.$broadcast(`${_that.uuid}Change`, _that.ngModel)
             }
         })
 
@@ -146,24 +146,23 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
     this.dropDownAppendToBody = function () {
         let popperTooltipList = []
-        cross.put(this.name, this)
+        cross.put(this.uuid, this)
         let selectOptions = null;
         if (this.group) {
             selectOptions = $compile(
                 `
-                <div class="mob-popper mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
-                    <div class="mob-popper__wrapper">
-                        <span class="mob-popper__arrow"></span>
-                        <div class="mob-popper__inner">
-                            
-                            <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-name="${_that.name}" label="group.label">
+                <div class="mob-popper-down mob-select-popper" id="${_that.uuid}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                    <div class="mob-popper-down__wrapper">
+                        <span class="mob-popper-down__arrow"></span>
+                        <div class="mob-popper-down__inner">
+                            <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-uuid="${_that.uuid}" label="group.label">
                             <div>
-                                <mob-select-options ng-repeat="o in group.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
+                                <mob-select-options ng-repeat="o in group.options track by $index" select-uuid="${_that.uuid}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
                                 </mob-select-options>
                             </div>
                             </mob-select-options>
                             </mob-select-group>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>
@@ -172,13 +171,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         } else {
             selectOptions = $compile(
                 `
-                <div class="mob-popper-down mob-select-popper" id="${_that.name}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                <div class="mob-popper-down mob-select-popper" id="${_that.uuid}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
-                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-name="${_that.name}" select-name="${_that.name}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
+                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-uuid="${_that.uuid}" select-uuid="${_that.uuid}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-name="${_that.name}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
                     </div>
                 </div>
@@ -198,7 +197,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (this.collapseTagTooltip) {
             let tooltip = $compile(
                 `
-                <div class="mob-popper-down mob-select-popper mob-select-tag-popper" id="${_that.name}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip" popper-location="selectDrown">
+                <div class="mob-popper-down mob-select-popper mob-select-tag-popper" id="${_that.uuid}_mob-select-tag-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="tooltip" popper-location="selectDrown">
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
@@ -303,7 +302,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.filterOptions = function () {
         $debounce.debounce($scope, $scope.$id, () => {
             let filter = !!$scope.filterableText
-            $scope.$broadcast(`${_that.name}Filter`, {
+            $scope.$broadcast(`${_that.uuid}Filter`, {
                 filter,
                 value: $scope.filterableText,
                 filterMethod: _that.filterMethod

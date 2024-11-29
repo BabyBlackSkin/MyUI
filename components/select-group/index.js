@@ -5,8 +5,8 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         let abbParams = ['appendToBody', 'filterable', "group"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
-        let name = $element[0].getAttribute("select-name")
-        this.mobSelect = cross.get(name)
+        let selectUUID = $element[0].getAttribute("select-uuid")
+        this.mobSelect = cross.get(selectUUID)
 
         this.id = uuId.newUUID()
         // 当开启过滤时，每个options的匹配结果
@@ -44,7 +44,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         //
         //
         // // 监听options的filter结果
-        $scope.$on(`${_that.mobSelect.name}FilterResult`, function (e, data) {
+        $scope.$on(`${_that.mobSelect.uuid}FilterResult`, function (e, data) {
             // console.log('group监听到了来自options的result事件，通知select', data)
             // 通知select过滤结果
             $scope.filterResult.options[data.key] = data.value

@@ -9,8 +9,9 @@ function controller($scope, $element, $attrs) {
         if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
             // 绑定model
             this.ngModel = this.radioGroup.ngModel
-
-            $scope.$on(`${_that.radioGroup.uuid}Change`, function (event, data) {
+            // 绑定name，一个组内的radio应该互斥
+            this.name = this.radioGroup.uuid
+            $scope.$on(`${this.name}Change`, function (event, data) {
                 _that.ngModel = data
             })
         }
@@ -46,7 +47,7 @@ function controller($scope, $element, $attrs) {
         if (angular.isFunction(this.changeHandle)) {
             this.changeHandle({value: this.value})
         } else {
-            $scope.$emit(`${_that.radioGroup.uuid}ChildChange`, this.value)
+            $scope.$emit(`${this.name}ChildChange`, this.value)
         }
 
     }
