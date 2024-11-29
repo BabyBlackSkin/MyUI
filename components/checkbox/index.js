@@ -1,4 +1,4 @@
-function controller($scope, $element, $attrs) {
+function controller($scope, $element, $attrs, $parse) {
     const _that = this
 
     // 初始化工作
