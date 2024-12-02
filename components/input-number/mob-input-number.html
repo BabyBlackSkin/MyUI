@@ -3,8 +3,8 @@
 >
 
     <div class="mob-input_prepend mob-input__slot" ng-click="$ctrl.decrease()">
-        <slot name="prepend" ng-show="$slot.slotSet.has('prepend')"></slot>
-        <mob-icon-decrease ng-if="!$slot.slotSet.has('prepend')"></mob-icon-decrease>
+        <slot name="prepend" ng-show="$slot.slot['prepend']"></slot>
+        <mob-icon-decrease ng-if="!$slot.slot['prepend']"></mob-icon-decrease>
     </div>
 
     <div class="mob-input__wrapper">
@@ -23,8 +23,8 @@
     </div>
 
     <div class="mob-input_append  mob-input__slot" ng-click="$ctrl.increase()">
-        <slot name="append" ng-show="$slot.slotSet.has('append')"></slot>
-        <mob-icon-increase ng-if="!$slot.slotSet.has('append')"></mob-icon-increase>
+        <slot name="append" ng-show="$slot.slot['append']"></slot>
+        <mob-icon-increase ng-if="!$slot.slot['append']"></mob-icon-increase>
     </div>
 
 </div>

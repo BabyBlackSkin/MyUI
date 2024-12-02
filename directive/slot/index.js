@@ -46,8 +46,10 @@ app
                     // if(!compileScope){
                     //     return
                     // }
-                    scope.$slot = {
-                        slot:{},
+                    if(!scope.$slot){
+                        scope.$slot = {
+                            slot:{},
+                        }
                     }
 
                     for (let node of tranEl) {
@@ -92,10 +94,12 @@ app
                     return;
                 }
                 if (!scope.$slot) {
-                    scope.$slot = {}
+                    scope.$slot = {
+                        slot:{},
+                    }
                 }
-                if(!scope.$slot.slotSet ){
-                    scope.$slot.slotSet = new Set()
+                if(!scope.$slot.slot ){
+                    scope.$slot.slot = {}
                 }
                 angular.forEach(slotTemplate, function (slot) {
                     let slotName = slot.getAttribute('name')
@@ -104,7 +108,7 @@ app
                         return
                     }
                     console.log(slotName)
-                    scope.$slot.slotSet.add(slotName)
+                    scope.$slot.slot[slotName] = true
                     slot.parentNode.replaceChild($compile(outSlot)(scope)[0], slot);
                 })
             }
