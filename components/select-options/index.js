@@ -40,24 +40,11 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的通知事件
         $scope.$on(`${_that.mobSelect.uuid}Change`, function (e, data) {
-            let hasChange = _that.change(data);
-            // 通知父组件更新ngModel的cache
-            if (hasChange) {
-                $scope.$emit(`${_that.mobSelect.uuid}collapseTagsListUpdate`, {
-                    label: _that.label,
-                    value: _that.getValue()
-                })
-            }
+            _that.change(data);
         })
 
         // 监听父组件的清空事件
         $scope.$on(`${_that.mobSelect.uuid}Empty`, function (e, data) {
-            if ($scope.active) {
-                $scope.$emit(`${_that.mobSelect.uuid}collapseTagsListUpdate`, {
-                    label: _that.label,
-                    value: _that.getValue()
-                })
-            }
             $scope.active = false
         })
 
@@ -113,13 +100,8 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
 app
     .component('mobSelectOptions', {
-        transclude: {
-            'slot': '?mobContainer'
-        },
         templateUrl: './components/select-options/mob-select-options.html',
-        // require: {
-        //     'mobSelect': '?^mobSelect'
-        // },
+        controller: controller,
         bindings: {
             ngDisabled: '<?',
             notJoinMatchOption: '<?',
@@ -127,5 +109,4 @@ app
             value: '<?',
             data: '<?'
         },
-        controller: controller
     })

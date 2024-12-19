@@ -1,15 +1,23 @@
-mob-form{
+mob-form {
     display: flex;
 }
-.mob-form .mob-form-transclude{
-    display: block;
+
+.mob-form {
+    width: 100%;
 }
-.mob-form .mob-form-transclude mob-form-item{
-    display: block;
-}
-.mob-form.mob-form-inline .mob-form-transclude{
+
+.mob-form .mob-form-transclude {
     display: flex;
 }
-.mob-form-item-template{
+
+.mob-form .mob-form-transclude mob-form-item {
+    display: block;
+}
+
+.mob-form.mob-form-inline .mob-form-transclude {
+    display: flex;
+}
+
+.mob-form-item-template {
     display: inline-block;
 }

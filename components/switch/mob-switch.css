@@ -1,8 +1,11 @@
+mob-switch {
+    display: flex;
+    height: 100%;
+}
 .mob-switch {
     position: relative;
     align-items: center;
     display: flex;
-    width: 100%;
 }
 
 .mob-switch .mob-switch__input {
@@ -42,7 +45,7 @@
 }
 
 .mob-switch.is_active .mob-switch-core .mob-switch__action {
-    left: calc(100% - 16px - 3px);
+    left: calc(100% - 16px - 1px);
 }
 
 .mob-switch .mob-switch-core .mob-switch__inner {

@@ -11,6 +11,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             this.placeholder = "请选择"
         }
         $scope.placeholder = this.placeholder
+        // options的缓存
+        this.optionsCache = {}
+        _that.buildCache(this.options,this.group)
 
         this.uuid = `mobSelect_${$scope.$id}`
         // 当开启过滤时，每个options的匹配结果
@@ -77,18 +80,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (!_that.multiple) {
                 $scope.placeholder = data.label ? data.label : data.value
             } else {
-                $scope.collapseTagsList.push({label: data.label, value: data.value})
+                // $scope.collapseTagsList.push({label: data.label, value: data.value})
             }
         })
 
         // 监听optionsClick事件
         $scope.$on(`${_that.uuid}OptionsClick`, function (e, data) {
             _that.changeHandler(data)
-        })
-
-        // 监听collapseTagsListUpdate事件
-        $scope.$on(`${_that.uuid}collapseTagsListUpdate`, function (e, data) {
-            _that.collapseTagsListUpdate(data)
         })
 
         // 监听filter结果
@@ -99,28 +97,81 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
     }
 
+    this.buildCache = function (options, isGroup) {
+        if (angular.isUndefined(options)) {
+            return
+        }
+
+        // 是否分组展示
+        if (isGroup) {
+            for (let o of options) {
+                this.buildCache(o.options, false)
+            }
+        }
+        else {
+            for (let o of options) {
+                let value = _that.optionsConfigGetValue(o)
+                let label = _that.optionsConfigGetLabel(o)
+                this.optionsCache[value] = {label, value}
+            }
+        }
+    }
+
     /**
      * 初始化事件监听
      */
     this.initWatcher = function () {
+        /**
+         * 监听ngOptions
+         */
         $scope.$watchCollection(() => {
-            return _that.ngModel
-        }, function (newV,oldV) {
+            return _that.options
+        }, function (newV, oldV) {
             if (!newV && !oldV) {
                 return
             }
             if (newV && oldV && newV === oldV) {
                 return;
             }
+            // 更新optionsCache
+            _that.optionsCache = {}
+            _that.buildCache(newV,_that.group)
+
+            for (let tag of $scope.collapseTagsList) {
+                if (tag.notMatchOptions) {
+                    let newTag = _that.optionsCache[tag.value]
+                    if (newTag) {
+                        tag.label = newTag.label
+                    }
+                }
+            }
+        })
+        /**
+         * 监听ngModel
+         */
+        $scope.$watchCollection(() => {
+            return _that.ngModel
+        }, function (newV,oldV) {
+            let newIsEmpty = !newV || newV.length === 0
+            let oldIsEmpty = !oldV || oldV.length === 0
+            if (newIsEmpty && oldIsEmpty) {
+                return
+            }
+            if (newV === oldV) {
+                return;
+            }
             if (_that.filterable) {
                 $scope.filterableText = ''
                 if (_that.multiple) {
-                    $scope.placeholder = _that.ngModel.length === 0 ? _that.placeholder : ""
+                    $scope.placeholder = (!_that.ngModel || _that.ngModel.length === 0) ? _that.placeholder : ""
                 }
             }
 
             if (angular.isFunction(_that.change)) {
-                let opt = {value: newV, attachment: _that.attachment}
+                // 判断是不是多选
+                let options = _that.getNgModelOptions()
+                // ngModel、参数、ngModel对应的options
+                let opt = {value: newV, attachment: _that.attachment, options}
                 _that.change({opt: opt})
             }
 
@@ -130,17 +181,43 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 let emptyValue = _that.emptyValue()
                 $scope.$broadcast(`${_that.uuid}Empty`, emptyValue)
                 _that.changeHandler({value:emptyValue})
+                // 更新tagList
+                _that.collapseTagsListUpdate([])
             } else {
                 // 通知OptionsChange
                 $scope.$broadcast(`${_that.uuid}Change`, _that.ngModel)
+                // 更新tagList
+                _that.collapseTagsListUpdate(_that.ngModel)
             }
         })
 
+        /**
+         * 监听搜索框
+         */
         $scope.$watch(() => {
             return $scope.filterableText
         }, function (newV, oldV) {
             _that.filterOptions()
         })
+    }
+
+    /**
+     * 根据ngModel匹配options
+     */
+    this.getNgModelOptions = function () {
+        if (!this.ngModel) {
+            return;
+        }
+        if (this.multiple) {
+            let options = []
+            for (let v of this.ngModel) {
+                options.push(_that.optionsCache[v])
+            }
+            return options;
+        }
+        else {
+            return this.optionsCache[this.ngModel]
+        }
     }
 
 
@@ -155,9 +232,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
+                            
                             <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-uuid="${_that.uuid}" label="group.label">
                             <div>
-                                <mob-select-options ng-repeat="o in group.options track by $index" select-uuid="${_that.uuid}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
+                                <mob-select-options ng-repeat="o in group.options track by $index" select-uuid="${_that.uuid}" label="$ctrl.optionsConfigGetLabel(o)" value="$ctrl.optionsConfigGetValue(o)" ng-if="$ctrl.optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
                                 </mob-select-options>
                             </div>
                             </mob-select-options>
@@ -175,7 +253,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
-                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-uuid="${_that.uuid}" select-uuid="${_that.uuid}" label="optionsConfigGetLabel(o)" value="optionsConfigGetValue(o)" ng-if="optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
+                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-uuid="${_that.uuid}" select-uuid="${_that.uuid}" label="$ctrl.optionsConfigGetLabel(o)" value="$ctrl.optionsConfigGetValue(o)" ng-if="$ctrl.optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
                             </mob-select-options>
                             <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
@@ -285,15 +363,19 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             $scope.collapseTagsList = []
             return
         }
-        let winIndex = $scope.collapseTagsList.findIndex(obj => {
-            return obj.value === data.value
-        })
-        // 判断model中是否包含
-        if (winIndex > -1) {
-            $scope.collapseTagsList.splice(winIndex, 1)
-        } else {
-            $scope.collapseTagsList.push(data)
+
+        let tagsList = []
+        for (let o of data) {
+            let tag = this.optionsCache[o]
+            // 如果没有options则显示值
+            if (angular.isUndefined(tag)) {
+                tagsList.push({label: o, value: o, notMatchOptions: true});
+            }
+            else {
+                tagsList.push(tag);
+            }
         }
+        $scope.collapseTagsList = tagsList
     }
 
     /**
@@ -390,10 +472,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     }
 
     // 是否显示清除按钮
-    $scope.showClear = function () {
-        return _that.clearable &&
-            !_that.ngDisabled &&
-            _that.ngModel && _that.ngModel.length > 0
+    this.showClear = function () {
+        return this.clearable &&
+            !this.ngDisabled &&
+            (
+                (this.multiple && this.ngModel && this.ngModel.length > 0) ||
+                (this.ngModel !== '' && this.ngModel !== undefined && this.ngModel !== null)
+            )
     }
     /**
      * 清空input内容
@@ -425,7 +510,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
         let noSelected = true;
         for (let o of options) {
-            let isRender = $scope.optionsConfigIsRender(o)
+            let isRender = _that.optionsConfigIsRender(o)
             noSelected = ! (!isRender || isRender)
             // 有一个有值就退出循环
             if (!noSelected) {
@@ -463,7 +548,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 获取options的label属性
      * @param o
      */
-    $scope.optionsConfigGetLabel = function (o) {
+    this.optionsConfigGetLabel = function (o) {
         let label = null;
         if (_that.optionsConfig) {
             label = _that.optionsConfig["label"]
@@ -483,7 +568,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 获取options的label属性
      * @param o
      */
-    $scope.optionsConfigGetValue = function (o) {
+    this.optionsConfigGetValue = function (o) {
         let value = null;
         if (_that.optionsConfig) {
             value = _that.optionsConfig["value"]
@@ -503,7 +588,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @param o
      * @return boolean default True
      */
-    $scope.optionsConfigIsRender = function (o) {
+    this.optionsConfigIsRender = function (o) {
         let render = null;
         if (_that.optionsConfig) {
             render = _that.optionsConfig["render"]

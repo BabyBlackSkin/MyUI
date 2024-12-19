@@ -9,6 +9,10 @@
     </mob-input>
 
 
+    <div ng-if="$ctrl.col.type === 'text'">
+        <p ng-bind="$ctrl.ngModel"></p>
+    </div>
+
     <mob-select ng-if="$ctrl.col.type === 'select'"
                 ng-model="$ctrl.ngModel"
                 clearable="$ctrl.col.attrs.clearable || false"

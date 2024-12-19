@@ -54,10 +54,10 @@
             </div>
 
             <div class="mob-select__selected-item mob-select__input-wrapper" ng-class="{'is-hidden':$ctrl.filterable }">
-                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}" class="mob-input__inner" ng-model="$ctrl.model">
+                <input readonly type="text" autocomplete="off" placeholder="{{placeholder}}" class="mob-input__inner  custom" ng-model="$ctrl.model">
             </div>
             <div class="mob-select__selected-item mob-select__filterable-input-wrapper" ng-class="{'is-hidden':!$ctrl.filterable }">
-                <input type="text" autocomplete="off" placeholder="{{placeholder}}" ng-readonly="!$ctrl.filterable"  class="mob-input__inner mob-input-filterable" ng-model="filterableText">
+                <input type="text" autocomplete="off" placeholder="{{placeholder}}" ng-readonly="!$ctrl.filterable"  class="mob-input__inner mob-input-filterable custom" ng-model="filterableText">
             </div>
             <div class="mob-select__selected-item mob-select-placeholder" ng-if="isSpanPlaceholder()">
                 <span class="mob-unselect-text" ng-bind="placeholder"></span>
@@ -67,10 +67,10 @@
 
         <!-- 右侧的ICON -->
         <div class="mob-select__suffix" >
-            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':showClear()}">
-                <mob-Icon-arrow-down  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-Icon-arrow-down>
+            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':$ctrl.showClear()}">
+                <mob-icon-arrow-down  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-icon-arrow-down>
             </span>
-            <span class="mob-select__suffix-inner mob-icon__clean" ng-if="showClear()">
+            <span class="mob-select__suffix-inner mob-icon__clean" ng-if="$ctrl.showClear()">
                 <mob-icon-circle-close ng-class="{'is_popper':popperShow}" ng-click="clean()"></mob-icon-circle-close>
             </span>
         </div>

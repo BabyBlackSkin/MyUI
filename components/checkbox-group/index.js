@@ -24,9 +24,6 @@ function controller($scope, $element, $attrs) {
 
     // ngModel改变时，同时子组件
     this.changeHandle = function () {
-        if (angular.isFunction(this.change)) {
-            this.change({value: this.ngModel})
-        }
         // 反向通知group下所有的radio绑定的ngModel
         $scope.$broadcast(`${_that.uuid}Change`, this.ngModel)
     }
@@ -60,7 +57,15 @@ function controller($scope, $element, $attrs) {
     function initWatcher() {
         $scope.$watchCollection(() => {
             return _that.ngModel
-        }, function (newValue, oldValue) {
+        }, function (newV, oldV) {
+            if (!newV && !oldV) {
+                return
+            }
+            // change hook
+            if (angular.isFunction(_that.change)) {
+                let opt = {value: newV, attachment: _that.attachment}
+                _that.change({opt: opt})
+            }
             _that.changeHandle()
         })
     }
@@ -74,7 +79,15 @@ app
             ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
             min: '<?',
             max: '<?',
+            /**
+             *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
+             *  以下写法会报异常：
+             *  <mob-checkbox ng-mode="obj.val" change="(value)=>{customChangeHandler(value, obj)}"></mob-checkbox>
+             *
+             *  此时需要通过attachment将对象传入
+             *  <mob-checkbox ng-mode="obj.val" attachment="obj" change="customChangeHandler(value, obj)"></mob-checkbox>
+             */
+            attachment:"<?",
             change: '&?'
         },
-        controller: controller
     })
