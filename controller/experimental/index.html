@@ -1,0 +1,24 @@
+<style>
+    [contenteditable] {
+        border: 1px solid black;
+        background-color: white;
+        min-height: 20px;
+    }
+
+    .ng-invalid {
+        border: 1px solid red;
+    }
+</style>
+<section class="mob-doc content" ng-controller="Experimental as ctrl">
+
+
+    <div class="mob-popper-down" popper-group="demo" id="down">
+        哈哈哈哈哈哈
+    </div>
+
+    <mob-button ng-click="createDemo()">创建</mob-button>
+
+
+    <input class="mob-popper" popper-group="demo" id="popper"/>
+    <!--    <mob-select></mob-select>-->
+</section>

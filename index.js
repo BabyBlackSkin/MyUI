@@ -61,7 +61,7 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controllerAs: 'form',
         })
         .when('/experimental', {
-            templateUrl: './controller/experimental/input.html',
+            templateUrl: './controller/experimental/index.html',
             controller: 'Experimental',
             controllerAs: 'experimental',
         })
@@ -129,6 +129,8 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Date日历', path: '/date', tags: [{title:'developing', type:'danger'}]},
         {label: 'DatePicker日期选择器', path: '/datePicker'},
         {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
+        {label: 'Data数据展示', type: 1},
+        {label: 'Table表格', path: '/table'},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

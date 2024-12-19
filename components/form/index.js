@@ -4,10 +4,6 @@ function controller($scope, $element, $transclude, $timeout, $attrs, $compile, s
     }
     this.$postLink = function () {
     }
-
-    $scope.$on('formItemRepeatFinish',function(){
-        slot.transclude($scope, $element, $transclude)
-    })
 }
 
 app
