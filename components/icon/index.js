@@ -86,6 +86,10 @@ app.component('mobIcon', {
         templateUrl: './components/icon/arrowUp.html',
         controller:controller
     })
+    .component('mobIconEdit', {
+        templateUrl: './components/icon/edit.html',
+        controller:controller
+    })
     .component('mobIconIncrease', {
         templateUrl: './components/icon/increase.html',
         controller:controller
