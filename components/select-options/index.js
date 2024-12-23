@@ -5,7 +5,6 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         let abbParams = ['notJoinMatchOption']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
         this.id = uuId.newUUID()
-        $scope.isSlot = $transclude.isSlotFilled('slot')
         $scope.active = false
         $scope.$data = this.data // 绑定data，给container使用
         if (!this.mobSelect) {// 如果select是appendToBody时，要通过cross服务来获取父级作用域

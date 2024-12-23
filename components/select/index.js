@@ -157,9 +157,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (newIsEmpty && oldIsEmpty) {
                 return
             }
-            if (newV === oldV) {
-                return;
-            }
             if (_that.filterable) {
                 $scope.filterableText = ''
                 if (_that.multiple) {
@@ -408,7 +405,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         return !_that.ngDisabled && // 未禁用
             _that.multiple &&  // 支持多选
             _that.collapseTag && // 支持工具箱
-            (angular.isDefined(_that.collapseTagTooltip) && !_that.collapseTagTooltip || angular.isUndefined(_that.collapseTagTooltip)) // 不开启工具箱
+            (
+                angular.isDefined(_that.collapseTagTooltip) && !_that.collapseTagTooltip // 定义了工具箱标记，且未开启
+                || angular.isUndefined(_that.collapseTagTooltip) // 未定义工具箱标记
+            )
             && $scope.collapseTagsList && $scope.collapseTagsList.length > 0
     }
     /**
