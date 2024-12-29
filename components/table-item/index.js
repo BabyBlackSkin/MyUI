@@ -42,18 +42,31 @@ const mobTableItem = [
     function () {
         return {
             restrict: "E",
-            template: function (tElement, tAttrs) {
-                console.log(tElement,tAttrs);
-                return '<div>你好，我是' + tAttrs.name + '</div>'
-            },
+            transclude:true,
+            scope:true,
+            //     {
+            //
+            //     $context :"="
+            // },
             replace: true,
+            // templateUrl: 'index.html',
+            template: function (tElement, tAttrs) {
+                console.log(tAttrs)
+                return `
+                <tr>
+                <td>
+                    <mob-transclude context='{"context":"context"}'></mob-transclude>
+                    <span ng-show="$$mobTransclude" ng-bind="$context.row[$ctrl.prop]"></span>
+                    <span ng-show="!$$mobTransclude" ng-bind="$context.row[prop]"></span>
+                </td>
+                </tr>
+                `
+            },
+            link: function ($scope, $element, $attrs) {
+            },
             controller: function ($scope, $element, $attrs, $transclude) {
-                // $transclude(function (clone) {
-                //     var a = angular.element('<a>');
-                //     a.attr('href',$attrs.attr);//取得div上的attr属性并设置给a
-                //     a.text(clone.text());// 通过clone属性可以获取指令嵌入内容，包括文本，元素名等等，已经过JQ封装，这里获取文本并添加给a
-                //     $element.append(a); // 将a添加到指令所在元素内
-                // })
+                $scope.prop = $scope.$eval($attrs.prop)
+                console.log($scope.prop)
             }
         };
     }

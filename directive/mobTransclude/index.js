@@ -19,7 +19,7 @@ const mobTransclude = [
                     $transclude
                 ) {
                     console.log('执行')
-                    $scope.$$mobTranscluded = false
+                    $scope.$$mobTransclude = false
                     let context = {};
                     let childScope = null;
                     let parentScope = null;
@@ -70,6 +70,7 @@ const mobTransclude = [
                         } else {
                             for (let contextAttr of contextAttrs) {
                                 $scope.$watch(contextAttr, (newVal, oldVal) => {
+                                    console.log(contextAttr, newVal)
                                     // 如果是context，则解构后在赋值给context
                                     if ("context" === contextAttr) {
                                         angular.extend(context, newVal);
@@ -92,7 +93,7 @@ const mobTransclude = [
 
                     function ngTranscludeCloneAttachFn(clone, transcludedScope) {
                         if (clone.length && notWhitespace(clone)) {
-                            $scope.$$mobTranscluded = true
+                            $scope.$$mobTransclude = true
                             //$element.append(clone);
                             $element.replaceWith(clone);
                             childScope = transcludedScope;
