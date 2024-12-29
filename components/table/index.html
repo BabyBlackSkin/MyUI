@@ -1,0 +1,31 @@
+
+<div>
+    <table class="mob-table ">
+        <thead>
+        <tr>
+            <th ng-repeat="col in $ctrl.columns">
+                <div class="mob-table-item cell" ng-bind="col.label"></div>
+            </th>
+            <th>
+                <div class="mob-table-item cell">操作</div>
+            </th>
+        </tr>
+        </thead>
+        <!-- 每行是对象 -->
+        <tbody>
+<!--        <tr ng-repeat="($rowInx, row) in $ctrl.data track by $index">-->
+        <tr>
+            <td>
+    <!--        <div>-->
+                <mob-transclude context="row,$index"></mob-transclude>
+<!--                <ng-transclude context="row,$index"></ng-transclude>-->
+<!--            </div>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+<!--    <div ng-repeat="($rowInx, row) in $ctrl.data track by $index">-->
+<!--        <mob-transclude context="row,$index"></mob-transclude>-->
+<!--    </div>-->
+</div>

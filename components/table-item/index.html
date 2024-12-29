@@ -1,0 +1,6 @@
+<div class="mob-form-table-item cell" ng-style="{'width': $ctrl.col.width}">
+    <!-- 优化别名 -->
+    <mob-transclude context='{"context":"$parent.context"}'></mob-transclude>
+    <span ng-show="!$$mobTranscluded" ng-bind="$parent.$context.row[$ctrl.prop]"></span>
+<!--    <span ng-if="!$$mobTranscluded" ng-bind="$parent.row[$ctrl.prop]"></span>-->
+</div>
