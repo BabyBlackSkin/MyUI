@@ -1,3 +1,11 @@
-mob-table table{
+.mob-table{
     width: 100%;
+}
+
+.mob-table thead {
+    background-color: var(--mob-table-header-bg-color);
+}
+
+.mob-table tr {
+    background-color: var(--mob-table-tr-bg-color);
 }

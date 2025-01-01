@@ -18,7 +18,6 @@ const mobTransclude = [
                     controller,
                     $transclude
                 ) {
-                    console.log('执行')
                     $scope.$$mobTransclude = false
                     let context = {};
                     let childScope = null;
@@ -41,45 +40,17 @@ const mobTransclude = [
 
 
                     if (angular.isDefined($attrs.context)) {
-                        // 判断context是json还是字符串
-                        let isJson = false;
-                        let contextAttrs = null;
-                        try {
-                            contextAttrs = JSON.parse($attrs.context);
-                            isJson = true
-                        } catch (e) {
-                            //
-                            contextAttrs = $attrs.context.split(",");
-                        }
-
-                        // 如果是Json，基于Object支持别名
-                        if (isJson) {
-                            for (let alias in contextAttrs) {
-                                let name = contextAttrs[alias];
-                                $scope.$watch(name, (newVal, oldVal) => {
-                                    context[alias] = newVal;
-                                    // 如果是context，则解构后在赋值给context
-                                    if ("context" === alias) {
-                                        angular.extend(context, newVal);
-                                    } else {
-                                        context[alias] = newVal;
-                                    }
+                        let contextAttrs = $attrs.context.split(",");
+                        for (let contextAttr of contextAttrs) {
+                            $scope.$watch(contextAttr, (newVal, oldVal) => {
+                                // 如果是context，则解构后在赋值给context
+                                if ("$context" === contextAttr) {
+                                    updateScope(childScope, newVal);
+                                } else {
+                                    context[contextAttr] = newVal;
                                     updateScope(childScope, context);
-                                });
-                            }
-                        } else {
-                            for (let contextAttr of contextAttrs) {
-                                $scope.$watch(contextAttr, (newVal, oldVal) => {
-                                    console.log(contextAttr, newVal)
-                                    // 如果是context，则解构后在赋值给context
-                                    if ("context" === contextAttr) {
-                                        angular.extend(context, newVal);
-                                    } else {
-                                        context[contextAttr] = newVal;
-                                    }
-                                    updateScope(childScope, context);
-                                });
-                            }
+                                }
+                            });
                         }
                     }
 
@@ -127,6 +98,7 @@ const mobTransclude = [
                         if (!scope || !varsHash) {
                             return;
                         }
+                        console.log(scope.$id)
 
                         angular.extend(scope, {$context: varsHash});
                     }

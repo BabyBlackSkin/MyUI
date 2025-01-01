@@ -4,10 +4,12 @@
 
     <div class="mob-doc content" style="position: relative">
 <!--        <mob-table-item prop="'label'" label="'标签'"></mob-table-item>-->
-        <mob-table data="data" style="display:flex;width: 200px;">
-            <mob-table-item prop="'label'" label="'标签'"></mob-table-item>
-            <mob-table-item prop="'name'" label="'名称'"></mob-table-item>
-            <mob-table-item prop="'status'" label="'行号'"></mob-table-item>
+        <mob-table data="data" style="display:flex;">
+            <mob-table-item prop="'label'" label="'标签'" width="180"></mob-table-item>
+            <mob-table-item prop="'name'" label="'名称'" width="180"></mob-table-item>
+            <mob-table-item prop="'$index'" label="'行号'">
+                <span>{{$context['$index']}}</span>
+            </mob-table-item>
         </mob-table>
     </div>
 </section>

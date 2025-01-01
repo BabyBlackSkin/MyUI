@@ -1,24 +1,20 @@
-
 <div>
     <table class="mob-table ">
+        <colgroup>
+            <col ng-repeat="col in columns track by $index" ng-class="['mob-table-col__' + $index]" width="{{col.witdh || 180}}">
+        </colgroup>
         <thead>
         <tr>
-            <th ng-repeat="col in $ctrl.columns">
+            <th ng-repeat="col in columns">
                 <div class="mob-table-item cell" ng-bind="col.label"></div>
-            </th>
-            <th>
-                <div class="mob-table-item cell">操作</div>
             </th>
         </tr>
         </thead>
         <!-- 每行是对象 -->
         <tbody>
-        <tr ng-repeat="($rowInx, row) in $ctrl.data track by $index" context="row,$index" mob-transclude >
+        <tr ng-repeat="($rowInx, row) in data track by $index">
+            <td mob-transclude context="row,$index"></td>
         </tr>
         </tbody>
     </table>
-
-<!--    <div ng-repeat="($rowInx, row) in $ctrl.data track by $index">-->
-<!--        <mob-transclude context="row,$index"></mob-transclude>-->
-<!--    </div>-->
 </div>

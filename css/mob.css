@@ -81,6 +81,14 @@
     /* popper 控件属性 */
     --mob-popper-max-height: 300px;
 
+    /* table 控件属性*/
+    /*表头背景颜色*/
+    --mob-table-header-bg-color:var(--mob-base-background-color);
+    /*table 行颜色*/
+    --mob-table-tr-bg-color:var(--mob-base-background-color);
+    /*边框颜色*/
+    --mob-table-border:var(--mob-lighter-border-color);
+
     /* date-picker */
     --mob-date-off-text-color: var(--mob-placeholder-text-color);
 
