@@ -5,12 +5,12 @@ const mobTableItem = [
         return {
             restrict: "E",
             transclude: true,
-            scope: true,
-            // scope: {
-            //     prop: "=",
-            //     label: "=",
-            //     width: "="
-            // },
+            // scope: true,
+            scope: {
+                prop: "=",
+                label: "=",
+                width: "="
+            },
             require: "^mobTable",
             replace: true,
             // templateUrl: 'index.html',
