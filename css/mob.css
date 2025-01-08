@@ -88,6 +88,8 @@
     --mob-table-tr-bg-color:var(--mob-base-background-color);
     /*边框颜色*/
     --mob-table-border:var(--mob-lighter-border-color);
+    --mob-table-head-text-color:var(--mob-secondary-text-color);
+    --mob-table-body-text-color:var(--mob-regular-text-color);
 
     /* date-picker */
     --mob-date-off-text-color: var(--mob-placeholder-text-color);

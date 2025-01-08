@@ -1,7 +1,7 @@
 function template() {
     return `
                 <div>
-                    <table class="mob-table ">
+                    <table class="mob-table " ng-class="{'border':border}">
                         <colgroup>
                             <col ng-repeat="col in columns track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >
                         </colgroup>
@@ -30,12 +30,13 @@ const mobTable = [
             restrict: "E",
             transclude: true,
             scope: {
-                data: "="
+                data: "=",
+                border:'=',
             },
             replace: true,
             template: template(),
             link: function ($scope, $element, $attrs) {
-                console.log($scope.data)
+                // console.log($scope.data)
             },
             controller: function ($scope, $element, $attrs, $transclude) {
                 let hasRegisteredColumn = new Set()

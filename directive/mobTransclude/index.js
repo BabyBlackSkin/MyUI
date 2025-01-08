@@ -1,5 +1,7 @@
 // https://dev.to/elpddev/template-transclusion-in-angularjs-532f
 const NODE_TYPE_TEXT = 3;
+const CONTEXT_TYPE_ARRAY = "Array";
+const CONTEXT_TYPE_JSON = "JSON";
 
 const mobTransclude = [
     "$compile",
@@ -40,6 +42,18 @@ const mobTransclude = [
 
 
                     if (angular.isDefined($attrs.context)) {
+                        let contextType = $attrs.contextType || CONTEXT_TYPE_ARRAY
+                        if (CONTEXT_TYPE_ARRAY === contextType) {
+                            arrayContext();
+                        } else {
+                            JSONContext();
+                        }
+                    }
+
+                    /**
+                     * 根据数组解析上下文
+                     */
+                    function arrayContext() {
                         let contextAttrs = $attrs.context.split(",");
                         for (let contextAttr of contextAttrs) {
                             $scope.$watch(contextAttr, (newVal, oldVal) => {
@@ -48,6 +62,35 @@ const mobTransclude = [
                                     updateScope(childScope, newVal);
                                 } else {
                                     context[contextAttr] = newVal;
+                                    updateScope(childScope, context);
+                                }
+                            });
+                        }
+                    }
+
+                    /**
+                     * 根据JSON对象解析上下文
+                     * @constructor
+                     */
+                    function JSONContext() {
+                        let context = $scope.$eval($attrs.context)
+                        // 当context作为对象传入时。标准格式
+                        // {
+                        //  'key':{
+                        //      name:'变量名',
+                        //      alias:'子作用域别名'
+                        //  }
+                        //
+                        // }
+                        for (let contextAttr in context) {
+                            let obj = context[contextAttr];
+                            $scope.$watch(obj.name, (newVal, oldVal) => {
+                                let mappingName = obj.alias || obj.name
+                                // 如果是context，则解构后在赋值给context
+                                if ("$context" === mappingName) {
+                                    updateScope(childScope, newVal);
+                                } else {
+                                    context[mappingName] = newVal;
                                     updateScope(childScope, context);
                                 }
                             });
@@ -98,7 +141,6 @@ const mobTransclude = [
                         if (!scope || !varsHash) {
                             return;
                         }
-                        console.log(scope.$id)
 
                         angular.extend(scope, {$context: varsHash});
                     }

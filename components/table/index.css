@@ -1,11 +1,53 @@
-.mob-table{
+.mob-table {
     width: 100%;
+    border-spacing: 0;
 }
 
 .mob-table thead {
+    color: var(--mob-table-head-text-color);
     background-color: var(--mob-table-header-bg-color);
+}
+
+.mob-table thead tr:last-child th {
+    border-top: 1px solid var(--mob-table-border);
+}
+
+
+.mob-table thead tr th {
+    vertical-align: middle;
+    border-bottom: 1px solid var(--mob-table-border);
 }
 
 .mob-table tr {
     background-color: var(--mob-table-tr-bg-color);
+}
+
+
+.mob-table tbody {
+    color: var(--mob-table-body-text-color);
+}
+
+.mob-table tbody tr:last-child th {
+    border-top: 1px solid var(--mob-table-border);
+}
+
+.mob-table tbody tr td {
+    border-bottom: 1px solid var(--mob-table-border);
+}
+
+/*边框样式*/
+.mob-table.border thead tr th:first-child {
+    border-left: 1px solid var(--mob-table-border);
+}
+
+.mob-table.border thead tr th {
+    border-right: 1px solid var(--mob-table-border);
+}
+
+.mob-table.border tbody tr td:first-child {
+    border-left: 1px solid var(--mob-table-border);
+}
+
+.mob-table.border tbody tr td {
+    border-right: 1px solid var(--mob-table-border);
 }
