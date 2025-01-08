@@ -90,6 +90,10 @@ app.component('mobIcon', {
         templateUrl: './components/icon/edit.html',
         controller:controller
     })
+    .component('mobIconFolder', {
+        templateUrl: './components/icon/folder.html',
+        controller:controller
+    })
     .component('mobIconIncrease', {
         templateUrl: './components/icon/increase.html',
         controller:controller
