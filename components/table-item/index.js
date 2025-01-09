@@ -39,10 +39,7 @@ const mobTableItem = [
                     post: function ($scope, $element, $attrs, mobTableController) {
                         let column = {}
                         for (let attr of attrs) {
-                            // column[attr] = $scope[attr]
-                            let v = $scope.$eval($attrs[attr])
-                            column[attr] = v
-                            $scope[attr] = v
+                            column[attr] = $scope[attr]
                         }
                         mobTableController.registerColumn(column)
                     }
