@@ -90,6 +90,10 @@
     --mob-table-border:var(--mob-lighter-border-color);
     --mob-table-head-text-color:var(--mob-secondary-text-color);
     --mob-table-body-text-color:var(--mob-regular-text-color);
+    /*偶数行颜色*/
+    --mob-table-body-tr-even-color:var(--mob-lighter-fill-color);
+    /*鼠标移入颜色*/
+    --mob-table-body-tr-hover-color:var(--mob-light-fill-color);
 
     /* date-picker */
     --mob-date-off-text-color: var(--mob-placeholder-text-color);

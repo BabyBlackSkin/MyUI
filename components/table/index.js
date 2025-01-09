@@ -1,7 +1,7 @@
 function template() {
     return `
                 <div>
-                    <table class="mob-table " ng-class="{'border':border}">
+                    <table class="mob-table " ng-class="{'border':border,'stripe':stripe}">
                         <colgroup>
                             <col ng-repeat="col in columns track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >
                         </colgroup>
@@ -31,7 +31,8 @@ const mobTable = [
             transclude: true,
             scope: {
                 data: "=",
-                border:'=',
+                border:'=',// 是否边框
+                stripe:'=', // 是否条纹
             },
             replace: true,
             template: template(),

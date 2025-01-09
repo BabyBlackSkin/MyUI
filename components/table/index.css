@@ -31,6 +31,13 @@
     border-top: 1px solid var(--mob-table-border);
 }
 
+.mob-table tbody tr{
+    transition: background-color .25s ease;
+}
+.mob-table tbody tr:hover{
+    background-color: var(--mob-table-body-tr-hover-color);
+}
+
 .mob-table tbody tr td {
     border-bottom: 1px solid var(--mob-table-border);
 }
@@ -50,4 +57,13 @@
 
 .mob-table.border tbody tr td {
     border-right: 1px solid var(--mob-table-border);
+}
+
+/*条纹*/
+.mob-table.stripe tbody tr:nth-child(even):hover {
+    background-color: var(--mob-table-body-tr-hover-color);
+}
+
+.mob-table.stripe tbody tr:nth-child(even) {
+    background-color: var(--mob-table-body-tr-even-color);
 }
