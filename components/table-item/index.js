@@ -1,22 +1,27 @@
 // 属性常量
-const attrs = ['prop', 'label', 'width']
-const mobTableItem = [
-    function () {
+const attrs = ['prop', 'label', 'width', 'minWidth', 'fixed']
+
+const mobTableItem = ["$timeout",
+    function ($timeout) {
         return {
             restrict: "E",
             transclude: true,
             // scope: true,
             scope: {
                 prop: "=",
-                label: "=",
-                width: "="
+                label: "=",//
+                width: "=",// 宽度
+                fixed:"=",// 固定列
             },
             require: "^mobTable",
             replace: true,
             // templateUrl: 'index.html',
             template: function (tElement, tAttrs) {
                 return `
-                <td class="mob-table-item mob-table-item__cell">
+                <td class="mob-table-item mob-table-item__cell" 
+                ng-class="{'fixed':fixed, 'fixed-left': fixed && fixed !=='right','fixed-right': fixed ==='right' ,'first-fixed-column': isFirstFixedColumn}"
+                ng-style="style"
+                >
                     <div class="cell">
                         <mob-transclude context="transcludeContext" context-type="JSON"></mob-transclude>
                         <span ng-show="$$mobTransclude" ng-bind="$parent.$context.row[$ctrl.prop]"></span>
@@ -37,21 +42,13 @@ const mobTableItem = [
                         }
                     },
                     post: function ($scope, $element, $attrs, mobTableController) {
-                        let column = {}
-                        for (let attr of attrs) {
-                            column[attr] = $scope[attr]
-                        }
-                        mobTableController.registerColumn(column)
+                        mobTableController.registerColumn($scope)
+
                     }
                 };
                 //或 return function postLink() {}
             },
             controller: function ($scope, $element, $attrs, $transclude) {
-                console.log('controller', $scope.$id)
-
-                $scope.test = function () {
-                    console.log($scope.$id, $scope.$context)
-                }
             }
         };
     }

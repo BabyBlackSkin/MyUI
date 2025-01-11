@@ -1,8 +1,17 @@
 .mob-table {
+    overflow: auto;
+}
+.mob-table table{
     width: 100%;
+    table-layout:fixed;
     border-spacing: 0;
 }
 
+.mob-table.table-head-fixed thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
 .mob-table thead {
     color: var(--mob-table-head-text-color);
     background-color: var(--mob-table-header-bg-color);
@@ -18,8 +27,8 @@
     border-bottom: 1px solid var(--mob-table-border);
 }
 
-.mob-table tr {
-    background-color: var(--mob-table-tr-bg-color);
+.mob-table th,.mob-table td {
+    background-color: var(--mob-table-td-bg-color);
 }
 
 
@@ -66,4 +75,41 @@
 
 .mob-table.stripe tbody tr:nth-child(even) {
     background-color: var(--mob-table-body-tr-even-color);
+}
+
+.mob-table tr .mob-table-item.fixed {
+    position: sticky;
+    z-index: 1;
+}
+
+.mob-table tr:last-child .mob-table-item.fixed {
+    border-right:1px solid var(--mob-table-border);
+}
+
+
+.mob-table .mob-table-item.fixed.fixed-left {
+    left: 0;
+}
+
+.mob-table .mob-table-item.fixed.fixed-right {
+    right: 0;
+}
+
+.mob-table tr .mob-table-item.first-fixed-column:before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    bottom: -1px;
+    display: block;
+    width: 10px;
+}
+
+.mob-table tr .mob-table-item.fixed.fixed-left:before {
+    right: -10px;
+    box-shadow: var(--mob-table-fixed-left-column);
+}
+.mob-table tr .mob-table-item.fixed.fixed-right:before {
+    left: -10px;
+    box-shadow: var(--mob-table-fixed-right-column);
 }
