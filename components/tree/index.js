@@ -94,34 +94,6 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
                 }
             }
         })
-
-        // 判断是否懒加载
-        if (this.lazy) {
-            // 如果是包裹在select中的懒加载，则由treeSelect来决定加载的时机
-            if ($scope.$parent.$ctrl && $scope.$parent.$ctrl.$type === 'mobTreeSelect') {
-                $scope.$on(`${$scope.$parent.$ctrl.name}TreeInit`, function (event, opt) {
-                    _that.parseNode(opt.data)
-                    _that.ngModelWatchHandler(_that.ngModel)
-                    $scope.$emit(`${$scope.$parent.$ctrl.name}TreeInitFinish`)
-                })
-            } else {
-                // 判断是否存在data，如果不存在则load
-                if (angular.isUndefined(this.data) && angular.isDefined($attrs.load)) {
-                    _that.loadStatus = 2
-                    let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
-                    this.load({opt: opt}).then(data => {
-                        _that.loadStatus = 1
-                        if (angular.isUndefined(data) || data.length === 0) {
-                            return
-                        }
-                        // 解析节点
-                        this.parseNode(angular.copy(data))
-                    }).catch(err => {
-                        _that.loadStatus = 0
-                    })
-                }
-            }
-        }
     }
 
 
@@ -214,7 +186,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         }, function (newValue, oldValue) {
             if (_that.loadStatus === 0) {
                 // 判断是不是被嵌入到treeSelect中，如果是，则由treeSelect完成回调
-                if ($scope.$parent.$ctrl.$type === 'mobTreeSelect') {
+                if ($scope.$parent.$ctrl && $scope.$parent.$ctrl.$type === 'mobTreeSelect') {
                     // NoThing To Do
                     return
                 } else {
@@ -277,6 +249,7 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
 
 
     this.initialNodeList = function () {
+        this.loadStatus = 0;
         this.nodeCache = {}// 节点缓存
         this.parentNodeCache = {} // key：节点的value，value：父节点
         this.nodeList = []// 节点缓存
@@ -284,6 +257,34 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             // 解析节点
             this.parseNode(angular.copy(this.data))
             this.loadStatus = 1
+        }
+
+        // 判断是否懒加载
+        if (this.lazy) {
+            // 如果是包裹在select中的懒加载，则由treeSelect来决定加载的时机
+            if ($scope.$parent.$ctrl && $scope.$parent.$ctrl.$type === 'mobTreeSelect') {
+                $scope.$on(`${$scope.$parent.$ctrl.name}TreeInit`, function (event, opt) {
+                    _that.parseNode(opt.data)
+                    _that.ngModelWatchHandler(_that.ngModel)
+                    $scope.$emit(`${$scope.$parent.$ctrl.name}TreeInitFinish`)
+                })
+            } else {
+                // 判断是否存在data，如果不存在则load
+                if (angular.isUndefined(this.data) && angular.isDefined($attrs.load)) {
+                    _that.loadStatus = 2
+                    let opt = {node: {level: 0, init: true}, deferred: $q.defer(), attachment: this.attachment}
+                    this.load({opt: opt}).then(data => {
+                        _that.loadStatus = 1
+                        if (angular.isUndefined(data) || data.length === 0) {
+                            return
+                        }
+                        // 解析节点
+                        this.parseNode(angular.copy(data))
+                    }).catch(err => {
+                        _that.loadStatus = 0
+                    })
+                }
+            }
         }
     }
 
@@ -329,6 +330,10 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
     this.changeHandler = function () {
         // 反向通知group下所有的radio绑定的ngModel
         // $scope.$broadcast(`${_that.name}Change`, this.ngModel)
+    }
+
+    $scope.reset = function () {
+        _that.initialNodeList()
     }
 }
 
