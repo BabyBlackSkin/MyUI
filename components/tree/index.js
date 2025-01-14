@@ -340,7 +340,10 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
 app
     .component('mobTree', {
         templateUrl: './components/tree/index.html',
+        controller: controller,
         bindings: {
+            ngRef:"<?",// 仿vue的refs
+            ref:"<?",// 仿vue的refs
             // === 属性 ===
             ngModel: "=?",// 双向数据绑定
             data: "<?",// 展示数据
@@ -385,5 +388,4 @@ app
             // filterNodeMethod: "&?", // 对树节点进行筛选时执行的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏 Function(value, data, node)
 
         },
-        controller: controller
     })

@@ -107,7 +107,7 @@ app
 
         $scope.treeModel5 = []
         $scope.treeData5 = angular.copy($scope.baseTreeData)
-        $scope.treeData5[1].disabled = true
+        $scope.treeData5[0].children[1].disabled = true
         console.log($scope.treeData5)
 
         $scope.nodeClick = function (opt) {
