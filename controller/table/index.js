@@ -14,17 +14,74 @@ app
         // console.log(dataList)
         $scope.data = dataList
 
-        // $scope.column = [
-        //     {prop:'num0',label:'列1',width:'200',fixed:true},
-        //     {prop:'num1',label:'列1',width:'200',fixed:true},
-        //     {prop:'num2',label:'列1',width:'200'},
-        //     {prop:'num3',label:'列1',width:'200'},
-        //     {prop:'num4',label:'列1',width:'200'},
-        //     {prop:'num5',label:'列1',width:'200'},
-        //     {prop:'num6',label:'列1',width:'200'},
-        //     {prop:'num7',label:'列1',width:'200'},
-        //     {prop:'num8',label:'列1',width:'200'},
-        //     {prop:'num9',label:'列1',width:'200'},
-        //     {prop:'num0',label:'operate',width:'200', slot:'operate'}
-        // ]
+        $scope.data = [
+            {
+                eshopOrderSn:'001',
+                orderPrice:100,
+                refundOrderSn:'001R001',
+                refundOrderNum:2
+            },
+            {
+                eshopOrderSn:'001',
+                orderPrice:100,
+                refundOrderSn:'001R002',
+                refundOrderNum:2
+            },
+            // {
+            //     eshopOrderSn:'002',
+            //     orderPrice:100,
+            //     refundOrderSn:'002R002',
+            //     refundOrderNum:1
+            // },
+            // {
+            //     eshopOrderSn:'003',
+            //     orderPrice:100,
+            //     refundOrderSn:'003R001',
+            //     refundOrderNum:3
+            // },
+            // {
+            //     eshopOrderSn:'003',
+            //     orderPrice:100,
+            //     refundOrderSn:'003R002',
+            //     refundOrderNum:3
+            // },
+            // {
+            //     eshopOrderSn:'003',
+            //     orderPrice:100,
+            //     refundOrderSn:'003R003',
+            //     refundOrderNum:3
+            // },
+            // {
+            //     eshopOrderSn:'004',
+            //     orderPrice:100,
+            //     refundOrderSn:'004R001',
+            //     refundOrderNum:1
+            // }
+        ]
+
+
+        $scope.spanCache = {}
+
+        $scope.spanMethod = function (opt) {
+            let {rowIndex, row, columnIndex, column} = opt;
+            if (columnIndex !== 0) {
+                return {
+                    rowspan: 0,
+                    colspan: 0
+                }
+            }
+            let cache = $scope.spanCache[row.eshopOrderSn]
+            if (cache) {
+                return {
+                    rowspan: 0,
+                    colspan: 0
+                }
+            } else {
+                $scope.spanCache[row.eshopOrderSn] = {
+                    rowspan: row.refundOrderNum ,
+                    colspan: 0,
+                }
+                return $scope.spanCache[row.eshopOrderSn];
+            }
+        }
     }])

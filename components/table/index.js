@@ -3,11 +3,11 @@ function template() {
                 <div class="mob-table"  ng-class="{'border':border,'stripe':stripe,'table-head-fixed':height}" ng-style="style">
                     <table>
                         <colgroup>
-                            <col ng-repeat="col in columns track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >
+                            <col ng-repeat="col in cellList[0] track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >
                         </colgroup>
                         <thead>
                         <tr>
-                            <th ng-repeat="col in columns" class="mob-table-item mob-table-item__cell" 
+                            <th ng-repeat="col in cellList[0]" class="mob-table-item mob-table-item__cell" 
                             ng-class="{'fixed':col.fixed, 'fixed-left': col.fixed && col.fixed !=='right','fixed-right': col.fixed ==='right' }"
                             ng-style="col.style">
                                 <div class="cell" ng-bind="col.label"></div>
@@ -16,7 +16,7 @@ function template() {
                         </thead>
                         <!-- 每行是对象 -->
                         <tbody>
-                        <tr ng-repeat="($rowInx, row) in data track by $index">
+                        <tr ng-repeat="($rowInx, row) in data track by $index" on-repeat-finish="mobTableColumnRepeatFinish">
                             <td mob-transclude context="row,$index"></td>
                         </tr>
                         </tbody>
@@ -36,6 +36,7 @@ const mobTable = [
                 height: '=?',
                 border: '=?',// 是否边框
                 stripe: '=?', // 是否条纹
+                spanMethod: '&?', // 合并方法
             },
             replace: true,
             template: template(),
@@ -65,8 +66,19 @@ const mobTable = [
                 //或 return function postLink() {}
             },
             controller: function ($scope, $element, $attrs, $transclude) {
+                const self = this
+                self.$id = $scope.$id
+                // 渲染完成后，通知mobTableColumn，进行后续操作
+                $scope.$on("mobTableColumnRepeatFinish", function () {
+                    $scope.$broadcast(`mobTableColumnRepeatFinish${self.$id}`)
+                })
+
                 let hasRegisteredColumn = {}
-                $scope.columns = []
+                // $scope.columns = []
+                $scope.cellList = []
+                // 是否首次重复匹配
+                let firstReportMatch = true;
+                let cellListRowInx = 0
                 let leftFirstFixedColumn;
                 let rightFirstFixedColumn;
 
@@ -100,7 +112,9 @@ const mobTable = [
                     let rightStickerOffset = 0;
 
                     // 遍历列，计算偏移量，以及计算是否固定列的首列
-                    for (let column of $scope.columns) {
+                    // 首行
+                    let columns = $scope.cellList[0] || []
+                    for (let column of columns) {
                         if (column.prop === col.prop) {
                             break;
                         }
@@ -130,15 +144,76 @@ const mobTable = [
 
                 /**
                  * 注册列属性
-                 * @param col
+                 * @param cell
                  */
-                this.registerColumn = function (col) {
-                    calcFixed(col)
-                    if (hasRegisteredColumn[col.prop]) {
+                this.registerColumn = function (cell) {
+                    calcFixed(cell)
+                    if (hasRegisteredColumn[cell.prop]) {
+                        // 首次重复匹配，换行
+                        firstReportMatch && cellListRowInx++
+                        firstReportMatch = false
+
+                        // 首行
+                        let columns = $scope.cellList[0]
+                        // 是否最后一个
+                        let isLast = columns[columns.length - 1].prop === cell.prop;
+                        this.addToCellList(cell);
+                        cell.rowIndex = cellListRowInx
+                        cell.columnIndex = hasRegisteredColumn[cell.prop].columnIndex
+
+                        // 如果最后一个则换行
+                        isLast && cellListRowInx++
                         return;
                     }
-                    $scope.columns.push(col)
-                    hasRegisteredColumn[col.prop] = col
+                    // 计算列索引
+                    cell.rowIndex = cellListRowInx
+                    cell.columnIndex = $scope.cellList[0] && $scope.cellList[0].length || 0
+                    this.addToCellList(cell);
+                    hasRegisteredColumn[cell.prop] = cell
+                }
+
+                this.addToCellList = function (cell) {
+                    if (!$scope.cellList[cellListRowInx]) {
+                        $scope.cellList[cellListRowInx] = []
+                    }
+                    $scope.cellList[cellListRowInx].push(cell)
+                }
+
+                this.spanMethod = function (opt) {
+                    if (angular.isUndefined($scope.spanMethod)) {
+                        return false
+                    }
+
+                    let spanMethod = $scope.spanMethod({opt: opt});
+
+                    // console.log(`获取cell ${opt.rowIndex}  ${opt.columnIndex}`)
+                    let currentCell = $scope.cellList[opt.rowIndex][opt.columnIndex]
+                    if (!currentCell.span) {
+                        currentCell.span = {}
+                    }
+                    angular.extend(currentCell.span , spanMethod);
+
+                    // 判断所在行是否被合并
+                    if (spanMethod.rowspan) {
+                        // 获取当前行的
+                        let startRow = opt.rowIndex;
+                        let endRow = startRow + spanMethod.rowspan;
+                        // 给被合并的单元，打上标记
+                        for (let i = startRow; i < endRow; i++) {
+                            for (let cell of $scope.cellList[i]) {
+                                if (!cell.span) {
+                                    cell.span = {};
+                                }
+
+                                cell.span.inRowspan = true
+                                // 合并行首列坐标
+                                cell.span.rowspanIndex = [opt.rowIndex, opt.columnIndex]
+                                if (cell.rowIndex > opt.rowIndex && cell.columnIndex === opt.columnIndex) {
+                                    cell.span.isSpan = true
+                                }
+                            }
+                        }
+                    }
                 }
             }
         };

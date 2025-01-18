@@ -43,8 +43,9 @@
 .mob-table tbody tr{
     transition: background-color .25s ease;
 }
-.mob-table tbody tr:hover{
-    background-color: var(--mob-table-body-tr-hover-color);
+.mob-table.stripe tbody tr:hover td ,
+.mob-table.stripe tbody tr.row-span:hover td {
+    background-color: var(--mob-table-body-tr-hover-color) !important;
 }
 
 .mob-table tbody tr td {
@@ -69,11 +70,7 @@
 }
 
 /*条纹*/
-.mob-table.stripe tbody tr:nth-child(even):hover {
-    background-color: var(--mob-table-body-tr-hover-color);
-}
-
-.mob-table.stripe tbody tr:nth-child(even) {
+.mob-table.stripe tbody tr:nth-child(even) td{
     background-color: var(--mob-table-body-tr-even-color);
 }
 

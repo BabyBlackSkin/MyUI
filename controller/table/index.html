@@ -3,17 +3,10 @@
     <h2>Table 表单</h2>
 
     <div class="mob-doc content" style="position: relative">
-        <mob-table data="data" style="display:flex;" stripe="true" border="true" height="400">
-            <mob-table-item prop="'num0'" label="'列1'" width="200" fixed="true"></mob-table-item>
-            <mob-table-item prop="'num1'" label="'列2'" width="200" fixed="true"></mob-table-item>
-            <mob-table-item prop="'num2'" label="'列3'" width="200"></mob-table-item>
-            <mob-table-item prop="'num3'" label="'列4'" width="200"></mob-table-item>
-            <mob-table-item prop="'num4'" label="'列5'" width="200"></mob-table-item>
-            <mob-table-item prop="'num5'" label="'列6'" width="200"></mob-table-item>
-            <mob-table-item prop="'num6'" label="'列7'" width="200"></mob-table-item>
-            <mob-table-item prop="'num7'" label="'列8'" width="200"></mob-table-item>
-            <mob-table-item prop="'num8'" label="'列9'" width="200"></mob-table-item>
-            <mob-table-item prop="'num9'" label="'列10'" width="200"></mob-table-item>
+        <mob-table data="data" style="display:flex;" stripe="true" border="true" height="400" span-method="spanMethod(opt)">
+            <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" fixed="true"></mob-table-item>
+            <mob-table-item prop="'orderPrice'" label="'列2'" width="200" fixed="true"></mob-table-item>
+            <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
             <mob-table-item prop="'operate'" label="'操作'" width="200" fixed="'right'">
                 <mob-button>
                     测试
