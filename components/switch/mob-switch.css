@@ -24,7 +24,7 @@ mob-switch {
     /* margin: 0 10px; */
     width: min-content;
     min-width: 40px;
-    height: 20px;
+    height: calc(var(--mob-switch-height) - 2px);
     border: 1px solid var(--mob-border-color);
     border-radius: 10px;
     cursor: pointer;
@@ -36,8 +36,9 @@ mob-switch {
     position: absolute;
     top: 1px;
     left: 1px;
-    width: 16px;
-    height: 16px;
+    width: calc(var(--mob-switch-height) - 6px);
+    height: calc(var(--mob-switch-height) - 6px);
+    aspect-ratio: 1;
     border-radius: 50%;
     background-color: var(--mob-blank-light-fill-color);
     border: 1px solid var(--mob-border-color);

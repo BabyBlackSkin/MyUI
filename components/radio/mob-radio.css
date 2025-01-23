@@ -1,7 +1,7 @@
 .mob-radio{
     display: flex;
     /* width: 100%; */
-    height: 40px;
+    height: var(--mob-radio-height);
     align-items: center;
     margin-right: 20px;
     font-size: 14px;

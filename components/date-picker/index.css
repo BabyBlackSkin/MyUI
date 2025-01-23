@@ -63,13 +63,13 @@ mob-date-picker .mob-popper .mob-popper__wrapper .mob-popper__inner {
     position: relative;
     width: 100%;
     background-color: #fff;
-    height: 40px;
-    line-height: 40px;
+    height: calc(var(--mob-date-time-picker-height) - 2px);
+    line-height:  calc(var(--mob-date-time-picker-height) - 2px);
     /*z-index: 1;*/
 }
 .mob-date-picker .mob-select__selected-item input{
     width: 100%;
-    height: var(--mob-input-inner-height);
+    height:  calc(var(--mob-date-time-picker-height) - 2px);
     font-size: inherit;
     -webkit-appearance:none;
     border:none;
@@ -88,8 +88,8 @@ mob-date-picker .mob-popper .mob-popper__wrapper .mob-popper__inner {
     color: var(--mob-input-color);
     display: inline-block;
     font-size: inherit;
-    height: 40px;
-    line-height: 40px;
+    height: calc(var(--mob-date-time-picker-height) - 2px);
+    line-height:  calc(var(--mob-date-time-picker-height) - 2px);
     outline: none;
     /*width: 1px;*/
     width: 100%;

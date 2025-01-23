@@ -76,8 +76,6 @@
     /*--mob-icon-size:1rem;*/
     --mob-icon-size: 16px;
 
-    --mob-input-inner-height:40px;
-
     /* tree树形控件属性 */
     --mob-tree-icon-size: var(--mob-icon-size);
 
@@ -132,12 +130,34 @@
     --mob-date-year-month-range-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
 
 
-    /* 尺寸 */
-    --mob-radio-button-height:32px;
+    /* default 尺寸 */
+    --mob-default-size: 32px;
+    --mob-big-size: 40px;
+
+    --mob-size:var(--mob-default-size);
+
+}
+
+* {
+    --mob-button-height: var(--mob-size);
+    --mob-pagination-height: var(--mob-size);
+    --mob-input-height:var(--mob-size);
+    --mob-radio-height:var(--mob-size);
+    --mob-radio-button-height: var(--mob-size);
+    --mob-check-box-height:var(--mob-size);
+    --mob-check-box-button-height:var(--mob-size);
+    --mob-select-height:var(--mob-size);
+    --mob-tree-select-height:var(--mob-size);
+    --mob-date-time-picker-height:var(--mob-size);
+
+    --mob-switch-height: 20px;
+    --mob-tree-height: 26px;
 }
 
 .large {
-    --mob-radio-button-height: 40px;
+    --mob-size:var(--mob-big-size) !important;
+    --mob-switch-height: 24px;
+    --mob-tree-height: 26px;
 }
 
 /* mob组件fontsSize默认为16px */

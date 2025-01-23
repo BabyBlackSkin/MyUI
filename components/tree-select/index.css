@@ -47,15 +47,16 @@
     width: 1px;
     overflow: hidden;
     z-index: 0;
-    height: 40px;
+    height: calc(var(--mob-tree-select-height) - 2px);
 
 }
 .mob-tree-select .mob-tree-select__selected-item {
     position: relative;
     width: 100%;
     background-color: #fff;
-    height: 40px;
-    line-height: 40px;
+    /*最外层有边框，这里减去2px*/
+    height: calc(var(--mob-tree-select-height) - 2px);
+    line-height: calc(var(--mob-tree-select-height) - 2px);
     /*z-index: 1;*/
 }
 .mob-tree-select .mob-input__inner {
@@ -67,8 +68,8 @@
     color: var(--mob-input-color);
     display: inline-block;
     font-size: inherit;
-    height: 40px;
-    line-height: 40px;
+    height: calc(var(--mob-tree-select-height) - 2px);
+    line-height: calc(var(--mob-tree-select-height) - 2px);
     outline: none;
     /*width: 1px;*/
     width: 100%;

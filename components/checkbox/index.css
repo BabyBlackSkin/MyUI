@@ -1,7 +1,7 @@
 mob-checkbox-group .mob-checkbox {
     display: flex;
     /* width: 100%; */
-    height: 40px;
+    height:var(--mob-check-box-height);
     align-items: center;
     margin-right: 20px;
     font-size: 14px;
@@ -13,7 +13,7 @@ mob-check-box {
 
 mob-check-box .mob-checkbox {
     display: inline-flex;
-    height: 32px;
+    height:var(--mob-check-box-height);
 }
 mob-check-box * {
     margin: 0;
