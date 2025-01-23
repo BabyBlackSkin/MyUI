@@ -1,0 +1,30 @@
+<div class="mob-pagination">
+    <mob-button text  icon="'mob-Icon-arrow-left'"></mob-button>
+    <ul>
+        <li ng-repeat="pageNo in pageCountPrefixArray"
+            ng-bind="pageNo"
+            ng-class="{'active': $ctrl.currentPage === pageNo}"
+            ng-click="$ctrl.setCurrentPage(pageNo)"></li>
+
+        <li ng-if="pageStatus === 2 || pageStatus === 3" ng-mouseenter="$ctrl.jumpMouseEnter('jump_before')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_before')" ng-click="$ctrl.setCurrentPage($ctrl.currentPage -5)">
+            <mob-icon-more-filled ng-if="!jump_before"></mob-icon-more-filled>
+            <mob-icon-double-arrow-left ng-if="jump_before"></mob-icon-double-arrow-left>
+        </li>
+
+        <li ng-if="pageStatus === 2" ng-repeat="pageNo in pageCountMiddleArray"
+            ng-bind="pageNo"
+            ng-class="{'active': $ctrl.currentPage === pageNo}"
+            ng-click="$ctrl.setCurrentPage(pageNo)"></li>
+
+        <li ng-if="pageStatus === 2 || pageStatus === 1" ng-mouseenter="$ctrl.jumpMouseEnter('jump_after')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_after')" ng-click="$ctrl.setCurrentPage($ctrl.currentPage + 5)">
+            <mob-icon-more-filled ng-if="!jump_after"></mob-icon-more-filled>
+            <mob-icon-double-arrow-right ng-if="jump_after"></mob-icon-double-arrow-right>
+        </li>
+
+        <li ng-repeat="pageNo in pageCountSuffixArray"
+            ng-bind="pageNo"
+            ng-class="{'active': $ctrl.currentPage === pageNo}"
+            ng-click="$ctrl.setCurrentPage(pageNo)"></li>
+    </ul>
+    <mob-button text  icon="'mob-Icon-arrow-right'"></mob-button>
+</div>

@@ -94,6 +94,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/table/index.html',
             controller: 'TableCtrl'
         })
+        .when('/pagination', {
+            templateUrl: './controller/pagination/index.html',
+            controller: 'Pagination'
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -135,6 +139,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Data数据展示', type: 1},
         {label: 'Table表格', path: '/table'},
+        {label: 'Pagination 分页', path: '/pagination'},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

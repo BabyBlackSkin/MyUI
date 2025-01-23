@@ -106,6 +106,10 @@ app.component('mobIcon', {
         templateUrl: './components/icon/loading.html',
         controller:controller
     })
+    .component('mobIconMoreFilled', {
+        templateUrl: './components/icon/moreFilled.html',
+        controller:controller
+    })
     .component('mobIconSearch', {
         templateUrl: './components/icon/search.html',
         controller:controller

@@ -1,0 +1,43 @@
+.mob-pagination {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.mob-pagination * {
+    list-style: none;
+}
+
+.mob-pagination .mob-button {
+    aspect-ratio: 1;
+    padding: 12px;
+    height: var(--mob-pagination-height);
+}
+
+.mob-pagination ul {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0;
+    margin: 0;
+}
+
+.mob-pagination li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    height: var(--mob-pagination-height);
+    line-height: var(--mob-pagination-height);
+    /*text-align: center;*/
+    box-sizing: border-box;
+    padding: 0 4px;
+    cursor: pointer;
+}
+
+.mob-pagination li.active {
+    color: var(--mob-active-fill-color)
+}
+
+.mob-pagination li:hover {
+    color: var(--mob-active-fill-color)
+}
+
