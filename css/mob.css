@@ -48,7 +48,9 @@
     /*背景颜色*/
     --mob-active-text-color-light: var(--mob-primary-light-color9);
 
+    --mob-text-color-placeholder: #a8abb2;
     --mob-transition-duration: .2s;
+    --mob-text-backgroud-color-primary: #ffffff;
     --mob-active-fill-color: var(--mob-primary-color);
     --mob-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, .12);
     --mob-border-color: #dcdfe6;
@@ -56,6 +58,7 @@
     --mob-active-border-color: var(--mob-primary-color);
     --mob-not-allow-background-color: #f5f7fa;
     --mob-disabled-background-color: #f5f7fa;
+    --mob-check-box-checked-icon-color: #ffffff;
     --mob-check-box-disabled-checked-icon-color: #a8abb2;
     --mob-transition-animate: cubic-bezier(.645, .045, .355, 1);
     --mob-ui-title-color: transparent;
@@ -79,7 +82,7 @@
     --mob-tree-icon-size: var(--mob-icon-size);
 
     /* popper 控件属性 */
-    --mob-popper-max-height: 300px;
+    --mob-popper-max-height:300px;
 
     /* table 控件属性*/
     /*表头背景颜色*/
@@ -127,12 +130,29 @@
     --mob-date-year-month-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
     --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2));
     --mob-date-year-month-range-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
+
+
+    /* 尺寸 */
+    --mob-radio-button-height:32px;
+}
+
+.large {
+    --mob-radio-button-height: 40px;
 }
 
 /* mob组件fontsSize默认为16px */
 [class^='mob'] {
     font-size: 14px;
 }
+/* ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 抵消 bootstrap 带来的影响 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  */
+.mob-checkbox * {
+    box-sizing: content-box;
+}
+
+.mob-checkbox *::before, .mob-checkbox *::after {
+    box-sizing: content-box;
+}
+/* ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ 抵消 bootstrap 带来的影响  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑  */
 
 .mob-icon svg {
     width: var(--mob-icon-size);
@@ -173,14 +193,15 @@ mob-switch,mob-popper{
 }
 mob-icon, mob-icon-calendar, mob-icon-caret-bottom, mob-icon-caret-left,
 mob-icon-caret-right, mob-icon-caret-top, mob-icon-check, mob-icon-circle-close, mob-icon-clock,
-mob-icon-close, mob-icon-decrease, mob-Icon-arrow-down, mob-icon-increase, mob-icon-invisible,
+mob-icon-close, mob-icon-decrease, mob-icon-arrow-down, mob-icon-increase, mob-icon-invisible,
 mob-icon-loading, mob-icon-search, mob-icon-visible, mob-icon {
     /*font-size: 0;*/
     display: flex;
 }
 
-mob-button {
+mob-button, mob-check-box {
     display: inline-flex;
+    font-size: 0;
     align-items: center;
     justify-content: center;
 }
@@ -202,6 +223,13 @@ mob-select, mob-tree-select, mob-date-picker, mob-time-spinner {
 mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date, mob-date-picker {
     display: block;
 }
+
+mob-form-item div[ng-transclude] {
+    width: 100%;
+    padding: 0;
+    overflow:auto;
+}
+
 mob-form-table {
     display: flex;
     width: 100%;

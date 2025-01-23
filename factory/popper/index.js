@@ -91,7 +91,9 @@ app
                         popperShow: false
                     }
                     // 给浮动元素 生成唯一id
-                    tooltip.id = uuId.newUUID()
+                    if (!tooltip.id) {
+                        tooltip.id = uuId.newUUID()
+                    }
                     // 给目标元素绑定唯一id
                     target.setAttribute('popper-id', tooltip.id)
                     // scope.$popperId = tooltip.id

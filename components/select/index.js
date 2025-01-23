@@ -33,8 +33,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.$onDestroy = function () {
         cross.delete(this.uuid)
         // 将创建的select和tag销毁
-        $(`${_that.uuid}_mob-select-popper`).remove()
-        $(`${_that.uuid}_mob-select-tag-popper`).remove()
+        $(`#${_that.uuid}_mob-select-popper`).remove()
+        $(`#${_that.uuid}_mob-select-tag-popper`).remove()
     }
 
 

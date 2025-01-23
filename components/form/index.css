@@ -14,8 +14,13 @@ mob-form {
     display: block;
 }
 
+.mob-form .mob-form-transclude {
+    flex-direction: column;
+}
+
 .mob-form.mob-form-inline .mob-form-transclude {
     display: flex;
+    flex-direction: row;
 }
 
 .mob-form-item-template {
