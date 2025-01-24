@@ -2,8 +2,6 @@ app
     .controller('CheckBoxCtrl', ['$scope', function CheckBoxCtrl($scope) {
         this.fatherChange = function (value) {
         }
-    }])
-    .controller('MultipleCheckBoxGroupCtrl', ['$scope', function MultipleCheckBoxGroupCtrl($scope) {
         this.multipleCheckBoxGroup = ['Option5']
 
 
@@ -27,6 +25,7 @@ app
             let checkCount = this.checkedCities.length
             this.checkAll = checkCount === this.cities.length
             this.indeterminate = checkCount > 0 && checkCount < this.cities.length
+            console.log(this.indeterminate)
         }
 
         this.min = 2

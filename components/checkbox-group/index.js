@@ -75,6 +75,7 @@ app
     .component('mobCheckBoxGroup', {
         transclude: true,
         templateUrl: './components/checkbox-group/index.html',
+        controller: controller,
         bindings: {
             ngModel: '=?',// 使用单项的model，用于监听他的change，checkBox
             min: '<?',

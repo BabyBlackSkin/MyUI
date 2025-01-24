@@ -46,7 +46,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                    <div>
                         <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
                             <mob-check-box label="'Option1'" check-value="'Option1'"></mob-check-box>
                             <mob-check-box label="'Option2'" check-value="'Option2'"></mob-check-box>
@@ -67,7 +67,7 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                             <html>
-                                 <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                                 <div>
                                     <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
                                         <mob-check-box label="'Option1'" check-value="'Option1'"></mob-check-box>
                                         <mob-check-box label="'Option2'" check-value="'Option2'"></mob-check-box>
@@ -78,14 +78,6 @@
                                     值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                                 </div>
                             </html>
-
-
-
-                            <script>
-                                angular.controller('MultipleCheckBoxGroupCtrl', ['$scope', function RadioCtrl($scope) {
-                                    this.multipleCheckBoxGroup = ['Option5']
-                                }])
-                            </script>
                         --></code>
                     </pre>
             </div>
@@ -97,7 +89,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                    <div>
                         <mob-check-box  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change="ctrl.checkAllChange()"></mob-check-box>
                         <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                             <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box>
@@ -112,7 +104,7 @@
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
                            <html>
-                            <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                            <div>
                                 <mob-check-box  label="'全选'" ng-model="ctrl.checkAll" indeterminate="ctrl.indeterminate" change="ctrl.checkAllChange()"></mob-check-box>
                                 <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                                     <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box>
@@ -123,25 +115,6 @@
                            </html>
 
                            <script>
-                                angular.controller('MultipleCheckBoxGroupCtrl', ['$scope', function MultipleCheckBoxGroupCtrl($scope) {
-
-                                            this.checkAll = false;
-                                            this.indeterminate = true
-                                            this.checkedCities = ['澳门'];
-                                            this.cities = ['北京', '上海', '广东', '深圳', '香港', '澳门']
-
-                                            this.checkAllChange = function () {
-                                                this.checkAll = !this.checkAll
-                                                this.checkedCities = this.checkAll ? [...this.cities] : []
-                                            }
-
-                                            this.checkboxChangeHandle = function () {
-                                                let checkCount = this.checkedCities.length
-                                                this.checkAll = checkCount === this.cities.length
-                                                this.indeterminate = checkCount > 0 && checkCount < this.cities.length
-                                            }
-                                        }])
-
                            </script>
                         --></code>
                     </pre>
@@ -153,7 +126,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                    <div>
                         <mob-check-box-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                             <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box>
                         </mob-check-box-group>
@@ -170,7 +143,7 @@
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                            <div>
                                 <mob-check-box-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                                     <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box>
                                 </mob-check-box-group>
@@ -186,7 +159,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                    <div>
                         <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                             <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box-button>
                         </mob-check-box-group>
@@ -199,7 +172,7 @@
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                            <div>
                                 <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
                                     <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box-button>
                                 </mob-check-box-group>
@@ -217,7 +190,7 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
-                    <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                    <div>
                         <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                             <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" border="true" ></mob-check-box>
                         </mob-check-box-group>
@@ -230,7 +203,7 @@
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <div ng-controller="MultipleCheckBoxGroupCtrl as ctrl">
+                            <div>
                                 <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
                                     <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-check-box-button>
                                 </mob-check-box-group>
