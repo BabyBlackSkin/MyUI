@@ -27,24 +27,24 @@ app
                 refundOrderSn:'001R002',
                 refundOrderNum:2
             },
-            // {
-            //     eshopOrderSn:'002',
-            //     orderPrice:100,
-            //     refundOrderSn:'002R002',
-            //     refundOrderNum:1
-            // },
-            // {
-            //     eshopOrderSn:'003',
-            //     orderPrice:100,
-            //     refundOrderSn:'003R001',
-            //     refundOrderNum:3
-            // },
-            // {
-            //     eshopOrderSn:'003',
-            //     orderPrice:100,
-            //     refundOrderSn:'003R002',
-            //     refundOrderNum:3
-            // },
+            {
+                eshopOrderSn:'002',
+                orderPrice:100,
+                refundOrderSn:'002R002',
+                refundOrderNum:1
+            },
+            {
+                eshopOrderSn:'003',
+                orderPrice:100,
+                refundOrderSn:'003R001',
+                refundOrderNum:3
+            },
+            {
+                eshopOrderSn:'003',
+                orderPrice:100,
+                refundOrderSn:'003R002',
+                refundOrderNum:3
+            },
             // {
             //     eshopOrderSn:'003',
             //     orderPrice:100,
@@ -83,5 +83,23 @@ app
                 }
                 return $scope.spanCache[row.eshopOrderSn];
             }
+        }
+
+        $scope.columns = [
+            {prop: 'eshopOrderSn', label: '列1'},
+            {prop: 'orderPrice', label: '列2'},
+            {prop: 'refundOrderSn', label: '列3'},
+            {prop: 'operate1', label: '操作1',slot:'operate1'},
+            {prop: 'operate2', label: '操作2',slot:'operate2'},
+            {prop: 'operate3', label: '操作3',slot:'operate3'},
+        ]
+        $scope.clickDemo1 = function ( sn){
+            alert("啊啊啊AAA" +  sn)
+        }
+        $scope.clickDemo2 = function (sn){
+            alert("啊啊啊BB" +  sn)
+        }
+        $scope.clickDemo3 = function (sn){
+            alert("啊啊啊CC" +  sn)
         }
     }])

@@ -2,16 +2,97 @@
 
     <h2>Table 表单</h2>
 
-    <div class="mob-doc content" style="position: relative">
-        <mob-table data="data" style="display:flex;" stripe="true" border="true" height="400" span-method="spanMethod(opt)">
-            <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" fixed="true"></mob-table-item>
-            <mob-table-item prop="'orderPrice'" label="'列2'" width="200" fixed="true"></mob-table-item>
-            <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
-            <mob-table-item prop="'operate'" label="'操作'" width="200" fixed="'right'">
-                <mob-button>
-                    测试
-                </mob-button>
-            </mob-table-item>
-        </mob-table>
+    <h3>基础用法</h3>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example" >
+            <mob-table data="data">
+                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+            </mob-table>
+        </div>
+        <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-table data="data">
+                                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+                            </mob-table>
+                        --></code>
+                    </pre>
+        </div>
+    </div>
+
+    <h3>带斑马纹表格</h3>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example" >
+            <mob-table data="data" stripe="true">
+                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+            </mob-table>
+        </div>
+        <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-table data="data" stripe="true">
+                                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+                            </mob-table>
+                        --></code>
+                    </pre>
+        </div>
+    </div>
+
+    <h3>带边框表格</h3>
+    <p>默认情况下，Table 组件是不具有竖直方向的边框的， 如果需要，可以使用 border 属性，把该属性设置为 true 即可启用。</p>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example" >
+            <mob-table data="data" border="true">
+                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+            </mob-table>
+        </div>
+        <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-table data="data" border="true">
+                                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+                            </mob-table>
+                        --></code>
+                    </pre>
+        </div>
+    </div>
+
+    <h3>固定表头</h3>
+    <p>当数据量动态变化时，可以为 Table 设置一个最大高度。</p>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example" >
+            <mob-table data="data" border="true" height="200">
+                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+            </mob-table>
+        </div>
+        <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-table data="data" border="true">
+                                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+                            </mob-table>
+                        --></code>
+                    </pre>
+        </div>
     </div>
 </section>

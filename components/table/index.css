@@ -17,7 +17,7 @@
     background-color: var(--mob-table-header-bg-color);
 }
 
-.mob-table thead tr:last-child th {
+.mob-table thead tr:not(:first-child):last-child th {
     border-top: 1px solid var(--mob-table-border);
 }
 
@@ -53,6 +53,10 @@
 }
 
 /*边框样式*/
+.mob-table.border thead tr th {
+    border-top: 1px solid var(--mob-table-border);
+}
+
 .mob-table.border thead tr th:first-child {
     border-left: 1px solid var(--mob-table-border);
 }
