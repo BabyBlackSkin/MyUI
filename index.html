@@ -193,17 +193,18 @@
 
     .navigation {
         position: fixed;
+        width: 15vw;
         padding: 20px 20px 30px 0;
         height: 100vh;
         overflow: auto;
         background-color: #ffffff;
-        margin-right: 20px;
         box-sizing: border-box;
         /*z-index: 1;*/
     }
 
     .navigation .nav-item {
         padding-left: 20px;
+        width: 100%;
         height: 40px;
         display: flex;
         align-items: center;
@@ -220,7 +221,7 @@
         display: flex;
         box-sizing: border-box;
         padding: 5px 20px;
-        width: 300px;
+        width: 100%;
         height: 40px;
         color: #444;
         align-items: center;
@@ -243,15 +244,17 @@
     }
 
     .main-container {
-        width: calc(100% - 300px - 60px);
-        padding-left: calc(300px + 70px);
+        width: 95vw;
+        box-sizing: border-box;
+        padding:0 20px 0 20vw;
         display: flex;
         flex-direction: column;
-        height: 100vh
+        height: 100vh;
     }
     /*@media (min-width: 1440px) {*/
     footer {
         padding: 32px;
+        background-color: white;
     }
     /*}*/
     footer{
@@ -275,7 +278,6 @@
 <div class="contain" style="display: flex;">
 
     <div class="navigation" style="z-index: 1">
-<!--        <mob-container>-->
             <div class="nav-item" ng-repeat="item in menuList"
                  ng-class="{'is_active':item.path === routPath, 'group_title':item.type === 1}">
                 <a href="{{'#' + item.path}}" ng-if="item.type !== 1">
@@ -286,18 +288,18 @@
 
             </span>
             </div>
-<!--        </mob-container>-->
     </div>
 
     <div class="main-container">
         <div ng-view="" class="view-animate-container" style="flex-shrink: 0;flex-grow: 1;min-height: auto">
         </div>
-            <footer data-v-80147a0d="" data-v-8f7cd5e4="" class="VPFooter" style="z-index: 999">
-                <div data-v-80147a0d="" class="container"><p data-v-80147a0d="" class="message">
-                    <a href="https://beian.miit.gov.cn/">苏ICP备2024078001号-1</a>
-                </p>
-                    <p data-v-80147a0d="" class="copyright">Copyright © 2024-present BabyBlackSkin</p></div>
-            </footer>
+
+        <footer data-v-80147a0d="" data-v-8f7cd5e4="" class="VPFooter" style="z-index: 999">
+            <div data-v-80147a0d="" class="container"><p data-v-80147a0d="" class="message">
+                <a href="https://beian.miit.gov.cn/">苏ICP备2024078001号-1</a>
+            </p>
+                <p data-v-80147a0d="" class="copyright">Copyright © 2024-present BabyBlackSkin</p></div>
+        </footer>
 
     </div>
 </div>
