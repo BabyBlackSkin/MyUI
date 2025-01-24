@@ -112,9 +112,7 @@ function controller($scope, $element, $attrs) {
      * @param jump
      */
     this.jumpMouseEnter = function (jump) {
-        console.log($scope[jump])
         $scope[jump] = true
-        console.log($scope[jump])
     }
 
     /**
