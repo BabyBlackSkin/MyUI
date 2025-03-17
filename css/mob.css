@@ -255,6 +255,9 @@ mob-form-table {
     width: 100%;
 }
 
+mob-table-item {
+    display: contents;
+}
 
 
 .mob-scrollbar::-webkit-scrollbar {
