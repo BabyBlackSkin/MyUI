@@ -65,6 +65,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         // 将创建的select和tag销毁
         $(`${_that.name}_mob-tree-select-popper`).remove()
         $(`${_that.name}_mob-tree-select-tag-popper`).remove()
+        $scope.$popper.destroy()
     }
 
     this.getAttrs = function (key){

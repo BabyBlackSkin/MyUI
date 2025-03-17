@@ -63,6 +63,8 @@ app
                     }
                 })
                 scope.$popper = {}
+
+                let clickHandleArr = []
                 // 遍历定义的popper
                 for (let name of Object.keys(popperConfig)) {
                     let trigger = popperConfig[name].popperTrigger;
@@ -115,7 +117,7 @@ app
                         }, 50)()
                     })
 
-                    document.addEventListener('click', function (e) {
+                    let clickHandle =  (e) => {
                         $debounce.debounce(scope, `${tooltip.id}_documentClick`, async () => {
                             // 点击的目标自己，不做处理
                             if (target.contains(e.target)) {
@@ -132,7 +134,16 @@ app
                                 scope.$popper[name].hide()
                             }
                         }, 50)()
-                    })
+                    }
+                    document.addEventListener('click', clickHandle)
+
+                    clickHandleArr.push(clickHandle)
+                }
+
+                scope.$popper.destroy = () => {
+                    for (let clickHandleArrElement of clickHandleArr) {
+                        document.removeEventListener('click', clickHandleArrElement)
+                    }
                 }
             }
         }
