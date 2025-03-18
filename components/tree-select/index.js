@@ -40,7 +40,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         }
         else {
-            this.props = Object.assign(this.props, {label: "label", children: "children"})
+            this.props = Object.assign({label: "label", children: "children"}, this.props)
         }
 
         // 初始化参数
