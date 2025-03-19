@@ -53,6 +53,9 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * 节点checkbox的change方法
      */
     this.changeHandler = function (opt) {
+        if (this.allowCheck === false) {
+            return
+        }
         // 是不是通知给tree，由tree来修改？
         let {value} = opt
         $scope.$emit(`${_that.tree.name}NodeChange`, {nodeKey: _that.data[_that.nodeKey], checked: value})
@@ -128,7 +131,6 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.expandOrCollapse = function () {
         let isExpand = _that.data.expand ? 1 : 0
-        _that.data.expand = !_that.data.expand;
         if (angular.isUndefined(this.data.children) || this.data.children.length === 0) {
             return
         }
@@ -147,25 +149,32 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
             childContent.style.height = 0
             childContent.style.opacity = 0
             $timeout(function () {
-                childContent.style.display = 'none'
+                // childContent.style.display = 'none'
+                _that.data.expand = false
             }, 300)
 
         } else {
+            _that.data.expand = true
+            _that.data.loadStatus = 2
+
             if (angular.isFunction(this.tree.nodeCollapse)) {
                 let opt = {node: _that.data, attachment: this.tree.attachment}
                 this.tree.nodeExpand({opt: opt})
             }
-            childContent.style.display = 'block'
-            childContent.style.height = 'auto'
-            let {height} = childContent.getBoundingClientRect()
-            childContent.style.height = 0
-            childContent.offsetHeight
-            childContent.style.height = height + 'px'
-            childContent.style.opacity = 1
-
-            $timeout(function () {
+            $timeout(function (){
+                _that.data.loadStatus = 1
+                childContent.style.display = 'block'
                 childContent.style.height = 'auto'
-            }, 300)
+                let {height} = childContent.getBoundingClientRect()
+                childContent.style.height = 0
+                childContent.offsetHeight
+                childContent.style.height = height + 'px'
+                childContent.style.opacity = 1
+
+                $timeout(function () {
+                    childContent.style.height = 'auto'
+                }, 300)
+            },1)
         }
     }
 }
@@ -193,6 +202,7 @@ app
             checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
             // defaultExpandedKeys: "<?", // 默认展开的节点的 key 的数组
             showCheckbox: "<?",// 是否显示多选框
+            allowCheck:'<?',// 是否允许选中
             // defaultCheckedKeys: "<?",// 默认勾选的节点的 key 的数组
             // currentNodeKey: "=?",// 当前选中节点的 key
 

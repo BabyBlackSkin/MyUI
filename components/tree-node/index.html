@@ -16,7 +16,7 @@
         <!-- checkBox -->
         <div class="mob-tree-node-operate">
             <mob-check-box  stop-bubbling
-                            ng-if="$ctrl.showCheckbox"
+                            ng-if="$ctrl.showCheckbox !== false && $ctrl.allowCheck !== false"
                             ng-model="$ctrl.data.check"
                             indeterminate="$ctrl.data.indeterminate"
                             ng-click="$ctrl.checkBoxClickHandler()"
@@ -29,8 +29,10 @@
     </div>
     <!-- 子节点 -->
     <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
-        <mob-tree-node ng-repeat="node in $ctrl.data.children"
-                       show-checkbox="$ctrl.showCheckbox"
+        <mob-tree-node ng-if="$ctrl.data.expand"
+                       ng-repeat="node in $ctrl.data.children"
+                       show-checkbox="node.showCheckbox"
+                       allow-check="node.allowCheck"
                        data="node"
                        node-key="$ctrl.nodeKey"
                        props="$ctrl.props"

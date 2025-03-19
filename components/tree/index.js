@@ -114,6 +114,10 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         // 自己的子节点，将子节点的check改为自己的值
         if (angular.isDefined(node.children)) {
             for (let child of node.children) {
+                // 如果节点不允许选中，则跳过
+                if (child.allowCheck === false) {
+                    continue
+                }
                 let childNode = this.nodeCache[this.getNodeKeyValue(child)]
                 childNode.check = node.check
                 if (syncNgModel && (angular.isUndefined(childNode.disabled) || !childNode.disabled)) {
@@ -140,6 +144,10 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
         // 获取父节点
         let parentNode = this.parentNodeCache[this.getNodeKeyValue(node)]
         if (angular.isUndefined(parentNode)) {
+            return;
+        }
+        // 如果节点不允许选中，则跳过
+        if (parentNode.allowCheck === false) {
             return;
         }
         let childCheckNum = 0;
