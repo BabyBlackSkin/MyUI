@@ -310,7 +310,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
                             <div class="mob-tree-select__selected-item__collapse" ng-repeat="item in collapseTagsList" ng-if="!$first">
-                                <span ng-bind="item[$ctrl.props['label']]"></span>
+                                <span ng-bind="$ctrl.getLabel(item)"></span>
                                 <!-- TreeSelect暂时不支持通过Tag移除 -->
 <!--                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)" stop-bubbling></mob-icon-close>-->
                             </div>
@@ -388,7 +388,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         let node = _that.optionsCache[nodeKey]
         // 判断node是否存在
         if (angular.isUndefined(node)) {
-            // 判断node是否存在
+            let unknownNode = {
+                label:nodeKey
+            }
+            unknownNode[this.nodeKey] = nodeKey
+            $scope.collapseTagsList.push(unknownNode)
+            return;
         }
         let winIndex = $scope.collapseTagsList.findIndex(obj => {
             return obj[_that.nodeKey] === node[_that.nodeKey]
@@ -424,6 +429,23 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.filterHasMatched = function () {
         $scope.filterResult.anyMatch = Object.values($scope.filterResult.options).some(o => o === true)
     }
+
+    /**
+     * 获取节点的label
+     * @param node
+     * @returns {*}
+     */
+    this.getLabel = function (node) {
+        if (!node) {
+            return ''
+        }
+        let label = node[this.props['label']]
+        if (label) {
+            return label
+        }
+        return node[this.nodeKey]
+    }
+
 
     /**
      * 无工具箱的collapse
