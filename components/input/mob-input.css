@@ -47,12 +47,13 @@
 .mob-input .mob-input__wrapper {
     padding: 0 11px;
 }
-.mob-input .mob_icon_clear {
+
+.mob-input .mob-input_clear {
     transition: all var(--mob-transition-duration);
     opacity: 0;
 }
 
-.mob-input:hover .mob_icon_clear {
+.mob-input:hover .mob-input_clear, .mob-input .mob-input__wrapper:focus-within .mob-input_clear {
     opacity: 1;
 }
 
