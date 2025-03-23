@@ -72,6 +72,41 @@
         </div>
     </div>
 
+
+    <style>
+        .mob-table tr.success{
+            background-color: #f0f9eb;
+        }
+        .mob-table tr.warning{
+            background-color: #fdf6ec;
+        }
+    </style>
+
+    <h3>带状态表格</h3>
+    <p>可将表格内容 highlight 显示，方便区分「成功、信息、警告、危险」等内容。</p>
+    <p>可以通过指定 Table 组件的 row-class-name 属性来为 Table 中的某一行添加 class， 这样就可以自定义每一行的样式了。</p>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example" >
+            <mob-table data="data" border="true" row-class-name="getClassName(opt)">
+                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+            </mob-table>
+        </div>
+        <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-table data="data" border="true">
+                                <mob-table-item prop="'eshopOrderSn'" label="'列1'" width="200" ></mob-table-item>
+                                <mob-table-item prop="'orderPrice'" label="'列2'" width="200"></mob-table-item>
+                                <mob-table-item prop="'refundOrderSn'" label="'列3'" width="200"></mob-table-item>
+                            </mob-table>
+                        --></code>
+                    </pre>
+        </div>
+    </div>
+
     <h3>固定表头</h3>
     <p>当数据量动态变化时，可以为 Table 设置一个最大高度。</p>
     <div class="mob-demo-block">

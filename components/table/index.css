@@ -27,7 +27,7 @@
     border-bottom: 1px solid var(--mob-table-border);
 }
 
-.mob-table th,.mob-table td {
+.mob-table tr {
     background-color: var(--mob-table-td-bg-color);
 }
 

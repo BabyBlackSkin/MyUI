@@ -45,18 +45,18 @@ app
                 refundOrderSn:'003R002',
                 refundOrderNum:3
             },
-            // {
-            //     eshopOrderSn:'003',
-            //     orderPrice:100,
-            //     refundOrderSn:'003R003',
-            //     refundOrderNum:3
-            // },
-            // {
-            //     eshopOrderSn:'004',
-            //     orderPrice:100,
-            //     refundOrderSn:'004R001',
-            //     refundOrderNum:1
-            // }
+            {
+                eshopOrderSn:'003',
+                orderPrice:100,
+                refundOrderSn:'003R003',
+                refundOrderNum:3
+            },
+            {
+                eshopOrderSn:'004',
+                orderPrice:100,
+                refundOrderSn:'004R001',
+                refundOrderNum:1
+            }
         ]
 
 
@@ -101,5 +101,15 @@ app
         }
         $scope.clickDemo3 = function (sn){
             alert("啊啊啊CC" +  sn)
+        }
+
+        $scope.getClassName = function (opt){
+            // console.log(opt)
+            if(opt.index == 1){
+                return 'warning'
+            }else if(opt.index == 3){
+                return 'success'
+            }
+            return ''
         }
     }])

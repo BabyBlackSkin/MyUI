@@ -4,22 +4,6 @@ function controller($scope, $element, $attrs) {
     this.$onInit = function () {
         this.cellList = []
 
-        $scope.style = {}
-        let height;
-        if ($scope.height) {
-            let finite = Number.isFinite($scope.height);
-            if (finite) {
-                $scope.style.height = $scope.height + 'px'
-            } else {
-                let percent = $scope.height.endsWith("%")
-                if (percent) {
-                    $scope.style.height = $scope.height
-                } else {
-                    $scope.style.height = $scope.height + 'px'
-                }
-            }
-        }
-
         // 注册列的缓存
         this.hasRegisteredColumn = {}
         this.cellListRowInx = 0
@@ -39,6 +23,30 @@ function controller($scope, $element, $attrs) {
 
     this.$postLink = function () {
 
+        $scope.style = {}
+        // 判断是否设定高度，如果设定，则固定表头
+        if (this.height) {
+            let height = null;
+            let finite = Number.isFinite(this.height);
+            if (finite) {
+                height = this.height + 'px'
+            } else {
+                let percent = this.height.endsWith("%")
+                if (percent) {
+                    height = this.height
+                } else {
+                    height= this.height + 'px'
+                }
+            }
+            $scope.style = {
+                height: height
+            }
+            $element.find('thead').css({
+                "position": 'sticky',
+                "z-index": 1,
+                "top": 0
+            });
+        }
     }
     /**
      * 计算列的定位
@@ -203,7 +211,7 @@ function controller($scope, $element, $attrs) {
         if (angular.isUndefined(_that.rowClassName)) {
             return ''
         }
-        return _that.rowClassName({index, row});
+        return _that.rowClassName({opt:{index, row}});
     }
 
 }
