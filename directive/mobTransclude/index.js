@@ -57,6 +57,7 @@ const mobTransclude = [
                         let contextAttrs = $attrs.context.split(",");
                         for (let contextAttr of contextAttrs) {
                             $scope.$watch(contextAttr, (newVal, oldVal) => {
+                                // console.log(`监听 ${$scope.$id}的 ${contextAttr} 更新给 ${childScope.$id}`)
                                 // 如果是context，则解构后在赋值给context
                                 if ("$context" === contextAttr) {
                                     updateScope(childScope, newVal);

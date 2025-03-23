@@ -11,7 +11,7 @@ app
 
 
     let dataList = []
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 1; i++) {
         let opt = {}
         for (let j = 0; j < 10; j++) {
             let v = i * j

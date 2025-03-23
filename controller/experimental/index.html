@@ -15,7 +15,10 @@
     <mob-table data="data" row-class-name="className(opt)">
         <mob-table-item prop="'num1'" label="'列1'" width="200" ></mob-table-item>
         <mob-table-item prop="'num2'" label="'列2'" width="200"></mob-table-item>
-        <mob-table-item prop="'num3'" label="'列3'" width="200"></mob-table-item>
+        <mob-table-item prop="'num3'" label="'列3'" width="200">
+            {{$context.row['num3']}}
+<!--            <mob-input ng-model=""></mob-input>-->
+        </mob-table-item>
     </mob-table>
 
 <!--    <mob-table data="dataList">-->

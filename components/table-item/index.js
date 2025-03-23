@@ -10,8 +10,8 @@ const mobTableItem = ["$timeout",
             scope: {
                 prop: "=",
                 label: "=",//
-                width: "=",// 宽度
-                fixed: "=",// 固定列
+                width: "=?",// 宽度
+                fixed: "=?",// 固定列
             },
             controllerAs: "vm",
             require: "?^mobTable",
@@ -28,8 +28,8 @@ const mobTableItem = ["$timeout",
                 >
                     <div class="cell">
                         <mob-transclude context="transcludeContext" context-type="JSON"></mob-transclude>
-                        <span ng-show="$$mobTransclude" ng-bind="$parent.$context.row[prop]"></span>
-                        <span ng-show="!$$mobTransclude" ng-bind="$parent.$context.row[prop]"></span>
+                        <!--  ngif 会创建一个子的scope-->
+                        <span ng-if="!$$mobTransclude" ng-bind="$parent.$parent.$context.row[prop]"></span>
                     </div>
                 </td>
                 `
