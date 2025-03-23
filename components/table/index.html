@@ -1,18 +1,20 @@
-<div>
-    <table class="mob-table ">
+<div class="mob-table"  ng-class="{'border':border,'stripe':stripe,'table-head-fixed':height}" ng-style="style">
+    <table>
         <colgroup>
-            <col ng-repeat="col in columns track by $index" ng-class="['mob-table-col__' + $index]" width="{{col.witdh || 180}}">
+            <col ng-repeat="col in $ctrl.cellList[0] track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >
         </colgroup>
         <thead>
         <tr>
-            <th ng-repeat="col in columns">
-                <div class="mob-table-item cell" ng-bind="col.label"></div>
+            <th ng-repeat="col in $ctrl.cellList[0]" class="mob-table-item mob-table-item__cell"
+                ng-class="{'fixed':col.fixed, 'fixed-left': col.fixed && col.fixed !=='right','fixed-right': col.fixed ==='right' }"
+                ng-style="col.style">
+                <div class="cell" ng-bind="col.label"></div>
             </th>
         </tr>
         </thead>
         <!-- 每行是对象 -->
         <tbody>
-        <tr ng-repeat="($rowInx, row) in data track by $index">
+        <tr ng-repeat="($rowIndex, row) in $ctrl.data track by $index" on-repeat-finish="mobTableColumnRepeatFinish" ng-class="rowClassName($rowIndex, row)">
             <td mob-transclude context="row,$index"></td>
         </tr>
         </tbody>

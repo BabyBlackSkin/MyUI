@@ -1,0 +1,12 @@
+<td rowspan="{{span.rowspan != 0 ? span.rowspan : ''}}" colspan="{{span.colspan != 0 ? span.colspan : ''}}" ng-show="!span.isSpan" class="mob-table-item mob-table-item__cell"
+    ng-class="{'fixed':fixed, 'fixed-left': fixed && fixed !=='right','fixed-right': fixed ==='right' ,'first-fixed-column': isFirstFixedColumn}"
+    ng-style="style"
+    ng-mouseenter="vm.mouseEnter()"
+    ng-mouseleave="vm.mouseLeave()"
+>
+    <div class="cell">
+        <mob-transclude context="transcludeContext" context-type="JSON"></mob-transclude>
+        <span ng-show="$$mobTransclude" ng-bind="$parent.$context.row[prop]"></span>
+        <span ng-show="!$$mobTransclude" ng-bind="$parent.$context.row[prop]"></span>
+    </div>
+</td>

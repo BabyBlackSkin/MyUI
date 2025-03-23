@@ -14,7 +14,7 @@ const mobTableItem = ["$timeout",
                 fixed: "=",// 固定列
             },
             controllerAs: "vm",
-            require: "^mobTable",
+            require: "?^mobTable",
             replace: true,
             //
             // templateUrl: 'index.html',
@@ -47,10 +47,12 @@ const mobTableItem = ["$timeout",
                     },
                     post: function ($scope, $element, $attrs, mobTableController) {
                         // 向table注册
-                        mobTableController.registerColumn($scope)
+                        $scope.$parent.$parent.$parent.$ctrl.registerColumn($scope)
+                        // mobTableController.registerColumn($scope)
 
                         // 监听渲染完成事件
-                        $scope.$on(`mobTableColumnRepeatFinish${mobTableController.$id}`, function () {
+                        $scope.$on(`mobTableColumnRepeatFinish${$scope.$parent.$parent.$parent.$ctrl.$id}`, function () {
+                        // $scope.$on(`mobTableColumnRepeatFinish${mobTableController.$id}`, function () {
                             // 计算合并列
                             // 获取合并的行列
                             let opt = {
@@ -59,7 +61,8 @@ const mobTableItem = ["$timeout",
                                 column: $scope.$parent.$context.row[$scope.prop],
                                 columnIndex: $scope.columnIndex
                             }
-                            mobTableController.spanMethod(opt)
+                            $scope.$parent.$parent.$parent.$ctrl.spanMethod(opt)
+                            // mobTableController.spanMethod(opt)
                         })
 
                     }
