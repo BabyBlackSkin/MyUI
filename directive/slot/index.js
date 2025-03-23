@@ -23,7 +23,11 @@ app
 
         return {
             transclude: function (scope, element, transcludeFn) {
-                transcludeFn(scope.$parent, function (tranEl, $scope) {
+                // transcludeFn(scope.$parent, ngTranscludeCloneAttachFn)
+                transcludeFn(ngTranscludeCloneAttachFn, null)
+
+                function ngTranscludeCloneAttachFn(tranEl, $scope) {
+                    // console.log('transclude1',$scope.$id, $scope)
                     let dom = element[0].querySelectorAll("slot")
                     let map = {};
 
@@ -33,22 +37,24 @@ app
                         if (!slotName) {
                             slotName = slot.name || 'anonymous'
                         }
-                        // console.log(slot.name +'', dom, scope1)
-                        if(!slotName){
+                        if (!slotName) {
                             slotName = $parse(slotName)(scope1)
                         }
-                        // console.log($parse(slotName)(scope.$parent))
-                        map[slotName] = slot
+                        // 获取插槽所在作用域
+                        let slotScope = angular.element(slot).scope()
+                        // 获取需要穿透的上下文
+                        let context = $parse($(slot).attr('context'))(scope1)
+                        map[slotName] = {
+                            dom: slot,
+                            context: context,
+                            $scope: slotScope
+                        }
                     }
 
                     // 获取插槽实际的作用域
-                    // let compileScope = getHeadScope(tranScope.$parent);
-                    // if(!compileScope){
-                    //     return
-                    // }
-                    if(!scope.$slot){
+                    if (!scope.$slot) {
                         scope.$slot = {
-                            slot:{},
+                            slot: {},
                         }
                     }
 
@@ -61,29 +67,26 @@ app
 
                         // 获取插槽名称
                         let slotName = node.slot || 'anonymous'
-                        // let appendToBody = node.getAttribute('append-to-body') || false
                         // 将插槽设置为开启
                         scope.$slot.slot[slotName] = true
+                        let slotConfig = map[slotName]
                         // 将自己标记为true，创建链式调用
-                        // scope.$slot.transclude = true
-
-                        // node = $compile(node)(compileScope)[0];
-                        // console.log(compileScope)
-                        // console.log(compileScope.$id)
-                        // map[slotName].appendChild(node)
-                        // if (appendToBody) {
-                            // $document[0].body.appendChild(node)
-                            // document.body.appendChild(node)
-                        // } else {
-                            let needBeReplact = map[slotName];
-                            if (needBeReplact) {
-                                needBeReplact.replaceWith(node)
-                            }else{
-                                console.warn(slotName + " is undefined")
-                            }
-                        // }
+                        if (!slotConfig) {
+                            console.warn(slotName + " is undefined")
+                            return
+                        }
+                        let needBeReplace = slotConfig.dom;
+                        if (!needBeReplace) {
+                            console.warn(slotName + " is undefined")
+                            return;
+                        }
+                        // 监控上下文
+                        slotConfig.$scope.$watch('$context',function (newV,oldV){
+                            $scope[slotName] = newV
+                        })
+                        needBeReplace.replaceWith(node)
                     }
-                })
+                }
             },
             appendChild: function (scope, element, slotList) {
                 if (null == element) {

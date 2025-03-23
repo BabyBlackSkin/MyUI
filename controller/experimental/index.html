@@ -11,14 +11,13 @@
 </style>
 <section class="mob-doc content" ng-controller="Experimental as ctrl">
 
+<!--    data:{{data}}-->
+    <mob-table data="data" row-class-name="className(opt)">
+        <mob-table-item prop="'num1'" label="'列1'" width="200" ></mob-table-item>
+        <mob-table-item prop="'num2'" label="'列2'" width="200"></mob-table-item>
+        <mob-table-item prop="'num3'" label="'列3'" width="200"></mob-table-item>
+    </mob-table>
 
-    <div class="mob-popper-down" popper-group="demo" id="down">
-        哈哈哈哈哈哈
-    </div>
-
-    <mob-button ng-click="createDemo()">创建</mob-button>
-
-
-    <input class="mob-popper" popper-group="demo" id="popper"/>
-    <!--    <mob-select></mob-select>-->
+<!--    <mob-table data="dataList">-->
+<!--    </mob-table>-->
 </section>
