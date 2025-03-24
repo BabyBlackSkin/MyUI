@@ -1,9 +1,10 @@
 <div class="mob-select-options" id="{{$ctrl.id}}"
      ng-class="{
-     'is_active': active,
+     'is_active': activeModel.active,
      'is_disabled':$ctrl.ngDisabled,
      'is_hidden':hidden
      }"
      ng-click="$ctrl.clickHandler()">
+    <mob-check-box ng-model="activeModel.active" ng-if="$ctrl.checkBox" ng-disabled="$ctrl.ngDisabled"></mob-check-box>
     <span class="mob-unselect-text" ng-bind="$ctrl.label"></span>
 </div>

@@ -2,10 +2,10 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['notJoinMatchOption']
+        let abbParams = ['notJoinMatchOption','checkBox']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
         this.id = uuId.newUUID()
-        $scope.active = false
+        $scope.activeModel = {active:false}
         $scope.$data = this.data // 绑定data，给container使用
         if (!this.mobSelect) {// 如果select是appendToBody时，要通过cross服务来获取父级作用域
             let selectUUID = $element[0].getAttribute("select-uuid")
@@ -44,7 +44,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的清空事件
         $scope.$on(`${_that.mobSelect.uuid}Empty`, function (e, data) {
-            $scope.active = false
+            $scope.activeModel.active = false
         })
 
         // 监听父组件的过滤事件
@@ -73,8 +73,8 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         } else {
             temporaryActive = data === this.getValue()
         }
-        if (temporaryActive !== $scope.active) {
-            $scope.active = temporaryActive;
+        if (temporaryActive !== $scope.activeModel.active) {
+            $scope.activeModel.active = temporaryActive;
             return true
         } else {
             return false
@@ -104,6 +104,7 @@ app
         bindings: {
             ngDisabled: '<?',
             notJoinMatchOption: '<?',
+            checkBox: '<?',
             label: '<?',
             value: '<?',
             data: '<?'
