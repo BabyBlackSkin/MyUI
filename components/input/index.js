@@ -102,6 +102,14 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
     this.showWordCount = function () {
         return this.showWordLimit && !this.showPassword
     }
+
+    $scope.keyDownHandle = function ($event) {
+        if (!angular.isFunction(_that.keyDown)) {
+            return
+        }
+        let opt = {$event}
+        _that.keyDown({opt})
+    }
 }
 
 app.component('mobInput', {
@@ -118,6 +126,7 @@ app.component('mobInput', {
         showPassword: '<?',
         ngMaxlength: '<?',
         showWordLimit: '<?',
-        handleChange: '&'
+        handleChange: '&',
+        keyDown:"&?"
     },
 })

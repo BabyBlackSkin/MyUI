@@ -37,8 +37,8 @@
     color: var(--mob-input-color);
     display: inline-block;
     font-size: inherit;
-    height: var(--mob-input-height);
-    line-height: var(--mob-input-height);
+    height: calc(var(--mob-input-height) - 2px);
+    line-height: calc(var(--mob-input-height) - 2px);
     outline: none;
     width: 100%;
 }

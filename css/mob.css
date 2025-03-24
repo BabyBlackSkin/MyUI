@@ -42,6 +42,9 @@
     --mob-normal-color: #606266;
     --mob-not-allow-text-color: #c0c4cc;
 
+    /* 字体 */
+    --mob-text-family:'"Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif';
+    --mob-text-family-mono:'"JetBrains Mono", source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace';
     /*文字颜色*/
     --mob-active-text-color: var(--mob-primary-color);
 

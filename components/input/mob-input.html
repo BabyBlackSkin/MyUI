@@ -30,6 +30,7 @@ clearable:'<' -->
                ng-disabled="$ctrl.ngDisabled"
                maxlength="{{$ctrl.ngMaxlength}}"
                ng-maxlength="$ctrl.ngMaxlength"
+               ng-keydown="keyDownHandle($event)"
         >
 
         <span class="mob-input__suffix">

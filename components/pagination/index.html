@@ -1,12 +1,23 @@
-<div class="mob-pagination">
-    <mob-button text  icon="'mob-Icon-arrow-left'"></mob-button>
+<div class="mob-pagination"
+     ng-class="{
+        'background':$ctrl.background
+    }"
+>
+
+    <span class="mob-page-layout mob-page-total" ng-bind="$ctrl.totalTips()" ng-if="$ctrl.layoutShow('total')"></span>
+
+    <mob-select options="$ctrl.pageSizesOptions"></mob-select>
+
+    <mob-button text icon="'mob-Icon-arrow-left'" ng-click="$ctrl.setCurrentPage($ctrl.currentPage - 1)"
+                ng-disabled="$ctrl.changeButtonDisabled('prev')"></mob-button>
     <ul>
         <li ng-repeat="pageNo in pageCountPrefixArray"
             ng-bind="pageNo"
             ng-class="{'active': $ctrl.currentPage === pageNo}"
             ng-click="$ctrl.setCurrentPage(pageNo)"></li>
 
-        <li ng-if="pageStatus === 2 || pageStatus === 3" ng-mouseenter="$ctrl.jumpMouseEnter('jump_before')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_before')" ng-click="$ctrl.expandPage('before')">
+        <li ng-if="pageStatus === 2 || pageStatus === 3" ng-mouseenter="$ctrl.jumpMouseEnter('jump_before')"
+            ng-mouseleave="$ctrl.jumpMouseLeave('jump_before')" ng-click="$ctrl.expandPage('before')">
             <mob-icon-more-filled ng-if="!jump_before"></mob-icon-more-filled>
             <mob-icon-double-arrow-left ng-if="jump_before"></mob-icon-double-arrow-left>
         </li>
@@ -16,7 +27,8 @@
             ng-class="{'active': $ctrl.currentPage === pageNo}"
             ng-click="$ctrl.setCurrentPage(pageNo)"></li>
 
-        <li ng-if="pageStatus === 2 || pageStatus === 1" ng-mouseenter="$ctrl.jumpMouseEnter('jump_after')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_after')" ng-click="$ctrl.expandPage('after')">
+        <li ng-if="pageStatus === 2 || pageStatus === 1" ng-mouseenter="$ctrl.jumpMouseEnter('jump_after')"
+            ng-mouseleave="$ctrl.jumpMouseLeave('jump_after')" ng-click="$ctrl.expandPage('after')">
             <mob-icon-more-filled ng-if="!jump_after"></mob-icon-more-filled>
             <mob-icon-double-arrow-right ng-if="jump_after"></mob-icon-double-arrow-right>
         </li>
@@ -26,5 +38,13 @@
             ng-class="{'active': $ctrl.currentPage === pageNo}"
             ng-click="$ctrl.setCurrentPage(pageNo)"></li>
     </ul>
-    <mob-button text  icon="'mob-Icon-arrow-right'"></mob-button>
+    <mob-button text icon="'mob-Icon-arrow-right'" ng-click="$ctrl.setCurrentPage($ctrl.currentPage + 1)"
+                ng-disabled="$ctrl.changeButtonDisabled('next')"></mob-button>
+
+    <span class="mob-page-layout mob-page-goto" ng-if="$ctrl.layoutShow('goTo')">
+        Go to
+        <mob-input ng-model="gotoPage" placeholder="''" key-down="$ctrl.gotoPageChange(opt)"></mob-input>
+    </span>
+
+
 </div>
