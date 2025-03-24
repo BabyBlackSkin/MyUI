@@ -233,8 +233,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                             
                             <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-uuid="${_that.uuid}" label="group.label">
                             <div>
-                                <mob-select-options check-box="$ctrl.checkBox" ng-repeat="o in group.options track by $index" select-uuid="${_that.uuid}" label="$ctrl.optionsConfigGetLabel(o)" value="$ctrl.optionsConfigGetValue(o)" ng-if="$ctrl.optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
-                                </mob-select-options>
+                                <mob-select-options ng-repeat="o in group.options track by $index" 
+                                select-uuid="${_that.uuid}" 
+                                label="$ctrl.optionsConfigGetLabel(o)" 
+                                value="$ctrl.optionsConfigGetValue(o)" 
+                                ng-if="$ctrl.optionsConfigIsRender(o)" 
+                                ng-disabled="o.disabled"
+                                check-box="$ctrl.checkBox"  
+                                data="o"
+                                >
                             </div>
                             </mob-select-options>
                             </mob-select-group>
@@ -251,11 +258,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
-                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-uuid="${_that.uuid}" select-uuid="${_that.uuid}" label="$ctrl.optionsConfigGetLabel(o)" value="$ctrl.optionsConfigGetValue(o)" 
+                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" 
+                            select-uuid="${_that.uuid}" 
+                            label="$ctrl.optionsConfigGetLabel(o)" 
+                            value="$ctrl.optionsConfigGetValue(o)" 
                             ng-if="$ctrl.optionsConfigIsRender(o)" 
                             check-box="$ctrl.checkBox"
                             ng-disabled="o.disabled" data="o">
-                            </mob-select-options>
                             <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
                     </div>
