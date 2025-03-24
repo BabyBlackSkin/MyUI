@@ -25,6 +25,9 @@ function controller($scope, $element, $attrs) {
             let remain = this.total % this.pageSize
             this.pageCount = parseInt(this.total / this.pageSize) + (remain > 0 ? 1 : 0);
         }
+        if(angular.isUndefined(this.pagerCount)){
+            this.pagerCount = 7
+        }
 
     }
 
@@ -50,7 +53,7 @@ function controller($scope, $element, $attrs) {
 
 
     this.resetPageCountArr = function () {
-        if (this.pageCount <= 7) {
+        if (this.pageCount <= this.pagerCount) {
             $scope.pageStatus = 0
             $scope.pageCountPrefixArray = [];
             $scope.pageCountMiddleArray = [];
@@ -134,7 +137,7 @@ app
             defaultPageSize: '=?',// 每页默认条目个数，不设置时默认为10
             total: '<?', // 总个数
             pageCount: '<?', // 总页数
-            pagerCount: '<?', // 设置最大页码按钮数，页码按钮的数量，但每总页数超过该值时，会折叠
+            pagerCount: '=?', // 设置最大页码按钮数，页码按钮的数量，但每总页数超过该值时，会折叠
             currentPage: '=?',//当前页数
             defaultCurrentPage: '=?',// 当前页数的默认初始值，不设置时默认为1
             layout: '<?', // 组件布局，子组件名称用逗号分割，prev、pager、next、jumper，total
