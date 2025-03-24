@@ -6,7 +6,7 @@
             ng-class="{'active': $ctrl.currentPage === pageNo}"
             ng-click="$ctrl.setCurrentPage(pageNo)"></li>
 
-        <li ng-if="pageStatus === 2 || pageStatus === 3" ng-mouseenter="$ctrl.jumpMouseEnter('jump_before')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_before')" ng-click="$ctrl.setCurrentPage($ctrl.currentPage -5)">
+        <li ng-if="pageStatus === 2 || pageStatus === 3" ng-mouseenter="$ctrl.jumpMouseEnter('jump_before')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_before')" ng-click="$ctrl.expandPage('before')">
             <mob-icon-more-filled ng-if="!jump_before"></mob-icon-more-filled>
             <mob-icon-double-arrow-left ng-if="jump_before"></mob-icon-double-arrow-left>
         </li>
@@ -16,7 +16,7 @@
             ng-class="{'active': $ctrl.currentPage === pageNo}"
             ng-click="$ctrl.setCurrentPage(pageNo)"></li>
 
-        <li ng-if="pageStatus === 2 || pageStatus === 1" ng-mouseenter="$ctrl.jumpMouseEnter('jump_after')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_after')" ng-click="$ctrl.setCurrentPage($ctrl.currentPage + 5)">
+        <li ng-if="pageStatus === 2 || pageStatus === 1" ng-mouseenter="$ctrl.jumpMouseEnter('jump_after')"  ng-mouseleave="$ctrl.jumpMouseLeave('jump_after')" ng-click="$ctrl.expandPage('after')">
             <mob-icon-more-filled ng-if="!jump_after"></mob-icon-more-filled>
             <mob-icon-double-arrow-right ng-if="jump_after"></mob-icon-double-arrow-right>
         </li>

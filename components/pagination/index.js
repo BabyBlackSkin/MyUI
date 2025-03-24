@@ -25,9 +25,10 @@ function controller($scope, $element, $attrs) {
             let remain = this.total % this.pageSize
             this.pageCount = parseInt(this.total / this.pageSize) + (remain > 0 ? 1 : 0);
         }
-        if(angular.isUndefined(this.pagerCount)){
+        if (angular.isUndefined(this.pagerCount)) {
             this.pagerCount = 7
         }
+        this.pageStage = new Decimal(this.pagerCount).div(new Decimal(2)).floor().toNumber() - 1
 
     }
 
@@ -64,26 +65,30 @@ function controller($scope, $element, $attrs) {
         } else {
             // 判断currentPage
             // 最前
-            if (this.currentPage <= 4) {
+            if (this.currentPage < this.pagerCount - 2) {
                 $scope.pageStatus = 1
                 // 头部
-                $scope.pageCountPrefixArray = [1, 2, 3, 4, 5, 6];
+                let prefixArr = []
+                for (let i = 1; i < this.pagerCount - 1; i++) {
+                    prefixArr.push(i)
+                }
+                $scope.pageCountPrefixArray = prefixArr
                 // 中间
                 $scope.pageCountMiddleArray = new Array(0);
                 // 末尾
                 $scope.pageCountSuffixArray = [this.pageCount]
             }
             // 最后
-            else if (this.currentPage >= this.pageCount - 3) {
+            else if (this.currentPage >= this.pageCount - this.pagerCount + 2) {
                 $scope.pageStatus = 3
                 // 头部
                 $scope.pageCountPrefixArray = [1];
                 // 中间没有
-                $scope.pageCountMiddleArray = new Array(0);
+                $scope.pageCountMiddleArray = [];
                 // 末尾
                 $scope.pageCountSuffixArray = [];
                 debugger
-                for (let i = this.pageCount - 5; i <= this.pageCount; i++) {
+                for (let i = this.pageCount - this.pagerCount + 2; i <= this.pageCount; i++) {
                     $scope.pageCountSuffixArray.push(i);
                 }
             } else {
@@ -91,7 +96,11 @@ function controller($scope, $element, $attrs) {
                 // 头部
                 $scope.pageCountPrefixArray = [1];
                 // 中间
-                $scope.pageCountMiddleArray = [this.currentPage - 2, this.currentPage - 1, this.currentPage, this.currentPage + 1, this.currentPage + 2];
+                $scope.pageCountMiddleArray = [];
+                // this.currentPage - 2, this.currentPage - 1, this.currentPage, this.currentPage + 1, this.currentPage + 2
+                for(let i = this.currentPage - this.pageStage;i< this.currentPage + this.pageStage;i++){
+                    $scope.pageCountMiddleArray.push(i);
+                }
                 // 末尾
                 $scope.pageCountSuffixArray = [this.pageCount]
             }
@@ -101,7 +110,18 @@ function controller($scope, $element, $attrs) {
      * 设置页码
      * @param currentPage
      */
-    this.setCurrentPage = function (currentPage) {
+    this.setCurrentPage = function (page) {
+        this.currentPage = page
+    }
+
+    this.expandPage = function (type){
+        let currentPage = null;
+        if ('before' === type) {
+            currentPage = this.currentPage - this.pageStage
+        } else {
+            currentPage = this.currentPage + this.pageStage
+        }
+
         if (currentPage > this.pageCount) {
             this.currentPage = angular.copy(this.pageCount)
         } else if (currentPage < 1) {
