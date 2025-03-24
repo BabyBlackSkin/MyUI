@@ -208,21 +208,21 @@
         this.gotoPageChange = function (opt) {
             console.log(opt)
         }
-        /**
-         * jump鼠标移入事件
-         * @param jump
-         */
-        this.jumpMouseEnter = function (jump) {
-            $scope[jump] = true
-        }
-
-        /**
-         * jump鼠标移出事件
-         * @param jump
-         */
-        this.jumpMouseLeave = function (jump) {
-            $scope[jump] = false
-        }
+        // /**
+        //  * jump鼠标移入事件
+        //  * @param jump
+        //  */
+        // this.jumpMouseEnter = function (jump) {
+        //     $scope[jump] = true
+        // }
+        //
+        // /**
+        //  * jump鼠标移出事件
+        //  * @param jump
+        //  */
+        // this.jumpMouseLeave = function (jump) {
+        //     $scope[jump] = false
+        // }
     }
 
     app
