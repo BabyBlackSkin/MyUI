@@ -148,6 +148,7 @@
     <script src="./factory/date/index.js"></script>
     <script src="./factory/debounce/index.js"></script> <!-- TODO 需要删除 -->
     <script src="./factory/tree/index.js"></script>
+    <script src="./factory/async-validator/index.js"></script>
 
     <!-- directive -->
     <script src="./directive/refs/index.js"></script>
@@ -318,7 +319,9 @@
     })
 
     app
-        .controller('IndexCtrl', ['$route', function IndexCtrl($route) {
+        .controller('IndexCtrl', ['$route', 'asyncValidator', function IndexCtrl($route, asyncValidator) {
+            console.log(asyncValidator)
+            console.log(asyncValidator.utils.isEmptyValue('a'))
             this.hero = {
                 name: 'Spawn'
             };
