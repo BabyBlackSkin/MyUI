@@ -2,7 +2,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['appendToBody','clearable', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip"]
+        let abbParams = ['appendToBody','clearable', 'filterable', "multiple", "group","collapseTag", "collapseTagTooltip","checkBox"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
         // 初始化一个map，存放ngModel的keyValue
@@ -233,8 +233,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                             
                             <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-uuid="${_that.uuid}" label="group.label">
                             <div>
-                                <mob-select-options ng-repeat="o in group.options track by $index" select-uuid="${_that.uuid}" label="$ctrl.optionsConfigGetLabel(o)" value="$ctrl.optionsConfigGetValue(o)" ng-if="$ctrl.optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
-                                </mob-select-options>
+                                <mob-select-options ng-repeat="o in group.options track by $index" 
+                                select-uuid="${_that.uuid}" 
+                                label="$ctrl.optionsConfigGetLabel(o)" 
+                                value="$ctrl.optionsConfigGetValue(o)" 
+                                ng-if="$ctrl.optionsConfigIsRender(o)" 
+                                ng-disabled="o.disabled"
+                                check-box="$ctrl.checkBox"  
+                                data="o"
+                                >
                             </div>
                             </mob-select-options>
                             </mob-select-group>
@@ -251,8 +258,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
-                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" select-uuid="${_that.uuid}" select-uuid="${_that.uuid}" label="$ctrl.optionsConfigGetLabel(o)" value="$ctrl.optionsConfigGetValue(o)" ng-if="$ctrl.optionsConfigIsRender(o)" ng-disabled="o.disabled" data="o">
-                            </mob-select-options>
+                            <mob-select-options ng-repeat="o in $ctrl.options track by $index" 
+                            select-uuid="${_that.uuid}" 
+                            label="$ctrl.optionsConfigGetLabel(o)" 
+                            value="$ctrl.optionsConfigGetValue(o)" 
+                            ng-if="$ctrl.optionsConfigIsRender(o)" 
+                            check-box="$ctrl.checkBox"
+                            ng-disabled="o.disabled" data="o">
                             <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
                     </div>
@@ -631,6 +643,7 @@ app
             collapseTagTooltip: '<?', // 是否显示Tag工具箱
             filterable: '<?', // 是否可过滤
             filterMethod: '&?', // 过滤方法, TODO 待实现
+            checkBox: '<?', // checkBox
             group:'<?',// 是否分组
             /**
              *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，

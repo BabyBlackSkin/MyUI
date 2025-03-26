@@ -110,7 +110,7 @@ app
                     if (!outSlot) {
                         return
                     }
-                    console.log(slotName)
+                    // console.log(slotName)
                     scope.$slot.slot[slotName] = true
                     slot.parentNode.replaceChild($compile(outSlot)(scope)[0], slot);
                 })

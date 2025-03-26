@@ -1,25 +1,26 @@
-// 属性常量
-const attrs = ['prop', 'label', 'width', 'minWidth', 'fixed']
+(function (){
+    // 属性常量
+    const attrs = ['prop', 'label', 'width', 'minWidth', 'fixed']
 
-const mobTableItem = ["$timeout",
-    function ($timeout) {
-        return {
-            restrict: "E",
-            transclude: true,
-            // scope: true,
-            scope: {
-                prop: "=",
-                label: "=",//
-                width: "=?",// 宽度
-                fixed: "=?",// 固定列
-            },
-            controllerAs: "vm",
-            require: "?^mobTable",
-            replace: true,
-            //
-            // templateUrl: 'index.html',
-            template: function (tElement, tAttrs) {
-                return `
+    const mobTableItem = ["$timeout",
+        function ($timeout) {
+            return {
+                restrict: "E",
+                transclude: true,
+                // scope: true,
+                scope: {
+                    prop: "=",
+                    label: "=",//
+                    width: "=?",// 宽度
+                    fixed: "=?",// 固定列
+                },
+                controllerAs: "vm",
+                require: "?^mobTable",
+                replace: true,
+                //
+                // templateUrl: 'index.html',
+                template: function (tElement, tAttrs) {
+                    return `
                 <td rowspan="{{span.rowspan != 0 ? span.rowspan : ''}}" colspan="{{span.colspan != 0 ? span.colspan : ''}}" ng-show="!span.isSpan" class="mob-table-item mob-table-item__cell" 
                 ng-class="{'fixed':fixed, 'fixed-left': fixed && fixed !=='right','fixed-right': fixed ==='right' ,'first-fixed-column': isFirstFixedColumn}"
                 ng-style="style"
@@ -33,57 +34,59 @@ const mobTableItem = ["$timeout",
                     </div>
                 </td>
                 `
-            },
-            compile: function (tElement, tAttrs, transclude, mobTableController) {
-                return {
-                    pre: function ($scope, $element, $attrs, controller) {
-                        // 创建需要穿透的上下文
-                        $scope.transcludeContext = {
-                            '$parent.$context': {
-                                name: '$parent.$context',
-                                alias: '$context'
+                },
+                compile: function (tElement, tAttrs, transclude, mobTableController) {
+                    return {
+                        pre: function ($scope, $element, $attrs, controller) {
+                            // 创建需要穿透的上下文
+                            $scope.transcludeContext = {
+                                '$parent.$context': {
+                                    name: '$parent.$context',
+                                    alias: '$context'
+                                }
                             }
+                        },
+                        post: function ($scope, $element, $attrs, mobTableController) {
+                            // 向table注册
+                            $scope.$parent.$parent.$parent.$ctrl.registerColumn($scope)
+                            // mobTableController.registerColumn($scope)
+
+                            // 监听渲染完成事件
+                            $scope.$on(`mobTableColumnRepeatFinish${$scope.$parent.$parent.$parent.$ctrl.$id}`, function () {
+                                // $scope.$on(`mobTableColumnRepeatFinish${mobTableController.$id}`, function () {
+                                // 计算合并列
+                                // 获取合并的行列
+                                let opt = {
+                                    row: $scope.$parent.$context.row,
+                                    rowIndex: $scope.rowIndex,
+                                    column: $scope.$parent.$context.row[$scope.prop],
+                                    columnIndex: $scope.columnIndex
+                                }
+                                $scope.$parent.$parent.$parent.$ctrl.spanMethod(opt)
+                                // mobTableController.spanMethod(opt)
+                            })
+
                         }
-                    },
-                    post: function ($scope, $element, $attrs, mobTableController) {
-                        // 向table注册
-                        $scope.$parent.$parent.$parent.$ctrl.registerColumn($scope)
-                        // mobTableController.registerColumn($scope)
+                    };
+                    //或 return function postLink() {}
+                },
+                controller: function ($scope, $element, $attrs, $transclude) {
 
-                        // 监听渲染完成事件
-                        $scope.$on(`mobTableColumnRepeatFinish${$scope.$parent.$parent.$parent.$ctrl.$id}`, function () {
-                        // $scope.$on(`mobTableColumnRepeatFinish${mobTableController.$id}`, function () {
-                            // 计算合并列
-                            // 获取合并的行列
-                            let opt = {
-                                row: $scope.$parent.$context.row,
-                                rowIndex: $scope.rowIndex,
-                                column: $scope.$parent.$context.row[$scope.prop],
-                                columnIndex: $scope.columnIndex
-                            }
-                            $scope.$parent.$parent.$parent.$ctrl.spanMethod(opt)
-                            // mobTableController.spanMethod(opt)
-                        })
-
+                    this.mouseEnter = function () {
+                        if ($scope.span && $scope.span.inRowspan) {
+                            $($element[0]).parent('tr').addClass('row-span')
+                        }
                     }
-                };
-                //或 return function postLink() {}
-            },
-            controller: function ($scope, $element, $attrs, $transclude) {
 
-                this.mouseEnter = function () {
-                    if ($scope.span && $scope.span.inRowspan) {
-                        $($element[0]).parent('tr').addClass('row-span')
-                    }
-                }
-
-                this.mouseLeave = function () {
-                    // if ($scope.inRowspan) {
+                    this.mouseLeave = function () {
+                        // if ($scope.inRowspan) {
                         $($element[0]).parent('tr').removeClass('row-span')
-                    // }
+                        // }
+                    }
                 }
-            }
-        };
-    }
-]
-app.directive('mobTableItem', mobTableItem)
+            };
+        }
+    ]
+    app.directive('mobTableItem', mobTableItem)
+
+})()

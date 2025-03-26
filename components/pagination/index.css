@@ -6,7 +6,25 @@
 .mob-pagination * {
     list-style: none;
 }
+.mob-page-total{
+    margin: 0 auto 0 0;
+}
 
+.mob-page-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mob-regular-text-color);
+}
+
+.mob-page-layout mob-input {
+    width: 50px;
+}
+
+.mob-pagination mob-select {
+    width: 100px;
+    margin: 0 8px;
+}
 .mob-pagination .mob-button {
     aspect-ratio: 1;
     padding: 12px;
@@ -28,13 +46,26 @@
     height: var(--mob-pagination-height);
     line-height: var(--mob-pagination-height);
     /*text-align: center;*/
+    color: var(--mob-primary-text-color);
     box-sizing: border-box;
     padding: 0 4px;
     cursor: pointer;
 }
 
 .mob-pagination li.active {
-    color: var(--mob-active-fill-color)
+    color: var(--mob-active-fill-color);
+    font-weight: 700;
+}
+
+.mob-pagination.background li {
+    margin: 0 4px;
+    background-color: var(--mob-light-fill-color);
+}
+
+.mob-pagination.background  li.active {
+    background-color: var(--mob-active-fill-color);
+    color: var(--mob-basic-white-color);
+    font-weight: 700;
 }
 
 .mob-pagination li:hover {

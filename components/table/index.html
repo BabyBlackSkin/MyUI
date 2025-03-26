@@ -1,4 +1,4 @@
-<div class="mob-table"  ng-class="{'border':border,'stripe':stripe,'table-head-fixed':height}" ng-style="style">
+<div class="mob-table"  ng-class="{'border':$ctrl.border,'stripe':$ctrl.stripe,'table-head-fixed':$ctrl.height}" ng-style="style">
     <table>
         <colgroup>
             <col ng-repeat="col in $ctrl.cellList[0] track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >

@@ -1,54 +1,65 @@
 <section class="mob-doc content" ng-controller="Pagination as ctrl">
-    <h2>Button 按钮</h2>
+    <h2>Pagination 分页</h2>
 
 
     <div class="mob-doc content">
         <h3>基础用法</h3>
+        <p>设置layout，表示需要显示的内容，用逗号分隔，布局元素会依次显示。 分页元素如下： prev (上一页按钮), next (下一页按钮), pager (分页列表), jumper (跳转), total (总计), sizes (每页条数选择) 和 -> </p>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-pagination total="80"></mob-pagination>
-                <mob-pagination total="150"></mob-pagination>
+                <p>很少页数时：</p>
+                <mob-pagination total="45"></mob-pagination>
+                <p>页数大于7时</p>
+                <mob-pagination total="77"></mob-pagination>
             </div>
             <div class="meta">
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                           <div class="mob-demo-example-child">
-                            <mob-button>默认按钮</mob-button>
-                            <mob-button type="'primary'">主要按钮</mob-button>
-                            <mob-button type="'success'">成功按钮</mob-button>
-                            <mob-button type="'info'">信息按钮</mob-button>
-                            <mob-button type="'warning'">警告按钮</mob-button>
-                            <mob-button type="'danger'">危险按钮</mob-button>
-                        </div>
-                        <div class="mob-demo-example-child">
-                            <mob-button plain>默认按钮</mob-button>
-                            <mob-button plain type="'primary'">主要按钮</mob-button>
-                            <mob-button plain type="'success'">成功按钮</mob-button>
-                            <mob-button plain type="'info'">信息按钮</mob-button>
-                            <mob-button plain type="'warning'">警告按钮</mob-button>
-                            <mob-button plain type="'danger'">危险按钮</mob-button>
-                        </div>
-
-                        <div class="mob-demo-example-child">
-                            <mob-button round>默认按钮</mob-button>
-                            <mob-button round type="'primary'">主要按钮</mob-button>
-                            <mob-button round type="'success'">成功按钮</mob-button>
-                            <mob-button round type="'info'">信息按钮</mob-button>
-                            <mob-button round type="'warning'">警告按钮</mob-button>
-                            <mob-button round type="'danger'">危险按钮</mob-button>
-                        </div>
-
-                        <div class="mob-demo-example-child">
-                            <mob-button circle icon="'mob-icon-check'"></mob-button>
-                            <mob-button circle icon="'mob-icon-circle-close'" type="'primary'"></mob-button>
-                            <mob-button circle icon="'mob-icon-close'" type="'success'"></mob-button>
-                            <mob-button circle icon="'mob-Icon-arrow-down'" type="'info'"></mob-button>
-                            <mob-button circle icon="'mob-icon-invisible'" type="'warning'"></mob-button>
-                            <mob-button circle icon="'mob-icon-search'" type="'danger'"></mob-button>
-                        </div>
+                        <mob-pagination total="45"></mob-pagination>
+                        <mob-pagination total="150"></mob-pagination>
                         --></code>
-                    </pre>
+                </pre>
             </div>
         </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>设置最大页码按钮数</h3>
+        <p>默认情况下，当总页数超过 7 页时，Pagination 会折叠多余的页码按钮。 通过 pager-count 属性可以设置最大页码按钮数。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-pagination total="1500" pager-count="20"></mob-pagination>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-pagination total="45"></mob-pagination>
+                        <mob-pagination total="150"></mob-pagination>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mob-doc content">
+        <h3>带有背景色的分页</h3>
+        <p>设置background属性可以为分页按钮添加背景色。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-pagination background total="1500" pager-count="20"></mob-pagination>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-pagination total="45"></mob-pagination>
+                        <mob-pagination total="150"></mob-pagination>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
 </section>
