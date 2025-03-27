@@ -59,7 +59,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initEvent = function () {
 
         $scope.$popper[`selectDrown_${$scope.$id}`].focus = async function () {
+            if (!_that.ngDisabled) {
+                _that.expand = !_that.expand
+            }
             return !_that.ngDisabled
+        }
+        $scope.$popper[`selectDrown_${$scope.$id}`].focusOut = async function () {
+            _that.expand = false
+            return true
         }
 
         // 标签工具集

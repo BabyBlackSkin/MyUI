@@ -67,7 +67,7 @@
 
         <!-- 右侧的ICON -->
         <div class="mob-select__suffix" >
-            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':$ctrl.showClear()}">
+            <span class="mob-select__suffix-inner" ng-class="{'is_hide_able':$ctrl.showClear(),'expand':$ctrl.expand}">
                 <mob-icon-arrow-down  class="mob-icon__down-arrow" ng-class="{'is_popper':popperShow}"></mob-icon-arrow-down>
             </span>
             <span class="mob-select__suffix-inner mob-icon__clean" ng-if="$ctrl.showClear()">

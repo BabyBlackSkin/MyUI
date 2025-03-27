@@ -113,6 +113,10 @@
 .mob-select .mob-select__suffix-inner{
     position: relative;
     display: flex;
+    transition: all .3s ease-in-out;
+}
+.mob-select .mob-select__suffix-inner.expand{
+    transform: rotate(180deg);
 }
 .mob-select  .mob-select__suffix .is_hidden{
     display: none;

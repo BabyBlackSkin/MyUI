@@ -7,7 +7,7 @@ mob-checkbox-group .mob-checkbox {
     font-size: 14px;
 }
 mob-check-box {
-    display: flex;
+    /*display: flex;*/
     align-items:center;
 }
 

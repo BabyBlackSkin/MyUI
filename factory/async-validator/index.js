@@ -779,7 +779,7 @@
             validators[type] = validator;
         };
 
-        static warning = warning;
+        static warning = utils.warning;
 
         static messages = defaultMessages;
 
@@ -817,6 +817,7 @@
 
         validate(source_, o = {}, oc = () => {
         }) {
+            debugger
             // 源对象
             let source = source_;
             // options配置
@@ -971,7 +972,7 @@
                         }
 
                         // Fill error info
-                        let filledErrors = errorList.map(complementError(rule, source));
+                        let filledErrors = errorList.map(utils.complementError(rule, source));
 
                         if (options.first && filledErrors.length) {
                             errorFields[rule.field] = 1;
@@ -987,12 +988,12 @@
                                 if (rule.message !== undefined) {
                                     filledErrors = []
                                         .concat(rule.message)
-                                        .map(complementError(rule, source));
+                                        .map(utils.complementError(rule, source));
                                 } else if (options.error) {
                                     filledErrors = [
                                         options.error(
                                             rule,
-                                            format(options.messages.required, rule.field),
+                                            utils.format(options.messages.required, rule.field),
                                         ),
                                     ];
                                 }
@@ -1045,7 +1046,10 @@
                         res = rule.asyncValidator(rule, data.value, cb, data.source, options);
                     } else if (rule.validator) {
                         try {
-                            res = rule.validator(rule, data.value, cb, data.source, options);
+                            let opt = {
+                                rule, value: data.value, callback: cb, source: data.source, options
+                            }
+                            res = rule.validator(opt);
                         } catch (error) {
                             console.error?.(error);
                             // rethrow to report error
@@ -1127,7 +1131,11 @@
 
     app
         .factory('asyncValidator', [function () {
-            const schema = new Schema()
-            return schema;
+            return (opt)=>{
+                let {source, rule, callback} = opt
+
+                const schema = new Schema(rule)
+                return schema.validate(source, callback)
+            };
         }])
 })()

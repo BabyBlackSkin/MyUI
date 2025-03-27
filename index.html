@@ -320,8 +320,6 @@
 
     app
         .controller('IndexCtrl', ['$route', 'asyncValidator', function IndexCtrl($route, asyncValidator) {
-            console.log(asyncValidator)
-            console.log(asyncValidator.utils.isEmptyValue('a'))
             this.hero = {
                 name: 'Spawn'
             };
