@@ -6,7 +6,7 @@
     'mob-form-item--label-top':($ctrl.labelPosition || $ctrl.mobForm.labelPosition) === 'top'
     }"
 >
-    <div class="mob-form-item__label" ng-if="$ctrl.label">
+    <div class="mob-form-item__label" ng-if="$ctrl.label" ng-style="$ctrl.style">
         <label for="#" ng-bind="$ctrl.label"></label>
     </div>
     <div class="mob-form-item__content">

@@ -75,9 +75,11 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             } = data
             // 将节点的状态改为选中
             let node = _that.nodeCache[nodeKey]
-            node.check = checked
 
             if (_that.multiple) {
+                if (angular.isUndefined(_that.ngModel)) {
+                    _that.ngModel = []
+                }
                 if (checked) {
                     _that.ngModel.push(nodeKey)
                 } else {
@@ -232,12 +234,17 @@ function controller($scope, $element, $attrs, $q, attrHelp) {
             }
         }
         if (this.multiple) {
-            // 遍历newValue，重新设置样式
-            for (let nodeKey of newValue) {
-                let node = this.nodeCache[nodeKey]
-                node.check = true
-                this.modifyChildNode(node, false)
-                this.modifyParentNode(node, false)
+            if (angular.isDefined(newValue)) {
+                // 遍历newValue，重新设置样式
+                for (let nodeKey of newValue) {
+                    let node = this.nodeCache[nodeKey]
+                    if (!node) {
+                        continue
+                    }
+                    node.check = true
+                    this.modifyChildNode(node, false)
+                    this.modifyParentNode(node, false)
+                }
             }
         } else {
             // 遍历newValue，重新设置样式

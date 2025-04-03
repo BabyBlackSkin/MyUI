@@ -20,6 +20,7 @@
     align-items: center;
     cursor: pointer;
     transition: backgroundColor .3s ease-in;
+    margin: 0;
 }
 .mob-radio .mob-radio__inner{
     position: relative;
