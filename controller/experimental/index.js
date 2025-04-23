@@ -26,4 +26,23 @@ app
     }
     // console.log(dataList)
     $scope.data = dataList
+
+    $scope.rule = {
+        name: [
+            {type: 'integer', required: true, message: 'cc'},
+            {min: 1, max: 10, message: '不在范围内'}
+        ],
+    }
+
+    $scope.handleErrors = function (error, fields){
+        console.log(error, fields)
+    }
+
+    $scope.validateData ={}
+    $scope.testValid = () => {
+        debugger
+        let opt = {source:$scope.validateData, rule:$scope.rule, callback: $scope.handleErrors};
+        asyncValidator(opt)
+    }
+
 }])
