@@ -517,9 +517,9 @@
                 // 有值时
                 if (value !== undefined && value !== null) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                     // 范围校验
-                    rules.range(rule, value, source, errors, options);
+                    rules.range({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -537,11 +537,11 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 有值时
                 if (value !== undefined) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -559,7 +559,7 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 有值时
                 if (!utils.isEmptyValue(value, 'date')) {
                     let dateObject;
@@ -597,7 +597,7 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (value !== undefined) {
                     // 枚举校验
@@ -620,13 +620,13 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (value !== undefined) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                     // 范围校验
-                    rules.range(rule, value, source, errors, options);
+                    rules.range({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -645,13 +645,13 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (value !== undefined) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                     // 范围校验
-                    rules.range(rule, value, source, errors, options);
+                    rules.range({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -675,13 +675,13 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (value !== undefined) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                     // 范围校验
-                    rules.range(rule, value, source, errors, options);
+                    rules.range({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -700,11 +700,11 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (value !== undefined) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -722,7 +722,7 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (!utils.isEmptyValue(value, 'string')) {
                     // 匹配校验
@@ -745,11 +745,11 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options);
+                rules.required({rule, value, source, errors, options});
                 // 值不为空时
                 if (!utils.isEmptyValue(value)) {
                     // 类型校验
-                    rules.type(rule, value, source, errors, options);
+                    rules.type({rule, value, source, errors, options});
                 }
             }
             callback(errors);
@@ -764,7 +764,46 @@
             rules.required(rule, value, source, errors, options, type);
             // 回调校验结果
             callback(errors);
-        }
+        },
+        string:  (opt) => {
+            let {rule, value, callback, source, options} = opt
+            const errors = [];
+            const validate =
+                rule.required || (!rule.required && source.hasOwnProperty(rule.field));
+            if (validate) {
+                if (utils.isEmptyValue(value, 'string') && !rule.required) {
+                    return callback();
+                }
+                rules.required({rule, value, source, errors, options, type:'string'});
+                if (!utils.isEmptyValue(value, 'string')) {
+                    rules.type({rule, value, source, errors, options});
+                    rules.range({rule, value, source, errors, options});
+                    rules.pattern({rule, value, source, errors, options});
+                    if (rule.whitespace === true) {
+                        rules.whitespace(rule, value, source, errors, options);
+                    }
+                }
+            }
+            callback(errors);
+        },
+        type:  (opt) => {
+            let {rule, value, callback, source, options} = opt
+            const ruleType = rule.type;
+            const errors = [];
+            const validate =
+                rule.required || (!rule.required && source.hasOwnProperty(rule.field));
+            if (validate) {
+                if (utils.isEmptyValue(value, ruleType) && !rule.required) {
+                    return callback();
+                }
+                rules.required({rule, value, source, errors, options, ruleType});
+                if (!utils.isEmptyValue(value, ruleType)) {
+                    rules.type({rule, value, source, errors, options});
+                }
+            }
+            callback(errors);
+        },
+
 
     }
 
@@ -1099,7 +1138,7 @@
                 rule.type &&
                 !validators.hasOwnProperty(rule.type)
             ) {
-                throw new Error(format('Unknown rule type %s', rule.type));
+                throw new Error(utils.format('Unknown rule type %s', rule.type));
             }
             return rule.type || 'string';
         }
@@ -1135,6 +1174,7 @@
                 let {source, rule, callback} = opt
 
                 const schema = new Schema(rule)
+                debugger
                 return schema.validate(source, callback)
             };
         }])
