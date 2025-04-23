@@ -11,13 +11,16 @@
 </style>
 <section class="mob-doc content" ng-controller="Experimental as ctrl">
 
-    <mob-input ng-model="validator.name"></mob-input>
-    <mob-button ng-click="validate(opt)">校验</mob-button>
-
-    {{validator}}
-
-
-
+    <mob-input ng-model="validateData.name"></mob-input>
+    <mob-button ng-click="testValid()">校验</mob-button>
+<!--    data:{{data[0]['num3']}}-->
+<!--    <mob-table data="data" row-class-name="className(opt)">-->
+<!--        <mob-table-item prop="'num1'" label="'列1'" width="200" ></mob-table-item>-->
+<!--        <mob-table-item prop="'num2'" label="'列2'" width="200"></mob-table-item>-->
+<!--        <mob-table-item prop="'num3'" label="'列3'" width="200">-->
+<!--            <mob-input ng-model="$context.row['num3']"></mob-input>-->
+<!--        </mob-table-item>-->
+<!--    </mob-table>-->
 
 <!--    <mob-table data="dataList">-->
 <!--    </mob-table>-->
