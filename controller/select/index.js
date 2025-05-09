@@ -7,6 +7,11 @@ app
                 label:id,value:id
             })
         }
+
+        $scope.changeModel = function (){
+            $scope.value = '广州'
+        }
+
         this.optionsBase = [
             {label: '香港', value: '香港', desc:'XiangGang'},
             {label: '澳门', value: '澳门', desc:'AoMen'},

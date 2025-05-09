@@ -92,6 +92,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         })
 
+        // 监听SyncPlaceholder事件
+        $scope.$on(`${_that.uuid}SyncPlaceholder`, function (e, data) {
+            if (_that.multiple) {
+                return
+            }
+            $scope.placeholder = data.label ? data.label : data.value ? data.value : _that.placeholder
+        })
+
+
         // 监听optionsClick事件
         $scope.$on(`${_that.uuid}OptionsClick`, function (e, data) {
             _that.changeHandler(data)
@@ -345,7 +354,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
         } else {
             this.ngModel = data.value
-            $scope.placeholder = data.label ? data.label : data.value ? data.value : this.placeholder
         }
     }
 

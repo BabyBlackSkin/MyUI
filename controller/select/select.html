@@ -9,7 +9,9 @@
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
+                    {{value}}
                     <mob-button ng-click="addOption()">追加options</mob-button>
+                    <mob-button ng-click="changeModel()">切换model</mob-button>
                     <mob-select style="width: 200px;" ng-model="value" options="select.optionsBase"></mob-select>
                 </div>
             </div>
@@ -34,144 +36,6 @@
             </div>
         </div>
 
-        <h3>有禁用选项</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value1" options="select.optionsDisabled"></mob-select>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <html>
-                             <mob-select style="display: block;width: 200px" ng-model="value">
-                                <mob-select-options ng-repeat="o in select.options" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
-        <h3>禁用状态</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value2" ng-disabled="true" options="select.optionsDisabled"></mob-select>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <html>
-                            <mob-select style="display: block;width: 200px" ng-model="value" ng-disabled="true">
-                                <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
-
-        <h3>可清空</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <mob-select style="display: block;width: 200px" ng-model="value3" clearable="true" options="select.optionsDisabled"></mob-select>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <html>
-                            <mob-select style="display: block;width: 200px" ng-model="value3" clearable="true">
-                                <mob-select-options ng-repeat="o in select.optionsDisabled" label="o.label" value="o.value" ng-disabled="o.disabled"></mob-select-options>
-                            </mob-select>
-                            </html>
-                            <script>
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
-
-        <h3>基础多选</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <p>默认</p>
-                <div class="mob-demo-example-child">
-                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" options="select.optionsDisabled"  check-box></mob-select>
-                </div>
-                <p>use collapse-tag</p>
-                <div class="mob-demo-example-child">
-                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true" options="select.optionsDisabled"></mob-select>
-                </div>
-                <p>use collapse-tag-tooltip</p>
-                <div class="mob-demo-example-child">
-                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" filterable="" collapse-tag="true" collapse-tag-tooltip="true" options="select.optionsDisabled"></mob-select>
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <html>
-                             <p>默认</p>
-                                <div class="mob-demo-example-child">
-                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" options="select.optionsDisabled"></mob-select>
-                                </div>
-                                <p>use collapse-tag</p>
-                                <div class="mob-demo-example-child">
-                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true" options="select.optionsDisabled"></mob-select>
-                                </div>
-                                <p>use collapse-tag-tooltip</p>
-                                <div class="mob-demo-example-child">
-                                    <mob-select style="display: block;width: 200px" ng-model="valueMultiple" multiple="true" collapse-tag="true" collapse-tag-tooltip="true" options="select.optionsDisabled"></mob-select>
-                                </div>
-                            </html>
-                            <script>
-                                $scope.valueMultiple = ['香港','1','上海','北京']
-                                this.optionsDisabled = [
-                                    {label: '香港', value: '香港'},
-                                    {label: '澳门', value: '澳门', disabled: true},
-                                    {label: '北京', value: '北京'},
-                                    {label: '上海', value: '上海'},
-                                    {label: '广州'},
-                                    {label: '深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳深圳', value: '1'},
-                                ]
-                            </script>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
 
     </div>
 </section>

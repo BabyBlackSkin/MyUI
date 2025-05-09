@@ -39,7 +39,10 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
 
         // 监听父组件的通知事件
         $scope.$on(`${_that.mobSelect.uuid}Change`, function (e, data) {
-            _that.change(data);
+            let change = _that.change(data);
+            if (change) {
+                $scope.$emit(`${_that.mobSelect.uuid}SyncPlaceholder`, {label: _that.label, value: _that.getValue()})
+            }
         })
 
         // 监听父组件的清空事件
@@ -73,12 +76,8 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         } else {
             temporaryActive = data === this.getValue()
         }
-        if (temporaryActive !== $scope.activeModel.active) {
-            $scope.activeModel.active = temporaryActive;
-            return true
-        } else {
-            return false
-        }
+        $scope.activeModel.active = temporaryActive
+        return temporaryActive;
     }
 
     // 获取options的Value
