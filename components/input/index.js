@@ -3,6 +3,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
     // 初始化工作
     this.$onInit = function () {
         this.placeholder = this.placeholder || '请输入内容'
+        this.type = this.type || 'text'
 
         // 动态插槽实现
         slot.transclude($scope, $element, $transclude)
@@ -118,6 +119,7 @@ app.component('mobInput', {
     controller: controller,
     bindings: {
         ngModel: '=?',
+        type:'=?',// 文本框类型
         ngDisabled: '<?',
         placeholder: '<?',
         prefixIcon: '<?',

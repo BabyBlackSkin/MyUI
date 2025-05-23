@@ -1,7 +1,6 @@
 .mob-radio-button {
-
     display: flex;
-    /* width: 100%; */
+    width: max-content;
     height: var(--mob-radio-button-height);
     align-items: center;
     font-size: 14px;
@@ -20,7 +19,7 @@
 .mob-radio-button .mob-radio-button__square {
     position: relative;
     display: inline-flex;
-    width: 77px;
+    padding: 5px 10px;
     height: var(--mob-radio-button-height);
     line-height: var(--mob-radio-button-height);
     box-sizing: border-box;

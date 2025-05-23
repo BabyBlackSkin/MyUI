@@ -17,9 +17,9 @@
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
-.mob-radio-group mob-radio-button:last-child:has(.mob-radio-button__original:checked) .mob-radio-button__square {
-    background-color: #1f2f3d;
-}
+/*.mob-radio-group mob-radio-button:last-child:has(.mob-radio-button__original:checked) .mob-radio-button__square {*/
+/*    background-color: #1f2f3d;*/
+/*}*/
 .mob-radio-group mob-radio-button:first-child .mob-radio-button__original:checked+.mob-radio-button__square {
     border-left: 1px solid var(--mob-border-color);
     border-top-left-radius: 4px;
