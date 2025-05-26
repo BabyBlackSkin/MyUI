@@ -52,13 +52,13 @@ function controller($scope, $element, $attrs) {
      * 计算列的定位
      * @param col
      */
+
+    let leftFirstFixedColumn;
+    let rightFirstFixedColumn;
     this.calcFixed = function (col) {
         if (!col.fixed) {
             return
         }
-
-        let leftFirstFixedColumn;
-        let rightFirstFixedColumn;
 
         col.isFirstFixedColumn = true;
         let fixedLeft = col.fixed && col.fixed !== 'right'

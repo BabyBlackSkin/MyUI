@@ -38,6 +38,7 @@
                 compile: function (tElement, tAttrs, transclude, mobTableController) {
                     return {
                         pre: function ($scope, $element, $attrs, controller) {
+                            console.log($scope.prop, $scope.fixed)
                             // 创建需要穿透的上下文
                             $scope.transcludeContext = {
                                 '$parent.$context': {

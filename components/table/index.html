@@ -6,7 +6,7 @@
         <thead>
         <tr>
             <th ng-repeat="col in $ctrl.cellList[0]" class="mob-table-item mob-table-item__cell"
-                ng-class="{'fixed':col.fixed, 'fixed-left': col.fixed && col.fixed !=='right','fixed-right': col.fixed ==='right' }"
+                ng-class="{'fixed':col.fixed, 'fixed-left': col.fixed && col.fixed !=='right','fixed-right': col.fixed ==='right' ,'first-fixed-column': col.isFirstFixedColumn}"
                 ng-style="col.style">
                 <div class="cell" ng-bind="col.label"></div>
             </th>

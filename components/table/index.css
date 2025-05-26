@@ -83,9 +83,9 @@
     z-index: 1;
 }
 
-.mob-table tr:last-child .mob-table-item.fixed {
-    border-right:1px solid var(--mob-table-border);
-}
+/*.mob-table tr:last-child .mob-table-item.fixed {*/
+/*    border-right:1px solid var(--mob-table-border);*/
+/*}*/
 
 
 .mob-table .mob-table-item.fixed.fixed-left {
