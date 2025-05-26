@@ -149,6 +149,7 @@
         isEmptyObject: (obj) => {
             return Object.keys(obj).length === 0;
         },
+        // for循环的方法
         asyncParallelArray: (arr, func, callback) => {
             const results = [];
             let total = 0;
@@ -162,10 +163,11 @@
                 }
             }
 
-            arr.forEach(a => {
+            arr.forEach(a  => {
                 func(a, count);
             });
         },
+        // 递归方式校验（FIXME 可能导致栈溢出？）
         asyncSerialArray: (arr, func, callback) => {
             let index = 0;
             const arrLength = arr.length;
@@ -200,25 +202,14 @@
             callback,
             source,
         ) => {
-            if (option.first) {
-                const pending = new Promise((resolve, reject) => {
-                    const next = (errors) => {
-                        callback(errors);
-                        return errors.length
-                            ? reject(new AsyncValidationError(errors, utils.convertFieldsError(errors)))
-                            : resolve(source);
-                    };
-                    const flattenArr = utils.flattenObjArr(objArr);
-                    utils.asyncSerialArray(flattenArr, func, next);
-                });
-                pending.catch(e => e);
-                return pending;
-            }
-            const firstFields = option.firstFields === true ? Object.keys(objArr) : option.firstFields || [];
 
+            // 校验字段
             const objArrKeys = Object.keys(objArr);
+            // 校验队列长度
             const objArrLength = objArrKeys.length;
+            // 校验队列总数
             let total = 0;
+            // 校验结果
             const results = [];
             const pending = new Promise((resolve, reject) => {
                 const next = (errors) => {
@@ -238,11 +229,7 @@
                 // 遍历校验队列
                 objArrKeys.forEach(key => {
                     const arr = objArr[key];
-                    if (firstFields.indexOf(key) !== -1) {
-                        utils.asyncSerialArray(arr, func, next);
-                    } else {
-                        utils.asyncParallelArray(arr, func, next);
-                    }
+                    utils.asyncParallelArray(arr, func, next);
                 });
             });
             pending.catch(e => e);
@@ -502,7 +489,7 @@
     const validators = {
         // 数组校验器
         array: (opt) => {
-            let {rule, callback, source, options} = opt
+            let {rule, callback, source, options, value} = opt
             // 错误信息，默认为数组
             const errors = [];
             // 当规则为必填，或者规则指定了字段是，表示需要验证
@@ -513,7 +500,8 @@
                     return callback();
                 }
                 // 必填校验
-                rules.required(rule, value, source, errors, options, 'array');
+                let requiredOpt = {rule, value, source, errors, options, type:'array'}
+                rules.required(requiredOpt);
                 // 有值时
                 if (value !== undefined && value !== null) {
                     // 类型校验
@@ -854,13 +842,11 @@
             return this._messages;
         }
 
-        validate(source_, o = {}, oc = () => {
-        }) {
+        validate(source_, options = {}, oc = () => {}) {
             debugger
-            // 源对象
-            let source = source_;
+            // copy 源对象
+            let source = {...source_};
             // options配置
-            let options = o;
             // 回调函数（用户自定义的校验完成后的逻辑）
             let callback = oc;
             // 如果options是函数，则将回调函数赋值给callback，并初始化Options为空对象
@@ -913,13 +899,7 @@
             // 当定义了message时
             if (options.messages) {
                 // 将默认的message合并到用户定义的message上
-                let messages = this.messages();
-                // 如果与默认的message相同，则创建一个新对象
-                if (messages === defaultMessages) {
-                    messages = newMessages();
-                }
-                utils.deepMerge(messages, options.messages);
-                options.messages = messages;
+                options.messages = this.messages(options.messages);
             } else {
                 // 将默认的message合并到用户定义的message上
                 options.messages = this.messages();
@@ -930,21 +910,17 @@
             // 根据规则获取需要校验的属性
             const keys = options.keys || Object.keys(this.rules);
             // 便利属性
-            keys.forEach(z => {
+            keys.forEach(field => {
                 // 得到每个属性的校验规则
-                const arr = this.rules[z];
-                let value = source[z];
-                arr.forEach(r => {
-                    let rule = r;
-                    // 判断是否有transform格式化方法
+                const ruleList = this.rules[field];
+                // 属性值
+                let value = source[field];
+                // 遍历规则
+                ruleList.forEach(rule => {
+                    // 是否存在格式化方法
                     if (typeof rule.transform === 'function') {
-                        // 如果source 与source_相等
-                        if (source === source_) {
-                            // 解构并赋值（深拷贝）
-                            source = {...source};
-                        }
-                        // 调用transform函数，得到转换后的值
-                        value = source[z] = rule.transform(value);
+                        // 调用transform函数，进行格式化
+                        value = source[field] = rule.transform(value);
                     }
                     // 如果rule是函数，则将其转换为对象
                     if (typeof rule === 'function') {
@@ -964,18 +940,18 @@
                     }
 
                     // 规则的属性
-                    rule.field = z;
+                    rule.field = field;
                     // 属性全名
-                    rule.fullField = rule.fullField || z;
+                    rule.fullField = rule.fullField || field;
                     // 类型
                     rule.type = this.getType(rule);
                     // 一个属性会有多个校验组
-                    series[z] = series[z] || [];
-                    series[z].push({
+                    series[field] = series[field] || [];
+                    series[field].push({
                         rule,
                         value,
                         source,
-                        field: z,
+                        field: field,
                     });
                 });
             });
@@ -988,8 +964,8 @@
                     const rule = data.rule;
                     let deep =
                         (rule.type === 'object' || rule.type === 'array') &&
-                        (typeof rule.fields === 'object' ||
-                            typeof rule.defaultField === 'object');
+                        (typeof rule.fields === 'object');
+                    // 判断是否需要进行深度校验。必填时，需要，或者有值时需要
                     deep = deep && (rule.required || (!rule.required && data.value));
                     rule.field = data.field;
 
@@ -1001,6 +977,11 @@
                         };
                     }
 
+                    /**
+                     * 校验完成后的回调方法
+                     * @param e 错误信息
+                     * @returns {*}
+                     */
                     function cb(e) {
                         let errorList = Array.isArray(e) ? e : [e];
                         if (!options.suppressWarning && errorList.length) {
@@ -1020,9 +1001,7 @@
                         if (!deep) {
                             doIt(filledErrors);
                         } else {
-                            // if rule is required but the target object
-                            // does not exist fail at the rule level and don't
-                            // go deeper
+                            // 上层必填，但没数据，则直接返回，不需要deeper
                             if (rule.required && !data.value) {
                                 if (rule.message !== undefined) {
                                     filledErrors = []
@@ -1039,34 +1018,29 @@
                                 return doIt(filledErrors);
                             }
 
-                            let fieldsSchema = {};
-                            if (rule.defaultField) {
-                                Object.keys(data.value).map(key => {
-                                    fieldsSchema[key] = rule.defaultField;
-                                });
-                            }
-                            fieldsSchema = {
-                                ...fieldsSchema,
-                                ...data.rule.fields,
-                            };
+                            // 解构deeper的规则定义
+                            let fieldsSchema = {...data.rule.fields};
 
-                            const paredFieldsSchema = {};
+                            // 构建校验rule
+                            const deepFieldsRules = {};
 
-                            Object.keys(fieldsSchema).forEach(field => {
+                            for(let field of data.rule.fields){
                                 const fieldSchema = fieldsSchema[field];
                                 const fieldSchemaList = Array.isArray(fieldSchema)
                                     ? fieldSchema
                                     : [fieldSchema];
-                                paredFieldsSchema[field] = fieldSchemaList.map(
+                                deepFieldsRules[field] = fieldSchemaList.map(
                                     addFullField.bind(null, field),
                                 );
-                            });
-                            const schema = new Schema(paredFieldsSchema);
+                            }
+                            // 构建校验schema
+                            const schema = new Schema(deepFieldsRules);
                             schema.messages(options.messages);
                             if (data.rule.options) {
                                 data.rule.options.messages = options.messages;
                                 data.rule.options.error = options.error;
                             }
+                            // 执行校验
                             schema.validate(data.value, data.rule.options || options, errs => {
                                 const finalErrors = [];
                                 if (filledErrors && filledErrors.length) {
@@ -1081,9 +1055,12 @@
                     }
 
                     let res;
+                    // 如果存在异步校验方法，则调用
                     if (rule.asyncValidator) {
                         res = rule.asyncValidator(rule, data.value, cb, data.source, options);
-                    } else if (rule.validator) {
+                    }
+                    // 存在同步校验方法
+                    else if (rule.validator) {
                         try {
                             let opt = {
                                 rule, value: data.value, callback: cb, source: data.source, options
@@ -1174,7 +1151,6 @@
                 let {source, rule, callback} = opt
 
                 const schema = new Schema(rule)
-                debugger
                 return schema.validate(source, callback)
             };
         }])
