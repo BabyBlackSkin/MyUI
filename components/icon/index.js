@@ -86,6 +86,16 @@ app.component('mobIcon', {
         templateUrl: './components/icon/arrowUp.html',
         controller:controller
     })
+
+    .component('mobIconDownload', {
+        templateUrl: './components/icon/download.html',
+        controller:controller
+    })
+    .component('mobIconUpload', {
+        templateUrl: './components/icon/upload.html',
+        controller:controller
+    })
+
     .component('mobIconEdit', {
         templateUrl: './components/icon/edit.html',
         controller:controller
