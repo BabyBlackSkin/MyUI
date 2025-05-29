@@ -163,6 +163,7 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: 0;
+    white-space:nowrap;
 }
 /* 尾部插槽 */
 .mob-input.is_append_slot .mob-input__wrapper {
@@ -173,4 +174,5 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left: 0;
+    white-space:nowrap;
 }
