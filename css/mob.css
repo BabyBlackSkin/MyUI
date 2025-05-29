@@ -132,6 +132,10 @@
     --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2));
     --mob-date-year-month-range-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
 
+    --mob-collapse-header-height: 48px;
+    --mob-collapse-border-color: var(--mob-lighter-border-color);
+    --mob-collapse-content-bg-color: var(--mob-blank-light-fill-color);
+
 
     /* default 尺寸 */
     --mob-default-size: 32px;

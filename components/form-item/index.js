@@ -1,4 +1,4 @@
-function controller($scope, $element, $transclude, $timeout, $attrs, $compile, slot) {
+function controller($scope, $element, $transclude, $timeout, $attrs, $compile, slot, uuId) {
 
     this.$onInit = function () {
         this.uuid = uuId.newUUID()

@@ -1,0 +1,13 @@
+<div class="mob-collapse-item"
+     ng-class="{'active': $ctrl.active}"
+>
+    <button class="mob-collapse-head mob-collapse-item__header" ng-click="$ctrl.transformActiveStatus()">
+        <span ng-bind="$ctrl.title"></span>
+        <mob-icon-arrow-right class="mob-collapse-item__header__icon"></mob-icon-arrow-right>
+    </button>
+    <div class="mob-collapse-content">
+        <div class="mob-collapse-item__content">
+            <mob-transclude></mob-transclude>
+        </div>
+    </div>
+</div>
