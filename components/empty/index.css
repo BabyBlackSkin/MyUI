@@ -34,3 +34,8 @@
     height: 100%;
     vertical-align: top
 }
+
+.mob-empty .mob-empty__description{
+    margin: 0;
+    color: var(--mob-secondary-text-color);
+}
