@@ -14,6 +14,13 @@ function controller($scope, $element, $attrs) {
 
     this.$postLink = function () {
 
+        if (this.imageSize) {
+            this.imageStyle = {
+                width: this.imageSize,
+                height: this.imageSize
+            }
+        }
+
     }
 
 }
@@ -25,6 +32,7 @@ app
         bindings: {
             description: '<?',
             image: '<?',
+            imageSize: '<?',
         },
         controller: controller
     })

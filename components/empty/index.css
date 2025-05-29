@@ -7,19 +7,30 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+
+    --el-empty-fill-color-0: var(--mob-blank-light-fill-color);
+    --el-empty-fill-color-1: #fcfcfd;
+    --el-empty-fill-color-2: #f8f9fb;
+    --el-empty-fill-color-3: #f7f8fc;
+    --el-empty-fill-color-4: #eeeff3;
+    --el-empty-fill-color-5: #edeef2;
+    --el-empty-fill-color-6: #e9ebef;
+    --el-empty-fill-color-7: #e5e7e9;
+    --el-empty-fill-color-8: #e0e3e9;
+    --el-empty-fill-color-9: #d5d7de;
 }
 
 .mob-empty .mob-empty__image {
     width: var(--mob-empty-image-width);
 }
+.mob-empty .mob-empty__image img {
+    width: 100%;
+}
 
 .mob-empty .mob-empty__image svg {
     color: var(--mob-svg-monochrome-grey);
+    fill: currentColor;
     width: 100%;
     height: 100%;
     vertical-align: top
-}
-
-.mob-empty .mob-empty__image svg * {
-    fill: currentColor;
 }

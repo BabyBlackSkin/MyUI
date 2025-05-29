@@ -6,17 +6,75 @@
         <h3>基础用法</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-empty></mob-empty>
+                <mob-empty description="'description'"></mob-empty>
             </div>
             <div class="meta">
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                        <mob-pagination total="45"></mob-pagination>
-                        <mob-pagination total="150"></mob-pagination>
+                        <mob-empty description="'description'"></mob-empty>
                         --></code>
                 </pre>
             </div>
         </div>
+    </div>
+
+
+    <div class="mob-doc content">
+        <h3>自定义图片</h3>
+        <p>通过设置 image 属性传入图片 URL。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-empty description="'description'" image="'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'"></mob-empty>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-empty description="'description'" image="'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'"></mob-empty>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>图片尺寸</h3>
+        <p>通过使用 <code> image-size</code> 属性来控制图片大小。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-empty description="'description'" image-size="'60px'" image="'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'"></mob-empty>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                           <mob-empty description="'description'" image-size="'60px'" image="'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'"></mob-empty>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+
+
+        <div class="mob-doc content">
+            <h3>底部内容</h3>
+            <p>使用默认插槽可在底部插入内容。</p>
+            <div class="mob-demo-block">
+                <div class="mob-demo-example">
+                    <mob-empty description="'description'" image="'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'">
+                        <mob-button type="'primary'">Button</mob-button>
+                    </mob-empty>
+                </div>
+                <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                           <mob-empty description="'description'" image="'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'">
+                                <mob-button type="'primary'">Button</mob-button>
+                            </mob-empty>
+                        --></code>
+                </pre>
+                </div>
+            </div>
     </div>
 </section>
