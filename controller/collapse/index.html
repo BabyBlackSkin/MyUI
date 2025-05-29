@@ -1,0 +1,29 @@
+<section class="mob-doc content" ng-controller="Collapse as ctrl">
+    <h2>Collapse 折叠面板</h2>
+
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <p>可同时展开多个面板，面板之间不影响</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-collapse>
+                    <mob-collapse-item title="'你好'" active="ctrl.active">
+                        <p>will-change</p>
+                        <p>will-change</p>
+                        <p>will-change</p>
+                    </mob-collapse-item>
+                </mob-collapse>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-pagination total="45"></mob-pagination>
+                        <mob-pagination total="150"></mob-pagination>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+</section>

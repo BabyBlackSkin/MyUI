@@ -136,6 +136,7 @@
     --mob-collapse-border-color: var(--mob-lighter-border-color);
     --mob-collapse-content-bg-color: var(--mob-blank-light-fill-color);
 
+    --mob-svg-monochrome-grey: var(--mob-border-color);
 
     /* default 尺寸 */
     --mob-default-size: 32px;

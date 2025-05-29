@@ -102,6 +102,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/collapse/index.html',
             controller: 'Collapse'
         })
+        .when('/empty', {
+            templateUrl: './controller/empty/index.html',
+            controller: 'Empty'
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -145,6 +149,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Table表格', path: '/table'},
         {label: 'Pagination 分页', path: '/pagination'},
         {label: 'Collapse 折叠面板', path: '/collapse'},
+        {label: 'Empty 空状态', path: '/empty'},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

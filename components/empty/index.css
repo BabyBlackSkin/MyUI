@@ -1,0 +1,25 @@
+.mob-empty {
+    --mob-empty-padding: 40px 0;
+    --mob-empty-image-width: 160px;
+    --mob-empty-description-margin-top: 20px;
+    --mob-empty-bottom-margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mob-empty .mob-empty__image {
+    width: var(--mob-empty-image-width);
+}
+
+.mob-empty .mob-empty__image svg {
+    color: var(--mob-svg-monochrome-grey);
+    width: 100%;
+    height: 100%;
+    vertical-align: top
+}
+
+.mob-empty .mob-empty__image svg * {
+    fill: currentColor;
+}
