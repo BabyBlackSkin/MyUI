@@ -2,11 +2,11 @@ app
     .factory('popper', ['uuId', 'floating','$debounce', function (uuId, floating, $debounce) {
 
         function showAutoUpdate(scope, popper, timer = {render: true}) {
-            let {target, tooltip, location} = popper
+            let {target, tooltip, location, options} = popper
             tooltip.style.display = 'block';
             tooltip.style.zIndex = '9999';
             // scope.popper[name].showAutoUpdateCleanUp
-            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, location, timer.render)
+            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, location, options, timer.render)
             timer.render = false
             timer.tooltipCss = setTimeout(() => {
                 tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'auto';
@@ -26,7 +26,7 @@ app
         }
 
         return {
-            popper: function (scope, targetList, popperTooltipList) {
+            popper: function (scope, targetList, popperTooltipList, options) {
                 if (angular.isUndefined(targetList) || targetList.length === 0) {
                     console.warn('targetList元素不存在')
                     return;
@@ -90,7 +90,8 @@ app
                             this.popperShow = false
                             hide(scope, this, timer)
                         },
-                        popperShow: false
+                        popperShow: false,
+                        options
                     }
                     // 给浮动元素 生成唯一id
                     if (!tooltip.id) {

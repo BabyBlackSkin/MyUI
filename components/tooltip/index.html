@@ -1,0 +1,14 @@
+<div class="mob-tooltip">
+    <div class="mob-popper-target popper-target" style="display: inline" popper-group="drop-down" ng-mouseenter="$ctrl.hoverHandle(true)" ng-mouseleave="$ctrl.hoverHandle(false)">
+        <mob-transclude></mob-transclude>
+    </div>
+
+    <div style="position: absolute; width: 200px" class="mob-popper-down popper-down" popper-group="drop-down">
+        <span  style="position: absolute" class="mob-popper-down__arrow"></span>
+        <div class="mob-popper-down__wrapper">
+            <div class="mob-popper-down__inner">
+                <span ng-bind="$ctrl.content"></span>
+            </div>
+        </div>
+    </div>
+</div>

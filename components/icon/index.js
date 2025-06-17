@@ -116,13 +116,13 @@ app.component('mobIcon', {
         templateUrl: './components/icon/loading.html',
         controller:controller
     })
-    .component('mobIconMoreFilled', {
-        templateUrl: './components/icon/moreFilled.html',
-        controller:controller
-    })
     .component('mobIconSearch', {
         templateUrl: './components/icon/search.html',
         controller:controller
+    })
+    .component('mobIconSetting', {
+            templateUrl: './components/icon/setting.html',
+            controller:controller
     })
     .component('mobIconVisible', {
         templateUrl: './components/icon/visible.html',
@@ -132,4 +132,36 @@ app.component('mobIcon', {
         templateUrl: './components/icon/warning.html',
         controller:controller
     })
+
+
+    .component('mobIconMoreFilled', {
+        templateUrl: './components/icon/moreFilled.html',
+        controller:controller
+    })
+    .component('mobIconInfoFilled', {
+        templateUrl: './components/icon/infoFilled.html',
+        controller:controller
+    })
+    .component('mobIconCircleCheckFilled', {
+        templateUrl: './components/icon/circleCheckFilled.html',
+        controller:controller
+    })
+    .component('mobIconSuccessFiled', {
+        templateUrl: './components/icon/successFiled.html',
+        controller:controller
+    })
+    .component('mobIconWarningFilled', {
+        templateUrl: './components/icon/warningFilled.html',
+        controller:controller
+    })
+    .component('mobIconCircleCloseFilled', {
+        templateUrl: './components/icon/circleCloseFilled.html',
+        controller:controller
+    })
+    .component('mobIconQuestionFiled', {
+        templateUrl: './components/icon/questionFiled.html',
+        controller:controller
+    })
+
+
 

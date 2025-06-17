@@ -154,6 +154,10 @@
 
     <script src="./components/icon/index.js"></script>
 
+    <!-- tooltip -->
+    <script src="./components/tooltip/index.js"></script>
+    <link rel="stylesheet" href="components/tooltip/index.css">
+
     <!-- factory -->
     <script src="./factory/popper/index.js"></script>
     <script src="./factory/cross/index.js"></script>
@@ -193,6 +197,28 @@
 
 </head>
 <style>
+
+    #tooltip {
+        background: #222;
+        color: white;
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 90%;
+        width: max-content;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    #arrow {
+        position: absolute;
+        background: #222;
+        width: 8px;
+        height: 8px;
+        transform: rotate(45deg);
+    }
+
     :root {
         --navigation-width: 300
     }
@@ -476,9 +502,22 @@
             // 箭头class
             const arrowClassStyle = ['top', 'right', 'bottom', 'left']
 
-            function setFloatingWidth(scope, target, floating) {
+            /**
+             * 设置popperDown的宽度
+             * @param scope
+             * @param target
+             * @param floating
+             * @param options
+             */
+            function setFloatingWidth(scope, target, floating, options) {
                 const {width: targetWidth} = target.getBoundingClientRect()
-                floating.style.width = (targetWidth + 10) + 'px';
+                if (!options) {
+                    floating.style.width = (targetWidth + 10) + 'px';
+                    return
+                }
+                if (options.popperDown && options.popperDown.style) {
+                    Object.assign(floating.style, options.style)
+                }
             }
 
             function setFloatingHeight(scope, target, floating) {
@@ -499,6 +538,7 @@
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
                 let arrowElement = floating.querySelector('.mob-popper-down__arrow');
+                console.log('arrowElement', arrowElement)
 
                 setFloatingHeight(scope, target, floating);
 
@@ -508,7 +548,7 @@
 
 
                 window.FloatingUIDOM.computePosition(target, floating, {
-                        placement: 'bottom-start',
+                        placement: 'bottom-center',
                         middleware: [
                             window.FloatingUIDOM.flip(),// y轴自适应
                             window.FloatingUIDOM.shift(), // x轴自适应
@@ -528,11 +568,12 @@
                         }
                     }
                     Object.assign(floating.style, {
-                        left: `${x - 5}px`, // -5px 抵消padding，不知道为什么shift不起作用
+                        left: `${x}px`, // -5px 抵消padding，不知道为什么shift不起作用
                         top: `${y}px`,
                     }, transformOrigin);
 
-                    const {x: arrowX, y: arrowY} = middlewareData.arrow;
+                    const {x: arrowX, y: arrowY, centerOffset} = middlewareData.arrow;
+                    console.log('middlewareData.arrow', middlewareData.arrow)
 
                     const staticSide = {
                         top: 'bottom',
@@ -580,12 +621,13 @@
                  * @param target 目标
                  * @param floating 浮动元素
                  * @param location 定位元素元素
+                 * @param options 配置
                  * @param render 是否需要重绘
                  * @returns {*}
                  */
-                autoUpdateComputePosition: function (scope, target, floating, location, render = true) {
+                autoUpdateComputePosition: function (scope, target, floating, location, options, render = true) {
                     if (render) {
-                        setFloatingWidth(scope, location, floating)
+                        setFloatingWidth(scope, location, floating, options)
                     }
                     // 需要判断是从下面还是从上面打开
                     return window.FloatingUIDOM.autoUpdate(
