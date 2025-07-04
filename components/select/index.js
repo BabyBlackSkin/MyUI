@@ -21,6 +21,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             options: {},
             anyMatch: false
         }
+
+        // 加载状态
+        this.loadStatus = -1;
     }
 
     this.$onChanges = function (changes) {
@@ -52,6 +55,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         popper.popper($scope, targetList, popperTooltipList)
         this.initEvent()
         this.initWatcher()
+
+        this.initScrollHandler()
 
     }
 
@@ -197,6 +202,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 _that.changeHandler({value:emptyValue})
                 // 更新tagList
                 _that.collapseTagsListUpdate([])
+                $scope.placeholder = _that.placeholder
             } else {
                 // 通知OptionsChange
                 $scope.$broadcast(`${_that.uuid}Change`, _that.ngModel)
@@ -213,6 +219,40 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }, function (newV, oldV) {
             _that.filterOptions()
         })
+    }
+
+    /**
+     * 滚动监听
+     */
+    this.initScrollHandler = function (){
+        let popper = document.getElementById(`${_that.uuid}_mob-select-popper`)
+        let element = popper.querySelectorAll('.mob-popper-down__inner')[0]
+        if (angular.isUndefined(element)) {
+            return
+        }
+        if (angular.isUndefined(this.load) && angular.isFunction(this.load)) {
+            return
+        }
+        let handleScroll = () => {
+            $debounce.debounce($scope, `${$scope.$id}_handleScroll`, () => {
+                const { scrollTop, scrollHeight, clientHeight } = element;
+                const scrollDistance = scrollHeight - scrollTop <= clientHeight;
+                if (scrollDistance) {
+                    let deferred = $q.defer();
+                    // 加载
+                    let opt ={deferred: deferred}
+                    _that.load({opt}).then(() => {
+                        _that.loadStatus = 1;// 更新状态为加载完成
+                    }).catch(err => {
+                        // 更新状态为未加载
+                        _that.loadStatus = 0;
+                    })
+                }
+            }, 300)()
+
+        }
+        console.log(element)
+        element.addEventListener('scroll', handleScroll);
     }
 
     /**
@@ -258,8 +298,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 check-box="$ctrl.checkBox"  
                                 data="o"
                                 >
+                                </mob-select-options>
                             </div>
-                            </mob-select-options>
                             </mob-select-group>
                             <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
                         </div>
@@ -649,7 +689,7 @@ app
              * hidden：options是否隐藏
              */
             optionsConfig:'<?',// options的配置参数
-            appendToBody:'<?',// 是否添加到body TODO（不建议使用，当selec被销毁时，options无法被销毁）
+            appendToBody:'<?',// 是否添加到body
             ngDisabled: '<?', // 是否禁用
             clearable: '<?', // 可清空的
             placeholder: '<?',// 提示文字
@@ -669,8 +709,9 @@ app
              *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
              */
             attachment:"<?",
-            // Events
+            // 方法
             change: '&?',
+            load: "&?", // 加载子节点 Function(node, resolve)
         },
         controller: controller
     })
