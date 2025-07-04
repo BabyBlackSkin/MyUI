@@ -60,6 +60,9 @@
     <!-- input-number组件 -->
     <script src="./components/input-number/index.js"></script>
     <link rel="stylesheet" href="components/input-number/mob-input-number.css">
+    <!-- input-number组件 -->
+    <script src="components/load/index.js"></script>
+    <link rel="stylesheet" href="components/load/index.css">
     <!-- pagination -->
     <script src="./components/pagination/index.js"></script>
     <link rel="stylesheet" href="components/pagination/index.css">
@@ -171,6 +174,7 @@
     <script src="./directive/refs/index.js"></script>
     <script src="./directive/stopBubbling/index.js"></script>
     <script src="./directive/formValid/index.js"></script>
+    <script src="./directive/mob-loading/index.js"></script>
     <script src="directive/mobTransclude/index.js"></script>
     <script src="./directive/repeatRenderFinish/index.js"></script>
     <script src="./directive/ngScroll/index.js"></script>
@@ -538,7 +542,7 @@
             function computePosition(scope, target, floating, autoUpdate) {
                 // 获取箭头元素
                 let arrowElement = floating.querySelector('.mob-popper-down__arrow');
-                console.log('arrowElement', arrowElement)
+                // console.log('arrowElement', arrowElement)
 
                 setFloatingHeight(scope, target, floating);
 

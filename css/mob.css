@@ -138,6 +138,10 @@
 
     --mob-svg-monochrome-grey: var(--mob-border-color);
 
+
+    --mob-circular-size: 42px;
+    --mob-mask-color: rgba(255,255,255,.9);
+
     /* default 尺寸 */
     --mob-default-size: 32px;
     --mob-big-size: 40px;
@@ -160,6 +164,8 @@
 
     --mob-switch-height: 20px;
     --mob-tree-height: 26px;
+
+
 }
 
 .large {
