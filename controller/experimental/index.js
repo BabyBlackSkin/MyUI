@@ -8,9 +8,14 @@ app
         }
     ]
 
-    $scope.loadStatus = true;
+    $scope.loadStatus = 0;
 
     $scope.changeLoad = function (){
-        $scope.loadStatus = !$scope.loadStatus;
+        if($scope.loadStatus == 1){
+            $scope.loadStatus = 0
+        }else{
+
+            $scope.loadStatus = 1
+        }
     }
 }])

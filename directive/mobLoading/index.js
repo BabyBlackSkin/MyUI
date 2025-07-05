@@ -4,14 +4,9 @@ app.directive('mobLoading', ["$compile", "uuId",function($compile, uuId) {
             mobLoading: '<?'  // 双向数据绑定
         },
         link: function($scope, $element) {
-            // console.log($element)
-            // 这里可以访问$scope.mobLoading获取值
-            console.log($scope.mobLoading);
-
             let UUID = uuId.newUUID()
             // 监听值变化
             $scope.$watch('mobLoading', function(newVal) {
-                // console.log('loadStatus changed:', newVal);
                 if (newVal) {
                     $element.addClass('mob-loading-parent--relative')
                     $element.append($compile(`<mob-load uuid="'${UUID}'"></mob-loading>`)($scope)[0])
@@ -22,7 +17,8 @@ app.directive('mobLoading', ["$compile", "uuId",function($compile, uuId) {
                 } else {
                     $scope.$broadcast(`mobLoadHide_${UUID}`, this.ngModel)
                     setTimeout(()=>{
-                        $element[0].removeChild($element[0].querySelector('mob-load'));
+                        let el = $element[0].querySelector('mob-load')
+                        el && $element[0].removeChild();
                     },350)
                 }
             });

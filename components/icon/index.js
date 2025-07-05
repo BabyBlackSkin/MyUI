@@ -158,12 +158,13 @@ app.component('mobIcon', {
         templateUrl: './components/icon/circleCloseFilled.html',
         controller:controller
     })
-    .component('mobIconCircular', {
-        templateUrl: './components/icon/circular.html',
-        controller:controller
-    })
+
     .component('mobIconQuestionFiled', {
         templateUrl: './components/icon/questionFiled.html',
+        controller:controller
+    })
+    .component('mobIconCircular', {
+        templateUrl: './components/icon/circular.html',
         controller:controller
     })
 
