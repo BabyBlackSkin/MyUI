@@ -67,9 +67,6 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     }
 
     this.change = function (data) {
-        if (this.ngDisabled) {
-            return false
-        }
         let temporaryActive = false
         if (Array.isArray(data)) {
             temporaryActive = data.includes(this.getValue())

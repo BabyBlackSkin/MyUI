@@ -249,7 +249,7 @@ mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-
     display: inline-block;
 }
 
-mob-select, mob-tree-select, mob-date-picker, mob-time-spinner {
+mob-input,mob-select, mob-tree-select, mob-date-picker, mob-time-spinner {
     min-width: 200px;
     width: 100%;
 }
