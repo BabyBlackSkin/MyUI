@@ -70,6 +70,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             return !_that.ngDisabled
         }
         $scope.$popper[`selectDrown_${$scope.$id}`].focusOut = async function () {
+            $scope.filterableText = ''
             _that.expand = false
             return true
         }
@@ -301,7 +302,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 </mob-select-options>
                             </div>
                             </mob-select-group>
-                            <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true"></mob-select-options>
                         </div>
                     </div>
                 </div>
@@ -320,8 +321,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                             value="$ctrl.optionsConfigGetValue(o)" 
                             ng-if="$ctrl.optionsConfigIsRender(o)" 
                             check-box="$ctrl.checkBox"
-                            ng-disabled="o.disabled" data="o">
-                            <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true" not-join-match-option></mob-select-options>
+                            ng-disabled="o.disabled" data="o"></mob-select-options>
+                            <mob-select-options ng-if="showNoMatchOptions()" select-uuid="${_that.uuid}" label="'无匹配数据'" value="'无匹配数据'" ng-disabled="true"></mob-select-options>
                         </div>
                     </div>
                 </div>

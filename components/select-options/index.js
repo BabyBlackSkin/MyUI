@@ -2,7 +2,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     const _that = this
     // 初始化工作
     this.$onInit = function () {
-        let abbParams = ['notJoinMatchOption','checkBox']
+        let abbParams = ['checkBox']
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
         this.id = uuId.newUUID()
         $scope.activeModel = {active:false}
@@ -53,7 +53,7 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.uuid}Filter`, function (e, data) {
             // 当父组件的过滤字段是undefined时，代表无需过滤，当options是不参与匹配的options时，无需处理
-            if (typeof data.value == 'undefined' || _that.notJoinMatchOption) {
+            if (typeof data.value == 'undefined') {
                 $scope.hidden = false
                 return
             }
@@ -99,7 +99,6 @@ app
         controller: controller,
         bindings: {
             ngDisabled: '<?',
-            notJoinMatchOption: '<?',
             checkBox: '<?',
             label: '<?',
             value: '<?',
