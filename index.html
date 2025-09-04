@@ -183,6 +183,7 @@
     <script src="./directive/repeatRenderFinish/index.js"></script>
     <script src="./directive/ngScroll/index.js"></script>
     <script src="./directive/slot/index.js"></script>
+    <script src="directive/transclude/ngTranscludeBody/index.js"></script>
 
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular.min.js"></script> -->
     <!-- <script src="https://cdn.staticfile.net/angular.js/1.5.3/angular-route.min.js"></script> -->
@@ -339,7 +340,9 @@
     </div>
 
     <div class="main-container">
-        <div ng-view="" class="view-animate-container" style="flex-shrink: 0;flex-grow: 1;min-height: auto">
+        <div >
+            <div ng-view="" class="view-animate-container" style="flex-shrink: 0;flex-grow: 1;min-height: auto">
+            </div>
         </div>
 
         <footer data-v-80147a0d="" data-v-8f7cd5e4="" class="VPFooter" style="z-index: 999">

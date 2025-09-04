@@ -1,0 +1,80 @@
+<style>
+    [contenteditable] {
+        border: 1px solid black;
+        background-color: white;
+        min-height: 20px;
+    }
+
+    .ng-invalid {
+        border: 1px solid red;
+    }
+
+    .demo-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #e4e7ed;
+        border-radius: 4px;
+    }
+
+    .demo-buttons {
+        margin: 10px 0;
+    }
+
+    .demo-buttons button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+<section class="mob-doc content" ng-controller="DrawerCtrl as ctrl">
+
+    <div class="demo-section">
+        <h3>Drawer 抽屉</h3>
+
+        <div class="demo-buttons">
+            <button ng-click="ctrl.openDrawer('rtl')">Open Right Drawer</button>
+            <button ng-click="ctrl.openDrawer('ltr')">Open Left Drawer</button>
+            <button ng-click="ctrl.openDrawer('ttb')">Open Top Drawer</button>
+            <button ng-click="ctrl.openDrawer('btt')">Open Bottom Drawer</button>
+        </div>
+
+    </div>
+
+    <mob-drawer
+        ng-model="ctrl.drawerModel"
+        direction="ctrl.drawerDirection">
+
+<!--        on-open="ctrl.onDrawerOpen()"-->
+<!--        on-close="ctrl.onDrawerClose()"-->
+
+        <ng-transclude-title>
+            <h2>Custom Title</h2>
+        </ng-transclude-title>
+
+        <ng-transclude-body>
+            <h4>Drawer Content</h4>
+            <p>This is the main content area of the drawer. You can put any content here.</p>
+
+            <div style="margin: 20px 0;">
+                <label>Name: </label>
+                <input type="text" ng-model="ctrl.formData.name" placeholder="Enter your name">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <label>Email: </label>
+                <input type="email" ng-model="ctrl.formData.email" placeholder="Enter your email">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <label>Message: </label>
+                <textarea ng-model="ctrl.formData.message" placeholder="Enter your message" rows="4" style="width: 100%;"></textarea>
+            </div>
+        </ng-transclude-body>
+
+        <ng-transclude-footer>
+            <button ng-click="ctrl.saveForm()" style="margin-right: 10px;">Save</button>
+            <button ng-click="ctrl.closeDrawer()">Cancel</button>
+        </ng-transclude-footer>
+
+    </mob-drawer>
+
+</section>
