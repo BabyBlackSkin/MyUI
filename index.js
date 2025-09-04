@@ -106,6 +106,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/empty/index.html',
             controller: 'Empty'
         })
+        .when('/drawer', {
+            templateUrl: './controller/drawer/index.html',
+            controller: 'DrawerCtrl'
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -150,6 +154,8 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Pagination 分页', path: '/pagination'},
         {label: 'Collapse 折叠面板', path: '/collapse'},
         {label: 'Empty 空状态', path: '/empty'},
+        {label: 'FeedBack反馈组件', type: 1},
+        {label: 'drawer 抽屉', path: '/drawer'},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

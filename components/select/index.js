@@ -109,6 +109,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
         // 监听optionsClick事件
         $scope.$on(`${_that.uuid}OptionsClick`, function (e, data) {
+            if (angular.isFunction(_that.input)) {
+                // 判断是不是多选
+                let options = _that.getNgModelOptions()
+                // ngModel、参数、ngModel对应的options
+                let opt = {value: data.value, attachment: _that.attachment, options}
+                _that.change({opt: opt})
+            }
             _that.changeHandler(data)
         })
 
@@ -712,6 +719,7 @@ app
             attachment:"<?",
             // 方法
             change: '&?',
+            input: '&?', // options被点击后的回调
             load: "&?", // 加载子节点 Function(node, resolve)
         },
         controller: controller
