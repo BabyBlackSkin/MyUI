@@ -30,7 +30,7 @@
                     <div class="cell">
                         <mob-transclude context="transcludeContext" context-type="JSON"></mob-transclude>
                         <!--  ngif 会创建一个子的scope-->
-                        <span ng-if="!$$mobTransclude" ng-bind="$parent.$parent.$context.row[prop]"></span>
+                        <span ng-if="!$$mobTransclude" ng-bind="vm.cellBind(prop)"></span>
                     </div>
                 </td>
                 `
@@ -38,7 +38,6 @@
                 compile: function (tElement, tAttrs, transclude, mobTableController) {
                     return {
                         pre: function ($scope, $element, $attrs, controller) {
-                            console.log($scope.prop, $scope.fixed)
                             // 创建需要穿透的上下文
                             $scope.transcludeContext = {
                                 '$parent.$context': {
@@ -49,12 +48,10 @@
                         },
                         post: function ($scope, $element, $attrs, mobTableController) {
                             // 向table注册
-                            $scope.$parent.$parent.$parent.$ctrl.registerColumn($scope)
-                            // mobTableController.registerColumn($scope)
+                            mobTableController.registerColumn($scope)
 
                             // 监听渲染完成事件
-                            $scope.$on(`mobTableColumnRepeatFinish${$scope.$parent.$parent.$parent.$ctrl.$id}`, function () {
-                                // $scope.$on(`mobTableColumnRepeatFinish${mobTableController.$id}`, function () {
+                            $scope.$on(`mobTableColumnRepeatFinish${mobTableController.uuid}`, function () {
                                 // 计算合并列
                                 // 获取合并的行列
                                 let opt = {
@@ -63,8 +60,7 @@
                                     column: $scope.$parent.$context.row[$scope.prop],
                                     columnIndex: $scope.columnIndex
                                 }
-                                $scope.$parent.$parent.$parent.$ctrl.spanMethod(opt)
-                                // mobTableController.spanMethod(opt)
+                                mobTableController.spanMethod(opt)
                             })
 
                         }
@@ -72,6 +68,11 @@
                     //或 return function postLink() {}
                 },
                 controller: function ($scope, $element, $attrs, $transclude) {
+
+                    // 单元格显示数据
+                    this.cellBind = function (prop){
+                        return $scope.$parent.$context.row[prop]
+                    }
 
                     this.mouseEnter = function () {
                         if ($scope.span && $scope.span.inRowspan) {

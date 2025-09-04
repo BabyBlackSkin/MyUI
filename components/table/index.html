@@ -14,7 +14,13 @@
         </thead>
         <!-- 每行是对象 -->
         <tbody>
-        <tr ng-repeat="($rowIndex, row) in $ctrl.data track by $index" on-repeat-finish="mobTableColumnRepeatFinish" ng-class="rowClassName($rowIndex, row)">
+
+        <tr ng-if="$ctrl.noData()" ng-show="false" >
+            <td mob-transclude></td></tr>
+        <tr ng-if="$ctrl.noData()">
+            <td class="empty-td" colspan="{{$ctrl.cellList[0].length}}" ng-bind="$ctrl.noDataTips"></td>
+        </tr>
+        <tr ng-if="$ctrl.hasData()" ng-repeat="($rowIndex, row) in $ctrl.data track by $index" on-repeat-finish="mobTableColumnRepeatFinish" ng-class="rowClassName($rowIndex, row)">
             <td mob-transclude context="row,$index"></td>
         </tr>
         </tbody>

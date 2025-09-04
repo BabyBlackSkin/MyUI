@@ -2,6 +2,8 @@ function controller($scope, $element, $attrs) {
     const _that = this
     // 初始化工作
     this.$onInit = function () {
+        this.uuid =  `mobTable_${$scope.$id}`
+        // 每个单元格的集合
         this.cellList = []
 
         // 注册列的缓存
@@ -9,6 +11,10 @@ function controller($scope, $element, $attrs) {
         this.cellListRowInx = 0
         // 是否首次重复匹配
         this.firstReportMatch = true;
+
+        if (!this.noDataTips) {
+            this.noDataTips = 'No Data'
+        }
     }
 
     this.$onChanges = function (changes) {
@@ -35,7 +41,7 @@ function controller($scope, $element, $attrs) {
                 if (percent) {
                     height = this.height
                 } else {
-                    height= this.height + 'px'
+                    height = this.height + 'px'
                 }
             }
             $scope.style = {
@@ -47,6 +53,20 @@ function controller($scope, $element, $attrs) {
                 "top": 0
             });
         }
+    }
+    /**
+     * 是否存在数据
+     * @returns {boolean}
+     */
+    this.hasData = function () {
+        return this.data && this.data.length > 0
+    }
+    /**
+     * 是否存在数据
+     * @returns {boolean}
+     */
+    this.noData = function () {
+        return !this.hasData()
     }
     /**
      * 计算列的定位
@@ -65,7 +85,7 @@ function controller($scope, $element, $attrs) {
         let fixedRight = col.fixed === 'right'
 
         // 是否新的列，新的列，尝试更新左侧固定列，右侧固定列
-        let cacheCol =  this.hasRegisteredColumn[col.prop] // cacheCol是第一行，列的scope
+        let cacheCol = this.hasRegisteredColumn[col.prop] // cacheCol是第一行，列的scope
         if (cacheCol) {
             // 相同属性的列注册过时，直接取配置
             col.isFirstFixedColumn = angular.copy(cacheCol.isFirstFixedColumn)
@@ -175,7 +195,7 @@ function controller($scope, $element, $attrs) {
         if (!currentCell.span) {
             currentCell.span = {}
         }
-        angular.extend(currentCell.span , spanMethod);
+        angular.extend(currentCell.span, spanMethod);
 
         // 判断所在行是否被合并
         if (spanMethod.rowspan) {
@@ -211,7 +231,7 @@ function controller($scope, $element, $attrs) {
         if (angular.isUndefined(_that.rowClassName)) {
             return ''
         }
-        return _that.rowClassName({opt:{index, row}});
+        return _that.rowClassName({opt: {index, row}});
     }
 
 }
@@ -223,10 +243,11 @@ app
         transclude: true,
         bindings: {
             data: "=?",
+            noDataTips: "<?",
             height: '=?',
             border: '=?',// 是否边框
             stripe: '=?', // 是否条纹
             spanMethod: '&?', // 合并方法
-            rowClassName:'&?' // 行className方法, fun(row)
+            rowClassName: '&?' // 行className方法, fun(row)
         },
     })

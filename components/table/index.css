@@ -1,6 +1,10 @@
 .mob-table {
     overflow: auto;
 }
+.mob-table .empty-td {
+    text-align: center;
+    padding: 12px;
+}
 .mob-table table{
     width: 100%;
     table-layout:fixed;
