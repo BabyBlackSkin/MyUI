@@ -1,6 +1,7 @@
 <div class="mob-segmented"
      ng-class="{
-    'block':$ctrl.block
+    'is-block':$ctrl.block,
+    'is-disabled':$ctrl.disabled
 }">
     <div class="mob-segmented__group">
         <div class="mob-segmented__item-selected"
@@ -8,7 +9,6 @@
              ng-class="{
                 'is-disabled':$ctrl.isModelDisabled()
              }">
-
         </div>
         <label for="#" class="mob-segmented__item"
                ng-repeat="($index, item) in $ctrl.options"
@@ -16,7 +16,7 @@
                ng-class=" {
                     'is-active':$ctrl.getValue(item) == $ctrl.model,
                     'is-disabled':$ctrl.isDisabled(item)
-               }">
+               }" >
             <input type="radio" class="mob-segmented__item-input" ng-model="$ctrl.model"
                    ng-value="$ctrl.getValue(item)">
             <div class="mob-segmented__item-label" ng-bind="$ctrl.getLabel(item)"></div>

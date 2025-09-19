@@ -3,7 +3,7 @@ app
         let _that = this
         $scope.options = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-        $scope.value  // 设置为选项中的一个有效值
+        $scope.value="Mon"  // 设置为选项中的一个有效值
 
 
         $scope.disabledOptions = [
