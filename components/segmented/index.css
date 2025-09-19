@@ -1,0 +1,93 @@
+mob-segmented {
+    width: 100%;
+    --mob-segnebted-bg-color: var(--mob-light-fill-color);
+    --mob-segnebted-hover-bg-color: var(--mob-dark-fill-color);
+    --mob-segnebted-label-color: var(--mob-normal-color);
+    --mob-segnebted-selected-bg-color: var(--mob-primary-color);
+    --mob-segnebted-selected-disabled-bg-color: var(--mob-primary-light-color5);
+    --mob-segnebted-itme-active-text-color: var(--mob-blank-light-fill-color);
+    --mob-segnebted-itme-disabled-text-color: var(--mob-disabled-text-color);
+}
+
+.mob-segmented {
+    display: inline-flex;
+    overflow: auto;
+    color: var(--mob-segnebted-label-color);
+    background-color: var(--mob-segnebted-bg-color);
+}
+.mob-segmented.block {
+    display: flex;
+}
+
+.mob-segmented .mob-segmented__group {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    width: 100%;
+}
+
+
+.mob-segmented .mob-segmented__item-selected {
+    position: absolute;
+    background-color: var(--mob-segnebted-selected-bg-color);
+    transform: translateX(0);
+    transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.mob-segmented .mob-segmented__item-selected.is-disabled {
+    background-color: var(--mob-segnebted-selected-disabled-bg-color);
+}
+
+.mob-segmented .mob-segmented__item {
+    z-index: 1;
+}
+
+.mob-segmented .mob-segmented__item.is-active {
+    color: var(--mob-segnebted-itme-active-text-color);
+}
+
+.mob-segmented .mob-segmented__item.is-disabled:not(.is-active) {
+    color: var(--mob-segnebted-itme-disabled-text-color);
+}
+
+.mob-segmented .mob-segmented__item.is-disabled {
+    cursor: not-allowed;
+}
+
+.mob-segmented .mob-segmented__item:not(.is-active,.is-disabled):hover {
+    background-color: var(--mob-segnebted-hover-bg-color);
+}
+
+
+.mob-segmented .mob-segmented__item, .mob-segmented .mob-segmented__item-selected {
+    box-sizing: border-box;
+    padding: 0 10px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+    min-width: 60px;
+    min-height: 40px;
+}
+
+.mob-segmented .mob-segmented__item-input {
+    position: absolute;
+    margin: 0;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0;
+}
+
+.mob-segmented .mob-segmented__item-label {
+    flex: 1;
+    text-align: center;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color .3s;
+
+}

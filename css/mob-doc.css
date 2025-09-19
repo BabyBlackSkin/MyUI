@@ -153,13 +153,13 @@ h1, h2, h3, h4, h5, h6 {
     flex-wrap: wrap;
 }
 
-.mob-demo-example-child .block {
+.mob-demo-example-child.block {
     padding: 30px ;
     text-align: center;
     border-right: 1px solid var(--mob-border-color);
     flex: 1;
 }
-.mob-demo-example-child .block > *{
+.mob-demo-example-child.block > *{
     margin: 0 auto;
 }
 

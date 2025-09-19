@@ -1,0 +1,134 @@
+<section class="mob-doc content ignore">
+
+    <h2>Segmented 分段控制器</h2>
+
+    <div class="mob-doc content" style="position: relative">
+
+
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-segmented ng-model="value" options="options"></mob-segmented>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-segmented ng-model="value" options="options"></mob-segmented>
+                            </html>
+                            <script>
+                                    $scope.options = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                                    $scope.value = 'Mon'  // 设置为选项中的一个有效值
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <div style="width: 420px">
+                        <mob-segmented ng-model="value" options="disabledOptions"></mob-segmented>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-segmented ng-model="value" options="disabledOptions" props="props"></mob-segmented>
+                            </html>
+                            <script>
+                                    $scope.props = {label:'label',value:'value',disabled:'disabled'}
+                                    $scope.disabledOptions = [
+                                        {label: 'Mon', value: 'Mon', disabled: true},
+                                        {label: 'Tue', value: 'Tue', },
+                                        {label: 'Wed', value: 'Wed', },
+                                        {label: 'Thu', value: 'Thu', },
+                                        {label: 'Fri', value: 'Fri', disabled: true},
+                                        {label: 'Sat', value: 'Sat', disabled: true},
+                                        {label: 'Sun', value: 'Sun', disabled: true},
+                                    ]
+                                    $scope.value = 'Mon'  // 设置为选项中的一个有效值
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>自定义选项</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <div style="width: 420px">
+                        <mob-segmented ng-model="value" options="disabledOptions2" props="props2"></mob-segmented>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-segmented ng-model="value" options="disabledOptions2" props="props2"></mob-segmented>
+                            </html>
+                            <script>
+                                $scope.disabledOptions2 = [
+                                    {ml: 'Mon', mv: 'Mon'},
+                                    {ml: 'Tue', mv: 'Tue', },
+                                    {ml: 'Wed', mv: 'Wed', },
+                                    {ml: 'Thu', mv: 'Thu', },
+                                    {ml: 'Fri', mv: 'Fri', md: true},
+                                    {ml: 'Sat', mv: 'Sat', md: true},
+                                    {ml: 'Sun', mv: 'Sun', md: true},
+                                ]
+                                $scope.props2 = {label:'ml',value:'mv',disabled:'md'}
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+        <h3>Block 分段选择器</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-segmented ng-model="value" options="disabledOptions2" props="props2" block="true"></mob-segmented>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-segmented ng-model="value" options="disabledOptions2" props="props2" block="true"></mob-segmented>
+                            </html>
+                            <script>
+                                $scope.disabledOptions2 = [
+                                    {ml: 'Mon', mv: 'Mon'},
+                                    {ml: 'Tue', mv: 'Tue', },
+                                    {ml: 'Wed', mv: 'Wed', },
+                                    {ml: 'Thu', mv: 'Thu', },
+                                    {ml: 'Fri', mv: 'Fri', md: true},
+                                    {ml: 'Sat', mv: 'Sat', md: true},
+                                    {ml: 'Sun', mv: 'Sun', md: true},
+                                ]
+                                $scope.props2 = {label:'ml',value:'mv',disabled:'md'}
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+    </div>
+</section>

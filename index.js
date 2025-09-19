@@ -110,6 +110,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/drawer/index.html',
             controller: 'DrawerCtrl'
         })
+        .when('/segmented', {
+            templateUrl: './controller/segmented/index.html',
+            controller: 'SegmentedCtrl'
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -154,6 +158,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Pagination 分页', path: '/pagination'},
         {label: 'Collapse 折叠面板', path: '/collapse'},
         {label: 'Empty 空状态', path: '/empty'},
+        {label: 'Segmented 分段控制器', path: '/segmented'},
         {label: 'FeedBack反馈组件', type: 1},
         {label: 'drawer 抽屉', path: '/drawer'},
     ]
