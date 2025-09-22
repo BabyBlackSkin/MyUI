@@ -24,9 +24,12 @@ function controller($scope, $element, $attrs) {
 
         $scope.$watch(function () {
             return _that.model;
-        }, function (value) {
-            _that.ngModel.$setViewValue(value);
-            _that.handleModelChange()
+        }, function (newV, oldV) {
+            if (newV !== oldV){
+                console.log('ngModel change', newV, oldV)
+                _that.ngModel.$setViewValue(newV);
+                _that.handleModelChange()
+            }
         });
     }
 
@@ -59,7 +62,6 @@ function controller($scope, $element, $attrs) {
 
     // 打开抽屉
     this.open = function () {
-        console.log('open')
         this.addEventListeners()
         this.toggleBodyScroll()
         this.onOpen && this.onOpen()
@@ -67,7 +69,6 @@ function controller($scope, $element, $attrs) {
 
     // 关闭抽屉
     this.close = function () {
-        console.log('close')
         // 先移除之前的事件监听器
         this.removeEventListeners()
         this.restoreBodyScroll()
