@@ -49,13 +49,22 @@ function controller($scope, $element, $timeout, useResizeObserver) {
     let stopObserving;
     // 初始化
     this.$onInit = function () {
-        this.model = this.ngModel.$viewValue;
-
         // ngModel 的值从外部改变时，触发此函数
         this.ngModel.$render = () => {
             this.model = this.ngModel.$viewValue;
             recalculateSlider();
         };
+
+        $scope.$watch(function () {
+            return _that.model;
+        }, function (newV, oldV) {
+            if (newV !== oldV){
+                console.log('ngModel change', newV, oldV)
+                _that.ngModel.$setViewValue(newV);
+                // 手动调用 recalculateSlider 来立即响应点击，提供更流畅的动画效果
+                recalculateSlider();
+            }
+        });
 
         stopObserving  = useResizeObserver.observe($element[0], recalculateSlider);
     }
@@ -87,9 +96,6 @@ function controller($scope, $element, $timeout, useResizeObserver) {
         const value = this.getValue(item);
         if (this.model !== value) {
             this.model = value;
-            this.ngModel.$setViewValue(value);
-            // 手动调用 recalculateSlider 来立即响应点击，提供更流畅的动画效果
-            recalculateSlider();
         }
 
         // 触发外部的回调函数
