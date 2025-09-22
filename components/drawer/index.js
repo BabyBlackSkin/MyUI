@@ -3,7 +3,6 @@ function controller($scope, $element, $attrs) {
     // 初始化状态位
     let INIT = 0
 
-    // this.ngModel = false
     this.direction = 'rtl' // rtl, ltr, ttb, btt
     this.title = ''
     this.withHeader = true
@@ -20,12 +19,12 @@ function controller($scope, $element, $attrs) {
 
         this.ngModel.$render = () => {
             _that.model = this.ngModel.$viewValue
+            _that.handleModelChange()
         };
 
         $scope.$watch(function () {
             return _that.model;
         }, function (value) {
-            console.log('$watch _that.model')
             _that.ngModel.$setViewValue(value);
             _that.handleModelChange()
         });
@@ -46,12 +45,12 @@ function controller($scope, $element, $attrs) {
     }
 
     this.$postLink = function () {
-        console.log(this.direction)
+        // console.log(this.direction)
     }
 
     // ngModel chang 事件
     this.handleModelChange = function () {
-        if (this.ngModel.$viewValue) {
+        if (this.model) {
             this.open()
         } else {
             this.close()
@@ -85,7 +84,7 @@ function controller($scope, $element, $attrs) {
 
     // 触发展和关闭
     this.toggle = function () {
-        if (this.ngModel.$viewValue) {
+        if (this.model) {
             this.close()
         } else {
             this.open()
@@ -94,7 +93,7 @@ function controller($scope, $element, $attrs) {
 
     // 隐藏body的滚动条
     this.toggleBodyScroll = function () {
-        if (this.ngModel.$viewValue && this.lockScroll) {
+        if (this.model && this.lockScroll) {
             document.body.style.overflow = 'hidden'
         }
     }
@@ -113,8 +112,8 @@ function controller($scope, $element, $attrs) {
         // esc
         const escapeHandler = (event) => {
             $scope.$apply(function (){
-                if (event.key === 'Escape' && _that.ngModel.$viewValue) {
-                    console.log('ESC key pressed, model:', _that.ngModel.$viewValue)
+                if (event.key === 'Escape' && _that.model) {
+                    console.log('ESC key pressed, model:', _that.model)
                     _that.model = false
                 }
             })

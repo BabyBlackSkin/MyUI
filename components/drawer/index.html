@@ -5,12 +5,12 @@
     'mob-drawer--ttb': $ctrl.direction === 'ttb',
     'mob-drawer--btt': $ctrl.direction === 'btt'
 }">
-    <!-- Overlay -->
+
     <div class="mob-drawer__overlay"
          ng-if="$ctrl.model && $ctrl.withHeader"
          ng-click="$ctrl.closeOverlay()">
     </div>
-    <!-- Drawer Content -->
+<!--    content-->
     <div class="mob-drawer__wrapper"
          ng-style="$ctrl.getWrapperStyle()"
          ng-class="{

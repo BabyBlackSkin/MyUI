@@ -3,12 +3,22 @@ app
     const _that = this
 
     // Drawer state
-    this.drawerModel = false
-    this.drawerDirection = 'rtl'
-    this.drawerSize = '50%'
-    this.drawerTitle = 'Default Title'
-    this.drawerWithHeader = true
-    this.drawerWithFooter = false
+    this.drawerOne={
+        direction: 'ltr',
+        model: false
+    }
+    this.drawerTow={
+        direction: 'rtl',
+        model: false
+    }
+    this.drawerThree= {
+        direction: 'ttb',
+        model: false
+    }
+    this.drawerFour={
+        direction: 'btt',
+        model: false
+    }
 
     // Form data
     this.formData = {
@@ -22,58 +32,41 @@ app
         num: '',
         result: ''
     }
+    // Drawer state
+    this.drawerOneInnerR={
+        direction: 'ltr',
+        model: false
+    }
+
+    // Drawer state
+    this.drawerOneInnerL={
+        direction: 'ltr',
+        model: false
+    }
 
     this.inputChange = function() {
         // Existing functionality
     }
 
     // Drawer methods
-    this.openDrawer = function(direction) {
-        this.drawerDirection = direction
-        this.drawerSize = '50%'
-        this.drawerTitle = `${direction.toUpperCase()} Drawer`
-        this.drawerWithHeader = true
-        this.drawerWithFooter = false
-        this.drawerModel =  !this.drawerModel
+    this.drawerOneFn = function() {
+        this.drawerOne.model = !this.drawerOne.model
+    }
+    this.drawerOneInnerFn1 = function() {
+        this.drawerOneInnerR.model = !this.drawerOneInnerR.model
     }
 
-    this.openDrawerWithSize = function(direction, size) {
-        this.drawerDirection = direction
-        this.drawerSize = size
-        this.drawerTitle = `${size.charAt(0).toUpperCase() + size.slice(1)} ${direction.toUpperCase()} Drawer`
-        this.drawerWithHeader = true
-        this.drawerWithFooter = false
-        this.drawerModel = true
+
+    this.drawerTwoFn = function() {
+        this.drawerTow.model = !this.drawerTow.model
     }
 
-    this.openDrawerWithFooter = function() {
-        this.drawerDirection = 'rtl'
-        this.drawerSize = '50%'
-        this.drawerTitle = 'Drawer with Footer'
-        this.drawerWithHeader = true
-        this.drawerWithFooter = true
-        this.drawerModel = true
+    this.drawerThreeFn = function() {
+        this.drawerThree.model = !this.drawerThree.model
     }
 
-    this.openDrawerWithoutHeader = function() {
-        this.drawerDirection = 'rtl'
-        this.drawerSize = '50%'
-        this.drawerTitle = ''
-        this.drawerWithHeader = false
-        this.drawerWithFooter = false
-        this.drawerModel = true
-    }
-
-    this.closeDrawer = function() {
-        this.drawerModel = false
-    }
-
-    this.onDrawerOpen = function() {
-        // console.log('Drawer opened')
-    }
-
-    this.onDrawerClose = function() {
-        // console.log('Drawer closed')
+    this.drawerFourFn = function() {
+        this.drawerFour.model = !this.drawerFour.model
     }
 
     this.saveForm = function() {

@@ -1,4 +1,3 @@
-/* Drawer Base Styles */
 .mob-drawer {
     position: fixed;
     top: 0;
@@ -14,7 +13,7 @@
     pointer-events: auto;
 }
 
-/* Overlay */
+
 .mob-drawer__overlay {
     position: absolute;
     top: 0;
@@ -30,18 +29,17 @@
     opacity: 1;
 }
 
-/* Drawer Wrapper */
+/* Wrapper */
 .mob-drawer__wrapper {
     position: absolute;
     background-color: #fff;
-    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.2), 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
     overflow: hidden;
 }
 
-/* Direction: Right to Left (default) */
+/* 从右到左 */
 .mob-drawer--rtl .mob-drawer__wrapper {
     top: 0;
     right: 0;
@@ -55,7 +53,7 @@
     transform: translateX(0);
 }
 
-/* Direction: Left to Right */
+/* 从左到右 */
 .mob-drawer--ltr .mob-drawer__wrapper {
     top: 0;
     left: 0;
@@ -69,7 +67,7 @@
     transform: translateX(0);
 }
 
-/* Direction: Top to Bottom */
+/* 从上到下 */
 .mob-drawer--ttb .mob-drawer__wrapper {
     top: 0;
     left: 0;
@@ -83,7 +81,7 @@
     transform: translateY(0);
 }
 
-/* Direction: Bottom to Top */
+/* 从下到上 */
 .mob-drawer--btt .mob-drawer__wrapper {
     bottom: 0;
     left: 0;
@@ -151,33 +149,19 @@
     text-align: right;
 }
 
-/* Responsive Design */
+/* 动画 */
 @media (max-width: 768px) {
     .mob-drawer--rtl .mob-drawer__wrapper,
     .mob-drawer--ltr .mob-drawer__wrapper {
         width: 100%;
     }
-    
+
     .mob-drawer--ttb .mob-drawer__wrapper,
     .mob-drawer--btt .mob-drawer__wrapper {
         height: 100%;
     }
 }
 
-/* Custom Size Classes */
-.mob-drawer__wrapper--size-small {
-    width: 30% !important;
-}
-
-.mob-drawer__wrapper--size-large {
-    width: 70% !important;
-}
-
-.mob-drawer__wrapper--size-full {
-    width: 100% !important;
-}
-
-/* Animation Classes */
 .mob-drawer__wrapper--enter {
     transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
