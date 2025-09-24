@@ -1,4 +1,4 @@
-function controller($scope, $element, $attrs) {
+function controller($scope, $element, $attrs, $timeout) {
     const _that = this;
     // 初始化工作
     this.$onInit = function () {
@@ -8,12 +8,27 @@ function controller($scope, $element, $attrs) {
 
         if (!angular.isUndefined(this.radioGroup) && this.radioGroup !== null) {
             // 绑定model
-            this.ngModel = this.radioGroup.ngModel
+            this.model = this.radioGroup.ngModel
             // 绑定name，一个组内的radio应该互斥
             this.name = this.radioGroup.uuid
             $scope.$on(`${this.name}Change`, function (event, data) {
-                _that.ngModel = data
+                _that.model = data
             })
+        }
+
+        if (this.ngModel) {
+            // ngModel 的值从外部改变时，触发此函数
+            this.ngModel.$render = () => {
+                this.model = this.ngModel.$viewValue;
+            };
+
+            $scope.$watch(function () {
+                return _that.model;
+            }, function (newV, oldV) {
+                if (newV !== oldV) {
+                    _that.ngModel.$setViewValue(newV);
+                }
+            });
         }
     }
 
@@ -35,7 +50,7 @@ function controller($scope, $element, $attrs) {
         if (this.ngDisabled) {
             return
         }
-        if (this.ngModel === this.value) {
+        if (this.model === this.value) {
             return;
         }
         this.change()
@@ -43,13 +58,14 @@ function controller($scope, $element, $attrs) {
     }
 
     this.change = function () {
-        this.ngModel = this.value
-        if (angular.isFunction(this.changeHandle)) {
-            this.changeHandle({value: this.value})
-        } else {
-            $scope.$emit(`${this.name}ChildChange`, this.value)
-        }
-
+        this.model = this.value
+        $timeout(function () {
+            if (angular.isFunction(_that.changeHandle)) {
+                _that.changeHandle({opt: {value: _that.value}})
+            } else {
+                $scope.$emit(`${this.name}ChildChange`, _that.value)
+            }
+        })
     }
 }
 
@@ -57,10 +73,10 @@ app
     .component('mobRadio', {
         templateUrl: './components/radio/mob-radio.html',
         require: {
-            'radioGroup': '?^mobRadioGroup'
+            'radioGroup': '?^mobRadioGroup',
+            'ngModel':'?^ngModel'
         },
         bindings: {
-            ngModel: '=?',
             ngDisabled: '<?',
             name: '<?',
             label: '<',
