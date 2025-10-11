@@ -1,0 +1,78 @@
+mob-tag {
+    display: inline-flex;
+    --mob-tag-default-font-size: 12px;
+    --mob-tag-primary-bg-color: var(--mob-primary-light-color9);
+    --mob-tag-primary-text-color: var(--mob-primary-color);
+    --mob-tag-primary-border-color: var(--mob-primary-light-color8);
+
+    --mob-tag-success-bg-color: var(--mob-success-light-color9);
+    --mob-tag-success-text-color: var(--mob-success-color);
+    --mob-tag-success-border-color: var(--mob-success-light-color8);
+
+    --mob-tag-info-bg-color: var(--mob-info-light-color9);
+    --mob-tag-info-text-color: var(--mob-info-color);
+    --mob-tag-info-border-color: var(--mob-info-light-color8);
+
+    --mob-tag-warning-bg-color: var(--mob-warning-light-color9);
+    --mob-tag-warning-text-color: var(--mob-warning-color);
+    --mob-tag-warning-border-color: var(--mob-warning-light-color8);
+
+    --mob-tag-danger-bg-color: var(--mob-danger-light-color9);
+    --mob-tag-danger-text-color: var(--mob-danger-color);
+    --mob-tag-danger-border-color: var( --mob-danger-light-color8);
+
+
+}
+
+
+mob-tag .mob-tag {
+    padding: 0 9px;
+}
+
+mob-tag .mob-tag, mob-tag ng-transclude {
+    margin: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    height: 24px;
+    line-height: 1;
+    font-size: var(--mob-tag-default-font-size);
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.mob-tag span {
+    white-space: nowrap;
+    font-size: var(--mob-tag-default-font-size);
+}
+
+
+.mob-tag.primary {
+    background-color: var(--mob-tag-primary-bg-color);
+    color: var(--mob-tag-primary-text-color);
+    border: 1px solid var(--mob-tag-primary-border-color);
+}
+
+.mob-tag.success {
+    background-color: var(--mob-tag-success-bg-color);
+    color: var(--mob-tag-success-text-color);
+    border: 1px solid var(--mob-tag-success-border-color);
+}
+
+.mob-tag.info {
+    background-color: var(--mob-tag-info-bg-color);
+    color: var(--mob-tag-info-text-color);
+    border: 1px solid var(--mob-tag-info-border-color);
+}
+.mob-tag.warning {
+    background-color: var(--mob-tag-warning-bg-color);
+    color: var(--mob-tag-warning-text-color);
+    border: 1px solid var(--mob-tag-warning-border-color);
+}
+
+.mob-tag.danger {
+    background-color: var(--mob-tag-danger-bg-color);
+    color: var(--mob-tag-danger-text-color);
+    border: 1px solid var(--mob-tag-danger-border-color);
+}

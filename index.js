@@ -114,6 +114,14 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/segmented/index.html',
             controller: 'SegmentedCtrl'
         })
+        .when('/tag', {
+            templateUrl: './controller/tag/index.html',
+            controller: 'TagCtrl'
+        })
+        .when('/z-index-demo', {
+            templateUrl: './controller/z-index-demo/index.html',
+            controller: 'ZIndexDemoCtrl'
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -161,6 +169,8 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Segmented 分段控制器', path: '/segmented'},
         {label: 'FeedBack反馈组件', type: 1},
         {label: 'drawer 抽屉', path: '/drawer'},
+        {label: 'Tag 标签', path: '/tag'},
+        {label: 'Z-Index 管理器', path: '/z-index-demo', tags: [{title:'experimental', type:'primary'}]},
     ]
     //通过$on为$rootScope添加路由事件
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

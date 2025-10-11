@@ -1,10 +1,46 @@
 :root {
     /*颜色*/
+    /*primaryColor*/
     --mob-primary-color: #409eff;
     --mob-primary-light-color2: #66b1ff;
+    --mob-primary-light-color3: #79bbff;
     --mob-primary-light-color5: #a0cfff;
     --mob-primary-light-color6: #b3d8ff;
+    --mob-primary-light-color7: #c6e2ff;
+    --mob-primary-light-color8: #d9ecff;
     --mob-primary-light-color9: #ecf5ff;
+
+    /*successColor*/
+    --mob-success-color: #67c23a;
+    --mob-success-light-color3: #95d475;
+    --mob-success-light-color5: #b3e19d;
+    --mob-success-light-color7: #d1edc4;
+    --mob-success-light-color8: #e1f3d8;
+    --mob-success-light-color9: #f0f9eb;
+
+    /*warningColor*/
+    --mob-warning-color: #e6a23c;
+    --mob-warning-light-color3: #eebe77;
+    --mob-warning-light-color5: #f3d19e;
+    --mob-warning-light-color7: #f8e3c5;
+    --mob-warning-light-color8: #faecd8;
+    --mob-warning-light-color9: #fdf6ec;
+
+    /*dangerColor*/
+    --mob-danger-color: #f56c6c;
+    --mob-danger-light-color3: #f89898;
+    --mob-danger-light-color5: #fab6b6;
+    --mob-danger-light-color7: #fcd3d3;
+    --mob-danger-light-color8: #fde2e2;
+    --mob-danger-light-color9: #fef0f0;
+
+    /*infoColor*/
+    --mob-info-color: #909399;
+    --mob-info-light-color3: #b1b3b8;
+    --mob-info-light-color5: #c8c9cc;
+    --mob-info-light-color7: #dedfe0;
+    --mob-info-light-color8: #e9e9eb;
+    --mob-info-light-color9: #f4f4f5;
 
     /* text color */
     --mob-primary-text-color: #303133;

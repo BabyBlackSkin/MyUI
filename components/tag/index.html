@@ -1,0 +1,12 @@
+<span class="mob-tag"
+ng-class="{
+    'primary':!$ctrl.type || $ctrl.type === 'primary',
+    'success':$ctrl.type === 'success',
+    'info':$ctrl.type === 'info',
+    'warning':$ctrl.type === 'warning',
+    'danger':$ctrl.type === 'danger',
+}">
+    <span class="mob-tag__content">
+        <ng-transclude/>
+    </span>
+</span>
