@@ -100,7 +100,9 @@ function controller($scope, $element, $timeout, useResizeObserver) {
 
         // 触发外部的回调函数
         if (this.input) {
-            this.input({ opt: { value, item, index } });
+            $timeout(function () {
+                _that.input({opt: {value, item, index}});
+            });
         }
     }
     /**
