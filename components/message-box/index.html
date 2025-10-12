@@ -1,0 +1,55 @@
+<div class="mob-message-box" ng-if="$ctrl.isShow" ng-class="{'is-show':$ctrl.isShow, 'is-closing':$ctrl.isClosing}" ng-style="{'z-index': $ctrl.zIndex}">
+    <!-- 遮罩层 -->
+    <div class="mob-message-box__modal"
+         ng-click="$ctrl.handleModalClick()">
+    </div>
+
+    <!-- 消息框主体 -->
+    <div class="mob-message-box__wrapper"
+         ng-class="{'is-show':$ctrl.isWrapperShow, 'is-closing':$ctrl.isClosing}"
+    >
+
+        <!-- 头部 -->
+        <div class="mob-message-box__header" ng-if="$ctrl.options">
+            <div class="mob-message-box__title">
+                <i class="mob-message-box__icon"
+                   ng-class="$ctrl.getIconClass()"
+                   ng-if="$ctrl.options.type !== 'info' || $ctrl.options.title">
+                </i>
+                <span ng-bind="$ctrl.options.title"></span>
+            </div>
+            <button class="mob-message-box__close"
+                    ng-if="$ctrl.options.showClose"
+                    ng-click="$ctrl.handleCancel()">
+                <i class="mob-icon-close"></i>
+            </button>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="mob-message-box__content">
+            <div class="mob-message-box__message" ng-if="$ctrl.options.message">
+                <i class="mob-message-box__icon"
+                   ng-class="$ctrl.getIconClass()"
+                   ng-if="$ctrl.options.type !== 'info' && !$ctrl.options.title">
+                </i>
+                <div class="mob-message-box__message-text" ng-bind="$ctrl.options.message"></div>
+            </div>
+        </div>
+
+        <!-- 底部按钮区域 -->
+        <div class="mob-message-box__btns" ng-if="$ctrl.options.showConfirmButton || $ctrl.options.showCancelButton">
+            <mob-button
+                    ng-if="$ctrl.options.showCancelButton"
+                    type="'info'"
+                    ng-click="$ctrl.handleCancel()">
+                {{$ctrl.options.cancelButtonText}}
+            </mob-button>
+            <mob-button
+                    ng-if="$ctrl.options.showConfirmButton"
+                    type="'primary'"
+                    ng-click="$ctrl.handleConfirm()">
+                {{$ctrl.options.confirmButtonText}}
+            </mob-button>
+        </div>
+    </div>
+</div>

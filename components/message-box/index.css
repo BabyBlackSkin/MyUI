@@ -1,0 +1,154 @@
+mob-message-box {
+    --mob-message-box-padding: 20px;
+    --mob-message-width: 400px;
+}
+
+.mob-message-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+}
+
+.mob-message-box__modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(2px);
+}
+
+.mob-message-box__wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 320px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, opacity;
+}
+
+.mob-message-box.is-show .mob-message-box__modal {
+    opacity: 1;
+
+}
+
+.mob-message-box.is-show .mob-message-box__wrapper.is-show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* 关闭动画状态 */
+.mob-message-box.is-closing .mob-message-box__modal {
+    opacity: 0;
+}
+
+.mob-message-box.is-closing .mob-message-box__wrapper {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+.mob-message-box__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 10px;
+    border-bottom: 1px solid var(--mob-border-color-light);
+}
+
+.mob-message-box__title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--mob-primary-text-color);
+    margin: 0;
+}
+
+.mob-message-box__icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.mob-message-box__close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: var(--mob-secondary-text-color);
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mob-message-box__close:hover {
+    background-color: var(--mob-light-fill-color);
+    color: var(--mob-regular-text-color);
+}
+
+.mob-message-box__content {
+    padding: 20px;
+}
+
+.mob-message-box__message {
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.5;
+    color: var(--mob-regular-text-color);
+    font-size: 14px;
+}
+
+.mob-message-box__message-text {
+    flex: 1;
+    word-break: break-word;
+}
+
+.mob-message-box__btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 10px 20px 20px;
+    border-top: 1px solid var(--mob-border-color-light);
+}
+
+.mob-message-box__btns .mob-button {
+    min-width: 80px;
+    height: 32px;
+    padding: 0 16px;
+    font-size: 14px;
+}
+
+/* 类型样式 */
+.mob-message-box--info .mob-message-box__icon {
+    color: var(--mob-info-color);
+}
+
+.mob-message-box--success .mob-message-box__icon {
+    color: var(--mob-success-color);
+}
+
+.mob-message-box--warning .mob-message-box__icon {
+    color: var(--mob-warning-color);
+}
+
+.mob-message-box--error .mob-message-box__icon {
+    color: var(--mob-danger-color);
+}
