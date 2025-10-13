@@ -1,44 +1,52 @@
-app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', function($compile, $rootScope, $sce, $injector) {
-    let messageBoxInstance = null;
-    let messageBoxElement = null;
+app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', "uuId", function($compile, $rootScope, $sce, $injector, $q, uuId) {
 
     // 创建MessageBox实例
-    function createMessageBox(callerScope) {
-        if (messageBoxElement) {
-            return messageBoxInstance;
-        }
-
+    function createMessageBox(config, callerScope) {
         // 如果传入了调用者的scope，则使用它；否则创建新的scope
         const scope = callerScope || $rootScope.$new();
-        messageBoxElement = $compile('<mob-message-box config="config" on-close="onClose()"></mob-message-box>')(scope);
+
+        // 外部回调Promise
+        let callbackPromise = $q.defer();
+
+        // 组件回调
+        config.deferred = $q.defer();
+
+        // 随机id
+        let configKey = `${uuId.newUUID('_')}_MessageBoxConfig`
+        let closeKey = `${uuId.newUUID('_')}_MessageBoxConfigClose(opt)`
+        scope[closeKey] = function (opt){
+            console.log("destroyMessageBox")
+            // if (messageBoxElement) {
+            //     messageBoxElement.remove();
+            // }
+        };
+
+        scope[configKey] = config;
+        let messageBoxElement = $compile(`<mob-message-box config="${configKey}" close="${closeKey}"></mob-message-box>`)(scope);
+
+        // scope[closeKey] = function (){
+        //     console.log("destroyMessageBox")
+        //     if (messageBoxElement) {
+        //         messageBoxElement.remove();
+        //     }
+        // };
+        config.deferred.promise.then((action)=>{
+            callbackPromise.resolve(action);
+        }).catch((action)=>{
+            callbackPromise.reject(action);
+        })
+
         document.body.appendChild(messageBoxElement[0]);
 
-        messageBoxInstance = scope;
-        return messageBoxInstance;
+        return callbackPromise.promise;
     }
 
     // 销毁MessageBox实例
-    function destroyMessageBox() {
-        if (messageBoxElement) {
-            messageBoxElement.remove();
-            messageBoxElement = null;
-            messageBoxInstance = null;
-        }
-    }
+    // function destroyMessageBox(ele)
 
     // 显示MessageBox
     function show(options, callerScope) {
-        const instance = createMessageBox(callerScope);
-        instance.config = options;
-        return instance;
-    }
-
-    // 关闭MessageBox
-    function close() {
-        if (messageBoxInstance) {
-            messageBoxInstance.config = null;
-            messageBoxInstance.$apply();
-        }
+        return createMessageBox(options, callerScope);
     }
 
     // 消息提示 - alert
@@ -54,31 +62,11 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', functi
             confirmButtonType: 'primary',
             closeOnClickModal: true,
             closeOnPressEscape: true,
-            callback: options.callback || null,
-            beforeClose: options.beforeClose || null
+            callback:  null,
+            beforeClose: null
         };
 
-        return show(config, callerScope);
-    }
-
-    // 信息提示
-    function info(message, title, options = {}, callerScope) {
-        return alert(message, title, { ...options, type: 'info' }, callerScope);
-    }
-
-    // 成功提示
-    function success(message, title, options = {}, callerScope) {
-        return alert(message, title, { ...options, type: 'success' }, callerScope);
-    }
-
-    // 警告提示
-    function warning(message, title, options = {}, callerScope) {
-        return alert(message, title, { ...options, type: 'warning' }, callerScope);
-    }
-
-    // 错误提示
-    function error(message, title, options = {}, callerScope) {
-        return alert(message, title, { ...options, type: 'error' }, callerScope);
+        return show(angular.extend({}, config, options || {}), callerScope);
     }
 
     // 确认消息
@@ -130,14 +118,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', functi
 
     return {
         alert: alert,
-        info: info,
-        success: success,
-        warning: warning,
-        error: error,
         confirm: confirm,
-        prompt: prompt,
-        show: show,
-        close: close,
-        destroy: destroyMessageBox
+        // prompt: prompt,
     };
 }]);

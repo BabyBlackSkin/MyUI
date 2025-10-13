@@ -15,7 +15,6 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         cancelButtonType: 'default',
         closeOnClickModal: true,
         closeOnPressEscape: true,
-        beforeClose: null,
         callback: null
     };
 
@@ -32,15 +31,12 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
     };
 
     this.$onChanges = function (changes) {
-        // if (changes.config) {
-        //     console.log("changes.config")
-        //     if (changes.config.currentValue) {
-        //         this.options = angular.extend({}, this.defaultOptions, changes.config.currentValue);
-        //         this.show();
-        //     } else {
-        //         this.close();
-        //     }
-        // }
+        if (changes.config) {
+            console.log("changes.config")
+            if (changes.config.currentValue) {
+                this.options = angular.extend({}, this.defaultOptions, changes.config.currentValue);
+            }
+        }
     };
 
     this.$onDestroy = function () {
@@ -62,11 +58,11 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         this.isShow = true;
         $timeout(() => {
             this.isWrapperShow = true;
-        },100);
+        }, 100);
     };
 
     // 关闭MessageBox
-    this.close = function () {
+    this.closeHandle = function () {
         if (this.isClosing) {
             return; // 防止重复关闭
         }
@@ -75,43 +71,28 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         this.unbindKeydown();
 
         // 等待关闭动画完成后再触发回调
+        this.isWrapperShow = false;
         $timeout(() => {
-            if (this.onClose) {
-                this.onClose();
-            }
+            _that.isShow = false
+            $timeout(()=>{
+                console.log("closeHandle")
+                _that.close();
+            },300)
         }, 300); // 与CSS动画时长保持一致
     };
 
     // 确认按钮点击
     this.handleConfirm = function () {
-        if (this.options.beforeClose && typeof this.options.beforeClose === 'function') {
-            const result = this.options.beforeClose('confirm');
-            if (result === false) {
-                return;
-            }
-        }
-
-        if (this.options.callback && typeof this.options.callback === 'function') {
-            this.options.callback('confirm');
-        }
-        // 触发关闭
-        this.onClose();
+        let action = {type: 'confirm'};
+        this.options.deferred.resolve(action);
+        this.closeHandle();
     };
 
     // 取消按钮点击
     this.handleCancel = function () {
-        if (this.options.beforeClose && typeof this.options.beforeClose === 'function') {
-            const result = this.options.beforeClose('cancel');
-            if (result === false) {
-                return;
-            }
-        }
-
-        if (this.options.callback && typeof this.options.callback === 'function') {
-            this.options.callback('cancel');
-        }
-        // 触发关闭
-        this.onClose();
+        let action = {type: 'cancel'};
+        this.options.deferred.reject(action);
+        this.closeHandle();
     };
 
     // 遮罩层点击
@@ -163,6 +144,6 @@ app
         controller: controller,
         bindings: {
             config: '<?',
-            onClose: '&?'
+            close: '&?'
         }
     });

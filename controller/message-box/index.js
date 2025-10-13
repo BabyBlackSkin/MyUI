@@ -2,8 +2,12 @@ function controller($scope, messageBox) {
     const _that = this;
 
     // 显示基础Alert
-    this.showAlert = function() {
-        messageBox.alert('这是一段内容', '标题');
+    this.showAlert = function () {
+        messageBox.alert('这是一段内容', '标题', {
+            confirmButtonText: "ok",
+        }).then((action) => {
+            console.log(action)
+        });
     };
 
     // 显示Info消息
