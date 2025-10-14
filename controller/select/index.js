@@ -32,7 +32,8 @@ app
         ]
 
         $scope.demo = 'Select'
-        $scope.value = '香港'
+        // $scope.value = '香港'
+        $scope.value = ['香港']
         $scope.value3 = '香港'
         $scope.valueMultiple = ['香港','1','上海','北京']
 
@@ -71,5 +72,9 @@ app
 
         $scope.changeDemo = function(v){
             console.log(v)
+        }
+
+        $scope.selectChange=function (opt){
+            console.log("selectChange", opt)
         }
     }])

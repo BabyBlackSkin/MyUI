@@ -12,7 +12,10 @@
                     {{value}}
                     <mob-button ng-click="addOption()">追加options</mob-button>
                     <mob-button ng-click="changeModel()">切换model</mob-button>
-                    <mob-select style="width: 200px;" ng-model="value" options="select.optionsBase"></mob-select>
+                    <mob-select style="width: 200px;" ng-model="value" options="select.optionsBase" multiple=" true" auto-disable-selected=" true" change="selectChange(opy)"></mob-select>
+                    <mob-select style="width: 200px;" ng-model="value1" options="select.optionsBase" multiple=" true" auto-disable-selected=" true" change="selectChange(opy)"></mob-select>
+<!--                    <mob-select style="width: 200px;" ng-model="value" options="select.optionsBase"  auto-disable-selected=" true" change="selectChange(opy)"></mob-select>-->
+<!--                    <mob-select style="width: 200px;" ng-model="value1" options="select.optionsBase" auto-disable-selected=" true" change="selectChange(opy)"></mob-select>-->
                 </div>
             </div>
             <div class="meta">

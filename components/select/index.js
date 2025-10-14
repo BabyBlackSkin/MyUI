@@ -23,7 +23,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
 
         // 加载状态
-        this.loadStatus = -1;
+        this.loadStatus = 0;
     }
 
     this.$onChanges = function (changes) {
@@ -55,7 +55,6 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         popper.popper($scope, targetList, popperTooltipList)
         this.initEvent()
         this.initWatcher()
-
         this.initScrollHandler()
 
     }
@@ -69,6 +68,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
             return !_that.ngDisabled
         }
+
         $scope.$popper[`selectDrown_${$scope.$id}`].focusOut = async function () {
             $scope.filterableText = ''
             _that.expand = false
@@ -111,10 +111,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $scope.$on(`${_that.uuid}OptionsClick`, function (e, data) {
             if (angular.isFunction(_that.input)) {
                 // 判断是不是多选
-                let options = _that.getNgModelOptions()
+                let options = angular.copy(_that.getNgModelOptions())
                 // ngModel、参数、ngModel对应的options
                 let opt = {value: data.value, attachment: _that.attachment, options}
-                _that.change({opt: opt})
+                _that.input({opt: opt})
             }
             _that.changeHandler(data)
         })
@@ -142,7 +142,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             for (let o of options) {
                 let value = _that.optionsConfigGetValue(o)
                 let label = _that.optionsConfigGetLabel(o)
-                this.optionsCache[value] = {label, value}
+                this.optionsCache[value] = {label, value, $ref: o}
             }
         }
     }
@@ -194,6 +194,9 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 }
             }
 
+            // 当ngModel变动的时候，自动禁用已选项处理
+            _that.autoDisableSelectedHandler(newV, oldV)
+
             if (angular.isFunction(_that.change)) {
                 // 判断是不是多选
                 let options = _that.getNgModelOptions()
@@ -238,7 +241,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (angular.isUndefined(element)) {
             return
         }
-        if (angular.isUndefined(this.load) && angular.isFunction(this.load)) {
+        if (angular.isUndefined(this.load) && !angular.isFunction(this.load)) {
             return
         }
         let handleScroll = () => {
@@ -246,11 +249,12 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 const { scrollTop, scrollHeight, clientHeight } = element;
                 const scrollDistance = scrollHeight - scrollTop <= clientHeight;
                 if (scrollDistance) {
+                    _that.loadStatus = 1;// 更新状态为加载完成
                     let deferred = $q.defer();
                     // 加载
                     let opt ={deferred: deferred}
                     _that.load({opt}).then(() => {
-                        _that.loadStatus = 1;// 更新状态为加载完成
+                        _that.loadStatus = 2;// 更新状态为加载完成
                     }).catch(err => {
                         // 更新状态为未加载
                         _that.loadStatus = 0;
@@ -371,6 +375,45 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             popperTooltipList.push(tooltip)
         }
         return popperTooltipList
+    }
+
+    /**
+     * 变动通知
+     */
+    this.autoDisableSelectedHandler = function (newV,oldV) {
+        if (!this.autoDisableSelected) {
+            return;
+        }
+        if (!this.optionsCache) {
+            return
+        }
+        if (this.multiple) {
+            if (oldV) {
+                for (let i = 0; i < oldV.length; i++) {
+                    this.setOptionsDisabled(this.optionsCache[oldV[i]], false)
+                }
+            }
+            if (newV) {
+                for (let i = 0; i < newV.length; i++) {
+                    this.setOptionsDisabled(this.optionsCache[newV[i]], true)
+                }
+            }
+
+        } else {
+            this.setOptionsDisabled(this.optionsCache[oldV], false)
+            this.setOptionsDisabled(this.optionsCache[newV], true)
+        }
+    }
+    /**
+     * 设置禁用状态
+     * @param options
+     * @param disabled
+     */
+    this.setOptionsDisabled = function (options, disabled) {
+        if (!options) {
+            return
+        }
+        options.$ref.disabled = disabled
     }
 
     /**
@@ -699,6 +742,7 @@ app
             optionsConfig:'<?',// options的配置参数
             appendToBody:'<?',// 是否添加到body
             ngDisabled: '<?', // 是否禁用
+            autoDisableSelected:'<?', // 是否禁用已选择的
             clearable: '<?', // 可清空的
             placeholder: '<?',// 提示文字
             multiple: '<?',// 是否支持多选
