@@ -1,8 +1,25 @@
-function controller($scope, $element, $attrs, $parse) {
+function controller($scope, $element, $attrs, $parse, $timeout) {
     const _that = this
 
     // 初始化工作
     this.$onInit = function () {
+        if (this.ngModel) {
+            this.ngModel.$render = () => {
+                this.model = this.ngModel.$viewValue;
+                $timeout(function () {
+                    changeHook()
+                })
+            };
+
+            $scope.$watch(function () {
+                return _that.model;
+            }, function (newV, oldV) {
+                if (newV !== oldV) {
+                    _that.ngModel.$setViewValue(newV);
+                }
+            });
+        }
+
         if (!this.checkValue) {
             this.checkValue = $parse($attrs.checkValue)($scope.$parent)
         }
@@ -34,7 +51,7 @@ function controller($scope, $element, $attrs, $parse) {
             // 绑定model
             if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
                 let match = this.checkBoxGroup.ngModel.includes(this.checkValue);
-                this.ngModel = match ? this.checkValue : this.unCheckValue
+                this.model = match ? this.checkValue : this.unCheckValue
             }
             // 绑定name
             $attrs.name = this.checkBoxGroup.uuid
@@ -42,7 +59,7 @@ function controller($scope, $element, $attrs, $parse) {
             $scope.$on(`${$attrs.name}Change`, function (event, data) {
                 // 判断组内是否包含自己
                 let match = angular.isDefined(data) && data.includes(_that.checkValue)
-                _that.ngModel = match ? _that.checkValue : _that.unCheckValue
+                _that.model = match ? _that.checkValue : _that.unCheckValue
             })
         }
     }
@@ -52,26 +69,37 @@ function controller($scope, $element, $attrs, $parse) {
         if (this.ngDisabled) {
             return
         }
+
+        if (angular.isFunction(this.input)) {
+            $timeout(function () {
+                let opt = {value: _that.model, attachment: _that.attachment}
+                _that.input({opt: opt})
+            })
+        }
         this.changeHandler()
 
     }
 
     this.changeHandler = function () {
-        if (this.ngModel === this.checkValue) {
-            this.ngModel = this.unCheckValue
+        if (this.model === this.checkValue) {
+            this.model = this.unCheckValue
         }
         else {
-            this.ngModel = this.checkValue
+            this.model = this.checkValue
         }
+        changeHook()
+        $scope.$emit(`${$attrs.name}ChildChange`, this.checkValue)
 
-        if (angular.isFunction(this.change)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
-            this.change({opt: opt})
-        }
-        else {
-            $scope.$emit(`${$attrs.name}ChildChange`, this.checkValue)
-        }
+    }
 
+    function changeHook() {
+        if (angular.isUndefined(_that.change)) {
+            return
+        }
+        $timeout(function () {
+            let opt = {value: _that.model, attachment: _that.attachment}
+            _that.change({opt: opt})
+        })
     }
 }
 
@@ -79,11 +107,12 @@ app
     .component('mobCheckBox', {
         transclude: true,
         templateUrl: './components/checkbox/index.html',
+        controller: controller,
         require: {
+            ngModel: '?^ngModel',
             'checkBoxGroup': '?^mobCheckBoxGroup'
         },
         bindings: {
-            ngModel: '=?',
             ngDisabled: '<?',
             name: '<?',
             label: '<?',
@@ -102,6 +131,6 @@ app
             attachment:"<?",
             // Event
             change: '&?',
-        },
-        controller: controller
+            input: '&?',
+        }
     })

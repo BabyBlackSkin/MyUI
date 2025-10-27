@@ -3,6 +3,20 @@ function controller($scope, $element, $attrs) {
     // 初始化工作
     this.$onInit = function () {
         this.uuid = `mobRadioGroup_${$scope.$id}`
+        if (this.ngModel) {
+            // ngModel 的值从外部改变时，触发此函数
+            this.ngModel.$render = () => {
+                this.model = this.ngModel.$viewValue;
+            };
+
+            $scope.$watch(function () {
+                return _that.model;
+            }, function (newV, oldV) {
+                if (newV !== oldV) {
+                    _that.ngModel.$setViewValue(newV);
+                }
+            });
+        }
     }
 
 
@@ -20,14 +34,14 @@ function controller($scope, $element, $attrs) {
 
     function initEvent() {
         $scope.$on(`${_that.uuid}ChildChange`, function (event, data) {
-            _that.ngModel = data
+            _that.model = data
             _that.change()
         })
     }
 
     function initWatcher() {
         $scope.$watchCollection(() => {
-            return _that.ngModel
+            return _that.model
         }, function (newV) {
             _that.change()
         })
@@ -35,10 +49,10 @@ function controller($scope, $element, $attrs) {
 
     this.change = function () {
         if (angular.isFunction(this.changeHandle)) {
-            this.changeHandle({opt: {value: this.ngModel}})
+            this.changeHandle({opt: {value: this.model}})
         }
-        // 反向通知group下所有的radio绑定的ngModel
-        $scope.$broadcast(`${_that.uuid}Change`, this.ngModel)
+        // 反向通知group下所有的radio绑定的model
+        $scope.$broadcast(`${_that.uuid}Change`, this.model)
     }
 }
 
@@ -46,8 +60,10 @@ app
     .component('mobRadioGroup', {
         transclude: true,
         templateUrl: './components/radio-group/mob-radio-group.html',
+        require: {
+            'ngModel':'?^ngModel'
+        },
         bindings: {
-            ngModel: '=?',
             name:'<?',
             changeHandle: '&?'
         },

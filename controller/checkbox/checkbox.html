@@ -205,7 +205,7 @@
                         ><!--
                             <div>
                                 <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
-                                    <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" ng-disabled="city.disabled" ></mob-check-box-button>
+                                    <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" border="true" ></mob-check-box>
                                 </mob-check-box-group>
 
                                 值：<span>{{ctrl.checkedCities}}</span>
