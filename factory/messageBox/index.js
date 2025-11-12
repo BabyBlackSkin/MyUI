@@ -13,23 +13,17 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
 
         // 随机id
         let configKey = `${uuId.newUUID('_')}_MessageBoxConfig`
-        let closeKey = `${uuId.newUUID('_')}_MessageBoxConfigClose(opt)`
+        let closeKey = `${uuId.newUUID('_')}_MessageBoxConfigClose`
         scope[closeKey] = function (opt){
             console.log("destroyMessageBox")
-            // if (messageBoxElement) {
-            //     messageBoxElement.remove();
-            // }
+            if (messageBoxElement) {
+                messageBoxElement.remove();
+            }
         };
 
         scope[configKey] = config;
-        let messageBoxElement = $compile(`<mob-message-box config="${configKey}" close="${closeKey}"></mob-message-box>`)(scope);
+        let messageBoxElement = $compile(`<mob-message-box config="${configKey}" close="${closeKey}(opt)"></mob-message-box>`)(scope);
 
-        // scope[closeKey] = function (){
-        //     console.log("destroyMessageBox")
-        //     if (messageBoxElement) {
-        //         messageBoxElement.remove();
-        //     }
-        // };
         config.deferred.promise.then((action)=>{
             callbackPromise.resolve(action);
         }).catch((action)=>{
@@ -41,8 +35,6 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
         return callbackPromise.promise;
     }
 
-    // 销毁MessageBox实例
-    // function destroyMessageBox(ele)
 
     // 显示MessageBox
     function show(options, callerScope) {
@@ -61,8 +53,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
             confirmButtonText: '确定',
             confirmButtonType: 'primary',
             closeOnClickModal: true,
-            closeOnPressEscape: true,
-            callback:  null,
+            closeOnPressEscape: false,
             beforeClose: null
         };
 
@@ -81,15 +72,25 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
             confirmButtonText: options.confirmButtonText || '确定',
             cancelButtonText: options.cancelButtonText || '取消',
             confirmButtonType: options.confirmButtonType || 'primary',
-            cancelButtonType: options.cancelButtonType || 'default',
+            cancelButtonType: options.cancelButtonType,
             closeOnClickModal: false,
             closeOnPressEscape: true,
-            callback: options.callback || null,
             beforeClose: options.beforeClose || null
         };
 
         return show(config, callerScope);
     }
+
+    function inputConfigRequireNotNullElse(options, key, defaultValue) {
+        if (!options) {
+            return defaultValue
+        }
+        if (!options.input) {
+            return defaultValue
+        }
+        return options.input[key] || defaultValue
+    }
+
 
     // 输入框提示
     function prompt(message, title, options = {}, callerScope) {
@@ -103,13 +104,13 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
             confirmButtonText: options.confirmButtonText || '确定',
             cancelButtonText: options.cancelButtonText || '取消',
             confirmButtonType: options.confirmButtonType || 'primary',
-            cancelButtonType: options.cancelButtonType || 'default',
+            cancelButtonType: options.cancelButtonType,
             closeOnClickModal: false,
             closeOnPressEscape: true,
-            inputType: options.inputType || 'text',
-            inputValue: options.inputValue || '',
-            inputPlaceholder: options.inputPlaceholder || '',
-            callback: options.callback || null,
+            inputConfig:{
+                placeholder: inputConfigRequireNotNullElse(options, 'placeholder'),
+                pattern: inputConfigRequireNotNullElse(options, 'pattern'),
+            },
             beforeClose: options.beforeClose || null
         };
 
@@ -119,6 +120,6 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
     return {
         alert: alert,
         confirm: confirm,
-        // prompt: prompt,
+        prompt: prompt,
     };
 }]);

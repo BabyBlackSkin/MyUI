@@ -34,19 +34,27 @@
                 </i>
                 <div class="mob-message-box__message-text" ng-bind="$ctrl.options.message"></div>
             </div>
+            <div class="mob-message-box__message" ng-if="$ctrl.options.inputConfig">
+                <div class="mob-message-box__message__form">
+                    <form name="promptForm">
+                        <mob-input name="prompt" ng-model="$ctrl.options.inputConfig.model" ng-pattern="$ctrl.options.inputConfig.pattern"></mob-input>
+                    </form>
+                </div>
+                <p class="invalid_msg" ng-if="promptForm.$invalid">输入内容不合法</p>
+            </div>
         </div>
 
         <!-- 底部按钮区域 -->
         <div class="mob-message-box__btns" ng-if="$ctrl.options.showConfirmButton || $ctrl.options.showCancelButton">
             <mob-button
                     ng-if="$ctrl.options.showCancelButton"
-                    type="'info'"
+                    type="$ctrl.options.cancelButtonType"
                     ng-click="$ctrl.handleCancel()">
                 {{$ctrl.options.cancelButtonText}}
             </mob-button>
             <mob-button
                     ng-if="$ctrl.options.showConfirmButton"
-                    type="'primary'"
+                    type="$ctrl.options.confirmButtonType"
                     ng-click="$ctrl.handleConfirm()">
                 {{$ctrl.options.confirmButtonText}}
             </mob-button>

@@ -1,81 +1,70 @@
 <div class="demo-container" ng-controller="MessageBoxCtrl as ctrl">
     <h2>MessageBox 消息弹出层</h2>
-    <p>模拟实现 ElementPlus 的 MessageBox 组件，支持消息提示和确认消息功能。</p>
+    <p>模拟系统的消息提示框而实现的一套模态对话框组件，用于消息提示、确认消息和提交内容。</p>
 
-    <div class="demo-section">
-        <h3>基础用法</h3>
-        <p>调用 <code>messageBox.alert</code> 方法可以打开消息提示弹窗。</p>
-        <div class="demo-block">
-            <mob-button type="primary" ng-click="ctrl.showAlert()">打开 Alert</mob-button>
+
+    <div class="mob-doc content">
+        <h3>消息提示</h3>
+        <p>当用户进行操作时会被触发，该对话框中断用户操作，直到用户确认知晓后才可关闭。</p>
+        <p>调用 ElMessageBox.alert 方法以打开 alert 框。 它模拟了系统的 alert，无法通过按下 ESC 或点击框外关闭。 此例中接收了两个参数，message和title。 值得一提的是，窗口被关闭后，它默认会返回一个Promise对象便于进行后续操作的处理。 若不确定浏览器是否支持Promise，可自行引入第三方 polyfill 或像本例一样使用回调进行后续处理。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+
+                <mob-button type="primary" ng-click="ctrl.showAlert()">打开 Alert</mob-button>
+            </div>
+            <div class="meta">
+                <div class="mob-demo-example">
+                    可以直接通过 <code>ng-model</code> 进行双向数据绑定
+                </div>
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
         </div>
-    </div>
 
-    <div class="demo-section">
-        <h3>消息类型</h3>
-        <p>支持 <code>info</code>、<code>success</code>、<code>warning</code>、<code>error</code> 四种消息类型。</p>
-        <div class="demo-block">
-            <mob-button type="'primary'" ng-click="ctrl.showInfo()">Info</mob-button>
-            <mob-button type="'success'" ng-click="ctrl.showSuccess()">Success</mob-button>
-            <mob-button type="'warning'" ng-click="ctrl.showWarning()">Warning</mob-button>
-            <mob-button type="'danger'" ng-click="ctrl.showError()">Error</mob-button>
-        </div>
-    </div>
-
-    <div class="demo-section">
         <h3>确认消息</h3>
-        <p>调用 <code>messageBox.confirm</code> 方法可以打开确认消息弹窗。</p>
-        <div class="demo-block">
-            <mob-button type="primary" ng-click="ctrl.showConfirm()">打开 Confirm</mob-button>
+        <p>提示用户确认其已经触发的动作，并询问是否进行此操作时会用到此对话框。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showConfirm()">打开 Confirm</mob-button>
+            </div>
+            <div class="meta">
+                <div class="mob-demo-example">
+                    可以直接通过 <code>ng-model</code> 进行双向数据绑定
+                </div>
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>提交内容</h3>
+        <p>当需要用户输入内容时，可以使用 Prompt 类型的消息框。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showPrompt()">打开 Prompt</mob-button>
+            </div>
+            <div class="meta">
+                <div class="mob-demo-example">
+                    可以直接通过 <code>ng-model</code> 进行双向数据绑定
+                </div>
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
+                            值：<span ng-bind="value"></span>
+                        --></code>
+                    </pre>
+            </div>
         </div>
     </div>
 
-    <div class="demo-section">
-        <h3>自定义按钮</h3>
-        <p>可以自定义按钮的文本和类型。</p>
-        <div class="demo-block">
-            <mob-button type="primary" ng-click="ctrl.showCustomConfirm()">自定义按钮</mob-button>
-        </div>
-    </div>
-
-    <div class="demo-section">
-        <h3>回调函数</h3>
-        <p>可以通过回调函数处理用户的操作结果。</p>
-        <div class="demo-block">
-            <mob-button type="primary" ng-click="ctrl.showCallback()">带回调的确认</mob-button>
-        </div>
-    </div>
-
-    <div class="demo-section">
-        <h3>代码示例</h3>
-        <pre><code class="language-javascript">// 基础用法
-messageBox.alert('这是一段内容', '标题');
-
-// 消息类型
-messageBox.info('这是一条信息提示', '消息');
-messageBox.success('恭喜你，这是一条成功消息', '成功');
-messageBox.warning('这是一条警告消息', '警告');
-messageBox.error('这是一条错误消息', '错误');
-
-// 确认消息
-messageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-}).then(() => {
-    console.log('用户点击了确定');
-}).catch(() => {
-    console.log('用户点击了取消');
-});
-
-// 带回调的确认
-messageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-    callback: function(action) {
-        if (action === 'confirm') {
-            console.log('用户点击了确定');
-        } else {
-            console.log('用户点击了取消');
-        }
-    }
-});</code></pre>
-    </div>
 </div>

@@ -4,7 +4,7 @@
     'mob-drawer--ltr': $ctrl.direction === 'ltr',
     'mob-drawer--ttb': $ctrl.direction === 'ttb',
     'mob-drawer--btt': $ctrl.direction === 'btt'
-}">
+}" ng-style="{'z-index': $ctrl.zIndex}">
 
     <div class="mob-drawer__overlay"
          ng-if="$ctrl.model && $ctrl.withHeader"

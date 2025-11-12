@@ -6,16 +6,16 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         title: '',
         message: '',
         type: 'info', // info, success, warning, error
-        showClose: true,
-        showCancelButton: false,
-        showConfirmButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        confirmButtonType: 'primary',
-        cancelButtonType: 'default',
-        closeOnClickModal: true,
-        closeOnPressEscape: true,
-        callback: null
+        showClose: true, // 是否显示clsoe
+        showCancelButton: false,// 是否显示关闭按钮
+        showConfirmButton: true,// 是否显示确认按钮
+        confirmButtonText: '确定',// 确认按钮文本
+        cancelButtonText: '取消',// 关闭按钮文本
+        confirmButtonType: 'primary',// 确认按钮类型
+        cancelButtonType: '', // 关闭按钮类型
+        closeOnClickModal: true, // 点击遮罩层关闭弹框
+        closeOnPressEscape: true, // 按下ESC关闭弹框
+        inputConfig: null, // prompt弹框的input选项
     };
 
     // 合并配置
@@ -27,7 +27,7 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         this.isWrapperShow = false;
         this.isClosing = false;
         this.options = angular.extend({}, this.defaultOptions, this.config || {});
-        this.zIndex = zIndexManager.getNextZIndex();
+        this.zIndex = zIndexManager.getNextZIndex('MESSAGE');
     };
 
     this.$onChanges = function (changes) {
@@ -40,6 +40,7 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
     };
 
     this.$onDestroy = function () {
+        console.log('$onDestory')
         this.close();
     };
 
@@ -74,16 +75,19 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         this.isWrapperShow = false;
         $timeout(() => {
             _that.isShow = false
-            $timeout(()=>{
+            $timeout(() => {
                 console.log("closeHandle")
-                _that.close();
-            },300)
+                _that.$onDestroy()
+            }, 300)
         }, 300); // 与CSS动画时长保持一致
     };
 
     // 确认按钮点击
     this.handleConfirm = function () {
         let action = {type: 'confirm'};
+        if (this.options.inputConfig && this.options.inputConfig.model) {
+            action.input = {model: this.options.inputConfig.model}
+        }
         this.options.deferred.resolve(action);
         this.closeHandle();
     };

@@ -1,4 +1,4 @@
-function controller($scope, $element, $attrs) {
+function controller($scope, $element, $attrs,zIndexManager) {
     const _that = this
     // 初始化状态位
     let INIT = 0
@@ -45,6 +45,7 @@ function controller($scope, $element, $attrs) {
         }
         // 添加ESC按件监听
         this.removeEventListeners()
+        zIndexManager.unregister($scope.$id);
     }
 
     this.$postLink = function () {
@@ -62,6 +63,7 @@ function controller($scope, $element, $attrs) {
 
     // 打开抽屉
     this.open = function () {
+        this.zIndex = zIndexManager.register('drawer', $scope.$id, $element);
         this.addEventListeners()
         this.toggleBodyScroll()
         this.onOpen && this.onOpen()
@@ -69,6 +71,7 @@ function controller($scope, $element, $attrs) {
 
     // 关闭抽屉
     this.close = function () {
+        zIndexManager.unregister($scope.$id);
         // 先移除之前的事件监听器
         this.removeEventListeners()
         this.restoreBodyScroll()

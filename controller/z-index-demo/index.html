@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Index 管理器演示</title>
+    <link rel="stylesheet" href="../../css/mob.css">
+    <style>
+        .demo-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--mob-base-border-color);
+            border-radius: 8px;
+            background: var(--mob-base-background-color);
+        }
+        
+        .demo-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--mob-primary-text-color);
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .demo-button {
+            padding: 8px 16px;
+            border: 1px solid var(--mob-base-border-color);
+            border-radius: 4px;
+            background: var(--mob-base-background-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .demo-button:hover {
+            border-color: var(--mob-primary-color);
+            color: var(--mob-primary-color);
+        }
+        
+        .demo-button.primary {
+            background: var(--mob-primary-color);
+            color: white;
+            border-color: var(--mob-primary-color);
+        }
+        
+        .demo-button.primary:hover {
+            background: var(--mob-primary-light-color2);
+        }
+        
+        .demo-layer {
+            position: fixed;
+            padding: 20px;
+            background: white;
+            border: 1px solid var(--mob-base-border-color);
+            border-radius: 8px;
+            box-shadow: var(--mob-box-shadow-light);
+            min-width: 300px;
+            max-width: 500px;
+        }
+        
+        .demo-layer-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--mob-primary-text-color);
+        }
+        
+        .demo-layer-content {
+            margin-bottom: 15px;
+            color: var(--mob-regular-text-color);
+        }
+        
+        .demo-layer-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .demo-info {
+            background: var(--mob-extra-light-fill-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--mob-regular-text-color);
+        }
+        
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .demo-stat-item {
+            padding: 10px;
+            background: var(--mob-light-fill-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .demo-stat-label {
+            font-weight: bold;
+            color: var(--mob-primary-text-color);
+        }
+        
+        .demo-stat-value {
+            color: var(--mob-regular-text-color);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Z-Index 管理器演示</h1>
+        
+        <div class="demo-section">
+            <div class="demo-title">基础功能演示</div>
+            <div class="demo-info">
+                点击下面的按钮来测试不同类型的层级管理。每个组件都会自动获得合适的z-index值。
+            </div>
+            <div class="demo-buttons">
+                <button class="demo-button primary" ng-click="showMessage()">显示消息</button>
+                <button class="demo-button primary" ng-click="showNotification()">显示通知</button>
+                <button class="demo-button primary" ng-click="showDialog()">显示对话框</button>
+                <button class="demo-button primary" ng-click="showDrawer()">显示抽屉</button>
+                <button class="demo-button primary" ng-click="showTooltip()">显示工具提示</button>
+                <button class="demo-button primary" ng-click="showLoading()">显示加载</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <div class="demo-title">层级管理统计</div>
+            <div class="demo-stats">
+                <div class="demo-stat-item">
+                    <div class="demo-stat-label">当前最高z-index</div>
+                    <div class="demo-stat-value">{{maxZIndex}}</div>
+                </div>
+                <div class="demo-stat-item">
+                    <div class="demo-stat-label">活跃实例数量</div>
+                    <div class="demo-stat-value">{{activeInstances.length}}</div>
+                </div>
+                <div class="demo-stat-item">
+                    <div class="demo-stat-label">消息实例</div>
+                    <div class="demo-stat-value">{{messageInstances.length}}</div>
+                </div>
+                <div class="demo-stat-item">
+                    <div class="demo-stat-label">对话框实例</div>
+                    <div class="demo-stat-value">{{dialogInstances.length}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <div class="demo-title">层级常量</div>
+            <div class="demo-info">
+                以下是预定义的z-index层级常量：
+            </div>
+            <div class="demo-stats">
+                <div class="demo-stat-item" ng-repeat="(key, value) in zIndexLevels">
+                    <div class="demo-stat-label">{{key}}</div>
+                    <div class="demo-stat-value">{{value}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <div class="demo-title">操作控制</div>
+            <div class="demo-buttons">
+                <button class="demo-button" ng-click="clearAll()">清除所有</button>
+                <button class="demo-button" ng-click="refreshStats()">刷新统计</button>
+                <button class="demo-button" ng-click="bringTopToFront()">置顶最新</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 消息层 -->
+    <div class="demo-layer mob-z-message" 
+         ng-show="showMessageLayer" 
+         style="top: 20px; right: 20px;">
+        <div class="demo-layer-header">消息提示</div>
+        <div class="demo-layer-content">
+            这是一个消息提示，z-index: {{messageZIndex}}
+        </div>
+        <div class="demo-layer-footer">
+            <button class="demo-button" ng-click="hideMessage()">关闭</button>
+        </div>
+    </div>
+    
+    <!-- 通知层 -->
+    <div class="demo-layer mob-z-notification" 
+         ng-show="showNotificationLayer" 
+         style="top: 20px; right: 20px;">
+        <div class="demo-layer-header">通知</div>
+        <div class="demo-layer-content">
+            这是一个通知，z-index: {{notificationZIndex}}
+        </div>
+        <div class="demo-layer-footer">
+            <button class="demo-button" ng-click="hideNotification()">关闭</button>
+        </div>
+    </div>
+    
+    <!-- 对话框层 -->
+    <div class="demo-layer mob-z-dialog" 
+         ng-show="showDialogLayer" 
+         style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="demo-layer-header">对话框</div>
+        <div class="demo-layer-content">
+            这是一个对话框，z-index: {{dialogZIndex}}
+        </div>
+        <div class="demo-layer-footer">
+            <button class="demo-button" ng-click="hideDialog()">关闭</button>
+        </div>
+    </div>
+    
+    <!-- 抽屉层 -->
+    <div class="demo-layer mob-z-drawer" 
+         ng-show="showDrawerLayer" 
+         style="top: 0; right: 0; height: 100vh; width: 300px;">
+        <div class="demo-layer-header">抽屉</div>
+        <div class="demo-layer-content">
+            这是一个抽屉，z-index: {{drawerZIndex}}
+        </div>
+        <div class="demo-layer-footer">
+            <button class="demo-button" ng-click="hideDrawer()">关闭</button>
+        </div>
+    </div>
+    
+    <!-- 工具提示层 -->
+    <div class="demo-layer mob-z-tooltip" 
+         ng-show="showTooltipLayer" 
+         style="top: 100px; left: 100px;">
+        <div class="demo-layer-header">工具提示</div>
+        <div class="demo-layer-content">
+            这是一个工具提示，z-index: {{tooltipZIndex}}
+        </div>
+        <div class="demo-layer-footer">
+            <button class="demo-button" ng-click="hideTooltip()">关闭</button>
+        </div>
+    </div>
+    
+    <!-- 加载层 -->
+    <div class="demo-layer mob-z-loading" 
+         ng-show="showLoadingLayer" 
+         style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="demo-layer-header">加载中</div>
+        <div class="demo-layer-content">
+            这是一个加载提示，z-index: {{loadingZIndex}}
+        </div>
+        <div class="demo-layer-footer">
+            <button class="demo-button" ng-click="hideLoading()">关闭</button>
+        </div>
+    </div>
+    
+    <!-- 遮罩层 -->
+    <div class="mob-layer-overlay" ng-show="showOverlay"></div>
+</body>
+</html>
