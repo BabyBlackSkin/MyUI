@@ -18,4 +18,8 @@ app
             $scope.loadStatus = 1
         }
     }
+
+    $scope.inputWatch = function (event, loadStatus){
+        console.log('1', event, )
+    }
 }])
