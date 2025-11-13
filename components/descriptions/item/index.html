@@ -1,0 +1,4 @@
+<div class="mob-descriptions__item" ng-style="{'grid-template-columns': 'repeat(' + $ctrl.column + ', 1fr)'}">
+    <div class="mob-descriptions__label" ng-style="{'grid-column':'span ' + $ctrl.labelGridSpan}" ng-bind="$ctrl.label"></div>
+    <div class="mob-descriptions__content" ng-style="{'grid-column':'span ' + $ctrl.contentGridSpan}" ng-transclude></div>
+</div>

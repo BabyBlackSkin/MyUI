@@ -1,0 +1,66 @@
+mob-descriptions  .mob-descriptions {
+    width: 100%;
+    display: block;
+    font-size: 14px;
+    color: #303133;
+}
+
+mob-descriptions  .mob-descriptions__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+mob-descriptions  .mob-descriptions__title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+mob-descriptions  .mob-descriptions__body {
+    display: grid;
+    row-gap: 12px;
+}
+
+mob-descriptions  .mob-descriptions__item {
+    display: flex;
+    align-items: flex-start;
+}
+
+mob-descriptions .mob-descriptions__label {
+    color: var(--mob-primary-text-color);
+    margin-right: 16px;
+    font-weight: 500;
+}
+mob-descriptions  .mob-descriptions__content {
+    flex: 1;
+    color: #303133;
+}
+
+mob-descriptions  .mob-descriptions.is-bordered .mob-descriptions__body {
+    border: 1px solid var(--mob-lighter-border-color);
+    row-gap: 0;
+}
+
+mob-descriptions  .mob-descriptions.is-bordered .mob-descriptions__item {
+    border-bottom: 1px solid #ebeef5;
+    display: grid;
+    /*grid-template-columns: repeat(2,1fr);*/
+    gap: 0;
+
+}
+mob-descriptions .mob-descriptions.is-bordered .mob-descriptions__item .mob-descriptions__label {
+    background-color: var(--mob-light-fill-color);
+    padding: 8px 12px;
+}
+mob-descriptions .mob-descriptions.is-bordered .mob-descriptions__item .mob-descriptions__content {
+    padding: 8px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+mob-descriptions  .mob-descriptions.is-bordered .mob-descriptions__item:last-child {
+    border-bottom: none;
+}

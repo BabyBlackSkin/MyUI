@@ -1,0 +1,10 @@
+<div class="mob-descriptions" ng-class="{'is-bordered': $ctrl.border}">
+
+    <div class="mob-descriptions__header"
+         ng-if="$ctrl.mobDescriptionsTitleSlot || $ctrl.mobDescriptionsExtraSlot">
+        <div class="mob-descriptions__title" ng-transclude="mobDescriptionsTitle"></div>
+        <div class="mob-descriptions__extra" ng-transclude="mobDescriptionsExtra"></div>
+    </div>
+    <div class="mob-descriptions__body" ng-transclude="mobDescriptionsBody">
+    </div>
+</div>
