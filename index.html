@@ -215,6 +215,7 @@
     <script src="directive/mobLoading/index.js"></script>
     <script src="directive/mobTransclude/index.js"></script>
     <script src="./directive/repeatRenderFinish/index.js"></script>
+    <script src="./directive/ngInput/index.js"></script>
     <script src="./directive/ngScroll/index.js"></script>
     <script src="./directive/slot/index.js"></script>
     <script src="directive/transclude/ngTranscludeBody/index.js"></script>
@@ -534,8 +535,9 @@
         }])
         .factory('uuId', [function () {
             return {
-                newUUID: function getUuid() {
-                    return 'mob-uuid-' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                newUUID: function getUuid(delimiter) {
+                    delimiter = delimiter || '-';
+                    return `mob${delimiter}uuid${delimiter}` + `xxxxxxxx${delimiter}xxxx${delimiter}4xxx${delimiter}yxxx${delimiter}xxxxxxxxxxxx`.replace(/[xy]/g, function (c) {
                         let r = Math.random() * 16 | 0,
                             v = c === 'x' ? r : (r & 0x3 | 0x8);
                         return v.toString(16);
@@ -552,12 +554,13 @@
              * @param scope
              * @param target
              * @param floating
+             * @param popperWidthLimit
              * @param options
              */
-            function setFloatingWidth(scope, target, floating, options) {
+            function setFloatingWidth(scope, target, floating, popperWidthLimit ,options) {
                 const {width: targetWidth} = target.getBoundingClientRect()
                 if (!options) {
-                    floating.style.width = (targetWidth + 10) + 'px';
+                    floating.style.width = popperWidthLimit ? (targetWidth + 10) + 'px' : 'auto'
                     return
                 }
                 if (options.popperDown && options.popperDown.style) {
@@ -663,23 +666,21 @@
                 /**
                  * 自动更新定位
                  * @param scope 范围
-                 * @param target 目标
-                 * @param floating 浮动元素
-                 * @param location 定位元素元素
-                 * @param options 配置
+                 * @param popper popper
                  * @param render 是否需要重绘
                  * @returns {*}
                  */
-                autoUpdateComputePosition: function (scope, target, floating, location, options, render = true) {
+                autoUpdateComputePosition: function (scope, popper, render = true) {
+                    let {tooltip, target, location, popperWidthLimit, options} = popper
                     if (render) {
-                        setFloatingWidth(scope, location, floating, options)
+                        setFloatingWidth(scope, location, tooltip, popperWidthLimit, options)
                     }
                     // 需要判断是从下面还是从上面打开
                     return window.FloatingUIDOM.autoUpdate(
                         target,
-                        floating,
+                        tooltip,
                         () => {
-                            computePosition(scope, location, floating, true)
+                            computePosition(scope, location, tooltip, true)
                         }
                     );
                 }
