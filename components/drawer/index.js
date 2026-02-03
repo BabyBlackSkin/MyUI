@@ -5,8 +5,6 @@ function controller($scope, $element, $attrs,zIndexManager) {
 
     this.direction = 'rtl' // rtl, ltr, ttb, btt
     this.title = ''
-    this.withHeader = true
-    this.withFooter = false
     this.showClose = true
     this.lockScroll = true
 
@@ -50,6 +48,15 @@ function controller($scope, $element, $attrs,zIndexManager) {
 
     this.$postLink = function () {
         // console.log(this.direction)
+        // console.log($element.style)
+        // $element[0].querySelector('.mob-drawer')
+        if ($element[0]) {
+            if ($element[0].querySelector('.mob-drawer')) {
+                $timeout(function () {
+                    $element[0].querySelector('.mob-drawer').style.opacity = 1
+                }, 1000)
+            }
+        }
     }
 
     // ngModel chang 事件
@@ -63,7 +70,8 @@ function controller($scope, $element, $attrs,zIndexManager) {
 
     // 打开抽屉
     this.open = function () {
-        this.zIndex = zIndexManager.register('drawer', $scope.$id, $element);
+        // 统一叫model
+        this.zIndex = zIndexManager.register('DRAWER', $scope.$id, $element);
         this.addEventListeners()
         this.toggleBodyScroll()
         this.onOpen && this.onOpen()
@@ -152,8 +160,6 @@ app
         bindings: {
             direction: '<?', // 方向 rtl, ltr, ttb, btt
             title: '<?', // title
-            withHeader: '<?', // 是否显示herder
-            withFooter: '<?', // 是否显示footer
             showClose: '<?', // 显示关闭按钮
             lockScroll: '<?', // Lock body scroll
             onOpen: '&?', // 打开的回调

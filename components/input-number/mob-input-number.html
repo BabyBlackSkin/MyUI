@@ -10,12 +10,10 @@
     <div class="mob-input__wrapper">
         <label for="{{'input_number' + $id}}"></label>
         <input id="{{'input_number' + $id}}"
-               ng-if="!$ctrl.showPassword"
                type="number"
-               autocomplete="off"
-               placeholder="{{$ctrl.placeholder}}"
+               inputmode="decimal"
                class="mob-input__inner"
-               ng-model="$ctrl.ngModel"
+               ng-model="$ctrl.innerValue"
                ng-disabled="$ctrl.ngDisabled"
                ng-change="$ctrl.changeHandle()"
                ng-blur="$ctrl.blurHandle()"

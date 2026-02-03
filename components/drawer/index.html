@@ -1,4 +1,4 @@
-<div class="mob-drawer" ng-class="{
+<div class="mob-drawer" style="opacity: 0" ng-class="{
     'mob-drawer--open': $ctrl.model,
     'mob-drawer--rtl': !$ctrl.direction || $ctrl.direction === 'rtl',
     'mob-drawer--ltr': $ctrl.direction === 'ltr',
@@ -7,39 +7,23 @@
 }" ng-style="{'z-index': $ctrl.zIndex}">
 
     <div class="mob-drawer__overlay"
-         ng-if="$ctrl.model && $ctrl.withHeader"
+         ng-if="$ctrl.model"
          ng-click="$ctrl.closeOverlay()">
     </div>
-<!--    content-->
+    <!--    content-->
     <div class="mob-drawer__wrapper"
-         ng-style="$ctrl.getWrapperStyle()"
-         ng-class="{
-             'mob-drawer__wrapper--with-header': $ctrl.withHeader,
-             'mob-drawer__wrapper--with-footer': $ctrl.withFooter
-         }">
+         ng-style="$ctrl.getWrapperStyle()">
 
         <!-- Header -->
-        <div class="mob-drawer__header" ng-if="$ctrl.withHeader">
-            <div class="mob-drawer__title">
-                <span ng-if="$ctrl.title">{{ $ctrl.title }}</span>
-                <div ng-transclude="title"></div>
-            </div>
-            <button class="mob-drawer__close-btn"
-                    ng-if="$ctrl.showClose"
-                    ng-click="$ctrl.close()"
-                    type="button">
-                <i class="mob-icon-close"></i>
-            </button>
+        <div class="mob-drawer__header" ng-transclude="title">
         </div>
 
         <!-- Body -->
-        <div class="mob-drawer__body">
-            <div ng-transclude="body"></div>
+        <div class="mob-drawer__body" ng-transclude="body">
         </div>
 
         <!-- Footer -->
-        <div class="mob-drawer__footer" ng-if="$ctrl.withFooter">
-            <div ng-transclude="footer"></div>
+        <div class="mob-drawer__footer" ng-transclude="footer">
         </div>
     </div>
 </div>

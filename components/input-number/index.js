@@ -1,8 +1,9 @@
 function controller($scope, $element, $transclude, $attrs, $compile, slot) {
-    // 初始化工作
+    // 初始化
     this.$onInit = function () {
         // 动态插槽实现
         slot.transclude($scope, $element, $transclude)
+        this.innerValue = null;
         // 获取步长
         this.calculateStep();
     }
@@ -19,12 +20,50 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
     }
 
 
-    this.$onChanges = function (changes) {}
+    this.$onChanges = function (changes) {
+        if (changes.step || changes.precision) {
+            this.calculateStep();
+        }
+    }
 
     this.$onDestroy = function () {}
 
 
-    this.$postLink = function () {}
+    this.$postLink = function () {
+        if (this.ngModel) {
+            this.ngModel.$formatters.push((value) => {
+                console.log('$formatter', value)
+                return angular.isDefined(value) ? value : null;
+            });
+
+            this.ngModel.$parsers.push((value) => {
+                console.log('$parsers', value)
+                if (value === '' || value === null) return null;
+                let d = new Decimal(value);
+                return this.normalize(d);
+            });
+
+            this.ngModel.$render = () => {
+                this.innerValue = this.ngModel.$viewValue;
+            };
+        }
+    }
+
+    this.normalize = function (decimal) {
+        if (angular.isDefined(this.min)) {
+            decimal = Decimal.max(decimal, this.min);
+        }
+        if (angular.isDefined(this.max)) {
+            decimal = Decimal.min(decimal, this.max);
+        }
+
+        if (angular.isDefined(this.precision)) {
+            decimal = new Decimal(decimal.toFixed(this.precision));
+        }
+
+        return decimal.toNumber();
+    };
+
 
 
     /**
@@ -40,33 +79,11 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
      */
     this.clean = function () {
         this.focus()
-        this.ngModel = ''
+        this.ngModel.$setViewValue(null);
     }
-
-    // 按照指定精度转换ngModel
-    this.patternPrecision = function (ngModel) {
-        let temporaryNgModel = ngModel.toNumber()
-        // 防止越界
-        let step = new Decimal(this.step)
-        // 判断是否小于最小值
-        if (angular.isDefined(this.min) && temporaryNgModel < this.min) {
-            ngModel = ngModel.add(step)
-        }
-        // 判断是否大于最大值
-        if (angular.isDefined(this.max) && temporaryNgModel > this.max) {
-            ngModel = ngModel.minus(step)
-        }
-        // 按照精度转换为Number
-        if (angular.isUndefined(this.precision)) {
-            this.ngModel = ngModel.toNumber();
-        } else {
-            this.ngModel = ngModel.toFixed(this.precision).toNumber();
-        }
-    }
-
     // 步长模式
     this.patternStep = function () {
-        let ngModel = new Decimal(this.ngModel)
+        let ngModel = new Decimal(this.innerValue)
         let step = new Decimal(this.step)
         let mod = ngModel.mod(step)
 
@@ -79,31 +96,27 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
             ngModel = ngModel.add(step)
         }
 
-        this.ngModel = ngModel.toNumber()
+        this.ngModel.$setViewValue(ngModel.toNumber())
     }
 
     /**
      * 减少
      */
     this.decrease = function () {
-        if (this.ngDisabled) {
-            return
-        }
-        this.patternStep()
-        let ngModel = new Decimal(this.ngModel).minus(new Decimal(this.step))
-        this.patternPrecision(ngModel)
+        if (this.ngDisabled || !angular.isNumber(this.innerValue)) return;
+        let d = new Decimal(this.innerValue).minus(this.step);
+        this.innerValue = this.normalize(d);
+        this.ngModel.$setViewValue(this.innerValue);
     }
 
     /**
      * 增加
      */
     this.increase = function () {
-        if (this.ngDisabled) {
-            return
-        }
-        this.patternStep()
-        let ngModel = new Decimal(this.ngModel).add(new Decimal(this.step))
-        this.patternPrecision(ngModel)
+        if (this.ngDisabled || !angular.isNumber(this.innerValue)) return;
+        let d = new Decimal(this.innerValue).add(this.step);
+        this.innerValue = this.normalize(d);
+        this.ngModel.$setViewValue(this.innerValue);
     }
 
     /**
@@ -119,10 +132,8 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
      */
     this.blurHandle = function () {
         this.patternStep()
-        this.patternPrecision(new Decimal(this.ngModel))
-        if (angular.isFunction(this.blurEvent)) {
-            this.blurEvent(this.ngModel)
-        }
+        this.innerValue = this.normalize(this.innerValue);
+        this.ngModel.$setViewValue(this.innerValue);
     }
 
 }
@@ -131,8 +142,10 @@ app
     .component('mobInputNumber', {
         transclude: true,
         templateUrl: './components/input-number/mob-input-number.html',
+        require: {
+            ngModel: '?ngModel'
+        },
         bindings: {
-            ngModel: '=?',
             ngDisabled: '<?',
             step: '<?',
             stepStrictly: '<?',
@@ -140,7 +153,6 @@ app
             min: '<?',
             max: '<?',
             changeEvent: '&?',
-            blurEvent: '&?'
         },
         controller: controller
     })

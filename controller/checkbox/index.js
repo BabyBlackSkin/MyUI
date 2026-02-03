@@ -12,12 +12,16 @@ app
         this.cities = ['北京', '上海', '广东', '深圳', '香港', '澳门']
 
         this.checkAllChange = function () {
-            // 是否全选
-            this.checkAll = !this.checkAll
-            // 无实际应用，仅仅是为了告诉group，需要发送事件通知子组件
+            // // 是否全选
+            // this.checkAll = !this.checkAll
+            // // 无实际应用，仅仅是为了告诉group，需要发送事件通知子组件
             this.changeTag = !this.changeTag
-            // 赋值
-            this.checkedCities = this.checkAll ? [...this.cities] : []
+            // // 赋值
+            let checkedCity = this.checkAll ? [...this.cities] : []
+            if(!this.indeterminate){
+                this.checkedCities = checkedCity
+            }
+            console.log('checkedCities', this.checkedCities)
         }
 
 

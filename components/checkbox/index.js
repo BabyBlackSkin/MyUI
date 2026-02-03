@@ -3,22 +3,6 @@ function controller($scope, $element, $attrs, $parse, $timeout) {
 
     // 初始化工作
     this.$onInit = function () {
-        if (this.ngModel) {
-            this.ngModel.$render = () => {
-                this.model = this.ngModel.$viewValue;
-                $timeout(function () {
-                    changeHook()
-                })
-            };
-
-            $scope.$watch(function () {
-                return _that.model;
-            }, function (newV, oldV) {
-                if (newV !== oldV) {
-                    _that.ngModel.$setViewValue(newV);
-                }
-            });
-        }
 
         if (!this.checkValue) {
             this.checkValue = $parse($attrs.checkValue)($scope.$parent)
@@ -42,6 +26,23 @@ function controller($scope, $element, $attrs, $parse, $timeout) {
 
 
     this.$postLink = function () {
+        if (this.ngModel) {
+            this.ngModel.$render = () => {
+                this.model = this.ngModel.$viewValue;
+                $timeout(function () {
+                    changeHook()
+                })
+            };
+
+            $scope.$watch(function () {
+                return _that.model;
+            }, function (newV, oldV) {
+                if (newV !== oldV) {
+                    _that.ngModel.$setViewValue(newV);
+                }
+            });
+        }
+
         this.initValue()
     }
 
@@ -49,8 +50,8 @@ function controller($scope, $element, $attrs, $parse, $timeout) {
     this.initValue = function () {
         if (!angular.isUndefined(this.checkBoxGroup) && this.checkBoxGroup !== null) {
             // 绑定model
-            if (this.checkBoxGroup && this.checkBoxGroup.ngModel) {
-                let match = this.checkBoxGroup.ngModel.includes(this.checkValue);
+            if (this.checkBoxGroup && this.checkBoxGroup.model) {
+                let match = this.checkBoxGroup.model.includes(this.checkValue);
                 this.model = match ? this.checkValue : this.unCheckValue
             }
             // 绑定name
@@ -109,7 +110,7 @@ app
         templateUrl: './components/checkbox/index.html',
         controller: controller,
         require: {
-            ngModel: '?^ngModel',
+            ngModel: '?ngModel',
             'checkBoxGroup': '?^mobCheckBoxGroup'
         },
         bindings: {

@@ -2,57 +2,17 @@
     <h2>CheckBox多选框</h2>
 
     <div class="mob-doc content">
-        <h3>基础用法</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <mob-check-box label="'Option1'" change="ctrl.fatherChange(value)" ng-model='value' check-value="1" un-check-value="0"></mob-check-box>
-                    值：<span ng-bind="value"></span>
-                </div>
-                <mob-divider></mob-divider>
-                <p>
-                    在单一的 <code>checkbox</code> 中，默认绑定变量的值是 <code>Boolean</code>，选中为 <code>true</code>
-                </p>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <mob-check-box label="'Option1'" change="ctrl.fatherChange(value)" ng-model='value' check-value="1" un-check-value="0"></mob-check-box>
-                            值：<span ng-bind="value"></span>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
-        <h3>禁用状态</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <mob-check-box label="'Option1'" check-value="'Option1'" change="ctrl.fatherChange(value)" ng-model='disableExampleValue' ng-disabled="true"></mob-check-box>
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <mob-check-box label="'Option1'" check-value="'Option1'" change="ctrl.fatherChange(value)" ng-model='disableExampleValue' ng-disabled="true"></mob-check-box>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
 
         <h3>多选框组</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <div class="mob-demo-example-child">
                     <div>
+                        <mob-check-box ng-model='OWNER' label="'Option1'" check-value="'Option1'"></mob-check-box>
+                        <p>{{OWNER}}</p>
                         <mob-check-box-group ng-model="ctrl.multipleCheckBoxGroup">
                             <mob-check-box label="'Option1'" check-value="'Option1'"></mob-check-box>
                             <mob-check-box label="'Option2'" check-value="'Option2'"></mob-check-box>
-                            <mob-check-box label="'Option3'" check-value="'Option3'"></mob-check-box>
-                            <mob-check-box label="'Option4'" check-value="'Option4'" ng-disabled="true"></mob-check-box>
-                            <mob-check-box label="'Option5'" check-value="'Option5'" ng-disabled="true"></mob-check-box>
                         </mob-check-box-group>
                         值：<span>{{ctrl.multipleCheckBoxGroup}}</span>
                     </div>
@@ -120,100 +80,5 @@
                     </pre>
             </div>
         </div>
-
-
-        <h3>选择数量限制</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div>
-                        <mob-check-box-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
-                            <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box>
-                        </mob-check-box-group>
-
-                        值：<span>{{ctrl.checkedCities}}</span>
-                    </div>
-                </div>
-                <mob-divider></mob-divider>
-                <p>
-                    使用 <code>min</code> 和 <code>max</code> 属性能够限制可以被勾选的项目的数量。
-                </p>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <div>
-                                <mob-check-box-group min="ctrl.min" max="4" ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
-                                    <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box>
-                                </mob-check-box-group>
-
-                                值：<span>{{ctrl.checkedCities}}</span>
-                            </div>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
-        <h3>按钮样式</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div>
-                        <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
-                            <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" ></mob-check-box-button>
-                        </mob-check-box-group>
-
-                        值：<span>{{ctrl.checkedCities}}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <div>
-                                <mob-check-box-group ng-model="ctrl.checkedCities" change-handle="ctrl.checkboxChangeHandle()">
-                                    <mob-check-box-button ng-repeat="city in ctrl.cities" label="city" value="city" ng-disabled="city.disabled" ></mob-check-box-button>
-                                </mob-check-box-group>
-
-                                值：<span>{{ctrl.checkedCities}}</span>
-                            </div>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
-
-
-        <h3>边框样式</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="mob-demo-example-child">
-                    <div>
-                        <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
-                            <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" border="true" ></mob-check-box>
-                        </mob-check-box-group>
-
-                        值：<span>{{ctrl.checkedCities}}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <div>
-                                <mob-check-box-group ng-model="ctrl.checkedCities" change="ctrl.checkboxChangeHandle()">
-                                    <mob-check-box ng-repeat="city in ctrl.cities" label="city" check-value="city" ng-disabled="city.disabled" border="true" ></mob-check-box>
-                                </mob-check-box-group>
-
-                                值：<span>{{ctrl.checkedCities}}</span>
-                            </div>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-
     </div>
 </section>

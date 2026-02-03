@@ -6,7 +6,7 @@
 
     <span class="mob-page-layout mob-page-total" ng-bind="$ctrl.totalTips()" ng-if="$ctrl.layoutShow('total')"></span>
 
-    <mob-select options="$ctrl.pageSizesOptions"></mob-select>
+    <mob-select ng-model="$ctrl.pageSize" options="$ctrl.pageSizesOptions"></mob-select>
 
     <mob-button text icon="'mob-Icon-arrow-left'" ng-click="$ctrl.setCurrentPage($ctrl.currentPage - 1)"
                 ng-disabled="$ctrl.changeButtonDisabled('prev')"></mob-button>
@@ -40,11 +40,4 @@
     </ul>
     <mob-button text icon="'mob-Icon-arrow-right'" ng-click="$ctrl.setCurrentPage($ctrl.currentPage + 1)"
                 ng-disabled="$ctrl.changeButtonDisabled('next')"></mob-button>
-
-    <span class="mob-page-layout mob-page-goto" ng-if="$ctrl.layoutShow('goTo')">
-        Go to
-        <mob-input ng-model="gotoPage" placeholder="''" key-down="$ctrl.gotoPageChange(opt)"></mob-input>
-    </span>
-
-
 </div>
