@@ -1,4 +1,4 @@
-function controller($scope, $element, $attrs,zIndexManager) {
+function controller($scope, $element, $attrs,zIndexManager,$timeout) {
     const _that = this
     // 初始化状态位
     let INIT = 0
@@ -149,6 +149,7 @@ function controller($scope, $element, $attrs,zIndexManager) {
 app
     .component('mobDrawer', {
         templateUrl: `./components/drawer/index.html`,
+        controller: controller,
         transclude: {
             body: '?ngTranscludeBody',
             title: '?ngTranscludeTitle',
@@ -165,5 +166,4 @@ app
             onOpen: '&?', // 打开的回调
             onClose: '&?' // 关闭的回调
         },
-        controller: controller
     })

@@ -1,13 +1,8 @@
-<!-- maxLength:'<',
-minLength:'<',
-showWordLimit:'<',
-placeholder:'<',
-clearable:'<' -->
 <div class="mob-input" ng-class="{
     'is_clearable':$ctrl.clearable,
     'is_disabled':$ctrl.ngDisabled,
     'is_showPassword':$ctrl.showPassword,
-    'is_append_slot':$slot.slot['append'],
+    'is_append_slot':$ctrl.hasAppendSlot,
     'is_prepend_slot':$slot.slot['prepend']
 }">
 
@@ -22,15 +17,14 @@ clearable:'<' -->
             </span>
         </span>
         <input
-               type="{{$ctrl.type}}"
-               autocomplete="off"
-               placeholder="{{$ctrl.placeholder}}"
-               class="mob-input__inner"
-               ng-model="$ctrl.ngModel"
-               ng-disabled="$ctrl.ngDisabled"
-               maxlength="{{$ctrl.ngMaxlength}}"
-               ng-maxlength="$ctrl.ngMaxlength"
-               ng-keydown="keyDownHandle($event)"
+                type="{{$ctrl.type}}"
+                autocomplete="off"
+                placeholder="{{$ctrl.placeholder}}"
+                class="mob-input__inner custom"
+                ng-model="$ctrl.model"
+                ng-disabled="$ctrl.ngDisabled"
+                maxlength="{{$ctrl.ngMaxlength}}"
+                ng-maxlength="$ctrl.ngMaxlength"
         >
 
         <span class="mob-input__suffix">
@@ -41,25 +35,25 @@ clearable:'<' -->
                                        ng-click="$ctrl.clean()"></mob-icon-circle-close>
 
                 <mob-icon-visible class="mob-input_access_visible"
-                                          ng-if="$ctrl.showValueAccessVisible()"
-                                          ng-click="$ctrl.visibleClickHandle()"></mob-icon-visible>
+                                  ng-if="$ctrl.showValueAccessVisible()"
+                                  ng-click="$ctrl.visibleClickHandle()"></mob-icon-visible>
 
                 <mob-icon-invisible class="mob-input_invisible"
-                                            ng-if="$ctrl.showValueInVisible()"
-                                            ng-click="$ctrl.visibleClickHandle()"></mob-icon-invisible>
+                                    ng-if="$ctrl.showValueInVisible()"
+                                    ng-click="$ctrl.visibleClickHandle()"></mob-icon-invisible>
 
                 <slot name="suffixIcon"></slot>
 
                 <span class="mob-input-count" ng-if="$ctrl.showWordCount()">
                     <span class="mob-input-count-inner"
-                          ng-bind="($ctrl.ngModel || '').length + '/' + $ctrl.ngMaxlength"></span>
+                          ng-bind="($ctrl.model || '').length + '/' + $ctrl.ngMaxlength"></span>
                 </span>
             </span>
         </span>
     </div>
 
-    <div class="mob-input_append" ng-class="{'is_hidden':!$slot.slot['append']}">
-        <slot name="append"></slot>
+    <div class="mob-input_append" ng-if="$ctrl.hasAppendSlot">
+        <div ng-transclude="append"></div>
     </div>
 
 </div>

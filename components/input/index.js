@@ -1,12 +1,9 @@
-function controller($scope, $element, $transclude, $attrs, $compile, slot) {
-    const _that = this
+function controller($scope, $element) {
+    const _that = this;
     // 初始化工作
     this.$onInit = function () {
         this.placeholder = this.placeholder || '请输入内容'
         this.type = this.type || 'text'
-
-        // 动态插槽实现
-        slot.transclude($scope, $element, $transclude)
         // 通过class配置icon
         compilePrefix(this.prefixIcon);
         compileSuffix(this.suffixIcon);
@@ -14,6 +11,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
         if (this.showPassword) {
             $scope.valueVisiable = false // 默认为不展示明文
         }
+
     }
 
 
@@ -40,6 +38,20 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
 
 
     this.$postLink = function () {
+        // ngModel 的值从外部改变时，触发此函数
+        if (this.ngModel) {
+            this.ngModel.$render = () => {
+                this.model = this.ngModel.$viewValue;
+            };
+
+            $scope.$watch(function () {
+                return _that.model;
+            }, function (newV, oldV) {
+                if (newV !== oldV) {
+                    _that.ngModel.$setViewValue(newV);
+                }
+            });
+        }
     }
 
 
@@ -56,7 +68,7 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
      */
     this.clean = function () {
         this.focus()
-        this.ngModel = ''
+        this.model = ''
     }
 
     /**
@@ -77,22 +89,22 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
     this.showClear = function () {
         return this.clearable &&
             !this.ngDisabled &&
-            this.ngModel && this.ngModel.length > 0
+            this.model && this.model.length > 0
     }
     // 是否显示可视按钮
     this.showValueAccessVisible = function () {
         return this.showPassword &&
             !this.ngDisabled &&
-            this.ngModel &&
-            this.ngModel.length > 0 &&
+            this.model &&
+            this.model.length > 0 &&
             $scope.valueVisiable
     }
     // 是否显示不可视按钮
     this.showValueInVisible = function () {
         return this.showPassword &&
             !this.ngDisabled &&
-            this.ngModel &&
-            this.ngModel.length > 0 &&
+            this.model &&
+            this.model.length > 0 &&
             !$scope.valueVisiable
     }
 
@@ -102,14 +114,6 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
      */
     this.showWordCount = function () {
         return this.showWordLimit && !this.showPassword
-    }
-
-    $scope.keyDownHandle = function ($event) {
-        if (!angular.isFunction(_that.keyDown)) {
-            return
-        }
-        let opt = {$event}
-        _that.keyDown({opt})
     }
 }
 
