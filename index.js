@@ -82,14 +82,14 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
         })
         .when('/date', {
             templateUrl: './controller/date/index.html',
-            controller: 'Date',
-            controllerAs: 'Date',
+            controller: 'DateCtrl',
+            controllerAs: 'ctrl',
         })
-        .when('/datePicker', {
-            templateUrl: './controller/date-picker/index.html',
-            controller: 'DatePicker',
-            controllerAs: 'DatePicker',
-        })
+        // .when('/datePicker', {
+        //     templateUrl: './controller/date-picker/index.html',
+        //     controller: 'DatePicker',
+        //     controllerAs: 'DatePicker',
+        // })
         .when('/table', {
             templateUrl: './controller/table/index.html',
             controller: 'TableCtrl'
@@ -167,8 +167,8 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Tree树形控件', path: '/tree'},
         {label: 'Form表单', path: '/form', tags: [{title:'developing', type:'danger'}]},
         {label: 'Date日历', path: '/date', tags: [{title:'developing', type:'danger'}]},
-        {label: 'DatePicker日期选择器', path: '/datePicker'},
-        {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
+        // {label: 'DatePicker日期选择器', path: '/datePicker'},
+        // {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Data数据展示', type: 1},
         {label: 'Table表格', path: '/table'},
         {label: 'Pagination 分页', path: '/pagination'},

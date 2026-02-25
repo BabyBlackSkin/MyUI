@@ -1,4 +1,4 @@
-PlatformIndexApp.directive('mobInputAppend', function (){
+app.directive('mobInputAppend', function (){
     return {
         restrict: 'E',
         template: '<div ng-transclude></div>',
