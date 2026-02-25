@@ -35,7 +35,7 @@ app
                         let scope1 = angular.element(slot).scope()
                         let slotName = $parse(slot.name)(scope1)
                         if (!slotName) {
-                            slotName = slot.name || 'anonymous'
+                            slotName = slot.getAttribute('ng-slot') || slot.name || 'anonymous'
                         }
                         if (!slotName) {
                             slotName = $parse(slotName)(scope1)
@@ -66,7 +66,7 @@ app
                         }
 
                         // 获取插槽名称
-                        let slotName = node.slot || 'anonymous'
+                        let slotName = node.getAttribute('ng-slot') || node.slot || 'anonymous'
                         // 将插槽设置为开启
                         scope.$slot.slot[slotName] = true
                         let slotConfig = map[slotName]

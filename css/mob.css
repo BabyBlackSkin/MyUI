@@ -150,6 +150,8 @@
     --mob-calendar-col-span-height:40px;
     --mob-calendar-col-span-border-radius: 30px;
     --mob-calendar-date-col-width:45px;
+    --mob-calendar-date-width:45px;
+    --mob-calendar-date-height:32px;
     --mob-calendar-date-col-padding:4px;
     --mob-calendar-date-col-span-width:24px;
     --mob-calendar-date-col-span-fontSize:12px;
