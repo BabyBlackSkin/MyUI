@@ -1,4 +1,4 @@
-function controller($scope, $element) {
+function controller($scope, $element, $transclude, $attrs, $compile, $timeout) {
     const _that = this;
     // 初始化工作
     this.$onInit = function () {
@@ -118,11 +118,15 @@ function controller($scope, $element) {
 }
 
 app.component('mobInput', {
-    transclude: true,
     templateUrl: './components/input/mob-input.html',
     controller: controller,
+    require: {
+        ngModel: '?ngModel'
+    },
+    transclude: {
+        append: '?mobInputAppend',
+    },
     bindings: {
-        ngModel: '=?',
         type:'=?',// 文本框类型
         ngDisabled: '<?',
         placeholder: '<?',
@@ -132,7 +136,6 @@ app.component('mobInput', {
         showPassword: '<?',
         ngMaxlength: '<?',
         showWordLimit: '<?',
-        handleChange: '&',
-        keyDown:"&?"
+        hasAppendSlot:'<?'
     },
 })
