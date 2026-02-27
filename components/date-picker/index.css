@@ -1,0 +1,23 @@
+/* Date Picker 日期选择器 */
+mob-date-picker {
+    display: block;
+    width: 360px;
+}
+
+.mob-popper-down.mob-date-picker .mob-popper-down__wrapper {
+    padding: 12px;
+}
+
+.mob-popper-down.mob-date-picker .mob-popper-down__wrapper {
+    max-height: calc(max(var(--mob-popper-max-height), 390px) - 10px);
+}
+.mob-popper-down.mob-date-picker .mob-popper-down__wrapper .mob-popper-down__inner {
+    display: flex;
+    justify-content: center;
+    max-height: calc(max(var(--mob-popper-max-height), 390px) - 20px);
+}
+
+
+/*.mob-popper-down.mob-date-picker-date-range .mob-popper-down__inner{*/
+/*    display: flex;*/
+/*}*/

@@ -548,15 +548,16 @@
              * @param scope
              * @param target
              * @param floating
-             * @param popperWidthLimit
+             * @param popperWidthAuto // popper的宽度是是否为auto
              * @param options
              */
-            function setFloatingWidth(scope, target, floating, popperWidthLimit ,options) {
+            function setFloatingWidth(scope, target, floating, popperWidthAuto ,options) {
                 const {width: targetWidth} = target.getBoundingClientRect()
                 if (!options) {
-                    floating.style.width = popperWidthLimit ? (targetWidth + 10) + 'px' : 'auto'
+                    floating.style.width = popperWidthAuto ?  'auto' : (targetWidth + 10) + 'px'
                     return
                 }
+                target.getBoundingClientRect()
                 if (options.popperDown && options.popperDown.style) {
                     Object.assign(floating.style, options.style)
                 }
@@ -665,9 +666,9 @@
                  * @returns {*}
                  */
                 autoUpdateComputePosition: function (scope, popper, render = true) {
-                    let {tooltip, target, location, popperWidthLimit, options} = popper
+                    let {tooltip, target, location, popperWidthAuto, options} = popper
                     if (render) {
-                        setFloatingWidth(scope, location, tooltip, popperWidthLimit, options)
+                        setFloatingWidth(scope, location, tooltip, popperWidthAuto, options)
                     }
                     // 需要判断是从下面还是从上面打开
                     return window.FloatingUIDOM.autoUpdate(

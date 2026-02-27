@@ -1,0 +1,14 @@
+<div class="mob-date-picker" ng-class="{
+'date':$ctrl.calendarType === 'date',
+'year':$ctrl.calendarType === 'year',
+'month':$ctrl.calendarType === 'month',
+'dateRange':$ctrl.calendarType === 'dateRange',
+'monthRang':$ctrl.calendarType === 'monthRang',
+'yearRange':$ctrl.calendarType === 'yearRange'
+}">
+    <div class="mob-date-picker-wrapper">
+        <div class="mob_popper__target" popper-group="mobDatePicker">
+            <mob-input ng-model="$ctrl.model"></mob-input>
+        </div>
+    </div>
+</div>
