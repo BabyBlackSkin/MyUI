@@ -1,47 +1,44 @@
 <section class="mob-doc content" ng-controller="DatePicker as ctrl">
     <h2>DatePicker日期选择器</h2>
 
-    <div class="mob-doc content">
-        <h3>选择某一天</h3>
-        <div class="mob-demo-block">
-            <div class="mob-demo-example">
-                <div class="example-block">
-                    <div class="block">
-                        <p class="title">默认</p>
-                        <div class="content">
-                            <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" ></mob-date-picker>
-                        </div>
-                    </div>
-<!--                    <div class="block">-->
-<!--                        <p class="title">快速选择</p>-->
-<!--                        <div class="content">-->
-<!--                            <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                </div>
-            </div>
-            <div class="meta">
-                <pre prism>
-                        <code class="source-code language-markup language-js language-html language-css"
-                        ><!--
-                            <div class="example-block">
-                                <div class="block">
-                                    <p class="title">默认</p>
-                                    <div class="content">
-                                        <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" ></mob-date-picker>
-                                    </div>
-                                </div>
-                                <div class="block">
-                                    <p class="title">快速选择</p>
-                                    <div class="content">
-                                        <mob-date-picker style="width: 220px;" ng-model="exampleOne" type="'date'" shortcuts="dateShortcuts"></mob-date-picker>
-                                    </div>
-                                </div>
-                            </div>
-                        --></code>
-                    </pre>
-            </div>
-        </div>
-    </div>
+    <h3>基础用法 - 选择日期</h3>
+    <mob-date-picker ng-model="ctrl.date1" type="'date'"></mob-date-picker>
+    <p>选中值: {{ctrl.date1}}</p>
+
+    <h3>选择周</h3>
+    <mob-date-picker ng-model="ctrl.week1" type="'week'"></mob-date-picker>
+    <p>选中值: {{ctrl.week1}}</p>
+
+    <h3>选择月</h3>
+    <mob-date-picker ng-model="ctrl.month1" type="'month'"></mob-date-picker>
+    <p>选中值: {{ctrl.month1}}</p>
+
+    <h3>选择年</h3>
+    <mob-date-picker ng-model="ctrl.year1" type="'year'"></mob-date-picker>
+    <p>选中值: {{ctrl.year1}}</p>
+
+    <h3>多选日期</h3>
+    <mob-date-picker ng-model="ctrl.dates1" type="'dates'"></mob-date-picker>
+    <p>选中值: {{ctrl.dates1}}</p>
+
+    <h3>日期范围</h3>
+    <mob-date-picker ng-model="ctrl.dateRange1" type="'dateRange'"></mob-date-picker>
+    <p>选中值: {{ctrl.dateRange1}}</p>
+
+    <h3>年份范围</h3>
+    <mob-date-picker ng-model="ctrl.yearRange1" type="'yearRange'"></mob-date-picker>
+    <p>选中值: {{ctrl.yearRange1}}</p>
+
+    <h3>月份范围</h3>
+    <mob-date-picker ng-model="ctrl.monthRange1" type="'monthRange'"></mob-date-picker>
+    <p>选中值: {{ctrl.monthRange1}}</p>
+
+    <h3>快捷方式 - 单日期</h3>
+    <mob-date-picker ng-model="ctrl.date5" type="'date'" shortcuts="ctrl.dateShortcuts"></mob-date-picker>
+    <p>选中值: {{ctrl.date5}}</p>
+
+    <h3>快捷方式 - 日期范围</h3>
+    <mob-date-picker ng-model="ctrl.dateRange4" type="'dateRange'" shortcuts="ctrl.shortcuts"></mob-date-picker>
+    <p>选中值: {{ctrl.dateRange4}}</p>
 
 </section>

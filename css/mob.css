@@ -120,7 +120,7 @@
     --mob-tree-icon-size: var(--mob-icon-size);
 
     /* popper 控件属性 */
-    --mob-popper-max-height:300px;
+    --mob-popper-max-height:310px;
 
     /* table 控件属性*/
     /*表头背景颜色*/
@@ -288,7 +288,7 @@ mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-
     display: inline-block;
 }
 
-mob-input,mob-select, mob-tree-select, mob-date-picker, mob-time-spinner {
+mob-input,mob-select, mob-tree-select,  mob-time-spinner {
     min-width: 200px;
     width: 100%;
 }

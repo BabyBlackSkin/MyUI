@@ -191,6 +191,27 @@ mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row s
     justify-content: center;
     border-radius: 18px;
 }
+
+mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+}
+
+/* yearRange 样式：potential 的 div 背景色，selected 的 span 背景色 */
+mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .potential {
+    background-color: var(--mob-extra-lighter-border-color);
+}
+
+mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+}
+
+/* 确保同时有 selected 和 potential 时，span 的主色背景优先 */
+mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .potential.selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+}
 /*===================*/
 /*month-pane*/
 /*===================*/
@@ -228,4 +249,25 @@ mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row 
     align-items: center;
     justify-content: center;
     border-radius: 18px;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+}
+
+/* monthRange 样式：potential 的 div 背景色，selected 的 span 背景色 */
+mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .potential {
+    background-color: var(--mob-extra-lighter-border-color);
+}
+
+mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+}
+
+/* 确保同时有 selected 和 potential 时，span 的主色背景优先 */
+mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .potential.selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
 }
