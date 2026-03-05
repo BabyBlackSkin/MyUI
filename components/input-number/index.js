@@ -1,15 +1,44 @@
-function controller($scope, $element, $transclude, $attrs, $compile, slot) {
-    // 初始化
+function controller($scope, $element, $transclude, $attrs, $compile) {
+    const $ctrl = this;
+
     this.$onInit = function () {
-        // 动态插槽实现
-        slot.transclude($scope, $element, $transclude)
-        this.innerValue = null;
-        // 获取步长
+        this.model = null;
         this.calculateStep();
     }
 
+    this.$onChanges = function (changes) {
+        if (changes.step || changes.precision) {
+            this.calculateStep();
+        }
+    }
+
+    this.$onDestroy = function() {
+        if (timer) $timeout.cancel(timer);
+    }
+
+    this.$postLink = function () {
+        if (this.ngModel) {
+            // 外部 model -> 内部 input 的转换
+            this.ngModel.$formatters.push((value) => {
+                return (angular.isDefined(value) && value !== null) ? Number(value) : null;
+            });
+
+            // 内部 input -> 外部 model 的转换
+            this.ngModel.$parsers.push((value) => {
+                if (value === '' || value === null || angular.isUndefined(value)) return null;
+                return $ctrl.normalize(new Decimal(value));
+            });
+
+            // 当外部 model 改变时同步内部变量
+            this.ngModel.$render = () => {
+                this.model = this.ngModel.$viewValue;
+            };
+        }
+    }
+
+
+    // 计算步长逻辑：根据 precision 自动推断或使用默认值
     this.calculateStep = function () {
-        // 未定义步长，默认为1
         if (angular.isUndefined(this.step)) {
             if (angular.isUndefined(this.precision)) {
                 this.step = 1;
@@ -19,123 +48,107 @@ function controller($scope, $element, $transclude, $attrs, $compile, slot) {
         }
     }
 
-
-    this.$onChanges = function (changes) {
-        if (changes.step || changes.precision) {
-            this.calculateStep();
-        }
-    }
-
-    this.$onDestroy = function () {}
-
-
-    this.$postLink = function () {
-        if (this.ngModel) {
-            this.ngModel.$formatters.push((value) => {
-                console.log('$formatter', value)
-                return angular.isDefined(value) ? value : null;
-            });
-
-            this.ngModel.$parsers.push((value) => {
-                console.log('$parsers', value)
-                if (value === '' || value === null) return null;
-                let d = new Decimal(value);
-                return this.normalize(d);
-            });
-
-            this.ngModel.$render = () => {
-                this.innerValue = this.ngModel.$viewValue;
-            };
-        }
-    }
-
+    /**
+     * 数值规范化：处理 最小值/最大值/精度
+     */
     this.normalize = function (decimal) {
-        if (angular.isDefined(this.min)) {
-            decimal = Decimal.max(decimal, this.min);
-        }
-        if (angular.isDefined(this.max)) {
-            decimal = Decimal.min(decimal, this.max);
-        }
+        if (!(decimal instanceof Decimal)) decimal = new Decimal(decimal || 0);
 
+        let result = decimal;
+        if (angular.isDefined(this.min) && this.min !== null) {
+            result = Decimal.max(result, this.min);
+        }
+        if (angular.isDefined(this.max) && this.max !== null) {
+            result = Decimal.min(result, this.max);
+        }
         if (angular.isDefined(this.precision)) {
-            decimal = new Decimal(decimal.toFixed(this.precision));
+            result = new Decimal(result.toFixed(this.precision));
+        }
+        return result.toNumber();
+    };
+
+    /**
+     * 步长对齐逻辑：修正了原代码中计算偏移量不准确的问题
+     */
+    this.patternStep = function () {
+        if (this.model === null || angular.isUndefined(this.model)) return;
+
+        let val = new Decimal(this.model);
+        let step = new Decimal(this.step);
+        let mod = val.mod(step);
+
+        if (this.stepStrictly) {
+            // 严格步长模式：强制向下取整到步长的倍数
+            val = val.minus(mod);
+        } else {
+            // 普通模式：四舍五入到最近的步长倍数
+            if (mod.times(2).gte(step)) {
+                val = val.plus(step.minus(mod));
+            } else {
+                val = val.minus(mod);
+            }
         }
 
-        return decimal.toNumber();
+        this.model = this.normalize(val);
+        this.syncToModel();
+    };
+
+    this.syncToModel = function() {
+        if (this.ngModel) {
+            this.ngModel.$setViewValue(this.model);
+            this.ngModel.$render(); // 强制触发渲染以保持 UI 同步
+        }
+    };
+
+    let timer = null; // 用于存放防抖定时器
+    this.applyChange = function(newValue) {
+        this.model = this.normalize(newValue);
+        this.syncToModel();
+
+        // 防抖触发外部 change 事件
+        if (timer) $timeout.cancel(timer);
+        timer = $timeout(function() {
+            $ctrl.changeHandle();
+        }, 300); // 300ms 内没有再次点击则触发
     };
 
 
-
-    /**
-     * input聚焦
-     */
-    this.focus = function () {
-        let input = $element[0].querySelector('.mob-input__inner')
-        input.focus();
-    }
-
-    /**
-     * 清空input内容
-     */
-    this.clean = function () {
-        this.focus()
-        this.ngModel.$setViewValue(null);
-    }
-    // 步长模式
-    this.patternStep = function () {
-        let ngModel = new Decimal(this.innerValue)
-        let step = new Decimal(this.step)
-        let mod = ngModel.mod(step)
-
-        if (this.stepStrictly) {
-            ngModel = ngModel.minus(mod)
-        }
-
-        mod = mod.mul(new Decimal(2))
-        if (mod > step) {
-            ngModel = ngModel.add(step)
-        }
-
-        this.ngModel.$setViewValue(ngModel.toNumber())
-    }
-
-    /**
-     * 减少
-     */
     this.decrease = function () {
-        if (this.ngDisabled || !angular.isNumber(this.innerValue)) return;
-        let d = new Decimal(this.innerValue).minus(this.step);
-        this.innerValue = this.normalize(d);
-        this.ngModel.$setViewValue(this.innerValue);
-    }
+        if (this.ngDisabled) return;
+        let base = angular.isNumber(this.model) ? this.model : (this.min || 0);
+        let d = new Decimal(base).minus(this.step);
+        this.applyChange(d);
+    };
 
-    /**
-     * 增加
-     */
     this.increase = function () {
-        if (this.ngDisabled || !angular.isNumber(this.innerValue)) return;
-        let d = new Decimal(this.innerValue).add(this.step);
-        this.innerValue = this.normalize(d);
-        this.ngModel.$setViewValue(this.innerValue);
-    }
+        if (this.ngDisabled) return;
+        let base = angular.isNumber(this.model) ? this.model : (this.min || 0);
+        let d = new Decimal(base).add(this.step);
+        this.applyChange(d);
+    };
 
-    /**
-     * model改变时的回调
-     */
     this.changeHandle = function () {
         if (angular.isFunction(this.changeEvent)) {
-            this.changeEvent(this.ngModel)
+            // 注意：& 绑定需要以对象形式传递参数
+            this.changeEvent({ $value: this.model });
         }
-    }
-    /**
-     * 失焦
-     */
-    this.blurHandle = function () {
-        this.patternStep()
-        this.innerValue = this.normalize(this.innerValue);
-        this.ngModel.$setViewValue(this.innerValue);
-    }
+    };
 
+    this.blurHandle = function () {
+        this.patternStep();
+        this.changeHandle();
+    };
+
+    this.focus = function () {
+        let input = $element[0].querySelector('.mob-input__inner');
+        if (input) input.focus();
+    };
+
+    this.clean = function () {
+        this.model = null;
+        this.syncToModel();
+        this.focus();
+    };
 }
 
 app

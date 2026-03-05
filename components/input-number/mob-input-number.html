@@ -1,28 +1,32 @@
-<div class="mob-input__number is_prepend_slot is_append_slot"
-    ng-class="{'is_disabled':$ctrl.ngDisabled}"
->
+<div class="mob-input__number" ng-class="{'is_disabled': $ctrl.ngDisabled}">
 
-    <div class="mob-input_prepend mob-input__slot" ng-click="$ctrl.decrease()">
-        <slot name="prepend" ng-show="$slot.slot['prepend']"></slot>
-        <mob-icon-decrease ng-if="!$slot.slot['prepend']"></mob-icon-decrease>
+    <div class="mob-input_prepend mob-input__slot"
+         ng-click="$ctrl.decrease()"
+         ng-class="{'is_inactive': $ctrl.ngDisabled}">
+        <mob-icon-decrease></mob-icon-decrease>
     </div>
 
     <div class="mob-input__wrapper">
-        <label for="{{'input_number' + $id}}"></label>
+        <label ng-if="false" for="{{'input_number' + $id}}"></label>
         <input id="{{'input_number' + $id}}"
                type="number"
                inputmode="decimal"
                class="mob-input__inner"
-               ng-model="$ctrl.innerValue"
+               ng-model="$ctrl.model"
+               ng-model-options="{ debounce: 300 }"
                ng-disabled="$ctrl.ngDisabled"
-               ng-change="$ctrl.changeHandle()"
+               ng-change="$ctrl.syncToModel()"
                ng-blur="$ctrl.blurHandle()"
+               step="{{$ctrl.step}}"
+               min="{{$ctrl.min}}"
+               max="{{$ctrl.max}}"
         >
     </div>
 
-    <div class="mob-input_append  mob-input__slot" ng-click="$ctrl.increase()">
-        <slot name="append" ng-show="$slot.slot['append']"></slot>
-        <mob-icon-increase ng-if="!$slot.slot['append']"></mob-icon-increase>
+    <div class="mob-input_append mob-input__slot"
+         ng-click="$ctrl.increase()"
+         ng-class="{'is_inactive': $ctrl.ngDisabled}">
+        <mob-icon-increase></mob-icon-increase>
     </div>
 
 </div>
