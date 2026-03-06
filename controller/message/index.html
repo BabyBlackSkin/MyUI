@@ -1,0 +1,152 @@
+<div class="demo-container" ng-controller="MessageCtrl as ctrl">
+    <h2>Message 消息提示</h2>
+    <p>常用于主动操作后的反馈提示，用于展示操作结果、系统消息或警告信息。消息在指定时间后自动消失，也可手动关闭。</p>
+
+    <div class="mob-doc content">
+
+        <!-- ===== 基础用法 ===== -->
+        <h3>基础用法</h3>
+        <p>从顶部出现，3 秒后自动消失。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button ng-click="ctrl.showInfo()">Info 消息</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPrimary()">Primary 消息</mob-button>
+                <mob-button type="success" ng-click="ctrl.showSuccess()">Success 消息</mob-button>
+                <mob-button type="warning" ng-click="ctrl.showWarning()">Warning 消息</mob-button>
+                <mob-button type="danger" ng-click="ctrl.showError()">Error 消息</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+message.info('这是一条普通消息提示');
+message.primary('这是一条 Primary 消息提示');
+message.success('恭喜你，操作成功！');
+message.warning('警告：请注意当前操作可能带来风险');
+message.error('错误：操作失败，请稍后重试');
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 不同状态 ===== -->
+        <h3>不同状态</h3>
+        <p>提供 <code>primary</code>、<code>success</code>、<code>warning</code>、<code>info</code>、<code>error</code> 五种类型，通过 <code>type</code> 字段区分。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button ng-click="ctrl.showInfo()">Info</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPrimary()">Primary</mob-button>
+                <mob-button type="success" ng-click="ctrl.showSuccess()">Success</mob-button>
+                <mob-button type="warning" ng-click="ctrl.showWarning()">Warning</mob-button>
+                <mob-button type="danger" ng-click="ctrl.showError()">Error</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+// 通过 type 指定类型
+message.show({ message: '操作成功', type: 'success' });
+message.show({ message: '操作失败', type: 'error' });
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 可关闭消息提示 ===== -->
+        <h3>可关闭消息提示</h3>
+        <p>
+            默认情况下，消息在 3 秒后自动关闭且不显示关闭按钮。<br>
+            设置 <code>showClose: true</code> 可显示关闭按钮；设置 <code>duration: 0</code> 可禁用自动关闭。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="success" ng-click="ctrl.showClosable()">可关闭（不自动消失）</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showNotClosable()">无关闭按钮（3秒消失）</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+// 可手动关闭，不自动消失
+message.success('这条消息可以手动关闭', {
+    showClose: true,
+    duration: 0
+});
+
+// 隐藏关闭按钮，3 秒后消失
+message.info('这条消息没有关闭按钮', {
+    showClose: false,
+    duration: 3000
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 自定义时长 ===== -->
+        <h3>自定义时长</h3>
+        <p>通过 <code>duration</code> 参数控制消息显示时长（毫秒）。设置为 <code>0</code> 或负数则不自动关闭。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="success" ng-click="ctrl.showLongDuration()">显示 10 秒</mob-button>
+                <mob-button type="warning" ng-click="ctrl.showPersistent()">永不消失</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+// 显示 10 秒
+message.success('这条消息将在 10 秒后消失', {
+    duration: 10000,
+    showClose: true
+});
+
+// 不自动消失
+message.warning('这条消息不会自动消失', {
+    duration: 0,
+    showClose: true
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 消息位置 ===== -->
+        <h3>消息位置（Placement）</h3>
+        <p>
+            通过 <code>placement</code> 参数控制消息出现的位置，支持：
+            <code>top</code>、<code>top-left</code>、<code>top-right</code>、
+            <code>bottom</code>、<code>bottom-left</code>、<code>bottom-right</code>，默认为 <code>top</code>。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <mob-button type="primary" ng-click="ctrl.showPlacement('top')">顶部居中（默认）</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPlacement('top-left')">顶部左侧</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPlacement('top-right')">顶部右侧</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPlacement('bottom')">底部居中</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPlacement('bottom-left')">底部左侧</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPlacement('bottom-right')">底部右侧</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+// 顶部居中（默认）
+message.info('顶部居中', { placement: 'top' });
+
+// 顶部左侧
+message.info('顶部左侧', { placement: 'top-left' });
+
+// 顶部右侧
+message.info('顶部右侧', { placement: 'top-right' });
+
+// 底部居中
+message.info('底部居中', { placement: 'bottom' });
+
+// 底部左侧
+message.info('底部左侧', { placement: 'bottom-left' });
+
+// 底部右侧
+message.info('底部右侧', { placement: 'bottom-right' });
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,280 @@
+/* ===== Message 消息提示 - 位置容器 ===== */
+.mob-message-container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+    z-index: 3000;
+    max-width: calc(100vw - 40px);
+}
+
+/* top - 居中 */
+.mob-message-container--top {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+}
+
+/* top-left */
+.mob-message-container--top-left {
+    top: 20px;
+    left: 20px;
+    align-items: flex-start;
+}
+
+/* top-right */
+.mob-message-container--top-right {
+    top: 20px;
+    right: 20px;
+    align-items: flex-end;
+}
+
+/* bottom - 居中，从底部向上堆叠 */
+.mob-message-container--bottom {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    flex-direction: column-reverse;
+}
+
+/* bottom-left */
+.mob-message-container--bottom-left {
+    bottom: 20px;
+    left: 20px;
+    align-items: flex-start;
+    flex-direction: column-reverse;
+}
+
+/* bottom-right */
+.mob-message-container--bottom-right {
+    bottom: 20px;
+    right: 20px;
+    align-items: flex-end;
+    flex-direction: column-reverse;
+}
+
+/* ===== mob-message 宿主元素 ===== */
+mob-message {
+    display: block;
+}
+
+/* ===== Message 消息条 ===== */
+.mob-message {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 16px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid var(--mob-light-border-color);
+    box-shadow: var(--mob-box-shadow-light);
+    pointer-events: auto;
+    min-width: 280px;
+    max-width: 420px;
+    box-sizing: border-box;
+    gap: 10px;
+
+    /* 进场初始状态：透明 + 向上偏移 */
+    opacity: 0;
+    transform: translateY(-16px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+}
+
+/* 进场完成状态 */
+.mob-message.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 退场状态 */
+.mob-message.is-closing {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+}
+
+/* bottom 容器中：从底部滑入 */
+.mob-message-container--bottom .mob-message,
+.mob-message-container--bottom-left .mob-message,
+.mob-message-container--bottom-right .mob-message {
+    transform: translateY(16px);
+}
+
+.mob-message-container--bottom .mob-message.is-visible,
+.mob-message-container--bottom-left .mob-message.is-visible,
+.mob-message-container--bottom-right .mob-message.is-visible {
+    transform: translateY(0);
+}
+
+.mob-message-container--bottom .mob-message.is-closing,
+.mob-message-container--bottom-left .mob-message.is-closing,
+.mob-message-container--bottom-right .mob-message.is-closing {
+    transform: translateY(8px);
+}
+
+/* ===== 图标 ===== */
+.mob-message__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.mob-message__icon mob-icon-info-filled,
+.mob-message__icon mob-icon-circle-check-filled,
+.mob-message__icon mob-icon-warning-filled,
+.mob-message__icon mob-icon-circle-close-filled {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+}
+
+/* ===== 内容文本 ===== */
+.mob-message__content {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--mob-regular-text-color);
+    word-break: break-word;
+}
+
+/* ===== 关闭按钮 ===== */
+.mob-message__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: var(--mob-secondary-text-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    transition: color 0.2s, background-color 0.2s;
+    margin-left: 4px;
+}
+
+.mob-message__close:hover {
+    color: var(--mob-primary-text-color);
+    background-color: var(--mob-dark-fill-color);
+}
+
+/* ===== 类型变体 ===== */
+
+/* primary */
+.mob-message--primary {
+    background-color: var(--mob-primary-light-color9);
+    border-color: var(--mob-primary-light-color7);
+}
+
+.mob-message--primary .mob-message__icon {
+    color: var(--mob-primary-color);
+}
+
+.mob-message--primary .mob-message__content {
+    color: var(--mob-primary-color);
+}
+
+.mob-message--primary .mob-message__close {
+    color: var(--mob-primary-color);
+}
+
+.mob-message--primary .mob-message__close:hover {
+    background-color: var(--mob-primary-light-color8);
+}
+
+/* success */
+.mob-message--success {
+    background-color: var(--mob-success-light-color9);
+    border-color: var(--mob-success-light-color7);
+}
+
+.mob-message--success .mob-message__icon {
+    color: var(--mob-success-color);
+}
+
+.mob-message--success .mob-message__content {
+    color: var(--mob-success-color);
+}
+
+.mob-message--success .mob-message__close {
+    color: var(--mob-success-color);
+}
+
+.mob-message--success .mob-message__close:hover {
+    background-color: var(--mob-success-light-color8);
+}
+
+/* warning */
+.mob-message--warning {
+    background-color: var(--mob-warning-light-color9);
+    border-color: var(--mob-warning-light-color7);
+}
+
+.mob-message--warning .mob-message__icon {
+    color: var(--mob-warning-color);
+}
+
+.mob-message--warning .mob-message__content {
+    color: var(--mob-warning-color);
+}
+
+.mob-message--warning .mob-message__close {
+    color: var(--mob-warning-color);
+}
+
+.mob-message--warning .mob-message__close:hover {
+    background-color: var(--mob-warning-light-color8);
+}
+
+/* info */
+.mob-message--info {
+    background-color: var(--mob-info-light-color9);
+    border-color: var(--mob-info-light-color7);
+}
+
+.mob-message--info .mob-message__icon {
+    color: var(--mob-info-color);
+}
+
+.mob-message--info .mob-message__content {
+    color: var(--mob-info-color);
+}
+
+.mob-message--info .mob-message__close {
+    color: var(--mob-info-color);
+}
+
+.mob-message--info .mob-message__close:hover {
+    background-color: var(--mob-info-light-color8);
+}
+
+/* error */
+.mob-message--error {
+    background-color: var(--mob-danger-light-color9);
+    border-color: var(--mob-danger-light-color7);
+}
+
+.mob-message--error .mob-message__icon {
+    color: var(--mob-danger-color);
+}
+
+.mob-message--error .mob-message__content {
+    color: var(--mob-danger-color);
+}
+
+.mob-message--error .mob-message__close {
+    color: var(--mob-danger-color);
+}
+
+.mob-message--error .mob-message__close:hover {
+    background-color: var(--mob-danger-light-color8);
+}

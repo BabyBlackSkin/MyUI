@@ -257,8 +257,8 @@
     /**
      * AngularJS 1.x 注入
      */
-    if (typeof angular !== 'undefined' && typeof PlatformIndexApp !== 'undefined') {
-        PlatformIndexApp
+    if (typeof angular !== 'undefined' && typeof app !== 'undefined') {
+        app
             .service('zIndexManager', function () {
                 return zIndexManager;
             })

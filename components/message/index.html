@@ -1,0 +1,26 @@
+<div class="mob-message"
+     ng-class="[
+         'mob-message--' + $ctrl.getType(),
+         $ctrl.isVisible ? 'is-visible' : '',
+         $ctrl.isClosing ? 'is-closing' : ''
+     ]"
+     ng-style="{'z-index': $ctrl.zIndex}">
+
+    <!-- 图标区域 -->
+    <span class="mob-message__icon">
+        <mob-icon-info-filled ng-if="$ctrl.getType() === 'primary' || $ctrl.getType() === 'info'"></mob-icon-info-filled>
+        <mob-icon-circle-check-filled ng-if="$ctrl.getType() === 'success'"></mob-icon-circle-check-filled>
+        <mob-icon-warning-filled ng-if="$ctrl.getType() === 'warning'"></mob-icon-warning-filled>
+        <mob-icon-circle-close-filled ng-if="$ctrl.getType() === 'error'"></mob-icon-circle-close-filled>
+    </span>
+
+    <!-- 内容 -->
+    <span class="mob-message__content" ng-bind="$ctrl.options.message"></span>
+
+    <!-- 关闭按钮 -->
+    <button class="mob-message__close"
+            ng-if="$ctrl.options.showClose"
+            ng-click="$ctrl.close()">
+        <mob-icon-close></mob-icon-close>
+    </button>
+</div>
