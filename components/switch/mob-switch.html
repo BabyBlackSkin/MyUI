@@ -7,7 +7,7 @@
 >
 
     <input type="checkbox" class="mob-switch__input" ng-disabled="$ctrl.ngDisabled" name="$ctrl.name"
-           ng-model="$ctrl.ngModel">
+           ng-checked="$ctrl.isActive()">
     <!-- 激活文字描述 -->
     <span class="mob-switch__inactive_text mob-switch__tips_text left" ng-class="{'is_active':!$ctrl.isActive()}" ng-bind="$ctrl.inactiveText" ng-if="$ctrl.showInactiveText()"  ng-click="$ctrl.clickHandle()"></span>
 

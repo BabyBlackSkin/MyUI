@@ -15,26 +15,30 @@ function controller($scope, $element, $compile, $q)  {
     }
 
     this.$postLink = function () {
-        this.ngModel ? this.setActiveChange() : this.setInActiveChange()
-        // 初始化监听事件
-        initWatcher()
+        // ngModel 的值从外部改变时，触发此函数
+        if (this.ngModel) {
+            this.ngModel.$render = () => {
+                _that.model = _that.ngModel.$viewValue;
+                _that.changeHandle()
+            };
+
+            // $scope.$watch(function () {
+            //     return _that.model;
+            // }, function (newV, oldV) {
+            //     if (newV !== oldV) {
+            //         _that.ngModel.$setViewValue(newV);
+            //     }
+            // });
+        }
+
         if (this.showInactiveIcon()) {
             $element[0].querySelector('.mob-switch__inactive_icon').appendChild($compile(`<${_that.inactiveIcon}></${_that.inactiveIcon}>`)($scope)[0])
         }
         if (this.showActiveIcon()) {
             $element[0].querySelector('.mob-switch__active_icon').appendChild($compile(`<${_that.activeIcon}></${_that.activeIcon}>`)($scope)[0])
         }
-    }
-
-    function initWatcher() {
-        $scope.$watch(() => {
-            return _that.ngModel
-        }, function (v,o) {
-            if (angular.isUndefined(v) && angular.isUndefined(o)) {
-                return
-            }
-            _that.changeHandle()
-        })
+        // 初始化一下样式
+        this.changeHandle()
     }
 
     /**
@@ -131,10 +135,9 @@ function controller($scope, $element, $compile, $q)  {
             return
         }
 
-        console.log(angular.isFunction(_that.beforeChange))
         // 触发change hook
         if (angular.isFunction(_that.beforeChange)) {
-            let opt = {deferred: $q.defer(),value: this.ngModel, attachment: this.attachment}
+            let opt = {deferred: $q.defer(),value: this.model, attachment: this.attachment}
             _that.beforeChange({opt: opt}).then(data => {
                 if (!data) {
                     return
@@ -151,15 +154,21 @@ function controller($scope, $element, $compile, $q)  {
     this.clickHandleInner = function (){
         if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
             if (this.isActive()) {
-                this.ngModel = this.inactiveValue
+                this.model = this.inactiveValue
             }
             else {
-                this.ngModel = this.activeValue
+                this.model = this.activeValue
             }
         }
         else {
-            this.ngModel = !this.ngModel
+            this.model = !this.model
         }
+
+        // 手动通知 ngModel 外部变量已改变
+        if (this.ngModel) {
+            this.ngModel.$setViewValue(this.model);
+        }
+        this.changeHandle()
     }
     /**
      * 是否激活
@@ -167,12 +176,12 @@ function controller($scope, $element, $compile, $q)  {
      */
     this.isActive = function () {
         if (angular.isDefined(this.activeValue) && angular.isDefined(this.inactiveValue)) {
-            return this.ngModel === this.activeValue
+            return this.model === this.activeValue
         }
-        return this.ngModel
+        return this.model
     }
     /**
-     * ngModel改变时
+     * model改变时
      */
     this.changeHandle = function () {
         if (this.isActive()) {
@@ -183,7 +192,7 @@ function controller($scope, $element, $compile, $q)  {
         }
         // 触发change hook
         if (angular.isFunction(_that.change)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: this.model, attachment: this.attachment}
             _that.change({opt: opt})
         }
     }
@@ -192,30 +201,33 @@ function controller($scope, $element, $compile, $q)  {
 app
     .component('mobSwitch', {
         templateUrl: './components/switch/mob-switch.html',
-        bindings: {
-            ngModel: '=?',// ngModel
-            ngDisabled: '<?',// 是否禁用
-            loading: "=?",// 加载中
-            activeColor: '<?',// 激活颜色
-            activeText: '<?', // 文字提示
-            activeIcon: '<?',// 激活图标
-            activeValue: '<?',// 激活value
-            inactiveColor: '<?',// 未激活颜色
-            inactiveIcon: '<?',// 未激活图标
-            inactiveText: '<?',// 未激活文字提示
-            inactiveValue: '<?',// 未激活value
-            inlinePrompt: '<?',// 是否为内联提示
-            /**
-             *  angularJs无法解析  箭头函数，如果想在changHandler中拿到绑定的对象，
-             *  以下写法会报异常：
-             *  <mob-checkbox ng-mode="obj.val" change-handle="(value)=>{customChangeHandler(value, obj)}"></mob-checkbox>
-             *
-             *  此时需要通过attachment将对象传入
-             *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
-             */
-            attachment:"<?",// 携带的属性
-            change: '&?',// chang hook
-            beforeChange:'&?'
+        controller: controller,
+        controllerAs: '$ctrl',
+        require: {
+            ngModel: '?ngModel'
         },
-        controller: controller
+        bindings: {
+            ngDisabled: '<?',   // 是否禁用
+            loading: '<?',      // 加载中
+            activeColor: '<?',  // 激活颜色
+            activeText: '<?',   // 激活文字提示
+            activeIcon: '<?',   // 激活图标
+            activeValue: '<?',  // 激活时对应的value
+            inactiveColor: '<?',  // 未激活颜色
+            inactiveIcon: '<?',   // 未激活图标
+            inactiveText: '<?',   // 未激活文字提示
+            inactiveValue: '<?',  // 未激活时对应的value
+            inlinePrompt: '<?',   // 是否为内联提示
+            /**
+             * AngularJS 无法解析箭头函数，如果想在 changeHandle 中拿到绑定的对象，
+             * 以下写法会报异常：
+             *   <mob-switch ng-model="obj.val" change="(value)=>{customChangeHandler(value, obj)}"></mob-switch>
+             *
+             * 此时需要通过 attachment 将对象传入：
+             *   <mob-switch ng-model="obj.val" attachment="obj" change="customChangeHandler(value, obj)"></mob-switch>
+             */
+            attachment: '<?',     // 附带传递的外部对象
+            change: '&?',         // 值变更回调
+            beforeChange: '&?'    // 变更前拦截回调，需返回 Promise
+        },
     })
