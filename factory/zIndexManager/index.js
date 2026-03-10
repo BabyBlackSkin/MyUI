@@ -1,48 +1,54 @@
 /**
  * Z-Index 管理器
  * 统一管理 AngularJS + Bootstrap 的所有浮层组件
- * 支持 Message / Drawer / Bootstrap Modal / Tooltip / Popover / Dropdown
+ * 支持 Message / MessageBox / Drawer / Bootstrap Modal / Tooltip / Popover / Dropdown
+ *
+ * 层级规则：谁后触发谁在上面（统一 globalCounter 竞争）
+ * Bootstrap 浮层：参与 globalCounter 计数，保持其自身 CSS z-index 值不变
+ * AngularJS 浮层：BASE + globalCounter，确保后触发者始终在前者之上
  */
 
 (function () {
     'use strict';
 
-
-    const Z_INDEX_GROUP = {
-        DRAWER:"MODEL"
-    }
     /**
-     * Z-Index 层级常量
+     * 各类型的基础层级
+     * 所有类型共享同一个 globalCounter，谁后调用 getNextZIndex 谁的值更大
+     * BASE 值仅用于初始偏移，不影响相对顺序
      */
     const Z_INDEX_LEVELS = {
         NORMAL: 1,
 
-        // Bootstrap 组件统一层
+        // Bootstrap 组件（保持原有 CSS z-index，仅记录到 stack 参与 globalCounter）
         BOOTSTRAP: 1055,
-        // BOOTSTRAP_BASE: 2000,
 
-        // 消息类
-        MESSAGE: 3000,
-        MESSAGE_BASE: 3000,
+        // 消息类（Message 条）
+        MESSAGE: 2000,
+        MESSAGE_BASE: 2000,
+
+        // 对话框类（MessageBox 等）
+        MESSAGE_BOX: 2000,
+        MESSAGE_BOX_BASE: 2000,
 
         // 抽屉 / 对话框类
-        DRAWER: 4000,
-        DRAWER_BASE: 4000,
+        DRAWER: 2000,
+        DRAWER_BASE: 2000,
 
         MAXIMUM: 9999
     };
 
     /**
-     * 全局递增计数器
+     * 全局递增计数器（所有类型共享，后触发值越大）
      */
     let globalCounter = 0;
 
     /**
-     * 各类型实例计数
+     * 各类型实例计数（仅统计用，不影响 z-index 计算）
      */
     const instanceCounter = {
         BOOTSTRAP: 0,
         MESSAGE: 0,
+        MESSAGE_BOX: 0,
         DRAWER: 0
     };
 
@@ -69,48 +75,61 @@
         }
 
         /**
-         * 根据类型获取 z-index
+         * 根据类型获取基础层级
+         */
+        getBaseLevel(type) {
+            const levelMap = {
+                MESSAGE:     Z_INDEX_LEVELS.MESSAGE_BASE,
+                MESSAGE_BOX: Z_INDEX_LEVELS.MESSAGE_BOX_BASE,
+                DRAWER:      Z_INDEX_LEVELS.DRAWER_BASE,
+                BOOTSTRAP:   Z_INDEX_LEVELS.BOOTSTRAP,
+                // 兼容旧调用
+                MODEL:       Z_INDEX_LEVELS.BOOTSTRAP,
+                MODAL:       Z_INDEX_LEVELS.BOOTSTRAP
+            };
+            return levelMap[type] || Z_INDEX_LEVELS.NORMAL;
+        }
+
+        /**
+         * 根据类型获取下一个 z-index（参与全局计数竞争）
          */
         getZIndex(type) {
-            const levelMap = {
-                // BOOTSTRAP: Z_INDEX_LEVELS.BOOTSTRAP_BASE,
-                // MESSAGE: Z_INDEX_LEVELS.MESSAGE_BASE,
-                // DRAWER: Z_INDEX_LEVELS.DRAWER_BASE
-                MODEL:Z_INDEX_LEVELS.BOOTSTRAP
-            };
-
-            const baseLevel = levelMap[type] || Z_INDEX_LEVELS.NORMAL;
+            const baseLevel = this.getBaseLevel(type);
             return this.getNextZIndex(type, baseLevel);
         }
 
         /**
          * 注册实例
+         * @param {string}  type        - 类型：MESSAGE / MESSAGE_BOX / DRAWER / BOOTSTRAP
+         * @param {string}  instanceId  - 唯一标识
+         * @param {Element} element     - DOM 元素
+         * @param {boolean} bootstrap   - 是否为 Bootstrap 浮层（保留其自身 CSS z-index，不覆盖）
          */
         register(type, instanceId, element, bootstrap = false) {
             if (bootstrap) {
-                const zIndex = $(element).css('z-index')
-                // 获取zIndex但是不用赋值给Style
-                this.getZIndex(type);
+                // Bootstrap 浮层：参与 globalCounter 竞争记录顺序，但不覆盖其自身 CSS z-index
+                const existingZIndex = element ? parseInt(window.getComputedStyle(element).zIndex, 10) || 0 : 0;
+                this.getNextZIndex(type, Z_INDEX_LEVELS.BOOTSTRAP); // 仅推进 globalCounter
 
                 this.stack.set(instanceId, {
                     type,
-                    zIndex,
+                    zIndex: existingZIndex,
                     element,
+                    bootstrap: true,
                     createdAt: Date.now()
                 });
 
-                return zIndex;
+                return existingZIndex;
             } else {
-
-                const zIndex = this.getZIndex(Z_INDEX_GROUP[type]);
+                const zIndex = this.getZIndex(type);
 
                 this.stack.set(instanceId, {
                     type,
                     zIndex,
                     element,
+                    bootstrap: false,
                     createdAt: Date.now()
                 });
-
 
                 if (element && element.style) {
                     element.style.zIndex = zIndex;
@@ -185,6 +204,7 @@
 
     /**
      * Bootstrap 自动接管
+     * Bootstrap 浮层显示时参与 globalCounter 竞争（记录先后顺序），但不覆盖其自身 CSS z-index
      */
     function hookBootstrap() {
         if (typeof window.$ === 'undefined') return;
@@ -204,27 +224,14 @@
         ].join(' ');
 
         $(document).on(SHOW_EVENTS, function (e) {
-            console.log('SHOW_EVENTS')
             const $el = $(e.target);
 
             if ($el.data('__zindex_instance_id__')) return;
 
             const instanceId = 'bs_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-            //
-            zIndexManager.register(
-                'MODAL',
-                instanceId,
-                $el[0],
-                true
-            );
 
-            // modal backdrop 单独处理
-            // if ($el.hasClass('modal')) {
-            //     const $backdrop = $('.modal-backdrop').last();
-            //     if ($backdrop.length) {
-            //         $backdrop.css('z-index', zIndexManager.getMaxZIndex() - 1);
-            //     }
-            // }
+            // bootstrap=true：参与 globalCounter 但不覆盖 CSS z-index
+            zIndexManager.register('BOOTSTRAP', instanceId, $el[0], true);
 
             $el.data('__zindex_instance_id__', instanceId);
         });

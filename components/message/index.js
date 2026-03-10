@@ -9,7 +9,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
             duration: 3000
         }, this.config || {});
 
-        this.zIndex = zIndexManager.getNextZIndex('MESSAGE', 3000);
+        this.zIndex = zIndexManager.getNextZIndex('MESSAGE', 2000);
         this.isVisible = false;
         this.isClosing = false;
         this._timer = null;

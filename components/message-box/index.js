@@ -52,8 +52,8 @@ function controller($scope, $element, $timeout, zIndexManager) {
 
     // 显示MessageBox
     this.show = function () {
-        // 使用正确的 type 和 baseLevel 参数获取 zIndex
-        this.zIndex = zIndexManager.getNextZIndex('MESSAGE', 3000);
+        // 使用 MESSAGE_BOX 类型，参与全局 globalCounter 竞争
+        this.zIndex = zIndexManager.getNextZIndex('MESSAGE_BOX', 2000);
         this.isClosing = false;
         this.isShow = true;
         // 延迟一帧再添加 is-show，确保浏览器完成倡始渲染后 transition 才生效
@@ -110,7 +110,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
             }
         }
         // 参考elementPlus的实现
-        beforeClose({action, instance: _that, done});
+        beforeClose({action, data: _that.options.inputConfig.model,instance: _that, done});
     };
 
     // 确认按钮点击

@@ -29,6 +29,7 @@ mob-message-box {
     padding: var(--mob-message-box-padding);
     top: 50%;
     left: 50%;
+    z-index: 1; /* 在父容器 stacking context 内高于遮罩层 */
     /* 默认隐藏态：居中位置上方 20px + 透明 */
     transform: translate(-50%, calc(-50% - 20px));
     opacity: 0;

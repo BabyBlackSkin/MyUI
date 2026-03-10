@@ -1,4 +1,4 @@
-function controller($scope, messageBox) {
+function controller($scope, messageBox,message) {
     const _that = this;
 
     // 显示基础Alert
@@ -27,10 +27,13 @@ function controller($scope, messageBox) {
     this.beforeClose = function (opt){
         console.log(opt)
         opt.instance.confirmButtonLoading = true
-        setTimeout(()=>{
-
-            opt.done()
-        }, 3000)
+        message.success("修改成功");
+        // setTimeout(()=>{
+        //     // opt.done()
+        // }, 3000)
+    }
+    this.showMessage = function() {
+        message.success("修改成功");
     }
     // 显示Info消息
     this.showPrompt = function() {
@@ -53,4 +56,4 @@ function controller($scope, messageBox) {
 }
 
 app
-    .controller('MessageBoxCtrl', ['$scope', 'messageBox', controller]);
+    .controller('MessageBoxCtrl', ['$scope', 'messageBox','message', controller]);

@@ -1,5 +1,5 @@
 <div class="mob-message-box" ng-if="$ctrl.isShow" ng-class="{'is-show':$ctrl.isWrapperShow, 'is-closing':$ctrl.isClosing}" ng-style="{'z-index': $ctrl.zIndex}">
-    <!-- 遮罩层 -->
+    <!-- 遮罩层：不设 z-index，由 DOM 顺序保证在 __wrapper 之下 -->
     <div class="mob-message-box__modal"
          ng-click="$ctrl.handleModalClick()">
     </div>
