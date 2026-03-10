@@ -1,4 +1,4 @@
-<div class="mob-message-box" ng-if="$ctrl.isShow" ng-class="{'is-show':$ctrl.isShow, 'is-closing':$ctrl.isClosing}" ng-style="{'z-index': $ctrl.zIndex}">
+<div class="mob-message-box" ng-if="$ctrl.isShow" ng-class="{'is-show':$ctrl.isWrapperShow, 'is-closing':$ctrl.isClosing}" ng-style="{'z-index': $ctrl.zIndex}">
     <!-- 遮罩层 -->
     <div class="mob-message-box__modal"
          ng-click="$ctrl.handleModalClick()">
@@ -6,7 +6,7 @@
 
     <!-- 消息框主体 -->
     <div class="mob-message-box__wrapper"
-         ng-class="{'is-show':$ctrl.isWrapperShow, 'is-closing':$ctrl.isClosing}"
+         ng-class="{'is-closing':$ctrl.isClosing}"
     >
 
         <!-- 头部 -->
@@ -20,12 +20,14 @@
             </div>
             <button class="mob-message-box__close"
                     ng-if="$ctrl.options.showClose"
+                    ng-disabled="$ctrl.cancelButtonLoading || $ctrl.confirmButtonLoading "
                     ng-click="$ctrl.handleCancel()">
-                <i class="mob-icon-close"></i>
+                <mob-icon-close></mob-icon-close>
             </button>
         </div>
 
         <!-- 内容区域 -->
+        <form name="promptForm" novalidate>
         <div class="mob-message-box__content">
             <div class="mob-message-box__message" ng-if="$ctrl.options.message">
                 <i class="mob-message-box__icon"
@@ -36,9 +38,7 @@
             </div>
             <div class="mob-message-box__message" ng-if="$ctrl.options.inputConfig">
                 <div class="mob-message-box__message__form">
-                    <form name="promptForm">
-                        <mob-input name="prompt" ng-model="$ctrl.options.inputConfig.model" ng-pattern="$ctrl.options.inputConfig.pattern"></mob-input>
-                    </form>
+                    <mob-input name="prompt" ng-model="$ctrl.options.inputConfig.model" ng-pattern="$ctrl.options.inputConfig.pattern"></mob-input>
                 </div>
                 <p class="invalid_msg" ng-if="promptForm.$invalid">输入内容不合法</p>
             </div>
@@ -47,17 +47,22 @@
         <!-- 底部按钮区域 -->
         <div class="mob-message-box__btns" ng-if="$ctrl.options.showConfirmButton || $ctrl.options.showCancelButton">
             <mob-button
+                    loading="$ctrl.cancelButtonLoading"
                     ng-if="$ctrl.options.showCancelButton"
                     type="$ctrl.options.cancelButtonType"
+                    ng-disabled="promptForm.$invalid || $ctrl.cancelButtonLoading "
                     ng-click="$ctrl.handleCancel()">
                 {{$ctrl.options.cancelButtonText}}
             </mob-button>
             <mob-button
+                    loading="$ctrl.confirmButtonLoading"
                     ng-if="$ctrl.options.showConfirmButton"
                     type="$ctrl.options.confirmButtonType"
+                    ng-disabled="promptForm.$invalid || $ctrl.confirmButtonLoading "
                     ng-click="$ctrl.handleConfirm()">
                 {{$ctrl.options.confirmButtonText}}
             </mob-button>
         </div>
+        </form>
     </div>
 </div>

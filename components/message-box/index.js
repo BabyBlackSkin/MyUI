@@ -1,4 +1,4 @@
-function controller($scope, $element, $timeout, $compile, $rootScope, zIndexManager) {
+function controller($scope, $element, $timeout, zIndexManager) {
     const _that = this;
 
     // 默认配置
@@ -6,19 +6,20 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         title: '',
         message: '',
         type: 'info', // info, success, warning, error
-        showClose: true, // 是否显示clsoe
-        showCancelButton: false,// 是否显示关闭按钮
-        showConfirmButton: true,// 是否显示确认按钮
-        confirmButtonText: '确定',// 确认按钮文本
-        cancelButtonText: '取消',// 关闭按钮文本
-        confirmButtonType: 'primary',// 确认按钮类型
-        cancelButtonType: '', // 关闭按钮类型
+        showClose: true, // 是否显示关闭图标
+        showCancelButton: false, // 是否显示取消按钮
+        showConfirmButton: true, // 是否显示确认按钮
+        confirmButtonText: '确定', // 确认按钮文本
+        cancelButtonText: '取消', // 取消按钮文本
+        confirmButtonType: 'primary', // 确认按钮类型
+        cancelButtonType: '', // 取消按钮类型
         closeOnClickModal: true, // 点击遮罩层关闭弹框
         closeOnPressEscape: true, // 按下ESC关闭弹框
         inputConfig: null, // prompt弹框的input选项
+        beforeClose: null, // 关闭前回调(action) => bool|Promise<bool>，返回false则阻止关闭
     };
 
-    // 合并配置
+    // 合并后的配置
     this.options = {};
 
     // 初始化
@@ -26,43 +27,42 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         this.isShow = false;
         this.isWrapperShow = false;
         this.isClosing = false;
+        this.cancelButtonLoading = false; // 按钮 loading 状态
+        this.confirmButtonLoading = false; // 按钮 loading 状态
         this.options = angular.extend({}, this.defaultOptions, this.config || {});
-        this.zIndex = zIndexManager.getNextZIndex('MESSAGE');
     };
 
     this.$onChanges = function (changes) {
-        if (changes.config) {
-            console.log("changes.config")
-            if (changes.config.currentValue) {
-                this.options = angular.extend({}, this.defaultOptions, changes.config.currentValue);
-            }
+        if (changes.config && changes.config.currentValue) {
+            this.options = angular.extend({}, this.defaultOptions, changes.config.currentValue);
         }
     };
 
     this.$onDestroy = function () {
-        console.log('$onDestory')
-        this.close();
+        _that.unbindKeydown();
     };
 
     this.$postLink = function () {
         // 绑定键盘事件
-        if (this.options.closeOnPressEscape) {
-            this.bindKeydown();
+        if (_that.options.closeOnPressEscape) {
+            _that.bindKeydown();
         }
         _that.show();
     };
 
     // 显示MessageBox
     this.show = function () {
-        this.zIndex = zIndexManager.getNextZIndex();
+        // 使用正确的 type 和 baseLevel 参数获取 zIndex
+        this.zIndex = zIndexManager.getNextZIndex('MESSAGE', 3000);
         this.isClosing = false;
         this.isShow = true;
-        $timeout(() => {
-            this.isWrapperShow = true;
-        }, 100);
+        // 延迟一帧再添加 is-show，确保浏览器完成倡始渲染后 transition 才生效
+        $timeout(function () {
+            _that.isWrapperShow = true;
+        }, 16);
     };
 
-    // 关闭MessageBox
+    // 关闭MessageBox（触发退出动画后清理 DOM）
     this.closeHandle = function () {
         if (this.isClosing) {
             return; // 防止重复关闭
@@ -71,49 +71,87 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
         this.isClosing = true;
         this.unbindKeydown();
 
-        // 等待关闭动画完成后再触发回调
+        // 触发退出动画
         this.isWrapperShow = false;
-        $timeout(() => {
-            _that.isShow = false
-            $timeout(() => {
-                console.log("closeHandle")
-                _that.$onDestroy()
-            }, 300)
-        }, 300); // 与CSS动画时长保持一致
+        $timeout(function () {
+            _that.isShow = false;
+            // 动画结束后通知 factory 销毁 DOM 并回收 scope
+            if (typeof _that.onClose === 'function') {
+                _that.onClose();
+            }
+        }, 450); // 弹框 0.3s + 遮罩 delay 0.15s + 遮罩淡出 0.25s = 总 0.4s，留余 50ms
+    };
+
+    // 执行 beforeClose»若非 false 则关闭，支持同步返回值和 Promise
+    this.executeWithBeforeClose = function (action, onClose) {
+        const beforeClose = _that.options.beforeClose;
+
+        // 未配置 beforeClose，直接关闭
+        if (typeof beforeClose !== 'function') {
+            onClose();
+            return;
+        }
+
+        // 进入 loading，禁用所有关闭操作
+        _that.unbindKeydown();
+
+
+        done = function (val) {
+            _that.cancelButtonLoading = false;
+            _that.confirmButtonLoading = false;
+            // 非 false（包含 undefined、null、true 等）均视为允许关闭
+            if (val !== false) {
+                onClose();
+            } else {
+                // 阻止关闭：恢复 ESC 监听
+                if (_that.options.closeOnPressEscape) {
+                    _that.bindKeydown();
+                }
+            }
+        }
+        // 参考elementPlus的实现
+        beforeClose({action, instance: _that, done});
     };
 
     // 确认按钮点击
     this.handleConfirm = function () {
+        if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
         let action = {type: 'confirm'};
-        if (this.options.inputConfig && this.options.inputConfig.model) {
-            action.input = {model: this.options.inputConfig.model}
+        if (_that.options.inputConfig && _that.options.inputConfig.model) {
+            action.input = {model: _that.options.inputConfig.model};
         }
-        this.options.deferred.resolve(action);
-        this.closeHandle();
+        _that.executeWithBeforeClose(action, function () {
+            _that.options.deferred.resolve(action);
+            _that.closeHandle();
+        });
     };
 
     // 取消按钮点击
     this.handleCancel = function () {
+        if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
         let action = {type: 'cancel'};
-        this.options.deferred.reject(action);
-        this.closeHandle();
+        _that.executeWithBeforeClose(action, function () {
+            _that.options.deferred.reject(action);
+            _that.closeHandle();
+        });
     };
 
     // 遮罩层点击
     this.handleModalClick = function () {
-        if (this.options.closeOnClickModal) {
-            this.handleCancel();
+        if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
+        if (_that.options.closeOnClickModal) {
+            _that.handleCancel();
         }
     };
 
     // 绑定键盘事件
     this.bindKeydown = function () {
-        this.keydownHandler = (event) => {
+        _that.keydownHandler = function (event) {
             if (event.keyCode === 27) { // ESC键
-                this.handleCancel();
+                _that.handleCancel();
             }
         };
-        document.addEventListener('keydown', this.keydownHandler);
+        document.addEventListener('keydown', _that.keydownHandler);
     };
 
     // 解绑键盘事件
@@ -138,7 +176,7 @@ function controller($scope, $element, $timeout, $compile, $rootScope, zIndexMana
 
     // 获取类型样式类名
     this.getTypeClass = function () {
-        return `mob-message-box--${this.options.type}`;
+        return 'mob-message-box--' + (_that.options.type || 'info');
     };
 }
 
@@ -148,6 +186,6 @@ app
         controller: controller,
         bindings: {
             config: '<?',
-            close: '&?'
+            onClose: '&?' // 动画结束后通知 factory 销毁 DOM 并回收 scope
         }
     });

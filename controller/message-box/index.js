@@ -24,6 +24,14 @@ function controller($scope, messageBox) {
         });
     };
 
+    this.beforeClose = function (opt){
+        console.log(opt)
+        opt.instance.confirmButtonLoading = true
+        setTimeout(()=>{
+
+            opt.done()
+        }, 3000)
+    }
     // 显示Info消息
     this.showPrompt = function() {
 
@@ -33,7 +41,8 @@ function controller($scope, messageBox) {
             confirmButtonType: 'primary',
             input:{
                 pattern:/^[A-Za-z]+$/
-            }
+            },
+            beforeClose:this.beforeClose
         }).then(data=>{
             console.log('confirm', data)
         }).catch(data=>{

@@ -1,9 +1,9 @@
-app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', "uuId", function($compile, $rootScope, $sce, $injector, $q, uuId) {
+app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($compile, $rootScope, $q, uuId) {
 
     // 创建MessageBox实例
-    function createMessageBox(config, callerScope) {
-        // 如果传入了调用者的scope，则使用它；否则创建新的scope
-        const scope = callerScope || $rootScope.$new();
+    function createMessageBox(config) {
+        // 创建隔离 scope，确保内存能被正确回收
+        const scope = $rootScope.$new(true);
 
         // 外部回调Promise
         let callbackPromise = $q.defer();
@@ -11,24 +11,29 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
         // 组件回调
         config.deferred = $q.defer();
 
-        // 随机id
-        let configKey = `${uuId.newUUID('_')}_MessageBoxConfig`
-        let closeKey = `${uuId.newUUID('_')}_MessageBoxConfigClose`
-        scope[closeKey] = function (opt){
-            console.log("destroyMessageBox")
+        // 随机 id，避免 scope 属性冲突
+        let configKey = uuId.newUUID('_') + '_MessageBoxConfig';
+        let closeKey = uuId.newUUID('_') + '_MessageBoxClose';
+
+        // 动画结束后销毁 DOM 并回收 scope
+        scope[closeKey] = function () {
             if (messageBoxElement) {
                 messageBoxElement.remove();
+                messageBoxElement = null;
             }
+            scope.$destroy();
         };
 
         scope[configKey] = config;
-        let messageBoxElement = $compile(`<mob-message-box config="${configKey}" close="${closeKey}(opt)"></mob-message-box>`)(scope);
+        let messageBoxElement = $compile(
+            '<mob-message-box config="' + configKey + '" on-close="' + closeKey + '()"></mob-message-box>'
+        )(scope);
 
-        config.deferred.promise.then((action)=>{
+        config.deferred.promise.then(function (action) {
             callbackPromise.resolve(action);
-        }).catch((action)=>{
+        }).catch(function (action) {
             callbackPromise.reject(action);
-        })
+        });
 
         document.body.appendChild(messageBoxElement[0]);
 
@@ -37,13 +42,14 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
 
 
     // 显示MessageBox
-    function show(options, callerScope) {
-        return createMessageBox(options, callerScope);
+    function show(options) {
+        return createMessageBox(options);
     }
 
     // 消息提示 - alert
-    function alert(message, title, options = {}, callerScope) {
-        const config = {
+    function alert(message, title, options) {
+        options = options || {};
+        let config = {
             title: title || '提示',
             message: message,
             type: 'info',
@@ -53,16 +59,16 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
             confirmButtonText: '确定',
             confirmButtonType: 'primary',
             closeOnClickModal: true,
-            closeOnPressEscape: false,
-            beforeClose: null
+            closeOnPressEscape: false
         };
 
-        return show(angular.extend({}, config, options || {}), callerScope);
+        return show(angular.extend({}, config, options));
     }
 
     // 确认消息
-    function confirm(message, title, options = {}, callerScope) {
-        const config = {
+    function confirm(message, title, options) {
+        options = options || {};
+        let config = {
             title: title || '确认',
             message: message,
             type: 'warning',
@@ -72,29 +78,27 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
             confirmButtonText: options.confirmButtonText || '确定',
             cancelButtonText: options.cancelButtonText || '取消',
             confirmButtonType: options.confirmButtonType || 'primary',
-            cancelButtonType: options.cancelButtonType,
+            cancelButtonType: options.cancelButtonType || '',
             closeOnClickModal: false,
             closeOnPressEscape: true,
             beforeClose: options.beforeClose || null
         };
 
-        return show(config, callerScope);
+        return show(config);
     }
 
-    function inputConfigRequireNotNullElse(options, key, defaultValue) {
-        if (!options) {
-            return defaultValue
+    function getInputOption(options, key, defaultValue) {
+        if (!options || !options.input) {
+            return defaultValue !== undefined ? defaultValue : null;
         }
-        if (!options.input) {
-            return defaultValue
-        }
-        return options.input[key] || defaultValue
+        let val = options.input[key];
+        return val !== undefined ? val : (defaultValue !== undefined ? defaultValue : null);
     }
-
 
     // 输入框提示
-    function prompt(message, title, options = {}, callerScope) {
-        const config = {
+    function prompt(message, title, options) {
+        options = options || {};
+        let config = {
             title: title || '输入',
             message: message,
             type: 'info',
@@ -104,17 +108,18 @@ app.factory('messageBox', ['$compile', '$rootScope', '$sce', '$injector', '$q', 
             confirmButtonText: options.confirmButtonText || '确定',
             cancelButtonText: options.cancelButtonText || '取消',
             confirmButtonType: options.confirmButtonType || 'primary',
-            cancelButtonType: options.cancelButtonType,
+            cancelButtonType: options.cancelButtonType || '',
             closeOnClickModal: false,
             closeOnPressEscape: true,
-            inputConfig:{
-                placeholder: inputConfigRequireNotNullElse(options, 'placeholder'),
-                pattern: inputConfigRequireNotNullElse(options, 'pattern'),
-            },
-            beforeClose: options.beforeClose || null
+            beforeClose: options.beforeClose || null,
+            inputConfig: {
+                model: '',  // 必须初始化为空字符串，确保 ng-model 双向绑定正常
+                placeholder: getInputOption(options, 'placeholder', ''),
+                pattern: getInputOption(options, 'pattern', null)
+            }
         };
 
-        return show(config, callerScope);
+        return show(config);
     }
 
     return {
