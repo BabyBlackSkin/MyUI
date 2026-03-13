@@ -1,0 +1,162 @@
+mob-dialog {
+    --mob-dialog-padding: 20px;
+    --mob-dialog-border-radius: 8px;
+}
+
+/* ========================================
+   容器：全屏覆盖，默认不可交互
+   z-index 由 zIndexManager 动态控制
+   ======================================== */
+.mob-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.mob-dialog.is-show {
+    pointer-events: auto;
+}
+
+/* ========================================
+   遮罩层
+   ======================================== */
+.mob-dialog__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 进入：遮罩淡入 */
+.mob-dialog.is-show .mob-dialog__overlay {
+    opacity: 1;
+}
+
+/* 退出：遮罩延迟 0.1s 后淡出 */
+.mob-dialog.is-closing .mob-dialog__overlay {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    transition-delay: 0.1s;
+}
+
+/* ========================================
+   对话框主体
+   ======================================== */
+
+.mob-dialog__wrapper {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    /* 默认隐藏态：居中偏上 20px + 透明 */
+    transform: translate(-50%, calc(-50% - 20px));
+    opacity: 0;
+    background-color: #ffffff;
+    border-radius: var(--mob-dialog-border-radius);
+    box-shadow: 0 12px 32px 4px rgba(0, 0, 0, 0.04), 0 8px 20px rgba(0, 0, 0, 0.08);
+    /* 宽度由 ng-style 动态注入，此处仅设上下限 */
+    min-width: 300px;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity;
+    /* 确保在父容器 stacking context 内高于遮罩 */
+    z-index: 1;
+}
+
+/* 进入：dialog 落入居中 + 淡入 */
+.mob-dialog.is-show .mob-dialog__wrapper {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+}
+
+/* 退出：dialog 向上淡出 */
+.mob-dialog.is-closing .mob-dialog__wrapper {
+    transform: translate(-50%, calc(-50% - 20px));
+    opacity: 0;
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+}
+
+/* ========================================
+   Header
+   ======================================== */
+.mob-dialog__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--mob-dialog-padding) var(--mob-dialog-padding) 0;
+    flex-shrink: 0;
+}
+
+.mob-dialog__header-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.mob-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--mob-primary-text-color, #303133);
+    line-height: 24px;
+    word-break: break-word;
+}
+
+.mob-dialog__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--mob-secondary-text-color, #909399);
+    padding: 0;
+    margin-left: 12px;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mob-dialog__close:hover {
+    background-color: var(--mob-light-fill-color, #f5f7fa);
+    color: var(--mob-regular-text-color, #606266);
+}
+
+/* ========================================
+   Body
+   ======================================== */
+.mob-dialog__body {
+    flex: 1;
+    padding: var(--mob-dialog-padding);
+    overflow-y: auto;
+    color: var(--mob-regular-text-color, #606266);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+.mob-dialog__footer {
+    padding: 12px var(--mob-dialog-padding);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--mob-base-border-color, #e4e7ed);
+}
+
+/* footer 为空时不占空间 */
+.mob-dialog__footer:empty {
+    display: none;
+}
