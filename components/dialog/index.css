@@ -45,16 +45,42 @@ mob-dialog {
 }
 
 /* ========================================
+   对话框居中容器（flex 居中，彻底避开 translate 亚像素问题）
+   ======================================== */
+.mob-dialog__center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 默认隐藏态：整体上移 20px + 透明，用于进入动画起始位 */
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 进入：落回原位 + 淡入 */
+.mob-dialog.is-show .mob-dialog__center {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 退出：向上淡出 */
+.mob-dialog.is-closing .mob-dialog__center {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    pointer-events: none;
+}
+
+/* ========================================
    对话框主体
    ======================================== */
-
 .mob-dialog__wrapper {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    /* 默认隐藏态：居中偏上 20px + 透明 */
-    transform: translate(-50%, calc(-50% - 20px));
-    opacity: 0;
     background-color: #ffffff;
     border-radius: var(--mob-dialog-border-radius);
     box-shadow: 0 12px 32px 4px rgba(0, 0, 0, 0.04), 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -65,23 +91,6 @@ mob-dialog {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    will-change: transform, opacity;
-    /* 确保在父容器 stacking context 内高于遮罩 */
-    z-index: 1;
-}
-
-/* 进入：dialog 落入居中 + 淡入 */
-.mob-dialog.is-show .mob-dialog__wrapper {
-    transform: translate(-50%, -50%);
-    opacity: 1;
-}
-
-/* 退出：dialog 向上淡出 */
-.mob-dialog.is-closing .mob-dialog__wrapper {
-    transform: translate(-50%, calc(-50% - 20px));
-    opacity: 0;
-    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
 }
 
 /* ========================================

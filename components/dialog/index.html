@@ -6,26 +6,28 @@
     <!-- 遮罩层 -->
     <div class="mob-dialog__overlay" ng-click="$ctrl.handleOverlayClick()"></div>
 
-    <!-- 对话框主体 -->
-    <div class="mob-dialog__wrapper" ng-style="{'width': $ctrl.width || '50%'}">
+    <!-- 对话框居中容器 + 主体 -->
+    <div class="mob-dialog__center">
+        <div class="mob-dialog__wrapper" ng-style="{'width': $ctrl.width || '50%'}">
 
-        <!-- Header：优先使用 slot，无 slot 则显示 title 绑定值 -->
-        <div class="mob-dialog__header">
-            <div class="mob-dialog__header-content" ng-transclude="header">
-                <span class="mob-dialog__title" ng-bind="$ctrl.title"></span>
+            <!-- Header：优先使用 slot，无 slot 则显示 title 绑定值 -->
+            <div class="mob-dialog__header">
+                <div class="mob-dialog__header-content" ng-transclude="header">
+                    <span class="mob-dialog__title" ng-bind="$ctrl.title"></span>
+                </div>
+                <button class="mob-dialog__close"
+                        ng-if="$ctrl.showClose !== false"
+                        ng-click="$ctrl.handleClose()">
+                    <mob-icon-close></mob-icon-close>
+                </button>
             </div>
-            <button class="mob-dialog__close"
-                    ng-if="$ctrl.showClose !== false"
-                    ng-click="$ctrl.handleClose()">
-                <mob-icon-close></mob-icon-close>
-            </button>
+
+            <!-- Body -->
+            <div class="mob-dialog__body" ng-transclude="body"></div>
+
+            <!-- Footer -->
+            <div class="mob-dialog__footer" ng-transclude="footer"></div>
+
         </div>
-
-        <!-- Body -->
-        <div class="mob-dialog__body" ng-transclude="body"></div>
-
-        <!-- Footer -->
-        <div class="mob-dialog__footer" ng-transclude="footer"></div>
-
     </div>
 </div>

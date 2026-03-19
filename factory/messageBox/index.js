@@ -50,9 +50,9 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
     function alert(message, title, options) {
         options = options || {};
         let config = {
-            title: title || '提示',
+            title: title,
             message: message,
-            type: 'info',
+            type: 'alert',
             showClose: true,
             showCancelButton: false,
             showConfirmButton: true,
@@ -71,7 +71,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
         let config = {
             title: title || '确认',
             message: message,
-            type: 'warning',
+            type: 'confirm',
             showClose: true,
             showCancelButton: true,
             showConfirmButton: true,
@@ -101,7 +101,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
         let config = {
             title: title || '输入',
             message: message,
-            type: 'info',
+            type: 'prompt',
             showClose: true,
             showCancelButton: true,
             showConfirmButton: true,
@@ -114,6 +114,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             beforeClose: options.beforeClose || null,
             inputConfig: {
                 model: '',  // 必须初始化为空字符串，确保 ng-model 双向绑定正常
+                required:false,// 是否必填
                 placeholder: getInputOption(options, 'placeholder', ''),
                 pattern: getInputOption(options, 'pattern', null)
             }
@@ -122,9 +123,69 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
         return show(config);
     }
 
+    // 成功提示弹框（带成功图标，对齐 alert，需用户点击确认才关闭）
+    function success(message, title, options) {
+        options = options || {};
+        let config = {
+            title: title,
+            message: message,
+            type: 'alert',
+            iconType: 'success',
+            showClose: false,
+            showCancelButton: false,
+            showConfirmButton: true,
+            confirmButtonText: options.confirmButtonText || '确定',
+            confirmButtonType: options.confirmButtonType || 'primary',
+            closeOnClickModal: false,
+            closeOnPressEscape: false
+        };
+        return show(angular.extend({}, config, options, { type: 'alert', iconType: 'success', closeOnClickModal: false, closeOnPressEscape: false }));
+    }
+
+    // 警告提示弹框（带警告图标，对齐 alert，需用户点击确认才关闭）
+    function warning(message, title, options) {
+        options = options || {};
+        let config = {
+            title: title,
+            message: message,
+            type: 'alert',
+            iconType: 'warning',
+            showClose: false,
+            showCancelButton: false,
+            showConfirmButton: true,
+            confirmButtonText: options.confirmButtonText || '确定',
+            confirmButtonType: options.confirmButtonType || 'primary',
+            closeOnClickModal: false,
+            closeOnPressEscape: false
+        };
+        return show(angular.extend({}, config, options, { type: 'alert', iconType: 'warning', closeOnClickModal: false, closeOnPressEscape: false }));
+    }
+
+    // 错误提示弹框（带错误图标，对齐 alert，需用户点击确认才关闭）
+    function error(message, title, options) {
+        options = options || {};
+        let config = {
+            title: title,
+            message: message,
+            type: 'alert',
+            iconType: 'error',
+            showClose: false,
+            showCancelButton: false,
+            showConfirmButton: true,
+            confirmButtonText: options.confirmButtonText || '确定',
+            confirmButtonType: options.confirmButtonType || 'danger',
+            closeOnClickModal: false,
+            closeOnPressEscape: false
+        };
+        return show(angular.extend({}, config, options, { type: 'alert', iconType: 'error', closeOnClickModal: false, closeOnPressEscape: false }));
+    }
+
     return {
         alert: alert,
         confirm: confirm,
         prompt: prompt,
+        success: success,
+        warning: warning,
+        error: error,
     };
 }]);

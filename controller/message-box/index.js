@@ -10,6 +10,19 @@ function controller($scope, messageBox,message) {
         });
     };
 
+    this.showSuccess = function () {
+        messageBox.success('数据保存成功').then(() => { /* 用户已确认 */ });
+    };
+    this.showWarning = function () {
+        messageBox.warning('剩余空间不足，请及时清理');
+    };
+    this.showError = function () {
+        messageBox.error('网络连接失败，请重试');
+    };
+
+
+
+
     // 显示Info消息
     this.showConfirm = function() {
 

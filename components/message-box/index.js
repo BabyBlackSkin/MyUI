@@ -6,6 +6,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
         title: '',
         message: '',
         type: 'info', // info, success, warning, error
+        iconType: null, // success, warning, error 对应状态图标，null 表示不显示大图标
         showClose: true, // 是否显示关闭图标
         showCancelButton: false, // 是否显示取消按钮
         showConfirmButton: true, // 是否显示确认按钮
@@ -52,7 +53,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
 
     // 显示MessageBox
     this.show = function () {
-        // 使用 MESSAGE_BOX 类型，参与全局 globalCounter 竞争
+        // 使用正确的 type 和 baseLevel 参数获取 zIndex
         this.zIndex = zIndexManager.getNextZIndex('MESSAGE_BOX', 2000);
         this.isClosing = false;
         this.isShow = true;
@@ -116,12 +117,12 @@ function controller($scope, $element, $timeout, zIndexManager) {
     // 确认按钮点击
     this.handleConfirm = function () {
         if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
-        let action = {type: 'confirm'};
-        if (_that.options.inputConfig && _that.options.inputConfig.model) {
-            action.input = {model: _that.options.inputConfig.model};
-        }
-        _that.executeWithBeforeClose(action, function () {
-            _that.options.deferred.resolve(action);
+        _that.executeWithBeforeClose('confirm', function () {
+            let opt = {action: 'confirm'}
+            if (_that.options.type === 'prompt') {
+                opt.data = _that.options.inputConfig.model
+            }
+            _that.options.deferred.resolve(opt);
             _that.closeHandle();
         });
     };
@@ -129,9 +130,8 @@ function controller($scope, $element, $timeout, zIndexManager) {
     // 取消按钮点击
     this.handleCancel = function () {
         if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
-        let action = {type: 'cancel'};
-        _that.executeWithBeforeClose(action, function () {
-            _that.options.deferred.reject(action);
+        _that.executeWithBeforeClose('action', function () {
+            _that.options.deferred.reject({action:'confirm'});
             _that.closeHandle();
         });
     };
@@ -163,7 +163,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
     };
 
 
-    // 获取图标类名
+    // 获取图标类名（优先使用 iconType，回退到 type）
     this.getIconClass = function () {
         const iconMap = {
             'info': 'mob-icon-info',
@@ -171,12 +171,14 @@ function controller($scope, $element, $timeout, zIndexManager) {
             'warning': 'mob-icon-warning',
             'error': 'mob-icon-error'
         };
-        return iconMap[this.options.type] || 'mob-icon-info';
+        const iconKey = _that.options.iconType || _that.options.type;
+        return iconMap[iconKey] || 'mob-icon-info';
     };
 
-    // 获取类型样式类名
+    // 获取类型样式类名（优先使用 iconType，回退到 type）
     this.getTypeClass = function () {
-        return 'mob-message-box--' + (_that.options.type || 'info');
+        const iconKey = _that.options.iconType || _that.options.type || 'info';
+        return 'mob-message-box--' + iconKey;
     };
 }
 
