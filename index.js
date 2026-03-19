@@ -110,6 +110,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/drawer/index.html',
             controller: 'DrawerCtrl'
         })
+        .when('/dialog', {
+            templateUrl: './controller/dialog/index.html',
+            controller: 'DialogCtrl'
+        })
         .when('/segmented', {
             templateUrl: './controller/segmented/index.html',
             controller: 'SegmentedCtrl'
@@ -177,6 +181,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Segmented 分段控制器', path: '/segmented'},
         {label: 'FeedBack反馈组件', type: 1},
         {label: 'drawer 抽屉', path: '/drawer'},
+        {label: 'Dialog 对话框', path: '/dialog'},
         {label: 'Tag 标签', path: '/tag'},
         {label: 'Z-Index 管理器', path: '/z-index-demo', tags: [{title:'experimental', type:'primary'}]},
         {label: 'MessageBox 消息弹出层', path: '/message-box'},
