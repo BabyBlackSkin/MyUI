@@ -1,0 +1,480 @@
+<div class="doc-page">
+
+    <h2 class="doc-title">Dialog 对话框</h2>
+    <p class="doc-desc">在保留当前页面状态的情况下，告知用户并承载相关操作。</p>
+    <button ng-click="detailDialogVisible = true">测试</button>
+
+    <style>
+
+        /* 布局工具 */
+        #detailActivityDialog .container {
+            width: 100%;
+            margin: 0;
+        }
+
+        /* 筛选栏 */
+        #detailActivityDialog .filter-bar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        #detailActivityDialog .filter-item label {
+            font-size: 14px;
+            margin-right: 8px;
+            color: var(--mob-regular-text-color);
+        }
+
+        #detailActivityDialog .filter-item select {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            width: 150px;
+        }
+
+        /* 按钮 */
+        #detailActivityDialog .btn {
+            padding: 6px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #detailActivityDialog .btn-primary {
+            background: #0091ff;
+            color: white;
+            border: none;
+        }
+
+        #detailActivityDialog .btn-outline {
+            background: white;
+            color: #0091ff;
+            border: 1px solid #0091ff;
+        }
+
+        #detailActivityDialog .btn-export {
+            border: 1px solid #ccc;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* 章节标题 */
+        #detailActivityDialog .section-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        #detailActivityDialog .section-title {
+            font-weight: bold;
+            border-left: 4px solid #0091ff;
+            padding-left: 10px;
+            font-size: 16px;
+        }
+
+        #detailActivityDialog .time-range {
+            font-weight: normal;
+            font-size: 12px;
+            color: #999;
+            margin-left: 10px;
+        }
+
+        /* 卡片布局 */
+        #detailActivityDialog .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        #detailActivityDialog .card {
+            border: 1px solid #e8e8e8;
+            border-radius: 2px;
+            padding: 15px;
+        }
+
+        #detailActivityDialog .col-span-2 {
+            grid-column: span 2;
+        }
+
+        #detailActivityDialog .card-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        #detailActivityDialog .card-header small {
+            /*font-weight: normal;*/
+            /*color: #aaa;*/
+            font-size: 11px;
+        }
+
+        #detailActivityDialog .main-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--mob-lighter-fill-color);
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #detailActivityDialog .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* 金额专用布局 */
+        #detailActivityDialog .amount-header {
+            display: flex;
+            border-bottom: 1px solid  var(--mob-base-border-color);;
+        }
+
+        #detailActivityDialog .amount-box {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #detailActivityDialog .amount-val {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        #detailActivityDialog .amount-details {
+            display: flex;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        #detailActivityDialog .amount-col {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        #detailActivityDialog .col-head {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        #detailActivityDialog .amount-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: var(--mob-regular-text-color);
+            line-height: 1.8;
+        }
+
+        #detailActivityDialog .border-left {
+            border-left: 1px solid var(--mob-base-border-color);
+        }
+
+        /* 详情网格 */
+        #detailActivityDialog .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            font-size: 12px;
+            gap: 5px;
+            color: var(--mob-regular-text-color);
+        }
+
+        /* 表格样式 */
+        #detailActivityDialog .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        #detailActivityDialog .data-table th, .data-table td {
+            border: 1px solid var(--mob-base-border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        #detailActivityDialog .data-table th {
+            background-color: var(--mob-lighter-fill-color);
+            color: var(--mob-regular-text-color);
+        }
+
+        /* 问号图标 */
+        #detailActivityDialog .icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #333;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 14px;
+            font-size: 10px;
+            cursor: help;
+        }
+    </style>
+    <!-- ==================== 基础用法 ==================== -->
+    <mob-dialog title="detailDialog.name + '-活动明细'" ng-model="detailDialogVisible" id="detailActivityDialog">
+        <ng-transclude-body>
+            <div class="container">
+                {{detailDialog}}
+                <div class="filter-bar">
+                    <div class="filter-item">
+
+                        <label>开始时间</label>
+                        <input type="text" search-date-time-help=""
+                        placeholder="选择开始时间" init-time="00:00:00" ng-model="detailDialog.searchModel.startTime" readonly="" style="cursor:default!important;">
+                    </div>
+                    <div class="filter-item">
+                        <label>结束时间</label>
+                        <input type="text" search-date-time-help=""
+                        placeholder="选择开始时间" init-time="23:59:59" ng-model="detailDialog.searchModel.endTime" readonly="" style="cursor:default!important;">
+                    </div>
+                    <button class="btn btn-primary" ng-click="detailDialog.search(1)">查询</button>
+                </div>
+
+                <div class="section-title-container">
+                    <div class="section-title">活动总计 <span class="time-range">(统计时间: 2025-01-23 至 2026-01-23)</span></div>
+                    <button class="btn-export">📥 导出明细</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="card">
+                        <div class="card-header">活动人数统计 <small>(单条数据每用户仅统计一次)</small></div>
+                        <div class="main-stat">
+                            <span>浏览人数</span>
+                            <span class="stat-value" ng-bind="detailDialog.searchResult.memberStatistics.viewNum"></span>
+                        </div>
+                        <div class="sub-stats">
+                            <div><span class="icon">?</span> 下单人数: {{detailDialog.searchResult.memberStatistics.orderNum}}</div>
+                            <div><span class="icon">?</span> 支付成功人数: {{detailDialog.searchResult.memberStatistics.orderPayFinishNum}}</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">活动订单统计</div>
+                        <div class="main-stat">
+                            <span>订单总数</span>
+                            <span class="stat-value" ng-bind="detailDialog.searchResult.orderStatistics.totalNum"></span>
+                        </div>
+                        <div class="details-grid">
+                            <div>待付款: {{detailDialog.searchResult.orderStatistics.waitPayNum}}</div>
+                            <div>待提货: {{detailDialog.searchResult.orderStatistics.waitPickupNum}}</div>
+                            <div>待发货: {{detailDialog.searchResult.orderStatistics.waitDeliveryNum}}</div>
+                            <div>待收货: {{detailDialog.searchResult.orderStatistics.waitTakeDeliveryNum}}</div>
+                            <div><span class="icon">?</span> 售后中: {{
+                                detailDialog.searchResult.orderStatistics.waitShopConfirmRefundApplyNum +
+                                detailDialog.searchResult.orderStatistics.allowApplyForRefund +
+                                detailDialog.searchResult.orderStatistics.waitRefundNum
+                                }}</div>
+                            <div>已完成: {{detailDialog.searchResult.orderStatistics.orderFinishedNum}}</div>
+                            <div><span class="icon">?</span> 已关闭: {{
+                                detailDialog.searchResult.orderStatistics.refundedNum +
+                                detailDialog.searchResult.orderStatistics.returnedNum
+                                }}</div>
+                        </div>
+                    </div>
+
+                    <div class="card col-span-2">
+                        <div class="card-header">活动金额统计 <small>(不包含未支付订单金额)</small></div>
+                        <div class="amount-header">
+                            <div class="amount-box">
+                                <span>销售金额</span>
+                                <span class="amount-val">{{detailDialog.searchResult.payAmountStatistics.totalAmountStr}}</span>
+                            </div>
+                            <div class="amount-box">
+                                <span>实收金额 <span class="icon">?</span></span>
+                                <span class="amount-val">{{
+                                    detailDialog.searchResult.payAmountStatistics.totalAmountStr -
+                                    detailDialog.searchResult.refundAmountStatistics.totalAmountStr
+                                    }}</span>
+                            </div>
+                        </div>
+                        <div class="amount-details">
+                            <div class="amount-col">
+                                <div class="col-head">支付总金额 <span>{{detailDialog.searchResult.payAmountStatistics.totalAmountStr}}</span></div>
+                                <ul>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.couponStr)">优惠券: {{detailDialog.searchResult.payAmountStatistics.couponStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.mixPromotionStr)">组合促销: {{detailDialog.searchResult.payAmountStatistics.mixPromotionStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.creditStr)">积分: {{detailDialog.searchResult.payAmountStatistics.creditStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.groupupStr)">成长值: {{detailDialog.searchResult.payAmountStatistics.groupupStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.creditcardStr)">购物卡: {{detailDialog.searchResult.payAmountStatistics.creditcardStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.walletStr)">电子钱包: {{detailDialog.searchResult.payAmountStatistics.walletStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.wxpayStr)">微信支付: {{detailDialog.searchResult.payAmountStatistics.wxpayStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.payAmountStatistics.alipayStr)">支付宝: {{detailDialog.searchResult.payAmountStatistics.alipayStr}}</li>
+                                </ul>
+                            </div>
+                            <div class="amount-col border-left">
+                                <div class="col-head">退款总金额 <span>1000</span></div>
+                                <ul>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.couponStr)">优惠券: {{detailDialog.searchResult.refundAmountStatistics.couponStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.mixPromotionStr)">组合促销: {{detailDialog.searchResult.refundAmountStatistics.mixPromotionStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.creditStr)">积分: {{detailDialog.searchResult.refundAmountStatistics.creditStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.groupupStr)">成长值: {{detailDialog.searchResult.refundAmountStatistics.groupupStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.creditcardStr)">购物卡: {{detailDialog.searchResult.refundAmountStatistics.creditcardStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.walletStr)">电子钱包: {{detailDialog.searchResult.refundAmountStatistics.walletStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.wxpayStr)">微信支付: {{detailDialog.searchResult.refundAmountStatistics.wxpayStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.refundAmountStatistics.alipayStr)">支付宝: {{detailDialog.searchResult.refundAmountStatistics.alipayStr}}</li>
+                                </ul>
+                            </div>
+                            <div class="amount-col border-left">
+                                <div class="col-head">有效总金额 <span>4000.53</span></div>
+                                <ul>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.couponStr)">优惠券: {{detailDialog.searchResult.availableAmountStatistics.couponStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.mixPromotionStr)">组合促销: {{detailDialog.searchResult.availableAmountStatistics.mixPromotionStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.creditStr)">积分: {{detailDialog.searchResult.availableAmountStatistics.creditStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.groupupStr)">成长值: {{detailDialog.searchResult.availableAmountStatistics.groupupStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.creditcardStr)">购物卡: {{detailDialog.searchResult.availableAmountStatistics.creditcardStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.walletStr)">电子钱包: {{detailDialog.searchResult.availableAmountStatistics.walletStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.wxpayStr)">微信支付: {{detailDialog.searchResult.availableAmountStatistics.wxpayStr}}</li>
+                                    <li ng-if="checkIsNotEmpty(detailDialog.searchResult.availableAmountStatistics.alipayStr)">支付宝: {{detailDialog.searchResult.availableAmountStatistics.alipayStr}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">每日活动明细 <span class="time-range">(统计时间: 2025-01-23 至 2026-01-23)</span></div>
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>日期</th>
+                        <th>活动人数统计</th>
+                        <th>活动订单数</th>
+                        <th>活动销售金额</th>
+                        <th>支付金额</th>
+                        <th>退款金额</th>
+                        <th>有效金额</th>
+                        <th>实收金额 <span class="icon">?</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="($index, item)  in detailDialog.searchResult.dailyStatisticsList.content">
+                        <td ng-bind="$index"></td>
+                        <td ng-bind="item.recordDate"></td>
+                        <td>
+                            <div class="card">
+                                <div class="card-header">活动人数统计</div>
+                                <div class="main-stat">
+                                    <span>浏览人数</span>
+                                    <span class="stat-value" ng-bind="item.memberStatistics.viewNum"></span>
+                                </div>
+                                <div class="sub-stats">
+                                    <div><span class="icon">?</span> 下单人数: {{item.memberStatistics.orderNum}}</div>
+                                    <div><span class="icon">?</span> 支付成功人数: {{item.memberStatistics.orderPayFinishNum}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="card">
+                                <div class="card-header">活动订单统计</div>
+                                <div class="main-stat">
+                                    <span>订单总数</span>
+                                    <span class="stat-value" ng-bind="item.orderStatistics.totalNum"></span>
+                                </div>
+                                <div class="details-grid">
+                                    <div>待付款: {{item.orderStatistics.waitPayNum}}</div>
+                                    <div>待提货: {{item.orderStatistics.waitPickupNum}}</div>
+                                    <div>待发货: {{item.orderStatistics.waitDeliveryNum}}</div>
+                                    <div>待收货: {{item.orderStatistics.waitTakeDeliveryNum}}</div>
+                                    <div><span class="icon">?</span> 售后中: {{
+                                        item.orderStatistics.waitShopConfirmRefundApplyNum +
+                                        item.orderStatistics.allowApplyForRefund +
+                                        item.orderStatistics.waitRefundNum
+                                        }}</div>
+                                    <div>已完成: {{item.orderStatistics.orderFinishedNum}}</div>
+                                    <div><span class="icon">?</span> 已关闭: {{
+                                        item.orderStatistics.refundedNum +
+                                        item.orderStatistics.returnedNum
+                                        }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-bind="item.payAmountStatistics.totalAmountStr"></td>
+                        <td>
+                            <div class="card">
+                                <div class="card-header">总</div>
+                                <div class="main-stat">
+                                    <span class="stat-value" ng-bind="detailDialog.searchResult.payAmountStatistics.totalAmountStr"></span>
+                                </div>
+                                <div class="details-grid">
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.couponStr)">优惠券: {{item.payAmountStatistics.couponStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.mixPromotionStr)">组合促销: {{item.payAmountStatistics.mixPromotionStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.creditStr)">积分: {{item.payAmountStatistics.creditStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.groupupStr)">成长值: {{item.payAmountStatistics.groupupStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.creditcardStr)">购物卡: {{item.payAmountStatistics.creditcardStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.walletStr)">电子钱包: {{item.payAmountStatistics.walletStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.wxpayStr)">微信支付: {{item.payAmountStatistics.wxpayStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.payAmountStatistics.alipayStr)">支付宝: {{item.payAmountStatistics.alipayStr}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="card">
+                                <div class="card-header">总</div>
+                                <div class="main-stat">
+                                    <span class="stat-value" ng-bind="detailDialog.searchResult.refundAmountStatistics.totalAmountStr"></span>
+                                </div>
+                                <div class="details-grid">
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.couponStr)">优惠券: {{item.refundAmountStatistics.couponStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.mixPromotionStr)">组合促销: {{item.refundAmountStatistics.mixPromotionStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.creditStr)">积分: {{item.refundAmountStatistics.creditStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.groupupStr)">成长值: {{item.refundAmountStatistics.groupupStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.creditcardStr)">购物卡: {{item.refundAmountStatistics.creditcardStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.walletStr)">电子钱包: {{item.refundAmountStatistics.walletStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.wxpayStr)">微信支付: {{item.refundAmountStatistics.wxpayStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.refundAmountStatistics.alipayStr)">支付宝: {{item.refundAmountStatistics.alipayStr}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="card">
+                                <div class="card-header">总</div>
+                                <div class="main-stat">
+                                    <span class="stat-value" ng-bind="detailDialog.searchResult.availableAmountStatistics.totalAmountStr"></span>
+                                </div>
+                                <div class="details-grid">
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.couponStr)">优惠券: {{item.availableAmountStatistics.couponStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.mixPromotionStr)">组合促销: {{item.availableAmountStatistics.mixPromotionStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.creditStr)">积分: {{item.availableAmountStatistics.creditStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.groupupStr)">成长值: {{item.availableAmountStatistics.groupupStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.creditcardStr)">购物卡: {{item.availableAmountStatistics.creditcardStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.walletStr)">电子钱包: {{item.availableAmountStatistics.walletStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.wxpayStr)">微信支付: {{item.availableAmountStatistics.wxpayStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.alipayStr)">支付宝: {{item.availableAmountStatistics.alipayStr}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+
+                            <div class="card">
+                                <div class="card-header">总</div>
+                                <div class="main-stat">
+                                    <span class="stat-value" ng-bind="detailDialog.searchResult.availableAmountStatistics.totalAmountStr"></span>
+                                </div>
+                                <div class="details-grid">
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.walletStr)">电子钱包: {{item.availableAmountStatistics.walletStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.wxpayStr)">微信支付: {{item.availableAmountStatistics.wxpayStr}}</div>
+                                    <div ng-if="checkIsNotEmpty(item.availableAmountStatistics.alipayStr)">支付宝: {{item.availableAmountStatistics.alipayStr}}</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-transclude-body>
+        <<ng-transclude-footer>
+        <div style="display: flex;justify-content: center">
+            <button class="btn btn-primary" ng-click="hideDetailDialog()">确定</button>
+        </div>
+    </ng-transclude-footer>
+    </mob-dialog>
+
+</div>
