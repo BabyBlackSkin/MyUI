@@ -153,7 +153,6 @@ function controller($scope, $element, $transclude, $attrs, $compile) {
 
 app
     .component('mobInputNumber', {
-        transclude: true,
         templateUrl: './components/input-number/mob-input-number.html',
         require: {
             ngModel: '?ngModel'
