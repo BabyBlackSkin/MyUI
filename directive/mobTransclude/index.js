@@ -1,6 +1,7 @@
 // https://dev.to/elpddev/template-transclusion-in-angularjs-532f
 const NODE_TYPE_TEXT = 3;
 const CONTEXT_TYPE_ARRAY = "Array";
+const CONTEXT_TYPE_JSON = "JSON";
 
 const mobTransclude = [
     "$compile",
@@ -9,7 +10,6 @@ const mobTransclude = [
         return {
             restrict: "EAC",
             compile: function ngTranscludeCompile(tElement) {
-                // Remove and cache any original content to act as a fallback
                 var fallbackLinkFn = $compile(tElement.contents());
                 tElement.empty();
 
@@ -20,10 +20,8 @@ const mobTransclude = [
                     controller,
                     $transclude
                 ) {
-                    $scope.$$mobTransclude = false
-                    let context = {};
-                    let childScope = null;
-                    let parentScope = null;
+                    $scope.$$mobTransclude = false;
+                    var childScope = null;
 
                     if (!$transclude) {
                         throw new Error(
@@ -34,112 +32,148 @@ const mobTransclude = [
                         );
                     }
 
-                    // If the attribute is of the form: `ng-transclude="ng-transclude"` then treat it like the default
                     if ($attrs.ngTransclude === $attrs.$attr.ngTransclude) {
                         $attrs.ngTransclude = "";
                     }
-                    let slotName = $attrs.ngTransclude || $attrs.ngTranscludeSlot;
+                    var slotName = $attrs.ngTransclude || $attrs.ngTranscludeSlot;
 
+                    function getContextType() {
+                        return $attrs.contextType || CONTEXT_TYPE_ARRAY;
+                    }
+
+                    function getArrayContextAttrs() {
+                        return ($attrs.context || "")
+                            .split(",")
+                            .map(function (s) {
+                                return s.trim();
+                            })
+                            .filter(Boolean);
+                    }
+
+                    function applyContextToChildScope() {
+                        if (!childScope || !angular.isDefined($attrs.context)) {
+                            return;
+                        }
+
+                        var contextType = getContextType();
+
+                        if (
+                            contextType !== CONTEXT_TYPE_ARRAY &&
+                            contextType !== "Array"
+                        ) {
+                            var mapping = $scope.$eval($attrs.context);
+                            if (!mapping || !angular.isObject(mapping)) {
+                                return;
+                            }
+                            for (var key in mapping) {
+                                if (!mapping.hasOwnProperty(key)) {
+                                    continue;
+                                }
+                                var obj = mapping[key];
+                                var val = $scope.$eval(obj.name);
+                                var alias = obj.alias || obj.name;
+                                if (alias === "$context") {
+                                    updateScope(childScope, val);
+                                    return;
+                                }
+                            }
+                            return;
+                        }
+
+                        var contextAttrs = getArrayContextAttrs();
+                        if (!contextAttrs.length) {
+                            return;
+                        }
+
+                        if (contextAttrs.length === 1) {
+                            var singleAttr = contextAttrs[0];
+                            var singleVal = $scope.$eval(singleAttr);
+                            if (singleAttr === "$context") {
+                                updateScope(childScope, singleVal);
+                            } else if (
+                                singleVal &&
+                                angular.isObject(singleVal) &&
+                                angular.isDefined(singleVal.row)
+                            ) {
+                                updateScope(childScope, singleVal);
+                            } else {
+                                var singleCtx = {};
+                                singleCtx[singleAttr] = singleVal;
+                                updateScope(childScope, singleCtx);
+                            }
+                            return;
+                        }
+
+                        var multiCtx = {};
+                        angular.forEach(contextAttrs, function (attr) {
+                            multiCtx[attr] = $scope.$eval(attr);
+                        });
+                        updateScope(childScope, multiCtx);
+                    }
+
+                    function arrayContext() {
+                        var contextAttrs = getArrayContextAttrs();
+                        angular.forEach(contextAttrs, function (contextAttr) {
+                            $scope.$watch(contextAttr, function () {
+                                applyContextToChildScope();
+                            });
+                        });
+                    }
+
+                    function JSONContext() {
+                        var mapping = $scope.$eval($attrs.context);
+                        if (!mapping || !angular.isObject(mapping)) {
+                            return;
+                        }
+                        for (var contextAttr in mapping) {
+                            if (!mapping.hasOwnProperty(contextAttr)) {
+                                continue;
+                            }
+                            (function (obj) {
+                                $scope.$watch(obj.name, function () {
+                                    applyContextToChildScope();
+                                });
+                            })(mapping[contextAttr]);
+                        }
+                    }
 
                     if (angular.isDefined($attrs.context)) {
-                        let contextType = $attrs.contextType || CONTEXT_TYPE_ARRAY
-                        if (CONTEXT_TYPE_ARRAY === contextType) {
+                        if (getContextType() === CONTEXT_TYPE_ARRAY) {
                             arrayContext();
                         } else {
                             JSONContext();
                         }
                     }
 
-                    /**
-                     * 根据数组解析上下文
-                     */
-                    function arrayContext() {
-                        let contextAttrs = $attrs.context.split(",");
-                        for (let contextAttr of contextAttrs) {
-                            $scope.$watch(contextAttr, (newVal, oldVal) => {
-                                // console.log(`监听 ${$scope.$id}的 ${contextAttr} 更新给 ${childScope.$id}`)
-                                // 如果是context，则解构后在赋值给context
-                                if ("$context" === contextAttr) {
-                                    updateScope(childScope, newVal);
-                                } else if (
-                                    contextAttrs.length === 1 &&
-                                    newVal &&
-                                    angular.isObject(newVal) &&
-                                    angular.isDefined(newVal.row)
-                                ) {
-                                    updateScope(childScope, newVal);
-                                } else {
-                                    context[contextAttr] = newVal;
-                                    updateScope(childScope, context);
-                                }
-                            });
-                        }
-                    }
-
-                    /**
-                     * 根据JSON对象解析上下文
-                     * @constructor
-                     */
-                    function JSONContext() {
-                        let context = $scope.$eval($attrs.context)
-                        // 当context作为对象传入时。标准格式
-                        // {
-                        //  'key':{
-                        //      name:'变量名',
-                        //      alias:'子作用域别名'
-                        //  }
-                        //
-                        // }
-                        for (let contextAttr in context) {
-                            let obj = context[contextAttr];
-                            $scope.$watch(obj.name, (newVal, oldVal) => {
-                                let mappingName = obj.alias || obj.name
-                                // 如果是context，则解构后在赋值给context
-                                if ("$context" === mappingName) {
-                                    updateScope(childScope, newVal);
-                                } else {
-                                    context[mappingName] = newVal;
-                                    updateScope(childScope, context);
-                                }
-                            });
-                        }
-                    }
-
-                    // If the slot is required and no transclusion content is provided then this call will throw an error
                     $transclude(ngTranscludeCloneAttachFn, null, slotName);
 
-                    // If the slot is optional and no transclusion content is provided then use the fallback content
                     if (slotName && !$transclude.isSlotFilled(slotName)) {
                         useFallbackContent();
                     }
 
                     function ngTranscludeCloneAttachFn(clone, transcludedScope) {
                         if (clone.length && notWhitespace(clone)) {
-                            $scope.$$mobTransclude = true
-                            //$element.append(clone);
+                            $scope.$$mobTransclude = true;
                             $element.replaceWith(clone);
                             childScope = transcludedScope;
-                            updateScope(childScope, context);
-                            var parentTr = clone[0] && clone[0].parentNode
+                            applyContextToChildScope();
+
+                            var parentTr = clone[0] && clone[0].parentNode;
                             if (parentTr && parentTr.nodeName === "TR") {
-                                mobTableRowAnimUtil.prepEnterRow(parentTr)
+                                mobTableRowAnimUtil.prepEnterRow(parentTr);
                                 $scope.$evalAsync(function () {
                                     angular.element(parentTr).triggerHandler(
                                         "mobTableRowMount"
-                                    )
-                                })
+                                    );
+                                });
                             }
                         } else {
                             useFallbackContent();
-                            // There is nothing linked against the transcluded scope since no content was available,
-                            // so it should be safe to clean up the generated scope.
                             transcludedScope.$destroy();
                         }
                     }
 
                     function useFallbackContent() {
-                        // Since this is the fallback content rather than the transcluded content,
-                        // we link against the scope of this directive rather than the transcluded scope
                         fallbackLinkFn($scope, function (clone) {
                             $element.append(clone);
                         });
@@ -148,23 +182,26 @@ const mobTransclude = [
                     function notWhitespace(nodes) {
                         for (var i = 0, ii = nodes.length; i < ii; i++) {
                             var node = nodes[i];
-                            if (node.nodeType !== NODE_TYPE_TEXT || node.nodeValue.trim()) {
+                            if (
+                                node.nodeType !== NODE_TYPE_TEXT ||
+                                node.nodeValue.trim()
+                            ) {
                                 return true;
                             }
                         }
                     }
 
                     function updateScope(scope, varsHash) {
-                        if (!scope || !varsHash) {
+                        if (!scope || varsHash === undefined || varsHash === null) {
                             return;
                         }
 
                         angular.extend(scope, {$context: varsHash});
                     }
                 };
-            }
+            },
         };
-    }
+    },
 ];
 
 app.directive("mobTransclude", mobTransclude);
