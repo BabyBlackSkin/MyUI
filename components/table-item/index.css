@@ -1,4 +1,4 @@
-.mob-table-item {
+.mob-table-item, .mob-table th, .mob-table td {
     padding: 8px 0;
     min-width: 0;
     box-sizing: border-box;
@@ -6,14 +6,22 @@
     vertical-align: middle;
     position: relative;
     text-align: left;
-    background-color: #fff;
 }
 
-.mob-table-item .cell {
+.mob-table th.mob-table-column--selection .cell,
+.mob-table th.mob-table-column--expand .cell,
+.mob-table td.mob-table-column--selection .cell,
+.mob-table td.mob-table-column--expand .cell {
+    justify-content: center;
+    padding: 0;
+}
+
+.mob-table-item .cell, .mob-table th .cell, .mob-table td .cell {
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    /* 暂时先换行，不然会导致table超出父元素 */
+    /*white-space: nowrap;*/
     overflow-wrap: break-word;
     line-height: 23px;
     padding: 0 12px;

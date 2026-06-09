@@ -1,94 +1,194 @@
-(function (){
-    // 属性常量
-    const attrs = ['prop', 'label', 'width', 'minWidth', 'fixed']
+// 属性常量
+(function () {
+    const attrs = ["prop", "label", "width", "type"]
 
-    const mobTableItem = ["$timeout",
-        function ($timeout) {
-            return {
-                restrict: "E",
-                transclude: true,
-                // scope: true,
-                scope: {
-                    prop: "=",
-                    label: "=",//
-                    width: "=?",// 宽度
-                    fixed: "=?",// 固定列
-                },
-                controllerAs: "vm",
-                require: "?^mobTable",
-                replace: true,
-                //
-                // templateUrl: 'index.html',
-                template: function (tElement, tAttrs) {
-                    return `
-                <td rowspan="{{span.rowspan != 0 ? span.rowspan : ''}}" colspan="{{span.colspan != 0 ? span.colspan : ''}}" ng-show="!span.isSpan" class="mob-table-item mob-table-item__cell" 
-                ng-class="{'fixed':fixed, 'fixed-left': fixed && fixed !=='right','fixed-right': fixed ==='right' ,'first-fixed-column': isFirstFixedColumn}"
-                ng-style="style"
-                ng-mouseenter="vm.mouseEnter()"
-                ng-mouseleave="vm.mouseLeave()"
-                >
-                    <div class="cell">
+    function isExtensionType(tAttrs) {
+        const type = tAttrs.type
+        if (!type) {
+            return false
+        }
+        return /extension/.test(type)
+    }
+
+    function template() {
+        return `
+                <td class="mob-table-item mob-table-item__cell"
+                    ng-class="{
+                        'mob-table-column--selection': type === 'selection',
+                        'mob-table-column--expand': type === 'expand'
+                    }">
+                    <div class="cell" ng-if="type === 'selection'">
+                        <mob-check-box check-value="true"
+                                       un-check-value="false"
+                                       ng-model="rowChecked"
+                                       ng-disabled="isRowDisabled()"
+                                       change="onRowSelectChange(opt)"></mob-check-box>
+                    </div>
+                    <div class="cell mob-table__tree-cell" ng-if="type === 'expand'">
+                        <span class="mob-table__expand-icon"
+                              ng-class="{'is-expanded': isRowExpanded()}"
+                              ng-if="showExpandIcon()"
+                              ng-click="onExpandClick($event)">
+                            <mob-icon-caret-right></mob-icon-caret-right>
+                        </span>
+                        <span class="mob-table__placeholder" ng-if="!showExpandIcon()"></span>
+                    </div>
+                    <div class="cell" ng-if="type !== 'selection' && type !== 'expand'">
                         <mob-transclude context="transcludeContext" context-type="JSON"></mob-transclude>
-                        <!--  ngif 会创建一个子的scope-->
-                        <span ng-if="!$$mobTransclude" ng-bind="vm.cellBind(prop)"></span>
+                        <span ng-if="!$$mobTransclude" ng-bind="getterProp()"></span>
                     </div>
                 </td>
                 `
+    }
+
+    const mobTableItem = [
+        "$parse",
+        function ($parse) {
+            return {
+                restrict: "E",
+                transclude: true,
+                scope: {
+                    prop: "=",
+                    label: "=",
+                    width: "=",
+                    type: "=",
                 },
-                compile: function (tElement, tAttrs, transclude, mobTableController) {
+                require: "^mobTable",
+                replace: true,
+                template: function (tElement, tAttrs) {
+                    if (isExtensionType(tAttrs)) {
+                        return '<span class="mob-table-item--extension"></span>'
+                    }
+                    return template()
+                },
+                compile: function (tElement, tAttrs) {
+                    if (isExtensionType(tAttrs)) {
+                        return {
+                            post: function (
+                                $scope,
+                                $element,
+                                $attrs,
+                                mobTableController,
+                                $transclude
+                            ) {
+                                $transclude(function (clone) {
+                                    mobTableController.registerExpandTemplate(clone)
+                                })
+                                $element.remove()
+                            },
+                        }
+                    }
+
                     return {
-                        pre: function ($scope, $element, $attrs, controller) {
-                            // 创建需要穿透的上下文
+                        pre: function ($scope) {
                             $scope.transcludeContext = {
-                                '$parent.$context': {
-                                    name: '$parent.$context',
-                                    alias: '$context'
-                                }
+                                "$parent.$context": {
+                                    name: "$parent.$context",
+                                    alias: "$context",
+                                },
                             }
                         },
                         post: function ($scope, $element, $attrs, mobTableController) {
-                            // 向table注册
-                            mobTableController.registerColumn($scope)
+                            $scope.tableVm = mobTableController
 
-                            // 监听渲染完成事件
-                            $scope.$on(`mobTableColumnRepeatFinish${mobTableController.uuid}`, function () {
-                                // 计算合并列
-                                // 获取合并的行列
-                                let opt = {
-                                    row: $scope.$parent.$context.row,
-                                    rowIndex: $scope.rowIndex,
-                                    column: $scope.$parent.$context.row[$scope.prop],
-                                    columnIndex: $scope.columnIndex
+                            $scope.getContext = function () {
+                                const parent = $scope.$parent
+                                return (parent && parent.$context) || {}
+                            }
+
+                            $scope.getRow = function () {
+                                return $scope.getContext().row
+                            }
+
+                            $scope.isRowDisabled = function () {
+                                const row = $scope.getRow()
+                                return row ? !mobTableController.isRowSelectable(row) : false
+                            }
+
+                            $scope.showExpandIcon = function () {
+                                if (
+                                    mobTableController.hasExpandTemplate() &&
+                                    !mobTableController.isTreeMode()
+                                ) {
+                                    return true
                                 }
-                                mobTableController.spanMethod(opt)
-                            })
+                                return !!$scope.getContext().hasChildren
+                            }
 
-                        }
-                    };
-                    //或 return function postLink() {}
+                            $scope.isRowExpanded = function () {
+                                if (
+                                    mobTableController.hasExpandTemplate() &&
+                                    !mobTableController.isTreeMode()
+                                ) {
+                                    const row = $scope.getRow()
+                                    return row
+                                        ? mobTableController.isRowExpanded(row)
+                                        : false
+                                }
+                                return !!$scope.getContext().expanded
+                            }
+
+                            let column = {}
+                            for (let attr of attrs) {
+                                column[attr] = $scope[attr]
+                            }
+                            if (
+                                $scope.type === "selection" ||
+                                $scope.type === "expand"
+                            ) {
+                                column.width = 50
+                            }
+                            column._uid = "col_" + $scope.$id
+                            mobTableController.registerColumn(column)
+                            $scope.columnIndex = column.columnIndex
+
+                            if ($scope.type === "selection") {
+                                $scope.$watch(
+                                    function () {
+                                        const row = $scope.getRow()
+                                        return row && mobTableController.isRowSelected(row)
+                                    },
+                                    function (selected) {
+                                        $scope.rowChecked = !!selected
+                                    }
+                                )
+                                $scope.onRowSelectChange = function (opt) {
+                                    const row = $scope.getRow()
+                                    if (!row) {
+                                        return
+                                    }
+                                    mobTableController.toggleRowSelection(
+                                        row,
+                                        opt.value === true
+                                    )
+                                }
+                            }
+
+                            $scope.onExpandClick = function ($event) {
+                                $event.stopPropagation()
+                                const row = $scope.getRow()
+                                if (row) {
+                                    mobTableController.toggleRowExpansion(row, $event)
+                                }
+                            }
+                        },
+                    }
                 },
-                controller: function ($scope, $element, $attrs, $transclude) {
-
-                    // 单元格显示数据
-                    this.cellBind = function (prop){
-                        return $scope.$parent.$context.row[prop]
-                    }
-
-                    this.mouseEnter = function () {
-                        if ($scope.span && $scope.span.inRowspan) {
-                            $($element[0]).parent('tr').addClass('row-span')
+                controller: function ($scope, $parse) {
+                    $scope.getterProp = function () {
+                        if (!$scope.prop) {
+                            return
                         }
+                        const getter = $parse($scope.prop)
+                        if (!getter) {
+                            return
+                        }
+                        const row = $scope.getRow && $scope.getRow()
+                        return row ? getter(row) : undefined
                     }
-
-                    this.mouseLeave = function () {
-                        // if ($scope.inRowspan) {
-                        $($element[0]).parent('tr').removeClass('row-span')
-                        // }
-                    }
-                }
-            };
-        }
+                },
+            }
+        },
     ]
-    app.directive('mobTableItem', mobTableItem)
-
+    app.directive("mobTableItem", mobTableItem)
 })()

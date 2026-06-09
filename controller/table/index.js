@@ -19,43 +19,50 @@ app
                 eshopOrderSn:'001',
                 orderPrice:100,
                 refundOrderSn:'001R001',
-                refundOrderNum:2
+                refundOrderNum:2,
+                detail:'第一笔退款，原因：用户取消订单'
             },
             {
                 eshopOrderSn:'001',
                 orderPrice:100,
                 refundOrderSn:'001R002',
-                refundOrderNum:2
+                refundOrderNum:2,
+                detail:'第二笔退款，原因：重复支付'
             },
             {
                 eshopOrderSn:'002',
                 orderPrice:100,
                 refundOrderSn:'002R002',
-                refundOrderNum:1
+                refundOrderNum:1,
+                detail:'全额退款'
             },
             {
                 eshopOrderSn:'003',
                 orderPrice:100,
                 refundOrderSn:'003R001',
-                refundOrderNum:3
+                refundOrderNum:3,
+                detail:'部分退款 1/3'
             },
             {
                 eshopOrderSn:'003',
                 orderPrice:100,
                 refundOrderSn:'003R002',
-                refundOrderNum:3
+                refundOrderNum:3,
+                detail:'部分退款 2/3'
             },
             {
                 eshopOrderSn:'003',
                 orderPrice:100,
                 refundOrderSn:'003R003',
-                refundOrderNum:3
+                refundOrderNum:3,
+                detail:'部分退款 3/3'
             },
             {
                 eshopOrderSn:'004',
                 orderPrice:100,
                 refundOrderSn:'004R001',
-                refundOrderNum:1
+                refundOrderNum:1,
+                detail:'超时未发货自动退款'
             }
         ]
 
@@ -112,4 +119,34 @@ app
             }
             return ''
         }
+
+        $scope.selectedRows = []
+        $scope.treeSelectedRows = []
+        $scope.expandRowKeys = []
+        $scope.treeProps = {children: 'children'}
+
+        $scope.onSelectionChange = function (opt) {
+            $scope.selectedRows = opt.selection
+        }
+
+        $scope.onTreeSelectionChange = function (opt) {
+            $scope.treeSelectedRows = opt.selection
+        }
+
+        $scope.treeData = [
+            {
+                id: '1',
+                name: 'Level one 1',
+                size: '-',
+                children: [
+                    {id: '1-1', name: 'Level two 1-1', size: '10KB'},
+                    {id: '1-2', name: 'Level two 1-2', size: '8KB'}
+                ]
+            },
+            {
+                id: '3',
+                name: 'Level one 3',
+                size: '2KB'
+            }
+        ]
     }])

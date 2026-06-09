@@ -1,27 +1,57 @@
-<div class="mob-table"  ng-class="{'border':$ctrl.border,'stripe':$ctrl.stripe,'table-head-fixed':$ctrl.height}" ng-style="style">
-    <table>
+<div>
+    <table class="mob-table" ng-class="{'border':border,'stripe':stripe}">
         <colgroup>
-            <col ng-repeat="col in $ctrl.cellList[0] track by $index" class="{{'mob-table-col_' + $index}}" ng-style="{'width': col.width}"  >
+            <col ng-repeat="col in columns track by $index"
+                 class="{{'mob-table-col_' + $index}}"
+                 ng-class="{
+                     'mob-table-column--selection': col.type === 'selection',
+                     'mob-table-column--expand': col.type === 'expand'
+                 }"
+                 ng-style="{'width': vm.getColumnWidth(col)}">
         </colgroup>
         <thead>
         <tr>
-            <th ng-repeat="col in $ctrl.cellList[0]" class="mob-table-item mob-table-item__cell"
-                ng-class="{'fixed':col.fixed, 'fixed-left': col.fixed && col.fixed !=='right','fixed-right': col.fixed ==='right' ,'first-fixed-column': col.isFirstFixedColumn}"
-                ng-style="col.style">
-                <div class="cell" ng-bind="col.label"></div>
+            <th ng-repeat="($colIndex, col) in columns track by $index"
+                class="mob-table-item mob-table-item__cell"
+                ng-class="{
+                    'mob-table-column--selection': col.type === 'selection',
+                    'mob-table-column--expand': col.type === 'expand'
+                }">
+                <div class="cell" ng-if="col.type !== 'selection' && col.type !== 'expand'"
+                     ng-bind="col.label"
+                     ng-class="vm.headerCellClassName($colIndex, col)"></div>
+                <div class="cell" ng-if="col.type === 'expand'"></div>
+                <div class="cell" ng-if="col.type === 'selection'">
+                    <mob-check-box check-value="true"
+                                   un-check-value="false"
+                                   indeterminate="vm.headerIndeterminate"
+                                   ng-model="vm.headerChecked"
+                                   change="vm.onHeaderSelectChange(opt)"></mob-check-box>
+                </div>
             </th>
         </tr>
         </thead>
-        <!-- 每行是对象 -->
         <tbody>
-
-        <tr ng-if="$ctrl.noData()" ng-show="false" >
-            <td mob-transclude></td></tr>
-        <tr ng-if="$ctrl.noData()">
-            <td class="empty-td" colspan="{{$ctrl.cellList[0].length}}" ng-bind="$ctrl.noDataTips"></td>
-        </tr>
-        <tr ng-if="$ctrl.hasData()" ng-repeat="($rowIndex, row) in $ctrl.data track by $index" on-repeat-finish="mobTableColumnRepeatFinish" ng-class="rowClassName($rowIndex, row)">
-            <td mob-transclude context="row,$index"></td>
+        <tr ng-repeat="rowMeta in vm.displayRows track by rowMeta.trackId"
+            ng-if="data"
+            mob-table-row-anim
+            class="mob-table__body-row"
+            ng-class="{
+                'mob-table__body-row--entering': rowMeta.entering,
+                'mob-table__body-row--leaving': rowMeta.leaving,
+                'mob-table__expand-row': rowMeta.rowType === 'expand'
+            }">
+            <td ng-if="rowMeta.rowType !== 'expand'"
+                mob-transclude
+                context="rowMeta"></td>
+            <td ng-if="rowMeta.rowType === 'expand'"
+                colspan="{{columns.length}}"
+                class="mob-table__expanded-cell">
+                <div class="mob-table__expand-content">
+                    <div class="mob-table__expand-inner"
+                         mob-table-expand-content></div>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

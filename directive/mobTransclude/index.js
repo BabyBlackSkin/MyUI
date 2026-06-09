@@ -1,11 +1,11 @@
 // https://dev.to/elpddev/template-transclusion-in-angularjs-532f
 const NODE_TYPE_TEXT = 3;
 const CONTEXT_TYPE_ARRAY = "Array";
-const CONTEXT_TYPE_JSON = "JSON";
 
 const mobTransclude = [
     "$compile",
-    function ($compile) {
+    "mobTableRowAnimUtil",
+    function ($compile, mobTableRowAnimUtil) {
         return {
             restrict: "EAC",
             compile: function ngTranscludeCompile(tElement) {
@@ -61,6 +61,13 @@ const mobTransclude = [
                                 // 如果是context，则解构后在赋值给context
                                 if ("$context" === contextAttr) {
                                     updateScope(childScope, newVal);
+                                } else if (
+                                    contextAttrs.length === 1 &&
+                                    newVal &&
+                                    angular.isObject(newVal) &&
+                                    angular.isDefined(newVal.row)
+                                ) {
+                                    updateScope(childScope, newVal);
                                 } else {
                                     context[contextAttr] = newVal;
                                     updateScope(childScope, context);
@@ -113,6 +120,15 @@ const mobTransclude = [
                             $element.replaceWith(clone);
                             childScope = transcludedScope;
                             updateScope(childScope, context);
+                            var parentTr = clone[0] && clone[0].parentNode
+                            if (parentTr && parentTr.nodeName === "TR") {
+                                mobTableRowAnimUtil.prepEnterRow(parentTr)
+                                $scope.$evalAsync(function () {
+                                    angular.element(parentTr).triggerHandler(
+                                        "mobTableRowMount"
+                                    )
+                                })
+                            }
                         } else {
                             useFallbackContent();
                             // There is nothing linked against the transcluded scope since no content was available,

@@ -1,27 +1,15 @@
 .mob-table {
-    overflow: auto;
-}
-.mob-table .empty-td {
-    text-align: center;
-    padding: 12px;
-}
-.mob-table table{
     width: 100%;
-    table-layout:fixed;
     border-spacing: 0;
+    table-layout: fixed;
 }
 
-.mob-table.table-head-fixed thead {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
 .mob-table thead {
     color: var(--mob-table-head-text-color);
     background-color: var(--mob-table-header-bg-color);
 }
 
-.mob-table thead tr:not(:first-child):last-child th {
+.mob-table thead tr:last-child th {
     border-top: 1px solid var(--mob-table-border);
 }
 
@@ -32,7 +20,15 @@
 }
 
 .mob-table tr {
-    background-color: var(--mob-table-td-bg-color);
+    background-color: var(--mob-table-tr-bg-color);
+}
+
+.mob-table tr.error {
+    background-color: var(--mob-danger-light-color7);
+}
+
+.mob-table tr.error:hover {
+    background-color: var(--mob-danger-light-color8);
 }
 
 
@@ -44,12 +40,12 @@
     border-top: 1px solid var(--mob-table-border);
 }
 
-.mob-table tbody tr{
+.mob-table tbody tr {
     transition: background-color .25s ease;
 }
-.mob-table tbody tr:hover td ,
-.mob-table tbody tr.row-span:hover td {
-    background-color: var(--mob-table-body-tr-hover-color) !important;
+
+.mob-table tbody tr:hover {
+    background-color: var(--mob-table-body-tr-hover-color);
 }
 
 .mob-table tbody tr td {
@@ -57,10 +53,6 @@
 }
 
 /*边框样式*/
-.mob-table.border thead tr th {
-    border-top: 1px solid var(--mob-table-border);
-}
-
 .mob-table.border thead tr th:first-child {
     border-left: 1px solid var(--mob-table-border);
 }
@@ -78,43 +70,130 @@
 }
 
 /*条纹*/
-.mob-table.stripe tbody tr:nth-child(even) td{
+.mob-table.stripe tbody tr:nth-child(even):not(.error):hover {
+    background-color: var(--mob-table-body-tr-hover-color);
+}
+
+.mob-table.stripe tbody tr:nth-child(even):not(.error) {
     background-color: var(--mob-table-body-tr-even-color);
 }
 
-.mob-table tr .mob-table-item.fixed {
-    position: sticky;
-    z-index: 1;
+.mob-table th.mob-table-column--selection,
+.mob-table th.mob-table-column--expand,
+.mob-table td.mob-table-column--selection,
+.mob-table td.mob-table-column--expand {
+    width: 25px;
+    min-width: 25px;
+    max-width: 25px;
+    padding: 8px 0;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-/*.mob-table tr:last-child .mob-table-item.fixed {*/
-/*    border-right:1px solid var(--mob-table-border);*/
-/*}*/
-
-
-.mob-table .mob-table-item.fixed.fixed-left {
-    left: 0;
+.mob-table th.mob-table-column--selection .cell,
+.mob-table th.mob-table-column--expand .cell,
+.mob-table td.mob-table-column--selection .cell,
+.mob-table td.mob-table-column--expand .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    overflow: hidden;
 }
 
-.mob-table .mob-table-item.fixed.fixed-right {
-    right: 0;
+.mob-table-column--selection mob-check-box,
+.mob-table-column--selection .mob-checkbox {
+    display: inline-flex;
+    justify-content: center;
+    margin: 0;
 }
 
-.mob-table tr .mob-table-item.first-fixed-column:before {
-    content: "";
+.mob-table__tree-cell {
+    display: flex;
+    align-items: center;
+}
+
+.mob-table__indent {
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.mob-table-column--expand .mob-table__expand-icon {
+    margin-right: 0;
+}
+
+.mob-table__expand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform .3s var(--mob-transition-animate, ease);
+}
+
+.mob-table__expand-icon.is-expanded {
+    transform: rotate(90deg);
+}
+
+.mob-table__placeholder {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* 树形表格行展开/收起动画
+   说明：保持标准 table 布局（不改 display），避免破坏 colgroup 列宽。
+   高度增长/塌陷由 mobTableRowAnim 指令驱动，作用于 td 内的 .cell 高度与 td 上下内边距。
+   下面仅定义“塌陷起始态”，保证展开行首帧即为 0 高度，避免出现满高空白。 */
+.mob-table__body-row--entering td {
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom-width: 0;
+    transition: none;
+}
+
+.mob-table__body-row--entering td .cell {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: none;
+}
+
+.mob-table__body-row--entering .mob-table__expand-content {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: none;
+}
+
+.mob-table__body-row--leaving {
     pointer-events: none;
-    position: absolute;
-    top: 0;
-    bottom: -1px;
-    display: block;
-    width: 10px;
 }
 
-.mob-table tr .mob-table-item.fixed.fixed-left:before {
-    right: -10px;
-    box-shadow: var(--mob-table-fixed-left-column);
+.mob-table__body-row--leaving td,
+.mob-table__body-row--leaving .mob-table__expanded-cell {
+    overflow: hidden;
 }
-.mob-table tr .mob-table-item.fixed.fixed-right:before {
-    left: -10px;
-    box-shadow: var(--mob-table-fixed-right-column);
+
+.mob-table__expand-row:hover {
+    background-color: var(--mob-table-tr-bg-color);
+}
+
+.mob-table__expanded-cell {
+    padding: 0;
+}
+
+.mob-table__expand-content {
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.mob-table__expand-inner {
+    padding: 12px;
 }
