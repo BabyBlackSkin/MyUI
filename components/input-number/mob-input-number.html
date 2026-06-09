@@ -2,30 +2,31 @@
 
     <div class="mob-input_prepend mob-input__slot"
          ng-click="$ctrl.decrease()"
-         ng-class="{'is_inactive': $ctrl.ngDisabled}">
+         ng-class="{'is_inactive': $ctrl.isDecreaseDisabled()}">
         <mob-icon-decrease></mob-icon-decrease>
     </div>
 
     <div class="mob-input__wrapper">
         <label ng-if="false" for="{{'input_number' + $id}}"></label>
         <input id="{{'input_number' + $id}}"
+               name="{{$ctrl.name}}"
                type="number"
                inputmode="decimal"
-               class="mob-input__inner"
+               class="mob-input__inner custom"
                ng-model="$ctrl.model"
                ng-model-options="{ debounce: 300 }"
+               ng-required="$ctrl.ngRequired"
                ng-disabled="$ctrl.ngDisabled"
-               ng-change="$ctrl.syncToModel()"
                ng-blur="$ctrl.blurHandle()"
-               step="{{$ctrl.step}}"
-               min="{{$ctrl.min}}"
-               max="{{$ctrl.max}}"
+               step="{{$ctrl.innerStep}}"
+               min="{{$ctrl.innerMin}}"
+               max="{{$ctrl.innerMax}}"
         >
     </div>
 
     <div class="mob-input_append mob-input__slot"
          ng-click="$ctrl.increase()"
-         ng-class="{'is_inactive': $ctrl.ngDisabled}">
+         ng-class="{'is_inactive': $ctrl.isIncreaseDisabled()}">
         <mob-icon-increase></mob-icon-increase>
     </div>
 

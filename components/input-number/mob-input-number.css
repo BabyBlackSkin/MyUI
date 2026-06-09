@@ -142,3 +142,13 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+/* ==========================================================================
+   新增：ng-pattern 校验失败时的 Danger 状态样式
+   ========================================================================== */
+mob-input-number.ng-invalid .mob-input__number {
+    border-color: var(--mob-danger-color) !important;
+}
+mob-input-number.ng-invalid .mob-input__number:focus-within {
+    border-color: var(--mob-danger-color) !important;
+}
