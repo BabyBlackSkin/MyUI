@@ -22,7 +22,6 @@ const mobTable = [
                 onSelectionChange: "&",
                 treeProps: "=",
                 defaultExpandAll: "=",
-                expandRowKeys: "=",
             },
             replace: true,
             controllerAs: "vm",
@@ -32,6 +31,7 @@ const mobTable = [
                 let hasRegisteredColumn = new Set()
                 let columnUid = 0
                 vm._expandRowKeys = []
+                vm._defaultRowKeys = 'id'
                 vm._expandTemplateNodes = []
                 vm._hasExpandTemplate = false
                 vm._enteringParentKey = null
@@ -43,6 +43,7 @@ const mobTable = [
 
                 $scope.columns = []
                 vm.displayRows = []
+                vm.selection = {} // 维护被选中的行
 
                 vm.registerColumn = function (col) {
                     const key =
@@ -114,6 +115,18 @@ const mobTable = [
                         return node.cloneNode(true)
                     })
                     return angular.element(nodes)
+                }
+
+                vm.getRowIdentity = function (row) {
+                    if (!row) {
+                        return null
+                    }
+                    let key = $scope.rowKey || vm._defaultRowKeys
+                    if (angular.isUndefined($scope.rowKey) || $scope.rowKey === null) {
+                        return vm._defaultRowKeys
+                    }
+                    const getter = $parse(key)
+                    return getter(row)
                 }
 
                 vm.getRowKey = function (row, fallbackIndex) {
@@ -343,7 +356,7 @@ const mobTable = [
                     const childrenKey = getChildrenKey()
                     for (let i = 0; i < nodes.length; i++) {
                         const row = nodes[i]
-                        const rowKey = vm.getRowKey(row, i)
+                        const rowKey = vm.getRowKey(row)
                         const hasChildren = vm.rowHasChildren(row)
                         const expanded = hasChildren && vm.isRowExpanded(row)
                         const entering =
@@ -450,18 +463,14 @@ const mobTable = [
                 }
 
                 vm.isRowSelected = function (row) {
-                    if (!angular.isArray($scope.selection)) {
-                        return false
-                    }
-                    return $scope.selection.indexOf(row) !== -1
+                    return vm.selection[vm.getRowIdentity(row)]
                 }
 
                 function emitSelectionChange() {
                     if (angular.isFunction($scope.onSelectionChange)) {
+                        // TODO 过滤出被选中的状态
                         $scope.onSelectionChange({opt:{
-                                selection: angular.isArray($scope.selection)
-                                    ? $scope.selection.slice()
-                                    : [],}
+                                selection: angular.copy(vm.selection)}
                         })
                     }
                     updateHeaderSelectionState()
@@ -471,17 +480,6 @@ const mobTable = [
                     if (!vm.isRowSelectable(row)) {
                         return
                     }
-                    if (!angular.isArray($scope.selection)) {
-                        $scope.selection = []
-                    }
-                    const index = $scope.selection.indexOf(row)
-                    const nextSelected =
-                        angular.isDefined(selected) ? selected : index === -1
-                    if (nextSelected && index === -1) {
-                        $scope.selection.push(row)
-                    } else if (!nextSelected && index !== -1) {
-                        $scope.selection.splice(index, 1)
-                    }
                     emitSelectionChange()
                 }
 
@@ -489,27 +487,20 @@ const mobTable = [
                     const visibleRows = vm.getVisibleRows().filter(function (row) {
                         return vm.isRowSelectable(row)
                     })
-                    if (!angular.isArray($scope.selection)) {
-                        $scope.selection = []
-                    }
                     if (selected) {
                         visibleRows.forEach(function (row) {
-                            if ($scope.selection.indexOf(row) === -1) {
-                                $scope.selection.push(row)
-                            }
+                            vm.selection[vm.getRowIdentity(row)] = true
                         })
                     } else {
                         visibleRows.forEach(function (row) {
-                            const index = $scope.selection.indexOf(row)
-                            if (index !== -1) {
-                                $scope.selection.splice(index, 1)
-                            }
+                            vm.selection[vm.getRowIdentity(row)] = false
                         })
                     }
                     emitSelectionChange()
                 }
 
                 vm.onHeaderSelectChange = function (opt) {
+                    console.log('header select change')
                     vm.setSelectAll(opt.value === true)
                 }
 
@@ -528,6 +519,7 @@ const mobTable = [
                             selectedCount++
                         }
                     })
+                    console.log(selectedCount, selectableRows.length)
                     vm.headerChecked = selectedCount === selectableRows.length
                     vm.headerIndeterminate =
                         selectedCount > 0 && selectedCount < selectableRows.length

@@ -11,6 +11,10 @@ app
             dataList.push(opt)
 
         }
+        $scope.visibleModel = false
+        $scope.show = function(){
+            $scope.visibleModel = true
+        }
         // console.log(dataList)
         $scope.data = dataList
 

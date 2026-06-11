@@ -17,11 +17,10 @@
                         'mob-table-column--selection': type === 'selection',
                         'mob-table-column--expand': type === 'expand'
                     }">
-                    <div class="cell" ng-if="type === 'selection'">
+                    <div class="cell" ng-if="type === 'selection' && !isRowDisabled()">
                         <mob-check-box check-value="true"
                                        un-check-value="false"
-                                       ng-model="rowChecked"
-                                       ng-disabled="isRowDisabled()"
+                                       ng-model="tableVm.selection[tableVm.getRowIdentity(getRow())]"
                                        change="onRowSelectChange(opt)"></mob-check-box>
                     </div>
                     <div class="cell mob-table__tree-cell" ng-if="type === 'expand'">
@@ -143,23 +142,17 @@
                             $scope.columnIndex = column.columnIndex
 
                             if ($scope.type === "selection") {
-                                $scope.$watch(
-                                    function () {
-                                        const row = $scope.getRow()
-                                        return row && mobTableController.isRowSelected(row)
-                                    },
-                                    function (selected) {
-                                        $scope.rowChecked = !!selected
-                                    }
-                                )
                                 $scope.onRowSelectChange = function (opt) {
                                     const row = $scope.getRow()
                                     if (!row) {
                                         return
                                     }
+                                    if (angular.isUndefined(opt.value)) {
+                                        return;
+                                    }
                                     mobTableController.toggleRowSelection(
                                         row,
-                                        opt.value === true
+                                        opt.value
                                     )
                                 }
                             }
