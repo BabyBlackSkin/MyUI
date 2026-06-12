@@ -45,6 +45,10 @@ const mobTable = [
                 $scope.columns = []
                 vm.displayRows = []
                 vm.selection = {} // 维护被选中的行
+                let rowUidCounter = 0
+                const rowToUid = new WeakMap()
+                const uidToRow = {}
+                let _dataRef = null
 
                 vm.registerColumn = function (col) {
                     const key =
@@ -122,16 +126,164 @@ const mobTable = [
                     return angular.element(nodes)
                 }
 
+                function hasRowKey() {
+                    return (
+                        angular.isDefined($scope.rowKey) && $scope.rowKey !== null
+                    )
+                }
+
+                function ensureRowUid(row) {
+                    if (!rowToUid.has(row)) {
+                        const uid = "r" + rowUidCounter++
+                        rowToUid.set(row, uid)
+                        uidToRow[uid] = row
+                    }
+                    return rowToUid.get(row)
+                }
+
                 vm.getRowIdentity = function (row) {
                     if (!row) {
                         return null
                     }
-                    let key = $scope.rowKey || vm._defaultRowKeys
-                    if (angular.isUndefined($scope.rowKey) || $scope.rowKey === null) {
-                        return vm._defaultRowKeys
+                    if (!hasRowKey()) {
+                        return ensureRowUid(row)
                     }
-                    const getter = $parse(key)
+                    const getter = $parse($scope.rowKey)
                     return getter(row)
+                }
+
+                function hasSelectionColumn() {
+                    return $scope.columns.some(function (col) {
+                        return col.type === "selection"
+                    })
+                }
+
+                function collectAllDataRows(nodes) {
+                    const result = []
+                    if (!angular.isArray(nodes)) {
+                        return result
+                    }
+                    const childrenKey = getChildrenKey()
+                    nodes.forEach(function (row) {
+                        result.push(row)
+                        const children = row[childrenKey]
+                        if (angular.isArray(children) && children.length) {
+                            result.push.apply(
+                                result,
+                                collectAllDataRows(children)
+                            )
+                        }
+                    })
+                    return result
+                }
+
+                function buildValidIdentitySet() {
+                    const set = new Set()
+                    collectAllDataRows($scope.data).forEach(function (row) {
+                        const id = vm.getRowIdentity(row)
+                        if (angular.isDefined(id) && id !== null) {
+                            set.add(id)
+                        }
+                    })
+                    return set
+                }
+
+                function buildDataRowRefSet() {
+                    return new Set(collectAllDataRows($scope.data))
+                }
+
+                function getSelectionSnapshot() {
+                    return angular.copy(vm.selection)
+                }
+
+                function syncScopeSelection() {
+                    if (angular.isUndefined($scope.selection)) {
+                        return
+                    }
+                    if (
+                        angular.isObject($scope.selection) &&
+                        !angular.isArray($scope.selection)
+                    ) {
+                        Object.keys($scope.selection).forEach(function (key) {
+                            delete $scope.selection[key]
+                        })
+                        angular.extend($scope.selection, getSelectionSnapshot())
+                    } else {
+                        $scope.selection = getSelectionSnapshot()
+                    }
+                }
+
+                function setRowSelected(row, selected) {
+                    const identity = vm.getRowIdentity(row)
+                    if (angular.isDefined(identity) && identity !== null) {
+                        vm.selection[identity] = selected
+                    }
+                }
+
+                function clearSelection() {
+                    vm.selection = {}
+                    if (vm._selectionBindCache) {
+                        vm._selectionBindCache = {}
+                    }
+                    emitSelectionChange()
+                }
+
+                function cleanSelection() {
+                    let changed = false
+                    if (hasRowKey()) {
+                        const validKeys = buildValidIdentitySet()
+                        Object.keys(vm.selection).forEach(function (key) {
+                            if (vm.selection[key] && !validKeys.has(key)) {
+                                delete vm.selection[key]
+                                changed = true
+                            }
+                        })
+                    } else {
+                        const dataRowSet = buildDataRowRefSet()
+                        Object.keys(vm.selection).forEach(function (key) {
+                            const row = uidToRow[key]
+                            if (
+                                vm.selection[key] &&
+                                (!row || !dataRowSet.has(row))
+                            ) {
+                                delete vm.selection[key]
+                                changed = true
+                            }
+                        })
+                    }
+                    if (changed) {
+                        emitSelectionChange()
+                    } else {
+                        updateHeaderSelectionState()
+                    }
+                }
+
+                vm.getRowSelectionModel = function (row) {
+                    if (!row) {
+                        return { value: false }
+                    }
+                    const identity = vm.getRowIdentity(row)
+                    if (!vm._selectionBindCache) {
+                        vm._selectionBindCache = {}
+                    }
+                    if (!vm._selectionBindCache[identity]) {
+                        vm._selectionBindCache[identity] = {}
+                        Object.defineProperty(
+                            vm._selectionBindCache[identity],
+                            "value",
+                            {
+                                get: function () {
+                                    return !!vm.selection[identity]
+                                },
+                                set: function (v) {
+                                    vm.selection[identity] = v
+                                },
+                                enumerable: true,
+                                configurable: true,
+                            }
+                        )
+                    }
+                    return vm._selectionBindCache[identity]
                 }
 
                 vm.getRowKey = function (row, fallbackIndex) {
@@ -468,14 +620,14 @@ const mobTable = [
                 }
 
                 vm.isRowSelected = function (row) {
-                    return vm.selection[vm.getRowIdentity(row)]
+                    return !!vm.selection[vm.getRowIdentity(row)]
                 }
 
                 function emitSelectionChange() {
+                    syncScopeSelection()
                     if (angular.isFunction($scope.onSelectionChange)) {
-                        // TODO 过滤出被选中的状态
-                        $scope.onSelectionChange({opt:{
-                                selection: angular.copy(vm.selection)}
+                        $scope.onSelectionChange({
+                            opt: { selection: getSelectionSnapshot() },
                         })
                     }
                     updateHeaderSelectionState()
@@ -569,7 +721,7 @@ const mobTable = [
 
                     targetRows.forEach(function (r) {
                         if (vm.isRowSelectable(r)) {
-                            vm.selection[vm.getRowIdentity(r)] = selected
+                            setRowSelected(r, selected)
                         }
                     })
                     emitSelectionChange()
@@ -581,18 +733,17 @@ const mobTable = [
                     })
                     if (selected) {
                         visibleRows.forEach(function (row) {
-                            vm.selection[vm.getRowIdentity(row)] = true
+                            setRowSelected(row, true)
                         })
                     } else {
                         visibleRows.forEach(function (row) {
-                            vm.selection[vm.getRowIdentity(row)] = false
+                            setRowSelected(row, false)
                         })
                     }
                     emitSelectionChange()
                 }
 
                 vm.onHeaderSelectChange = function (opt) {
-                    console.log('header select change')
                     vm.setSelectAll(opt.value === true)
                 }
 
@@ -611,15 +762,28 @@ const mobTable = [
                             selectedCount++
                         }
                     })
-                    console.log(selectedCount, selectableRows.length)
                     vm.headerChecked = selectedCount === selectableRows.length
                     vm.headerIndeterminate =
                         selectedCount > 0 && selectedCount < selectableRows.length
                 }
 
-                $scope.$watchCollection("data", function () {
+                $scope.$watchCollection("data", function (newData) {
+                    const isInitialized = _dataRef !== null
+                    const dataInstanceChanged =
+                        isInitialized && newData !== _dataRef
+
                     initExpandKeys()
                     rebuildDisplayRows()
+
+                    if (isInitialized && hasSelectionColumn()) {
+                        if (dataInstanceChanged) {
+                            clearSelection()
+                        } else {
+                            cleanSelection()
+                        }
+                    }
+
+                    _dataRef = newData
                 })
 
                 $scope.$watchCollection(

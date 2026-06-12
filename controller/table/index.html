@@ -110,7 +110,12 @@
 
     <h3>多选表格</h3>
     <p>选择多行数据时使用 Checkbox。可通过 type="selection" 列开启多选，表头 checkbox 可全选/取消当前可见行。</p>
-    <p >已选中 {{selectedRows.length || 0}} 行</p>
+    <p>已选中 {{getSelectedCount(selectedRows)}} 行</p>
+    <p>
+        <mob-button ng-click="replaceSelectionData()">替换 data（新数组，清空选中）</mob-button>
+        <mob-button ng-click="spliceFirstRow()">splice 删除首行（cleanSelection）</mob-button>
+        <mob-button ng-click="restoreSelectionData()">恢复 data</mob-button>
+    </p>
     <div class="mob-demo-block">
         <div class="mob-demo-example">
             <mob-table data="data"
@@ -140,6 +145,25 @@
                             </mob-table>
                         --></code>
                     </pre>
+        </div>
+    </div>
+
+    <h3>多选表格（无 row-key）</h3>
+    <p>未设置 row-key 时，data 变化会按行对象引用清理无效选中。</p>
+    <p>已选中 {{getSelectedCount(noRowKeySelectedRows)}} 行</p>
+    <p>
+        <mob-button ng-click="spliceNoRowKeyFirstRow()">splice 删除首行</mob-button>
+    </p>
+    <div class="mob-demo-block">
+        <div class="mob-demo-example">
+            <mob-table data="noRowKeyData"
+                       border="true"
+                       selection="noRowKeySelectedRows"
+                       on-selection-change="onNoRowKeySelectionChange(opt)">
+                <mob-table-item type="'selection'"></mob-table-item>
+                <mob-table-item prop="'eshopOrderSn'" label="'订单号'"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'退款单号'"></mob-table-item>
+            </mob-table>
         </div>
     </div>
 

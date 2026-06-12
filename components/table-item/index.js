@@ -20,7 +20,7 @@
                     <div class="cell" ng-if="type === 'selection' && !isRowDisabled()">
                         <mob-check-box check-value="true"
                                        un-check-value="false"
-                                       ng-model="tableVm.selection[tableVm.getRowIdentity(getRow())]"
+                                       ng-model="tableVm.getRowSelectionModel(getRow()).value"
                                        change="onRowSelectChange(opt)"></mob-check-box>
                     </div>
                     <div class="cell mob-table__tree-cell" ng-if="type === 'expand'">

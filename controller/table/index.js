@@ -124,10 +124,20 @@ app
             return ''
         }
 
-        $scope.selectedRows = []
-        $scope.treeSelectedRows = []
+        $scope.selectedRows = {}
+        $scope.treeSelectedRows = {}
         $scope.expandRowKeys = []
         $scope.treeProps = {children: 'children'}
+        $scope.dataBackup = angular.copy($scope.data)
+
+        $scope.getSelectedCount = function (selection) {
+            if (!selection || !angular.isObject(selection)) {
+                return 0
+            }
+            return Object.keys(selection).filter(function (key) {
+                return selection[key]
+            }).length
+        }
 
         $scope.onSelectionChange = function (opt) {
             $scope.selectedRows = opt.selection
@@ -138,12 +148,34 @@ app
         }
 
         $scope.getTreeSelectedCount = function () {
-            if (!$scope.treeSelectedRows) {
-                return 0
+            return $scope.getSelectedCount($scope.treeSelectedRows)
+        }
+
+        $scope.replaceSelectionData = function () {
+            $scope.data = angular.copy($scope.dataBackup)
+        }
+
+        $scope.spliceFirstRow = function () {
+            if ($scope.data.length > 0) {
+                $scope.data.splice(0, 1)
             }
-            return Object.keys($scope.treeSelectedRows).filter(function (key) {
-                return $scope.treeSelectedRows[key]
-            }).length
+        }
+
+        $scope.restoreSelectionData = function () {
+            $scope.data = angular.copy($scope.dataBackup)
+        }
+
+        $scope.noRowKeyData = angular.copy($scope.data).slice(0, 3)
+        $scope.noRowKeySelectedRows = {}
+
+        $scope.onNoRowKeySelectionChange = function (opt) {
+            $scope.noRowKeySelectedRows = opt.selection
+        }
+
+        $scope.spliceNoRowKeyFirstRow = function () {
+            if ($scope.noRowKeyData.length > 0) {
+                $scope.noRowKeyData.splice(0, 1)
+            }
         }
 
         $scope.treeData = [
