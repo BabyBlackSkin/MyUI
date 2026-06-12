@@ -145,7 +145,8 @@
 
     <h3>树形表格</h3>
     <p>当 row 含 children 字段时，可通过 tree-props 渲染树形表格。使用 type="expand" 单独作为展开列；若与多选同时使用，展开列在第一列，checkbox 在第二列。</p>
-    <p ng-if="treeSelectedRows.length">已选中 {{treeSelectedRows.length}} 行</p>
+    <p>树形多选可通过 group-selection 开启组内联动（默认 false）。设为 true 后：选中父节点时自动选中其所有后代子节点及同级兄弟节点；选中子节点/叶子节点时自动选中同级兄弟节点；取消选择与选中行为对称。</p>
+    <p ng-if="getTreeSelectedCount()">已选中 {{getTreeSelectedCount()}} 行</p>
     <div class="mob-demo-block">
         <div class="mob-demo-example">
             <mob-table data="treeData"
@@ -153,6 +154,7 @@
                        row-key="'id'"
                        tree-props="treeProps"
                        default-expand-all="true"
+                       group-selection="true"
                        selection="treeSelectedRows"
                        on-selection-change="onTreeSelectionChange(opt)">
                 <mob-table-item type="'expand'"></mob-table-item>
@@ -170,6 +172,7 @@
                                        row-key="'id'"
                                        tree-props="treeProps"
                                        default-expand-all="true"
+                                       group-selection="true"
                                        selection="treeSelectedRows"
                                        on-selection-change="onTreeSelectionChange(opt)">
                                 <mob-table-item type="'expand'" width="25"></mob-table-item>
@@ -186,27 +189,22 @@
     <p>通过 type="expand" 列展开行，type="extension" 定义展开区域自定义内容。展开行单独占一行并合并所有列，类似 Element Plus 的 expand 实现。</p>
     <div class="mob-demo-block">
         <div class="mob-demo-example">
-            <mob-button ng-click="show()">啊</mob-button>
-            <mob-dialog title="'测试'" ng-model="visibleModel">
-                <ng-transclude-body>
-                <mob-table data="data"
-                           border="true"
-                           row-key="'refundOrderSn'"
-                           expand-row-keys="expandRowKeys">
-                    <mob-table-item type="'expand'"></mob-table-item>
-                    <mob-table-item type="'extension'">
-                        <div>
-                            <p>订单号：{{$context.row.eshopOrderSn}}</p>
-                            <p>退款单号：{{$context.row.refundOrderSn}}</p>
-                            <p>详情：{{$context.row.detail}}</p>
-                        </div>
-                    </mob-table-item>
-                    <mob-table-item prop="'eshopOrderSn'" label="'订单号'"></mob-table-item>
-                    <mob-table-item prop="'orderPrice'" label="'金额'"></mob-table-item>
-                    <mob-table-item prop="'refundOrderSn'" label="'退款单号'"></mob-table-item>
-                </mob-table>
-                </ng-transclude-body>
-            </mob-dialog>
+            <mob-table data="data"
+                       border="true"
+                       row-key="'refundOrderSn'"
+                       expand-row-keys="expandRowKeys">
+                <mob-table-item type="'expand'"></mob-table-item>
+                <mob-table-item type="'extension'">
+                    <div>
+                        <p>订单号：{{$context.row.eshopOrderSn}}</p>
+                        <p>退款单号：{{$context.row.refundOrderSn}}</p>
+                        <p>详情：{{$context.row.detail}}</p>
+                    </div>
+                </mob-table-item>
+                <mob-table-item prop="'eshopOrderSn'" label="'订单号'"></mob-table-item>
+                <mob-table-item prop="'orderPrice'" label="'金额'"></mob-table-item>
+                <mob-table-item prop="'refundOrderSn'" label="'退款单号'"></mob-table-item>
+            </mob-table>
         </div>
         <div class="meta">
                 <pre prism>

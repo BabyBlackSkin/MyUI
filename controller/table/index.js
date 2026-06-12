@@ -137,6 +137,15 @@ app
             $scope.treeSelectedRows = opt.selection
         }
 
+        $scope.getTreeSelectedCount = function () {
+            if (!$scope.treeSelectedRows) {
+                return 0
+            }
+            return Object.keys($scope.treeSelectedRows).filter(function (key) {
+                return $scope.treeSelectedRows[key]
+            }).length
+        }
+
         $scope.treeData = [
             {
                 id: '1',
@@ -145,6 +154,23 @@ app
                 children: [
                     {id: '1-1', name: 'Level two 1-1', size: '10KB'},
                     {id: '1-2', name: 'Level two 1-2', size: '8KB'}
+                ]
+            },
+            {
+                id: '2',
+                name: 'Level one 2',
+                size: '-',
+                children: [
+                    {
+                        id: '2-1',
+                        name: 'Level two 2-1',
+                        size: '5KB',
+                        children: [
+                            {id: '2-1-1', name: 'Level three 2-1-1', size: '1KB'},
+                            {id: '2-1-2', name: 'Level three 2-1-2', size: '2KB'}
+                        ]
+                    },
+                    {id: '2-2', name: 'Level two 2-2', size: '3KB'}
                 ]
             },
             {

@@ -22,6 +22,7 @@ const mobTable = [
                 onSelectionChange: "&",
                 treeProps: "=",
                 defaultExpandAll: "=",
+                groupSelection: "=",
             },
             replace: true,
             controllerAs: "vm",
@@ -88,6 +89,10 @@ const mobTable = [
 
                 vm.isTreeMode = function () {
                     return angular.isDefined($scope.treeProps)
+                }
+
+                vm.isGroupSelectionEnabled = function () {
+                    return vm.isTreeMode() && !!$scope.groupSelection
                 }
 
                 vm.hasExpandTemplate = function () {
@@ -476,10 +481,97 @@ const mobTable = [
                     updateHeaderSelectionState()
                 }
 
+                function findRowContext(row) {
+                    if (!row || !angular.isArray($scope.data)) {
+                        return null
+                    }
+                    const childrenKey = getChildrenKey()
+
+                    function search(nodes, parent) {
+                        for (let i = 0; i < nodes.length; i++) {
+                            const node = nodes[i]
+                            if (node === row) {
+                                return {
+                                    row: node,
+                                    parent: parent,
+                                    siblings: nodes,
+                                }
+                            }
+                            const children = node[childrenKey]
+                            if (angular.isArray(children) && children.length) {
+                                const found = search(children, node)
+                                if (found) {
+                                    return found
+                                }
+                            }
+                        }
+                        return null
+                    }
+
+                    return search($scope.data, null)
+                }
+
+                function collectDescendants(row) {
+                    const childrenKey = getChildrenKey()
+                    const result = []
+
+                    function walk(node) {
+                        const children = node[childrenKey]
+                        if (!angular.isArray(children)) {
+                            return
+                        }
+                        children.forEach(function (child) {
+                            result.push(child)
+                            walk(child)
+                        })
+                    }
+
+                    walk(row)
+                    return result
+                }
+
+                function dedupeRows(rows) {
+                    const seen = new Set()
+                    const result = []
+                    rows.forEach(function (r) {
+                        if (r && !seen.has(r)) {
+                            seen.add(r)
+                            result.push(r)
+                        }
+                    })
+                    return result
+                }
+
+                function getTreeGroupSelectionRows(row) {
+                    const ctx = findRowContext(row)
+                    if (!ctx) {
+                        return [row]
+                    }
+
+                    const rows = []
+                    if (vm.rowHasChildren(row)) {
+                        rows.push.apply(rows, ctx.siblings)
+                        rows.push.apply(rows, collectDescendants(row))
+                    } else {
+                        rows.push.apply(rows, ctx.siblings)
+                    }
+                    return dedupeRows(rows)
+                }
+
                 vm.toggleRowSelection = function (row, selected) {
                     if (!vm.isRowSelectable(row)) {
                         return
                     }
+
+                    const targetRows = vm.isGroupSelectionEnabled()
+                        ? getTreeGroupSelectionRows(row)
+                        : [row]
+
+                    targetRows.forEach(function (r) {
+                        if (vm.isRowSelectable(r)) {
+                            vm.selection[vm.getRowIdentity(r)] = selected
+                        }
+                    })
                     emitSelectionChange()
                 }
 
