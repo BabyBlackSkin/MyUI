@@ -1,0 +1,177 @@
+<section class="mob-doc content" ng-controller="InputTagCtrl">
+
+    <h2>InputTag 标签输入框</h2>
+
+    <div class="mob-doc content">
+
+        <h3>基础用法</h3>
+        <p>按下 Enter 键将输入内容添加为标签。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input-tag style="display:block;width: 320px;" ng-model="basicValue" placeholder="'请输入'"></mob-input-tag>
+                <p>值：<span ng-bind="basicValue | json"></span></p>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="basicValue" placeholder="'请输入'"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>自定义触发键</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-segmented ng-model="trigger" options="triggerOptions"></mob-segmented>
+                <br><br>
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="triggerValue"
+                               trigger="trigger"
+                               placeholder="'请输入'"></mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="triggerValue" trigger="trigger"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>最大标签数</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="maxValue"
+                               max="3"
+                               placeholder="'最多 3 个标签'"></mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="maxValue" max="3"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>折叠标签</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <p>collapse-tags</p>
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="collapseValue1"
+                               collapse-tags="true"
+                               placeholder="'请输入'"></mob-input-tag>
+                <br>
+                <p>collapse-tags-tooltip</p>
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="collapseValue2"
+                               collapse-tags="true"
+                               collapse-tags-tooltip="true"
+                               placeholder="'请输入'"></mob-input-tag>
+                <br>
+                <p>max-collapse-tags</p>
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="collapseValue3"
+                               collapse-tags="true"
+                               collapse-tags-tooltip="true"
+                               max-collapse-tags="3"
+                               placeholder="'请输入'"></mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag collapse-tags="true" collapse-tags-tooltip="true" max-collapse-tags="3"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>禁用状态</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="disabledValue"
+                               ng-disabled="true"></mob-input-tag>
+                <br>
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="disabledCollapseValue"
+                               collapse-tags="true"
+                               collapse-tags-tooltip="true"
+                               ng-disabled="true"></mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="disabledValue" ng-disabled="true"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>可清空</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="clearableValue"
+                               clearable="true"></mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="clearableValue" clearable="true"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>分隔符</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="delimiterValue"
+                               delimiter="','"
+                               placeholder="'尝试用逗号分隔'"></mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="delimiterValue" delimiter="','"></mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+        <h3>自定义前缀和后缀</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-input-tag style="display:block;width: 320px;" ng-model="slotValue" clearable="true">
+                    <mob-icon-search slot="prefix"></mob-icon-search>
+                    <mob-icon-calendar slot="suffix"></mob-icon-calendar>
+                </mob-input-tag>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <mob-input-tag ng-model="slotValue">
+                                <mob-icon-search slot="prefix"></mob-icon-search>
+                                <mob-icon-calendar slot="suffix"></mob-icon-calendar>
+                            </mob-input-tag>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
+    </div>
+</section>

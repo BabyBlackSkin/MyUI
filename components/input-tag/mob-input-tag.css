@@ -1,0 +1,119 @@
+.mob-input-tag .mob-input__wrapper {
+    align-items: center;
+    min-height: calc(var(--mob-input-height) - 2px);
+    padding: 2px 11px;
+}
+
+.mob-input-tag__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mob-input-tag.is_collapse_tags .mob-input-tag__inner {
+    flex-wrap: nowrap;
+}
+
+.mob-input-tag .mob-input-tag__input.mob-input__inner {
+    flex: 1;
+    min-width: 60px;
+    width: auto;
+    height: 24px;
+    line-height: 24px;
+    padding: 0;
+    background-color: transparent;
+}
+
+.mob-input-tag__tag-item {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+}
+
+.mob-input-tag__tag-item mob-tag {
+    max-width: 100%;
+}
+
+.mob-input-tag__tag-item .mob-tag {
+    gap: 4px;
+    max-width: 100%;
+}
+
+.mob-input-tag__tag-item .mob-tag__content {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 100%;
+}
+
+.mob-input-tag__tag-item .mob-tag span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mob-input-tag__close {
+    flex-shrink: 0;
+}
+
+.mob-input-tag .mob-select__selected-item__collapse {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: 100%;
+    border-radius: 4px;
+    height: 30px;
+    margin: 2px;
+    color: #a6a9ae;
+    padding: 3px 10px;
+    font-size: .7rem;
+    background-color: #f4f4f5;
+}
+
+.mob-input-tag .mob-select__selected-item__collapse span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mob-input-tag .mob-icon__close .mob-icon {
+    padding: 1px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mob-input-tag .mob-icon__close .mob-icon:hover,
+.mob-select-popper .mob-icon__close .mob-icon:hover {
+    background-color: #909399;
+}
+
+.mob-input-tag .mob-icon__close .mob-icon:hover svg path,
+.mob-select-popper .mob-icon__close .mob-icon:hover svg path {
+    fill: #fff;
+}
+
+/* 禁用状态：对齐 mob-select.is_disabled 的折叠标签表现 */
+.mob-input-tag.is_disabled .mob-select__selected-item__collapse-contain {
+    cursor: not-allowed;
+}
+.mob-input-tag .mob-popper-down, .mob-popper-down__inner>mob-tag {
+    margin: 2px;
+}
+
+.mob-input-tag.is_disabled .mob-icon__close .mob-icon {
+    cursor: not-allowed;
+}
+
+.mob-input-tag.is_disabled .mob-icon__close .mob-icon:hover {
+    background-color: transparent;
+}
+
+.mob-input-tag.is_disabled .mob-icon__close .mob-icon:hover svg path {
+    fill: currentColor;
+}

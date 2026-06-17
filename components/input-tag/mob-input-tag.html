@@ -1,0 +1,98 @@
+<div class="mob-input mob-input-tag"
+     ng-class="{
+         'is_clearable': $ctrl.clearable,
+         'is_disabled': $ctrl.ngDisabled,
+         'is_collapse_tags': $ctrl.collapseTags
+     }">
+
+    <div class="mob-input__wrapper mob_popper__target" popper-group="inputTag">
+
+        <span class="mob-input__prefix">
+            <span class="mob-input__prefix-inner">
+                <slot name="prefix"></slot>
+            </span>
+        </span>
+
+        <div class="mob-input-tag__inner">
+
+            <!-- 非折叠：展示全部标签 -->
+            <div class="mob-input-tag__tag-item"
+                 ng-if="!$ctrl.collapseTags"
+                 ng-repeat="tag in $ctrl.model track by $index">
+                <mob-tag type="'info'">
+                    <span ng-bind="tag"></span>
+                    <mob-icon-close class="mob-icon__close mob-input-tag__close"
+                                    ng-if="!$ctrl.ngDisabled"
+                                    ng-click="$ctrl.removeTagAt($index, $event)"></mob-icon-close>
+                </mob-tag>
+            </div>
+
+            <!-- 折叠模式（对齐 mob-select collapse-tags） -->
+            <div class="mob-select__selected-item__collapse-contain"
+                 ng-if="$ctrl.collapseTags"
+                 stop-bubbling>
+
+
+                <mob-tag type="'info'"
+                         ng-repeat="tag in $ctrl.getVisibleTags() track by $index">
+                    <span ng-bind="tag"></span>
+                    <mob-icon-close class="mob-icon__close mob-input-tag__close"
+                                    ng-if="!$ctrl.ngDisabled"
+                                    ng-click="$ctrl.removeTagAt($index, $event)"></mob-icon-close>
+                </mob-tag>
+
+                <!-- 无 tooltip 的 +N -->
+                <mob-tag type="'info'"
+                         ng-if="!$ctrl.collapseTagsTooltip && $ctrl.getHiddenTagCount() > 0">
+                    <span ng-bind="'+' + $ctrl.getHiddenTagCount()"></span>
+                </mob-tag>
+
+                <!-- 有 tooltip 的 +N：未禁用时可点击展开 -->
+                <div class="mob_popper__target" style="display: inline-flex"
+                    popper-group="tooltip">
+                    <mob-tag type="'info'"
+                             ng-if="$ctrl.collapseTagsTooltip && !$ctrl.ngDisabled"
+                             ng-show="$ctrl.getHiddenTagCount() > 0">
+                        <span ng-bind="'+' + $ctrl.getHiddenTagCount()"></span>
+                    </mob-tag>
+                </div>
+
+<!--                <div class="mob-select__selected-item__collapse mob_popper__target"-->
+<!--                     popper-group="tooltip"-->
+<!--                     ng-if="$ctrl.collapseTagsTooltip && !$ctrl.ngDisabled"-->
+<!--                     ng-show="$ctrl.getHiddenTagCount() > 0">-->
+<!--                    <span ng-bind="'+' + $ctrl.getHiddenTagCount()"></span>-->
+<!--                </div>-->
+
+                <!-- 禁用时仅展示 +N，不绑定 popper -->
+
+                <mob-tag type="'info'"
+                         ng-if="$ctrl.collapseTagsTooltip && $ctrl.ngDisabled && $ctrl.getHiddenTagCount() > 0">
+                    <span ng-bind="'+' + $ctrl.getHiddenTagCount()"></span>
+                </mob-tag>
+            </div>
+
+            <input type="text"
+                   autocomplete="off"
+                   class="mob-input__inner mob-input-tag__input custom"
+                   ng-model="$ctrl.inputValue"
+                   ng-keydown="$ctrl.onKeydown($event)"
+                   ng-input="$ctrl.onInputChange"
+                   ng-blur="$ctrl.onBlur()"
+                   ng-focus="$ctrl.onFocus()"
+                   placeholder="{{$ctrl.showPlaceholder() ? $ctrl.placeholder : ''}}"
+                   ng-disabled="$ctrl.ngDisabled"
+                   ng-readonly="$ctrl.readonly"
+                   maxlength="{{$ctrl.maxlength}}">
+        </div>
+
+        <span class="mob-input__suffix">
+            <span class="mob-input__suffix-inner">
+                <mob-icon-circle-close class="mob-input_clear"
+                                       ng-if="$ctrl.showClear()"
+                                       ng-click="$ctrl.clear()"></mob-icon-circle-close>
+                <slot name="suffix"></slot>
+            </span>
+        </span>
+    </div>
+</div>
