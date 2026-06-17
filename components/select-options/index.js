@@ -45,10 +45,16 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
             }
         })
 
+        // 有的时候可能存在select的model先赋值，options还没有初始化的情况，这里自己再比较一次，同步select
+        let change = _that.change(_that.mobSelect.ngModel);
+        if (change) {
+            $scope.$emit(`${_that.mobSelect.uuid}SyncPlaceholder`, {label: _that.label, value: _that.getValue()})
+        }
+
         // 监听父组件的清空事件
-        $scope.$on(`${_that.mobSelect.uuid}Empty`, function (e, data) {
-            $scope.activeModel.active = false
-        })
+        // $scope.$on(`${_that.mobSelect.uuid}Empty`, function (e, data) {
+        //     $scope.activeModel.active = false
+        // })
 
         // 监听父组件的过滤事件
         $scope.$on(`${_that.mobSelect.uuid}Filter`, function (e, data) {
@@ -57,7 +63,13 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
                 $scope.hidden = false
                 return
             }
-            $scope.hidden = _that.label.indexOf(data.value) < 0
+            const type = typeof _that.label;
+            if (type === 'number') {
+                $scope.hidden = _that.label === data.value
+            }
+            else {
+                $scope.hidden = _that.label.indexOf(data.value) < 0
+            }
 
             $scope.$emit(`${_that.mobSelect.uuid}FilterResult`, {
                 key: $scope.$id,
@@ -67,20 +79,29 @@ function controller($scope, $element, uuId, $transclude, $attrs, attrHelp, cross
     }
 
     this.change = function (data) {
-        let temporaryActive = false
-        if (Array.isArray(data)) {
-            temporaryActive = data.includes(this.getValue())
-        } else {
-            temporaryActive = data === this.getValue()
+        $scope.activeModel.active = this.isActive()
+        return $scope.activeModel.active
+    }
+
+    this.isActive = function () {
+        if (!_that.mobSelect) {
+            return false
         }
-        $scope.activeModel.active = temporaryActive
-        return temporaryActive;
+        if (Array.isArray(_that.mobSelect.ngModel)) {
+            return _that.mobSelect.ngModel.includes(this.getValue())
+        } else {
+            if (this.strictEqual === false) {
+                return _that.mobSelect.ngModel == this.getValue()
+            } else {
+                return _that.mobSelect.ngModel === this.getValue()
+            }
+        }
     }
 
     // 获取options的Value
     this.getValue = function () {
         // 优先取value，然后是label
-        return this.value ? this.value : this.label
+        return angular.isDefined(this.value) ? this.value : this.label
     }
     // options的点击事件，被点击时，通知父组件
     this.clickHandler = function () {
@@ -102,6 +123,7 @@ app
             checkBox: '<?',
             label: '<?',
             value: '<?',
-            data: '<?'
+            data: '<?',
+            strictEqual:'<?',
         },
     })

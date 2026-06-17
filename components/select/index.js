@@ -35,6 +35,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      */
     this.$onDestroy = function () {
         cross.delete(this.uuid)
+        if (this.autoDisableSelected) {
+            for (let item in this.optionsCache) {
+                this.setOptionsDisabled(this.optionsCache[item], false)
+            }
+        }
         // 将创建的select和tag销毁
         $(`#${_that.uuid}_mob-select-popper`).remove()
         $(`#${_that.uuid}_mob-select-tag-popper`).remove()
@@ -112,9 +117,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (angular.isFunction(_that.input)) {
                 // 判断是不是多选
                 let options = angular.copy(_that.getNgModelOptions())
+                // 暂存oldValue
+                let oldValue = _that.ngModel
                 // ngModel、参数、ngModel对应的options
-                let opt = {value: data.value, attachment: _that.attachment, options}
-                _that.input({opt: opt})
+                $timeout(function () {
+                    let opt = {value: data.value, oldValue:oldValue, attachment: _that.attachment, options}
+                    _that.input({opt: opt})
+                })
             }
             _that.changeHandler(data)
         })
@@ -125,6 +134,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             _that.filterHasMatched()
         })
 
+        // 墨博在关闭页签的时候，会发送contentRowRemove事件
+        $scope.$on('contentRowRemove',function (){
+            _that.$onDestroy()
+        })
     }
 
     this.buildCache = function (options, isGroup) {
@@ -160,12 +173,16 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (!newV && !oldV) {
                 return
             }
-            if (newV && oldV && newV === oldV) {
+            if (newV && oldV && newV === oldV
+                && angular.isDefined(_that.optionsCache) && Object.keys(_that.optionsCache).length  > 0) {
                 return;
             }
             // 更新optionsCache
             _that.optionsCache = {}
             _that.buildCache(newV,_that.group)
+
+            //初始化禁用
+            _that.autoDisableSelectedHandler(_that.ngModel, null)
 
             for (let tag of $scope.collapseTagsList) {
                 if (tag.notMatchOptions) {
@@ -182,8 +199,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         $scope.$watchCollection(() => {
             return _that.ngModel
         }, function (newV,oldV) {
-            let newIsEmpty = !newV || newV.length === 0
-            let oldIsEmpty = !oldV || oldV.length === 0
+            let newIsEmpty = angular.isUndefined(newV) || newV.length === 0
+            let oldIsEmpty = angular.isUndefined(oldV) || oldV.length === 0
             if (newIsEmpty && oldIsEmpty) {
                 return
             }
@@ -201,7 +218,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 // 判断是不是多选
                 let options = _that.getNgModelOptions()
                 // ngModel、参数、ngModel对应的options
-                let opt = {value: newV, attachment: _that.attachment, options}
+                let opt = {value: newV,oldValue:oldV, attachment: _that.attachment, options}
                 _that.change({opt: opt})
             }
 
@@ -209,7 +226,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             if (angular.isUndefined(newV) || newV === null || newV.length === 0) {
                 // 通知OptionsEmpty
                 let emptyValue = _that.emptyValue()
-                $scope.$broadcast(`${_that.uuid}Empty`, emptyValue)
+                // $scope.$broadcast(`${_that.uuid}Empty`, emptyValue)
                 _that.changeHandler({value:emptyValue})
                 // 更新tagList
                 _that.collapseTagsListUpdate([])
@@ -263,7 +280,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }, 300)()
 
         }
-        console.log(element)
+        // console.log(element)
         element.addEventListener('scroll', handleScroll);
     }
 
@@ -305,6 +322,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 select-uuid="${_that.uuid}" 
                                 label="$ctrl.optionsConfigGetLabel(o)" 
                                 value="$ctrl.optionsConfigGetValue(o)" 
+                                strict-equal="$ctrl.optionsConfig.strictEqual"
                                 ng-if="$ctrl.optionsConfigIsRender(o)" 
                                 ng-disabled="o.disabled"
                                 check-box="$ctrl.checkBox"  
@@ -330,6 +348,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                             select-uuid="${_that.uuid}" 
                             label="$ctrl.optionsConfigGetLabel(o)" 
                             value="$ctrl.optionsConfigGetValue(o)" 
+                            strict-equal="$ctrl.optionsConfig.strictEqual"
                             ng-if="$ctrl.optionsConfigIsRender(o)" 
                             check-box="$ctrl.checkBox"
                             ng-disabled="o.disabled" data="o"></mob-select-options>
@@ -359,7 +378,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <div class="mob-popper-down__inner">
                             <div class="mob-select__selected-item__collapse" stop-bubbling ng-repeat="item in collapseTagsList" ng-if="!$first">
                                 <span ng-bind="item.label"></span>
-                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove($event, item)"></mob-icon-close>
+                                <mob-icon-close class="mob-icon__close" ng-if="!$ctrl.ngDisabled"  ng-click="collapseRemove($event, item)"></mob-icon-close>
                             </div>
                         </div>
                     </div>
@@ -384,9 +403,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         if (!this.autoDisableSelected) {
             return;
         }
-        if (!this.optionsCache) {
+
+        if (!this.optionsCache || Object.keys(this.optionsCache).length == 0) {
             return
         }
+
         if (this.multiple) {
             if (oldV) {
                 for (let i = 0; i < oldV.length; i++) {
@@ -400,8 +421,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             }
 
         } else {
-            this.setOptionsDisabled(this.optionsCache[oldV], false)
-            this.setOptionsDisabled(this.optionsCache[newV], true)
+            oldV && this.setOptionsDisabled(this.optionsCache[oldV], false)
+            newV && this.setOptionsDisabled(this.optionsCache[newV], true)
         }
     }
     /**
@@ -430,7 +451,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      */
     this.changeValueHandler = function (data) {
         if (this.multiple) {
-            if (angular.isUndefined(this.ngModel)) {
+            if (angular.isUndefined(this.ngModel) || this.ngModel == "") {
                 this.ngModel = []
             }
             if (Array.isArray(data.value) && data.value.length === 0) {
@@ -440,7 +461,22 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 if (this.ngModel.includes(data.value)) {
                     this.ngModel.splice(this.ngModel.indexOf(data.value), 1)
                 } else {
-                    this.ngModel.push(data.value)
+                    if (this.multipleLimit) {
+                        // 判断是否大于限制
+                        if (this.ngModel.length >= this.multipleLimit) {
+                            if (this.replaceOnMultipleLimit) {
+                                // 移除第一个
+                                this.ngModel.splice(0, 1)
+                                this.ngModel.push(data.value)
+                            }
+                        }
+                        else {
+                            this.ngModel.push(data.value)
+                        }
+                    }
+                    else {
+                        this.ngModel.push(data.value)
+                    }
                 }
             }
         } else {
@@ -521,8 +557,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @returns {false|string|boolean|*|boolean}
      */
     $scope.isCollapseTagsNoTooltip = function () {
-        return !_that.ngDisabled && // 未禁用
-            _that.multiple &&  // 支持多选
+        return _that.multiple &&  // 支持多选
             _that.collapseTag && // 支持工具箱
             (
                 angular.isDefined(_that.collapseTagTooltip) && !_that.collapseTagTooltip // 定义了工具箱标记，且未开启
@@ -545,8 +580,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @returns {false|string|boolean|*|boolean}
      */
     $scope.isCollapseTagsHasTooltip = function () {
-        return  !_that.ngDisabled && // 未禁用
-            _that.multiple &&  // 支持多选
+        return _that.multiple &&  // 支持多选
             _that.collapseTag && // 支持工具箱
             angular.isDefined(_that.collapseTagTooltip) && _that.collapseTagTooltip // 开启工具箱
             && $scope.collapseTagsList && $scope.collapseTagsList.length > 0
@@ -728,6 +762,7 @@ app
     .component('mobSelect', {
         transclude: true,
         templateUrl: './components/select/mob-select.html',
+        controller: controller,
         bindings: {
             ngModel: '=?',// 双向数据绑定
             required:'<?', // 是否必填
@@ -742,10 +777,12 @@ app
             optionsConfig:'<?',// options的配置参数
             appendToBody:'<?',// 是否添加到body
             ngDisabled: '<?', // 是否禁用
-            autoDisableSelected:'<?', // 是否禁用已选择的
+            autoDisableSelected:'<?', // 是否禁用已选择的。对于多个select使用相同的options时实现互斥功能
             clearable: '<?', // 可清空的
             placeholder: '<?',// 提示文字
             multiple: '<?',// 是否支持多选
+            multipleLimit: '<?', // 多选限制
+            replaceOnMultipleLimit: '<?', // 当多选达到上限时，是否自动移除第一个选项,继续选择新选项
             collapseTag: '<?', // 是否显示Tag
             collapseTagTooltip: '<?', // 是否显示Tag工具箱
             filterable: '<?', // 是否可过滤
@@ -761,10 +798,9 @@ app
              *  <mob-checkbox ng-mode="obj.val" attachment="obj" change-handle="customChangeHandler(value, obj)"></mob-checkbox>
              */
             attachment:"<?",
-            // 方法
+            // Events
             change: '&?',
             input: '&?', // options被点击后的回调
             load: "&?", // 加载子节点 Function(node, resolve)
-        },
-        controller: controller
+        }
     })
