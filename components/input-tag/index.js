@@ -314,27 +314,27 @@ app.component('mobInputTag', {
         form: '?^form'
     },
     bindings: {
-        name: '@?',
-        ngRequired: '<?',
-        ngDisabled: '<?',
-        readonly: '<?',
-        placeholder: '<?',
-        clearable: '<?',
-        max: '<?',
-        trigger: '<?',
-        delimiter: '<?',
-        saveOnBlur: '<?',
-        validateEvent: '<?',
-        tagType: '<?',
-        collapseTag: '<?',
-        collapseTagTooltip: '<?',
-        maxCollapseTag: '<?',
-        maxlength: '<?',
-        change: '&?',
-        addTag: '&?',
-        removeTag: '&?',
-        focusEvent: '&?',
-        blurEvent: '&?',
-        clearEvent: '&?'
+        name: '@?',              // 表单字段 name，未传时自动生成
+        ngRequired: '<?',        // 是否必填
+        ngDisabled: '<?',        // 是否禁用
+        readonly: '<?',          // 是否只读
+        placeholder: '<?',        // 输入框占位文本
+        clearable: '<?',         // 是否显示清空按钮
+        max: '<?',               // 最多可添加的标签数量
+        trigger: '<?',           // 添加标签的触发键，Enter 或 Space
+        delimiter: '<?',         // 分隔符，输入时自动拆分并添加标签
+        saveOnBlur: '<?',        // 失焦时是否将未提交的输入保存为标签
+        validateEvent: '<?',     // 标签变更时是否触发 ngModel 校验
+        tagType: '<?',           // 标签类型，对应 mob-tag 的 type
+        collapseTag: '<?',       // 是否折叠多余标签
+        collapseTagTooltip: '<?',// 折叠标签是否以 tooltip 展示剩余项
+        maxCollapseTag: '<?',    // 折叠模式下最多展示的标签数量
+        maxlength: '<?',        // 输入框最大字符长度
+        change: '&?',            // 标签列表变更回调，参数 { value }
+        addTag: '&?',            // 添加标签回调，参数 { value }
+        removeTag: '&?',         // 移除标签回调，参数 { value }
+        focusEvent: '&?',        // 获得焦点回调
+        blurEvent: '&?',         // 失去焦点回调
+        clearEvent: '&?'         // 清空回调
     }
 });
