@@ -4,6 +4,14 @@
     padding: 2px 11px;
 }
 
+.mob-input-tag .mob-input__prefix,
+.mob-input-tag .mob-input__suffix {
+    flex-shrink: 0;
+}
+.mob-input-tag mob-tag:hover {
+    cursor: default;
+}
+
 .mob-input-tag__inner {
     display: flex;
     flex-wrap: wrap;
@@ -11,20 +19,29 @@
     flex: 1;
     gap: 4px;
     min-width: 0;
+    overflow: hidden;
 }
 
 .mob-input-tag.is_collapse_tags .mob-input-tag__inner {
     flex-wrap: nowrap;
 }
 
-.mob-input-tag .mob-input-tag__input.mob-input__inner {
+.mob-input-tag .mob-select__selected-item__collapse-contain {
     flex: 1;
-    min-width: 60px;
-    width: auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.mob-input-tag .mob-input-tag__input.mob-input__inner {
+    flex: 1 1 auto;
+    min-width: 4px;
+    max-width: 100%;
+    width: 0;
     height: 24px;
     line-height: 24px;
     padding: 0;
     background-color: transparent;
+    display: block;
 }
 
 .mob-input-tag__tag-item {

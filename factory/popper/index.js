@@ -2,11 +2,11 @@ app
     .factory('popper', ['uuId', 'floating','$debounce', function (uuId, floating, $debounce) {
 
         function showAutoUpdate(scope, popper, timer = {render: true}) {
-            let {target, tooltip, location, options} = popper
+            let { tooltip } = popper
             tooltip.style.display = 'block';
             tooltip.style.zIndex = '9999';
             // scope.popper[name].showAutoUpdateCleanUp
-            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, target, tooltip, location, options, timer.render)
+            popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, popper, timer.render)
             timer.render = false
             timer.tooltipCss = setTimeout(() => {
                 tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'auto';
@@ -82,10 +82,12 @@ app
                     if (angular.isUndefined(location)) {
                         location = target
                     }
+                    let popperWidthAuto = popperConfig[name].popperWidthAuto || false;
                     scope.$popper[name] = {
                         target,
                         tooltip,
                         location,
+                        popperWidthAuto,
                         hide: function (timer = {render: true}) {
                             this.popperShow = false
                             hide(scope, this, timer)

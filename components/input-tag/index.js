@@ -14,8 +14,8 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
         if (angular.isUndefined(this.trigger)) {
             this.trigger = 'Enter';
         }
-        if (angular.isUndefined(this.maxCollapseTags)) {
-            this.maxCollapseTags = 1;
+        if (angular.isUndefined(this.maxCollapseTag)) {
+            this.maxCollapseTag = 1;
         }
         if (angular.isUndefined(this.validateEvent)) {
             this.validateEvent = true;
@@ -114,18 +114,20 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
     };
 
     this.getVisibleTags = function () {
-        if (!$ctrl.collapseTags) {
+        if (!$ctrl.collapseTag) {
             return $ctrl.model;
         }
-        const maxShow = Number($ctrl.maxCollapseTags) || 1;
+        const n = Number($ctrl.maxCollapseTag);
+        const maxShow = Number.isFinite(n) ? n : 1;
         return $ctrl.model.slice(0, maxShow);
     };
 
     this.getHiddenTags = function () {
-        if (!$ctrl.collapseTags) {
+        if (!$ctrl.collapseTag) {
             return [];
         }
-        const maxShow = Number($ctrl.maxCollapseTags) || 1;
+        const n = Number($ctrl.maxCollapseTag);
+        const maxShow = Number.isFinite(n) ? n : 1;
         return $ctrl.model.slice(maxShow);
     };
 
@@ -134,7 +136,8 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
     };
 
     this.getHiddenTagStartIndex = function () {
-        const maxShow = Number($ctrl.maxCollapseTags) || 1;
+        const n = Number($ctrl.maxCollapseTag);
+        const maxShow = Number.isFinite(n) ? n : 1;
         return maxShow;
     };
 
@@ -230,7 +233,7 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
     };
 
     this.initPopper = function () {
-        if (!$ctrl.collapseTagsTooltip) {
+        if (!$ctrl.collapseTagTooltip) {
             return;
         }
 
@@ -323,9 +326,9 @@ app.component('mobInputTag', {
         saveOnBlur: '<?',
         validateEvent: '<?',
         tagType: '<?',
-        collapseTags: '<?',
-        collapseTagsTooltip: '<?',
-        maxCollapseTags: '<?',
+        collapseTag: '<?',
+        collapseTagTooltip: '<?',
+        maxCollapseTag: '<?',
         maxlength: '<?',
         change: '&?',
         addTag: '&?',
