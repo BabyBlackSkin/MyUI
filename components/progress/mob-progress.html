@@ -1,0 +1,120 @@
+<!-- 线形进度条 -->
+<div class="mob-progress mob-progress--line"
+     ng-if="$ctrl.isLine()"
+     ng-class="{
+        'mob-progress--text-inside': $ctrl.textInside,
+        'is-success': $ctrl.status === 'success',
+        'is-warning': $ctrl.status === 'warning',
+        'is-exception': $ctrl.status === 'exception'
+     }">
+    <div class="mob-progress-bar">
+        <div class="mob-progress-bar__outer" ng-style="$ctrl.getOuterStyle()">
+            <div class="mob-progress-bar__inner"
+                 ng-class="$ctrl.getInnerClass()"
+                 ng-style="$ctrl.getInnerStyle()">
+                <div class="mob-progress-bar__innerText"
+                     ng-if="$ctrl.textInside && $ctrl.showProgressText() && !$ctrl.indeterminate">
+                    <span ng-if="!$ctrl.showStatusIcon()" ng-bind="$ctrl.getFormatText()"></span>
+                    <mob-icon-check ng-if="$ctrl.status === 'success'"></mob-icon-check>
+                    <mob-icon-warning ng-if="$ctrl.status === 'warning'"></mob-icon-warning>
+                    <mob-icon-circle-close ng-if="$ctrl.status === 'exception'"></mob-icon-circle-close>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mob-progress__text"
+         ng-if="($ctrl.showProgressText() || $ctrl.hasDefaultSlot) && !$ctrl.textInside"
+         ng-style="{'font-size': $ctrl.strokeWidth + 'px', 'line-height': $ctrl.strokeWidth + 'px'}">
+        <span ng-if="$ctrl.showProgressText() && !$ctrl.showStatusIcon() && !$ctrl.indeterminate" ng-bind="$ctrl.getFormatText()"></span>
+        <mob-icon-check ng-if="$ctrl.showProgressText() && $ctrl.status === 'success'"></mob-icon-check>
+        <mob-icon-warning ng-if="$ctrl.showProgressText() && $ctrl.status === 'warning'"></mob-icon-warning>
+        <mob-icon-circle-close ng-if="$ctrl.showProgressText() && $ctrl.status === 'exception'"></mob-icon-circle-close>
+        <span class="mob-progress__custom-text" ng-if="$ctrl.hasDefaultSlot"></span>
+    </div>
+</div>
+
+<!-- 环形进度条 -->
+<div class="mob-progress mob-progress--circle"
+     ng-if="$ctrl.isCircle()"
+     ng-class="{
+        'is-success': $ctrl.status === 'success',
+        'is-warning': $ctrl.status === 'warning',
+        'is-exception': $ctrl.status === 'exception'
+     }"
+     ng-style="$ctrl.getCircleSize()">
+    <div class="mob-progress-circle">
+        <svg viewBox="0 0 100 100">
+            <circle class="mob-progress-circle__track"
+                    cx="50" cy="50"
+                    ng-attr-r="{{$ctrl.getCircleRadius()}}"
+                    fill="none"
+                    ng-attr-stroke="{{$ctrl.getTrackColor()}}"
+                    ng-attr-stroke-width="{{$ctrl.getRelativeStrokeWidth()}}">
+            </circle>
+            <circle class="mob-progress-circle__path"
+                    cx="50" cy="50"
+                    ng-attr-r="{{$ctrl.getCircleRadius()}}"
+                    fill="none"
+                    ng-attr-stroke="{{$ctrl.getBarColor()}}"
+                    ng-attr-stroke-width="{{$ctrl.getRelativeStrokeWidth()}}"
+                    ng-attr-stroke-linecap="{{$ctrl.strokeLinecap}}"
+                    ng-attr-stroke-dasharray="{{$ctrl.getCirclePerimeter()}}"
+                    ng-attr-stroke-dashoffset="{{$ctrl.getCircleDashOffset()}}"
+                    transform="rotate(-90 50 50)">
+            </circle>
+        </svg>
+        <div class="mob-progress__text mob-progress-circle__text"
+             ng-if="$ctrl.showProgressText() || $ctrl.hasDefaultSlot">
+            <span ng-if="$ctrl.showProgressText() && !$ctrl.showStatusIcon()" ng-bind="$ctrl.getFormatText()"></span>
+            <mob-icon-check ng-if="$ctrl.showProgressText() && $ctrl.status === 'success'"></mob-icon-check>
+            <mob-icon-warning ng-if="$ctrl.showProgressText() && $ctrl.status === 'warning'"></mob-icon-warning>
+            <mob-icon-circle-close ng-if="$ctrl.showProgressText() && $ctrl.status === 'exception'"></mob-icon-circle-close>
+            <span class="mob-progress__custom-text" ng-if="$ctrl.hasDefaultSlot"></span>
+        </div>
+    </div>
+</div>
+
+<!-- 仪表盘形进度条 -->
+<div class="mob-progress mob-progress--dashboard"
+     ng-if="$ctrl.isDashboard()"
+     ng-class="{
+        'is-success': $ctrl.status === 'success',
+        'is-warning': $ctrl.status === 'warning',
+        'is-exception': $ctrl.status === 'exception'
+     }"
+     ng-style="$ctrl.getCircleSize()">
+    <div class="mob-progress-circle">
+        <svg viewBox="0 0 100 100">
+            <circle class="mob-progress-circle__track"
+                    cx="50" cy="50"
+                    ng-attr-r="{{$ctrl.getCircleRadius()}}"
+                    fill="none"
+                    ng-attr-stroke="{{$ctrl.getTrackColor()}}"
+                    ng-attr-stroke-width="{{$ctrl.getRelativeStrokeWidth()}}"
+                    ng-attr-stroke-dasharray="{{$ctrl.getDashboardTrackDashArray()}}"
+                    ng-attr-stroke-dashoffset="{{$ctrl.getDashboardDashOffset()}}"
+                    stroke-linecap="round"
+                    transform="rotate(135 50 50)">
+            </circle>
+            <circle class="mob-progress-circle__path"
+                    cx="50" cy="50"
+                    ng-attr-r="{{$ctrl.getCircleRadius()}}"
+                    fill="none"
+                    ng-attr-stroke="{{$ctrl.getBarColor()}}"
+                    ng-attr-stroke-width="{{$ctrl.getRelativeStrokeWidth()}}"
+                    ng-attr-stroke-linecap="{{$ctrl.strokeLinecap}}"
+                    ng-attr-stroke-dasharray="{{$ctrl.getDashboardPathDashArray()}}"
+                    ng-attr-stroke-dashoffset="{{$ctrl.getDashboardDashOffset()}}"
+                    transform="rotate(135 50 50)">
+            </circle>
+        </svg>
+        <div class="mob-progress__text mob-progress-circle__text"
+             ng-if="$ctrl.showProgressText() || $ctrl.hasDefaultSlot">
+            <span ng-if="$ctrl.showProgressText() && !$ctrl.showStatusIcon()" ng-bind="$ctrl.getFormatText()"></span>
+            <mob-icon-check ng-if="$ctrl.showProgressText() && $ctrl.status === 'success'"></mob-icon-check>
+            <mob-icon-warning ng-if="$ctrl.showProgressText() && $ctrl.status === 'warning'"></mob-icon-warning>
+            <mob-icon-circle-close ng-if="$ctrl.showProgressText() && $ctrl.status === 'exception'"></mob-icon-circle-close>
+            <span class="mob-progress__custom-text" ng-if="$ctrl.hasDefaultSlot"></span>
+        </div>
+    </div>
+</div>

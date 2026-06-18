@@ -1,0 +1,194 @@
+<section class="mob-doc content">
+
+    <h2>Progress 进度条</h2>
+    <p>用于展示操作进度，告知用户当前状态。</p>
+
+    <div class="mob-doc content">
+        <h3>线形进度条</h3>
+        <p>通过 <code>percentage</code> 设置百分比，范围 0-100。可使用 <code>format</code> 自定义文字格式。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress">
+                    <mob-progress percentage="50"></mob-progress>
+                    <mob-progress percentage="100" format="format(percentage)"></mob-progress>
+                    <mob-progress percentage="100" status="'success'"></mob-progress>
+                    <mob-progress percentage="100" status="'warning'"></mob-progress>
+                    <mob-progress percentage="50" status="'exception'"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress percentage="50"></mob-progress>
+                        <mob-progress percentage="100" format="format(percentage)"></mob-progress>
+                        <mob-progress percentage="100" status="'success'"></mob-progress>
+                        <mob-progress percentage="100" status="'warning'"></mob-progress>
+                        <mob-progress percentage="50" status="'exception'"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>百分比内显</h3>
+        <p>设置 <code>text-inside</code> 和 <code>stroke-width</code> 将百分比显示在进度条内部。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress">
+                    <mob-progress text-inside="true" stroke-width="26" percentage="70"></mob-progress>
+                    <mob-progress text-inside="true" stroke-width="24" percentage="100" status="'success'"></mob-progress>
+                    <mob-progress text-inside="true" stroke-width="22" percentage="80" status="'warning'"></mob-progress>
+                    <mob-progress text-inside="true" stroke-width="20" percentage="50" status="'exception'"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress text-inside="true" stroke-width="26" percentage="70"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>自定义颜色</h3>
+        <p><code>color</code> 支持颜色字符串、颜色数组或函数。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress">
+                    <mob-progress percentage="percentage" color="customColor"></mob-progress>
+                    <mob-progress percentage="percentage" color="customColorMethod"></mob-progress>
+                    <mob-progress percentage="percentage" color="customColors"></mob-progress>
+                    <mob-button-group>
+                        <mob-button icon="'mob-icon-decrease'" ng-click="decrease()"></mob-button>
+                        <mob-button icon="'mob-icon-increase'" ng-click="increase()"></mob-button>
+                    </mob-button-group>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress percentage="percentage" color="customColor"></mob-progress>
+                        <mob-progress percentage="percentage" color="customColors"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>环形进度条</h3>
+        <p>设置 <code>type="circle"</code> 使用环形进度条，<code>width</code> 控制大小。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress mob-demo-progress--circle">
+                    <mob-progress type="'circle'" percentage="0"></mob-progress>
+                    <mob-progress type="'circle'" percentage="25"></mob-progress>
+                    <mob-progress type="'circle'" percentage="100" status="'success'"></mob-progress>
+                    <mob-progress type="'circle'" percentage="70" status="'warning'"></mob-progress>
+                    <mob-progress type="'circle'" percentage="50" status="'exception'"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress type="'circle'" percentage="25"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>仪表盘形进度条</h3>
+        <p>设置 <code>type="dashboard"</code> 使用仪表盘形进度条。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress mob-demo-progress--circle">
+                    <mob-progress type="'dashboard'" percentage="10" color="dashboardColors"></mob-progress>
+                    <mob-progress type="'dashboard'" percentage="percentage2" color="dashboardColors"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress type="'dashboard'" percentage="10" color="dashboardColors"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>不确定进度</h3>
+        <p>设置 <code>indeterminate</code> 开启不确定进度，<code>duration</code> 控制动画时长。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress">
+                    <mob-progress percentage="50" indeterminate="true"></mob-progress>
+                    <mob-progress percentage="100" format="format(percentage)" indeterminate="true"></mob-progress>
+                    <mob-progress percentage="100" status="'success'" indeterminate="true" duration="5"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress percentage="50" indeterminate="true"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>条纹进度条</h3>
+        <p>设置 <code>striped</code> 显示条纹，<code>striped-flow</code> 让条纹流动。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress">
+                    <mob-progress percentage="50" stroke-width="15" striped="true"></mob-progress>
+                    <mob-progress percentage="30" stroke-width="15" status="'warning'" striped="true" striped-flow="true"></mob-progress>
+                    <mob-progress percentage="100" stroke-width="15" status="'success'" striped="true" striped-flow="true" duration="10"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <mob-progress percentage="50" stroke-width="15" striped="true"></mob-progress>
+                        <mob-progress percentage="30" striped="true" striped-flow="true"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<style>
+    .mob-demo-progress {
+        max-width: 600px;
+    }
+    .mob-demo-progress mob-progress {
+        display: block;
+        margin-bottom: 15px;
+    }
+    .mob-demo-progress--circle {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        max-width: none;
+    }
+    .mob-demo-progress--circle mob-progress {
+        display: inline-block;
+        margin-bottom: 0;
+    }
+</style>
