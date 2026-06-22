@@ -56,10 +56,14 @@ function controller($scope, $element, $transclude) {
         if (isNaN(value) || value < 0) {
             return 0
         }
-        if (value > 100) {
-            return 100
+        if (value > 1) {
+            return 1
         }
         return value
+    }
+
+    this.getDisplayPercentage = function () {
+        return Math.round(this.getPercentage() * 100)
     }
 
     this.isLine = function () {
@@ -119,7 +123,7 @@ function controller($scope, $element, $transclude) {
         if (this.format) {
             return this.format({percentage: percentage})
         }
-        return percentage + '%'
+        return this.getDisplayPercentage() + '%'
     }
 
     this.showProgressText = function () {
@@ -138,7 +142,7 @@ function controller($scope, $element, $transclude) {
 
     this.getInnerStyle = function () {
         const style = {
-            width: this.getPercentage() + '%',
+            width: (this.getPercentage() * 100) + '%',
             backgroundColor: this.getBarColor()
         }
         if (this.indeterminate) {
@@ -180,7 +184,7 @@ function controller($scope, $element, $transclude) {
 
     this.getCircleDashOffset = function () {
         const perimeter = this.getCirclePerimeter()
-        return perimeter * (1 - this.getPercentage() / 100)
+        return perimeter * (1 - this.getPercentage())
     }
 
     this.getDashboardRate = function () {
@@ -200,7 +204,7 @@ function controller($scope, $element, $transclude) {
     this.getDashboardPathDashArray = function () {
         const perimeter = this.getCirclePerimeter()
         const dashboardPerimeter = this.getDashboardPerimeter()
-        const progress = dashboardPerimeter * (this.getPercentage() / 100)
+        const progress = dashboardPerimeter * this.getPercentage()
         return progress + ' ' + perimeter
     }
 
@@ -215,7 +219,7 @@ app.component('mobProgress', {
     templateUrl: './components/progress/mob-progress.html',
     controller: controller,
     bindings: {
-        percentage: '<?',       // 百分比，取值范围 0-100
+        percentage: '<?',       // 进度比例，取值范围 0-1
         type: '<?',              // 进度条类型，line / circle / dashboard
         strokeWidth: '<?',       // 进度条宽度（线形）或描边宽度（环形）
         textInside: '<?',        // 是否将百分比文字显示在进度条内部

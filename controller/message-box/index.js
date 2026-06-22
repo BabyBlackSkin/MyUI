@@ -14,7 +14,7 @@ function controller($scope, messageBox, message, $interval) {
     this.showHtmlMessage = function () {
         messageBox.alert(
             '<p style="margin: 0 0 12px;">文件正在上传，请稍候...</p>' +
-            '<mob-progress percentage="50" stroke-width="8"></mob-progress>',
+            '<mob-progress percentage="0.5" stroke-width="8"></mob-progress>',
             '上传进度',
             {
                 dangerouslyUseHTMLString: true,
@@ -48,8 +48,8 @@ function controller($scope, messageBox, message, $interval) {
         });
 
         timer = $interval(function () {
-            ctx.progressValue += 10;
-            if (ctx.progressValue >= 50) {
+            ctx.progressValue += 0.1;
+            if (ctx.progressValue >= 0.5) {
                 ctx.status = 'exception'
                 $interval.cancel(timer);
             }
