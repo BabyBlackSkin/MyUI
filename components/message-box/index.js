@@ -1,12 +1,14 @@
-function controller($scope, $element, $timeout, zIndexManager) {
+function controller($scope, $element, $timeout, $compile, zIndexManager) {
     const _that = this;
+    let messageContentElement = null;
 
-    // 默认配置
     this.defaultOptions = {
         title: '',
         message: '',
         type: 'info', // info, success, warning, error
         iconType: null, // success, warning, error 对应状态图标，null 表示不显示大图标
+        showHeader: true,// 是否展示标题头部
+        align: 'center',//对齐样式，支持 'left' | 'center' | 'right'
         showClose: true, // 是否显示关闭图标
         showCancelButton: false, // 是否显示取消按钮
         showConfirmButton: true, // 是否显示确认按钮
@@ -18,6 +20,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
         closeOnPressEscape: true, // 按下ESC关闭弹框
         inputConfig: null, // prompt弹框的input选项
         beforeClose: null, // 关闭前回调(action) => bool|Promise<bool>，返回false则阻止关闭
+        dangerouslyUseHTMLString: false, // 是否将 message 作为 HTML 字符串渲染（可包含 mob-* 组件）
     };
 
     // 合并后的配置
@@ -28,19 +31,40 @@ function controller($scope, $element, $timeout, zIndexManager) {
         this.isShow = false;
         this.isWrapperShow = false;
         this.isClosing = false;
-        this.cancelButtonLoading = false; // 按钮 loading 状态
-        this.confirmButtonLoading = false; // 按钮 loading 状态
+        this.cancelButtonLoading = false;
+        this.confirmButtonLoading = false;
         this.options = angular.extend({}, this.defaultOptions, this.config || {});
+        _that.applyMessageContext();
     };
 
     this.$onChanges = function (changes) {
         if (changes.config && changes.config.currentValue) {
             this.options = angular.extend({}, this.defaultOptions, changes.config.currentValue);
+            _that.applyMessageContext();
         }
+    };
+
+    this.applyMessageContext = function () {
+        const ctx = _that.options.messageContext;
+        if (!ctx) {
+            return;
+        }
+
+        // 通过 getter 代理，确保 messageContext 内数据变更能同步到 scope 绑定
+        angular.forEach(ctx, function (value, key) {
+            Object.defineProperty($scope, key, {
+                configurable: true,
+                enumerable: true,
+                get: function () {
+                    return ctx[key];
+                }
+            });
+        });
     };
 
     this.$onDestroy = function () {
         _that.unbindKeydown();
+        _that.destroyMessageContent();
     };
 
     this.$postLink = function () {
@@ -49,6 +73,45 @@ function controller($scope, $element, $timeout, zIndexManager) {
             _that.bindKeydown();
         }
         _that.show();
+        $timeout(function () {
+            _that.renderMessageContent();
+        });
+    };
+
+    // 渲染正文：纯文本或 HTML 字符串（HTML 模式下会 $compile，支持 mob-* 组件）
+    this.renderMessageContent = function () {
+        if (!_that.options.message || _that.options.inputConfig) {
+            return;
+        }
+
+        if (_that.options.dangerouslyUseHTMLString) {
+            _that.compileMessageHtml();
+        }
+    };
+
+    this.compileMessageHtml = function () {
+        const container = $element[0].querySelector('.mob-message-box__message-html');
+        if (!container) {
+            return;
+        }
+
+        _that.destroyMessageContent();
+        container.innerHTML = '';
+
+        const wrapper = angular.element('<div class="mob-message-box__message-html-inner"></div>');
+        wrapper.html(_that.options.message);
+        messageContentElement = $compile(wrapper)($scope);
+
+        angular.forEach(messageContentElement, function (node) {
+            container.appendChild(node);
+        });
+    };
+
+    this.destroyMessageContent = function () {
+        if (messageContentElement) {
+            messageContentElement.remove();
+            messageContentElement = null;
+        }
     };
 
     // 显示MessageBox
@@ -65,9 +128,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
 
     // 关闭MessageBox（触发退出动画后清理 DOM）
     this.closeHandle = function () {
-        if (this.isClosing) {
-            return; // 防止重复关闭
-        }
+        if (this.isClosing) return;
 
         this.isClosing = true;
         this.unbindKeydown();
@@ -96,8 +157,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
         // 进入 loading，禁用所有关闭操作
         _that.unbindKeydown();
 
-
-        done = function (val) {
+        const done = function (val) {
             _that.cancelButtonLoading = false;
             _that.confirmButtonLoading = false;
             // 非 false（包含 undefined、null、true 等）均视为允许关闭
@@ -110,8 +170,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
                 }
             }
         }
-        // 参考elementPlus的实现
-        beforeClose({action, data: _that.options.inputConfig.model,instance: _that, done});
+        beforeClose({action, data: _that.options.inputConfig ? _that.options.inputConfig.model : null, instance: _that, done});
     };
 
     // 确认按钮点击
@@ -119,7 +178,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
         if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
         _that.executeWithBeforeClose('confirm', function () {
             let opt = {action: 'confirm'}
-            if (_that.options.type === 'prompt') {
+            if (_that.options.type === 'prompt' && _that.options.inputConfig) {
                 opt.data = _that.options.inputConfig.model
             }
             _that.options.deferred.resolve(opt);
@@ -131,7 +190,7 @@ function controller($scope, $element, $timeout, zIndexManager) {
     this.handleCancel = function () {
         if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
         _that.executeWithBeforeClose('action', function () {
-            _that.options.deferred.reject({action:'confirm'});
+            _that.options.deferred.reject({action:'cancel'});
             _that.closeHandle();
         });
     };
@@ -173,12 +232,6 @@ function controller($scope, $element, $timeout, zIndexManager) {
         };
         const iconKey = _that.options.iconType || _that.options.type;
         return iconMap[iconKey] || 'mob-icon-info';
-    };
-
-    // 获取类型样式类名（优先使用 iconType，回退到 type）
-    this.getTypeClass = function () {
-        const iconKey = _that.options.iconType || _that.options.type || 'info';
-        return 'mob-message-box--' + iconKey;
     };
 }
 

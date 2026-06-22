@@ -29,6 +29,49 @@
             </div>
         </div>
 
+        <h3>HTML 正文</h3>
+        <p>将 <code>dangerouslyUseHTMLString</code> 设为 <code>true</code> 时，<code>message</code> 会作为 HTML 字符串渲染，并自动编译其中的 mob-* 组件（如 mob-progress）。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showHtmlMessage()">静态 Progress</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showHtmlProgressMessage()">动态 Progress</mob-button>
+            </div>
+            <div class="meta">
+                <div class="mob-demo-example">
+                    传入 HTML 字符串，并在弹框中嵌入 mob-progress
+                </div>
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+// 静态进度条
+messageBox.alert(
+  '<p style="margin: 0 0 12px;">文件正在上传，请稍候...</p>' +
+  '<mob-progress percentage="50" stroke-width="8"></mob-progress>',
+  '上传进度',
+  {
+    dangerouslyUseHTMLString: true,
+    closeOnClickModal: false,
+    closeOnPressEscape: false,
+  }
+);
+
+// 动态进度条（messageContext 提供绑定数据）
+const ctx = { progressValue: 0 };
+messageBox.confirm(
+  '<p style="margin: 0 0 12px;">正在处理数据...</p>' +
+  '<mob-progress percentage="progressValue" stroke-width="8"></mob-progress>',
+  '处理进度',
+  {
+    dangerouslyUseHTMLString: true,
+    messageContext: ctx,
+  }
+);
+ctx.progressValue = 50;
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
         <h3>确认消息</h3>
         <p>提示用户确认其已经触发的动作，并询问是否进行此操作时会用到此对话框。</p>
         <div class="mob-demo-block">

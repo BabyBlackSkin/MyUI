@@ -1,4 +1,4 @@
-function controller($scope, messageBox,message) {
+function controller($scope, messageBox, message, $interval) {
     const _that = this;
 
     // 显示基础Alert
@@ -8,6 +8,56 @@ function controller($scope, messageBox,message) {
         }).then((action) => {
             console.log(action)
         });
+    };
+
+    // HTML 正文：静态 mob-progress
+    this.showHtmlMessage = function () {
+        messageBox.alert(
+            '<p style="margin: 0 0 12px;">文件正在上传，请稍候...</p>' +
+            '<mob-progress percentage="50" stroke-width="8"></mob-progress>',
+            '上传进度',
+            {
+                dangerouslyUseHTMLString: true,
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+            }
+        );
+    };
+
+    // HTML 正文：动态 mob-progress（通过 messageContext 绑定数据）
+    this.showHtmlProgressMessage = function () {
+        const ctx = {status:'primary', progressValue: 0 };
+        let timer;
+
+        messageBox.confirm(
+            `
+            <mob-progress percentage="progressValue" status="status" stroke-width="8"></mob-progress>
+<p ng-if="status == 'exception'"  style="margin: 0 0 12px;">正在处理数据，是否继续等待？</p>`,
+            '处理进度',
+            {
+                dangerouslyUseHTMLString: true,
+                messageContext: ctx,
+                closeOnClickModal: false,
+                confirmButtonText: '完成',
+                cancelButtonText: '取消',
+            }
+        ).finally(function () {
+            if (timer) {
+                $interval.cancel(timer);
+            }
+        });
+
+        timer = $interval(function () {
+            ctx.progressValue += 10;
+            if (ctx.progressValue >= 50) {
+                ctx.status = 'exception'
+                $interval.cancel(timer);
+            }
+            // if (ctx.progressValue >= 100) {
+            //     $interval.cancel(timer);
+            //     timer = null;
+            // }
+        }, 400);
     };
 
     this.showSuccess = function () {
@@ -69,4 +119,4 @@ function controller($scope, messageBox,message) {
 }
 
 app
-    .controller('MessageBoxCtrl', ['$scope', 'messageBox','message', controller]);
+    .controller('MessageBoxCtrl', ['$scope', 'messageBox', 'message', '$interval', controller]);

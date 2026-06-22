@@ -1,6 +1,8 @@
 mob-message-box {
     --mob-message-box-padding: 12px;
     --mob-message-box-width: 400px;
+    --mob-message-box-error-font-size: 12px;
+    --mob-message-box-error-font-line-height: 24px;
 }
 
 .mob-message-box {
@@ -9,6 +11,9 @@ mob-message-box {
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* z-index 由 zIndexManager 动态控制，这里仅作为备用层 */
     z-index: 3000;
 }
@@ -25,13 +30,10 @@ mob-message-box {
 }
 
 .mob-message-box__wrapper {
-    position: absolute;
+    position: relative;
     padding: var(--mob-message-box-padding);
-    top: 50%;
-    left: 50%;
     z-index: 1; /* 在父容器 stacking context 内高于遮罩层 */
-    /* 默认隐藏态：居中位置上方 20px + 透明 */
-    transform: translate(-50%, calc(-50% - 20px));
+    margin-top: -20px;
     opacity: 0;
     background-color: #ffffff;
     border-radius: 8px;
@@ -40,14 +42,13 @@ mob-message-box {
     max-width: 90%;
     max-height: 90%;
     overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    will-change: transform, opacity;
+    transition: margin-top 0.3s ease, opacity 0.3s ease;
 }
 
 /* 进入：dialog 落入居中 + 淡入 */
 .mob-message-box.is-show .mob-message-box__wrapper {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    margin-top: 0;
 }
 
 /* 进入：遮罩淡入 */
@@ -58,8 +59,8 @@ mob-message-box {
 /* 退出：dialog 向上淡出 */
 .mob-message-box.is-closing .mob-message-box__wrapper {
     opacity: 0;
-    transform: translate(-50%, calc(-50% - 20px));
-    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    margin-top: -20px;
+    transition: margin-top 0.3s ease-in, opacity 0.3s ease-in;
 }
 
 /* 退出：遮罩延迟 0.15s 后淡出，确保在弹框消失后才开始 */
@@ -128,6 +129,11 @@ mob-message-box {
     width: 100%;
     flex: 1;
     word-break: break-word;
+}
+
+.mob-message-box__message-html mob-progress {
+    display: block;
+    width: 100%;
 }
 
 .mob-message-box__btns {

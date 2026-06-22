@@ -84,7 +84,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             beforeClose: options.beforeClose || null
         };
 
-        return show(config);
+        return show(angular.extend({}, config, options));
     }
 
     function getInputOption(options, key, defaultValue) {
@@ -120,7 +120,7 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             }
         };
 
-        return show(config);
+        return show(angular.extend({}, config, options));
     }
 
     // 成功提示弹框（带成功图标，对齐 alert，需用户点击确认才关闭）
