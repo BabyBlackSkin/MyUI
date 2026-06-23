@@ -140,6 +140,26 @@ function controller($scope, $element, $transclude) {
         }
     }
 
+    this.showShimmer = function () {
+        if (!this.isLine() || this.indeterminate || this.striped) {
+            return false
+        }
+        if (this.animated === false) {
+            return false
+        }
+        if (this.animated === true) {
+            return true
+        }
+        const percentage = this.getPercentage()
+        if (percentage <= 0 || percentage >= 1) {
+            return false
+        }
+        if (this.status === 'success') {
+            return false
+        }
+        return true
+    }
+
     this.getInnerStyle = function () {
         const style = {
             width: (this.getPercentage() * 100) + '%',
@@ -152,6 +172,9 @@ function controller($scope, $element, $transclude) {
         if (this.stripedFlow) {
             style.animationDuration = this.duration + 's'
         }
+        if (this.showShimmer() && this.animated === true) {
+            style['--mob-progress-shimmer-duration'] = this.duration + 's'
+        }
         return style
     }
 
@@ -159,7 +182,8 @@ function controller($scope, $element, $transclude) {
         return {
             'is-striped': this.striped,
             'is-striped-flow': this.stripedFlow,
-            'is-indeterminate': this.indeterminate
+            'is-indeterminate': this.indeterminate,
+            'is-animated': this.showShimmer()
         }
     }
 
@@ -232,6 +256,7 @@ app.component('mobProgress', {
         strokeLinecap: '<?',     // 环形/仪表盘端点形状，round / butt / square
         format: '&?',            // 自定义文字格式，参数 { percentage }
         striped: '<?',           // 是否显示条纹
-        stripedFlow: '<?'         // 条纹是否流动
+        stripedFlow: '<?',        // 条纹是否流动
+        animated: '<?'           // 是否显示扫光动画，默认加载中自动开启
     }
 })

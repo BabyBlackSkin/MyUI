@@ -38,6 +38,29 @@ mob-progress {
     line-height: 1;
     white-space: nowrap;
     transition: width .6s ease;
+    overflow: hidden;
+}
+
+/* 渐变白色扫光加载动画 */
+.mob-progress--line .mob-progress-bar__inner.is-animated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.15) 20%,
+            rgba(255, 255, 255, 0.55) 50%,
+            rgba(255, 255, 255, 0.15) 80%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    transform: translateX(-120%);
+    animation: mob-progress-shimmer var(--mob-progress-shimmer-duration, 1s) ease-in-out infinite;
+    pointer-events: none;
+    will-change: transform;
 }
 
 .mob-progress--line .mob-progress-bar__inner.is-indeterminate {
@@ -65,6 +88,8 @@ mob-progress {
 }
 
 .mob-progress--line .mob-progress-bar__innerText {
+    position: relative;
+    z-index: 1;
     display: inline-block;
     vertical-align: middle;
     color: var(--mob-basic-white-color);
@@ -170,6 +195,15 @@ mob-progress {
 .mob-progress--circle.is-exception .mob-progress-circle__text,
 .mob-progress--dashboard.is-exception .mob-progress-circle__text {
     color: var(--mob-danger-color);
+}
+
+@keyframes mob-progress-shimmer {
+    0% {
+        transform: translateX(-120%);
+    }
+    100% {
+        transform: translateX(280%);
+    }
 }
 
 @keyframes mob-progress-indeterminate {

@@ -149,6 +149,34 @@
     </div>
 
     <div class="mob-doc content">
+        <h3>加载扫光动画</h3>
+        <p>进度处于加载中（0 &lt; percentage &lt; 1）时，进度条内会自动显示白色渐变扫光动画。可通过 <code>animated</code> 手动控制，<code>duration</code> 控制扫光速度。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-progress">
+                    <mob-progress percentage="0.45" stroke-width="8"></mob-progress>
+                    <mob-progress percentage="0.65" stroke-width="12" status="'warning'"></mob-progress>
+                    <mob-progress percentage="0.8" stroke-width="8" animated="true" duration="1.2"></mob-progress>
+                    <mob-progress percentage="1" stroke-width="8"></mob-progress>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                        <!-- 加载中自动扫光 -->
+                        <mob-progress percentage="0.45"></mob-progress>
+                        <!-- 强制开启 / 调整速度 -->
+                        <mob-progress percentage="0.8" animated="true" duration="1.2"></mob-progress>
+                        <!-- 完成后无扫光 -->
+                        <mob-progress percentage="1"></mob-progress>
+                        --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
         <h3>条纹进度条</h3>
         <p>设置 <code>striped</code> 显示条纹，<code>striped-flow</code> 让条纹流动。</p>
         <div class="mob-demo-block">
