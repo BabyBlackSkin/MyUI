@@ -107,6 +107,43 @@ message.warning('这条消息不会自动消失', {
             </div>
         </div>
 
+        <!-- ===== 代码主动关闭 ===== -->
+        <h3>代码主动关闭</h3>
+        <p>
+            当 <code>duration &lt;= 0</code> 时消息不会自动消失。
+            <code>message.show()</code> 及各类型快捷方法会返回实例，调用 <code>close()</code> 可主动关闭，适用于异步操作场景。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showProgrammaticClose()">模拟异步任务（2 秒后关闭）</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+// 创建持久消息
+const msg = message.primary('正在导出分享，请稍后', {
+    duration: -1,
+    showClose: false
+});
+
+commonCrudUtilService.$post(opt)
+    .then(function (data) {
+        msg.close(); // 手动关闭
+        if (data.content) {
+            window.open(data.content);
+        } else {
+            message.error('下载失败');
+        }
+    })
+    .catch(function (err) {
+        msg.close(); // 手动关闭
+        message.error('下载失败');
+    });
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
         <!-- ===== 消息位置 ===== -->
         <h3>消息位置（Placement）</h3>
         <p>

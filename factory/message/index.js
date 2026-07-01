@@ -25,6 +25,7 @@ app.factory('message', ['$compile', '$rootScope', 'zIndexManager', 'uuId',
          * @param {boolean} [options.showClose] - 是否显示关闭按钮，默认 true
          * @param {number} [options.duration]  - 显示时长(ms)，<=0 则不自动关闭，默认 3000
          * @param {string} [options.placement] - 位置: top/top-left/top-right/bottom/bottom-left/bottom-right，默认 top
+         * @returns {{ close: Function }} 消息实例，可通过 close() 主动关闭（适用于 duration <= 0 的持久消息）
          */
         function show(options) {
             const scope = $rootScope.$new(true);
@@ -54,7 +55,15 @@ app.factory('message', ['$compile', '$rootScope', 'zIndexManager', 'uuId',
 
             container.appendChild(element[0]);
 
-            return element;
+            const componentCtrl = element.controller('mobMessage');
+
+            return {
+                close: function () {
+                    if (componentCtrl && componentCtrl.close) {
+                        componentCtrl.close();
+                    }
+                }
+            };
         }
 
         /**

@@ -52,6 +52,19 @@ function MessageCtrl($scope, message) {
         });
     };
 
+    // ===== 代码主动关闭 =====
+    ctrl.showProgrammaticClose = function () {
+        const msg = message.primary('正在处理，请稍后…', {
+            duration: -1,
+            showClose: false
+        });
+
+        setTimeout(function () {
+            msg.close();
+            message.success('处理完成');
+        }, 2000);
+    };
+
     // ===== 不同位置 =====
     ctrl.showPlacement = function (placement) {
         var labelMap = {
