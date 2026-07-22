@@ -1,7 +1,10 @@
+.mob-input-tag__root {
+    width: 100%;
+}
 .mob-input-tag .mob-input__wrapper {
     align-items: center;
     min-height: calc(var(--mob-input-height) - 2px);
-    padding: 2px 11px;
+    padding: 0 11px;
 }
 
 .mob-input-tag .mob-input__prefix,
@@ -37,8 +40,8 @@
     min-width: 4px;
     max-width: 100%;
     width: 0;
-    height: 24px;
-    line-height: 24px;
+    height: var(--mob-input-height);
+    line-height: var(--mob-input-height);
     padding: 0;
     background-color: transparent;
     display: block;
@@ -133,4 +136,72 @@
 
 .mob-input-tag.is_disabled .mob-icon__close .mob-icon:hover svg path {
     fill: currentColor;
+}
+
+.mob-input-tag.is_append_slot .mob-input__wrapper {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.mob-input-tag .mob-input-tag__append {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+    padding: 0 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.mob-input-tag .mob-input-tag__append .mob-icon {
+    margin: 0;
+}
+
+.mob-input-tag.is_disabled .mob-input-tag__append {
+    cursor: not-allowed;
+}
+
+.mob-input-tag__batch-split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px 12px;
+    margin-bottom: 12px;
+}
+
+.mob-input-tag__batch-split-label {
+    flex-shrink: 0;
+    line-height: 32px;
+    font-size: 14px;
+    color: var(--mob-regular-text-color);
+}
+
+.mob-input-tag__batch-split .mob-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    flex: 1;
+}
+
+.mob-input-tag__batch-textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 160px;
+    padding: 8px 11px;
+    border: 1px solid var(--mob-border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--mob-input-color);
+    resize: vertical;
+    outline: none;
+}
+
+.mob-input-tag__batch-textarea:focus {
+    border-color: var(--mob-active-border-color);
+}
+
+.mob-input-tag__batch-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
 }

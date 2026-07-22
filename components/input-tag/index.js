@@ -11,15 +11,29 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
         if (angular.isUndefined(this.saveOnBlur)) {
             this.saveOnBlur = true;
         }
-        if (angular.isUndefined(this.trigger)) {
-            this.trigger = 'Enter';
-        }
         if (angular.isUndefined(this.maxCollapseTag)) {
             this.maxCollapseTag = 1;
         }
         if (angular.isUndefined(this.validateEvent)) {
             this.validateEvent = true;
         }
+        if (angular.isUndefined(this.batchInput)) {
+            this.batchInput = true;
+        }
+        if (!this.batchInputTitle) {
+            this.batchInputTitle = '输入多个值';
+        }
+        this.batchDialogVisible = false;
+        this.batchInputValue = '';
+        this.batchDelimiterOptions = [
+            {key: 'tab', label: '制表符', chars: ['\t'], default: true},
+            {key: 'space', label: '空格', chars: [' '], default: true},
+            {key: 'newline', label: '回车', chars: ['\r\n', '\n'], default: true},
+            {key: 'semicolon', label: '分号', chars: [';'], default: true},
+            {key: 'comma', label: '逗号', chars: [','], default: true},
+            {key: 'pause', label: '顿号', chars: ['、'], default: false}
+        ];
+        this.initBatchDelimiterSelection();
         if (angular.isDefined($attrs.required)) {
             this.ngRequired = true;
         }
@@ -33,6 +47,7 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
     };
 
     this.$onDestroy = function () {
+        $ctrl.unbindBatchTextareaEnterShield();
         const tooltipEl = $element[0].querySelector('#' + $ctrl.uuid + '_tooltip');
         if (tooltipEl) {
             tooltipEl.remove();
@@ -67,6 +82,102 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
             return true;
         }
         return $ctrl.model.length < Number($ctrl.max);
+    };
+
+    this.normalizeDelimiters = function (raw) {
+        if (raw === undefined || raw === null || raw === '') {
+            return [];
+        }
+        if (Array.isArray(raw)) {
+            return raw.map(function (item) {
+                return String(item);
+            }).filter(function (item) {
+                return item.length > 0;
+            });
+        }
+        return [String(raw)];
+    };
+
+    this.initBatchDelimiterSelection = function () {
+        $ctrl.batchSelectedDelimiterKeys = $ctrl.batchDelimiterOptions
+            .filter(function (option) {
+                return option.default;
+            })
+            .map(function (option) {
+                return option.key;
+            });
+    };
+
+    this.getBoundDelimiters = function () {
+        let raw = $ctrl.delimiter;
+        if ((raw === undefined || raw === null || raw === '') && angular.isDefined($attrs.delimiter) && $attrs.delimiter !== '') {
+            raw = $attrs.delimiter;
+        }
+        return $ctrl.normalizeDelimiters(raw);
+    };
+
+    this.getBatchDelimiters = function () {
+        const selected = $ctrl.batchSelectedDelimiterKeys || [];
+        const chars = [];
+        $ctrl.batchDelimiterOptions.forEach(function (option) {
+            if (selected.indexOf(option.key) === -1) {
+                return;
+            }
+            option.chars.forEach(function (char) {
+                if (chars.indexOf(char) === -1) {
+                    chars.push(char);
+                }
+            });
+        });
+        return chars;
+    };
+
+    this.getInputDelimiters = function () {
+        return $ctrl.getBoundDelimiters();
+    };
+
+    this.hasBatchDelimiterSelected = function () {
+        return $ctrl.getBatchDelimiters().length > 0;
+    };
+
+    this.getSelectedBatchDelimiterLabels = function () {
+        const selected = $ctrl.batchSelectedDelimiterKeys || [];
+        return $ctrl.batchDelimiterOptions
+            .filter(function (option) {
+                return selected.indexOf(option.key) !== -1;
+            })
+            .map(function (option) {
+                return option.label;
+            });
+    };
+
+    this.parseInputText = function (text, delimiters) {
+        if (!text) {
+            return [];
+        }
+        const splitBy = delimiters || $ctrl.getInputDelimiters();
+        if (!splitBy.length) {
+            const trimmed = text.trim();
+            return trimmed ? [trimmed] : [];
+        }
+        const escaped = splitBy.map(function (d) {
+            return d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        });
+        const pattern = new RegExp('(?:' + escaped.join('|') + ')+');
+        return text.split(pattern).map(function (s) {
+            return s.trim();
+        }).filter(Boolean);
+    };
+
+    this.addTagsFromText = function (text, delimiters) {
+        const values = $ctrl.parseInputText(text, delimiters);
+        let added = false;
+        values.forEach(function (value) {
+            if ($ctrl.addTagValue(value)) {
+                added = true;
+            }
+        });
+        return added;
     };
 
     this.addTagValue = function (value) {
@@ -141,47 +252,65 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
         return maxShow;
     };
 
+    this.isKeyDelimiter = function (key) {
+        if (key === 'Enter') {
+            return true;
+        }
+        if (key === ' ') {
+            return $ctrl.getBoundDelimiters().indexOf(' ') !== -1;
+        }
+        if (key.length === 1) {
+            return $ctrl.getBoundDelimiters().indexOf(key) !== -1;
+        }
+        return false;
+    };
+
     this.onKeydown = function (event) {
         if ($ctrl.ngDisabled || $ctrl.readonly) {
             return;
         }
         const key = event.key;
-        if (key === 'Enter' && $ctrl.trigger === 'Enter') {
-            event.preventDefault();
-            if ($ctrl.addTagValue($ctrl.inputValue)) {
-                $ctrl.inputValue = '';
-            }
-        } else if (key === ' ' && $ctrl.trigger === 'Space') {
-            event.preventDefault();
-            if ($ctrl.addTagValue($ctrl.inputValue)) {
-                $ctrl.inputValue = '';
-            }
-        } else if (key === 'Backspace' && !$ctrl.inputValue && $ctrl.model.length > 0) {
+        if (key === 'Backspace' && !$ctrl.inputValue && $ctrl.model.length > 0) {
             $ctrl.removeTagAt($ctrl.model.length - 1);
+            return;
+        }
+        if ($ctrl.isKeyDelimiter(key)) {
+            event.preventDefault();
+            if ($ctrl.addTagValue($ctrl.inputValue)) {
+                $ctrl.inputValue = '';
+            }
         }
     };
 
     this.onInputChange = function () {
-        if (!$ctrl.delimiter || !$ctrl.inputValue) {
+        if (!$ctrl.inputValue) {
             return;
         }
-        const delimiter = String($ctrl.delimiter);
-        if ($ctrl.inputValue.indexOf(delimiter) === -1) {
-            return;
-        }
-        const parts = $ctrl.inputValue.split(delimiter);
-        const tail = parts.pop();
-        parts.forEach(function (part) {
-            $ctrl.addTagValue(part);
+        const delimiters = $ctrl.getInputDelimiters();
+        let lastIndex = -1;
+        let lastLen = 0;
+        delimiters.forEach(function (delimiter) {
+            const index = $ctrl.inputValue.lastIndexOf(delimiter);
+            if (index !== -1 && index >= lastIndex) {
+                lastIndex = index;
+                lastLen = delimiter.length;
+            }
         });
-        $ctrl.inputValue = tail || '';
+        if (lastIndex === -1) {
+            return;
+        }
+        const completed = $ctrl.inputValue.substring(0, lastIndex);
+        const tail = $ctrl.inputValue.substring(lastIndex + lastLen);
+        $ctrl.addTagsFromText(completed);
+        $ctrl.inputValue = tail;
     };
 
     this.onBlur = function () {
         if ($ctrl.ngModel) {
             $ctrl.ngModel.$setTouched();
         }
-        if ($ctrl.saveOnBlur && $ctrl.addTagValue($ctrl.inputValue)) {
+        if ($ctrl.saveOnBlur && $ctrl.inputValue) {
+            $ctrl.addTagsFromText($ctrl.inputValue);
             $ctrl.inputValue = '';
         }
         if (angular.isFunction($ctrl.blurEvent)) {
@@ -230,6 +359,132 @@ function controller($scope, $element, $compile, popper, $attrs, uuId, $timeout) 
         if (input) {
             input.blur();
         }
+    };
+
+    this.showBatchInput = function () {
+        return $ctrl.batchInput && !$ctrl.ngDisabled && !$ctrl.readonly;
+    };
+
+    this.getBatchInputPlaceholder = function () {
+        if ($ctrl.batchInputPlaceholder) {
+            return $ctrl.batchInputPlaceholder;
+        }
+        const example1 = '1234567890';
+        const example2 = '0987654321';
+        const labelText = $ctrl.getSelectedBatchDelimiterLabels().join('、');
+        if (!labelText) {
+            return '请至少勾选一个分隔符，再粘贴或输入多个值';
+        }
+        return '按已勾选的' + labelText + '拆分，如：\n' + example1 + '\n' + example2;
+    };
+
+    this.getBatchDisplayDelimiter = function () {
+        return '\n';
+    };
+
+    this.modelToBatchText = function () {
+        const items = $ctrl.model.slice();
+        const pending = ($ctrl.inputValue || '').trim();
+        if (pending) {
+            items.push(pending);
+        }
+        if (!items.length) {
+            return '';
+        }
+        return items.join($ctrl.getBatchDisplayDelimiter());
+    };
+
+    this.setModelFromBatchText = function (text) {
+        const values = $ctrl.parseInputText(text || '', $ctrl.getBatchDelimiters());
+        const unique = [];
+        values.forEach(function (value) {
+            if (unique.indexOf(value) === -1) {
+                unique.push(value);
+            }
+        });
+        if (angular.isDefined($ctrl.max) && $ctrl.max !== null) {
+            $ctrl.model = unique.slice(0, Number($ctrl.max));
+        } else {
+            $ctrl.model = unique;
+        }
+        $ctrl.inputValue = '';
+        $ctrl.syncToModel();
+        if (angular.isFunction($ctrl.change)) {
+            $ctrl.change({value: $ctrl.model});
+        }
+    };
+
+    this.onBatchTextareaKeydown = function (event) {
+        if (event.key !== 'Enter' && event.keyCode !== 13) {
+            return;
+        }
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) {
+            event.stopImmediatePropagation();
+        }
+    };
+
+    this.bindBatchTextareaEnterShield = function () {
+        const textarea = $element[0].querySelector('.mob-input-tag__batch-textarea');
+        if (!textarea || textarea._mobInputTagEnterShield) {
+            return;
+        }
+        const shield = function (event) {
+            if (event.key !== 'Enter' && event.keyCode !== 13) {
+                return;
+            }
+            event.stopPropagation();
+            if (event.stopImmediatePropagation) {
+                event.stopImmediatePropagation();
+            }
+        };
+        ['keydown', 'keyup', 'keypress'].forEach(function (eventName) {
+            textarea.addEventListener(eventName, shield, false);
+        });
+        textarea._mobInputTagEnterShield = shield;
+    };
+
+    this.unbindBatchTextareaEnterShield = function () {
+        const textarea = $element[0].querySelector('.mob-input-tag__batch-textarea');
+        if (!textarea || !textarea._mobInputTagEnterShield) {
+            return;
+        }
+        const shield = textarea._mobInputTagEnterShield;
+        ['keydown', 'keyup', 'keypress'].forEach(function (eventName) {
+            textarea.removeEventListener(eventName, shield, false);
+        });
+        delete textarea._mobInputTagEnterShield;
+    };
+    this.openBatchDialog = function (event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        if (!$ctrl.showBatchInput()) {
+            return;
+        }
+        $ctrl.batchInputValue = $ctrl.modelToBatchText();
+        $ctrl.batchDialogVisible = true;
+        $timeout(function () {
+            $ctrl.bindBatchTextareaEnterShield();
+        });
+    };
+
+    this.cancelBatchInput = function () {
+        $ctrl.unbindBatchTextareaEnterShield();
+        $ctrl.batchInputValue = '';
+        $ctrl.batchDialogVisible = false;
+    };
+
+    this.confirmBatchInput = function () {
+        if (!$ctrl.hasBatchDelimiterSelected()) {
+            return;
+        }
+        $ctrl.setModelFromBatchText($ctrl.batchInputValue);
+        $ctrl.unbindBatchTextareaEnterShield();
+        $ctrl.batchInputValue = '';
+        $ctrl.batchDialogVisible = false;
+        $ctrl.focus();
     };
 
     this.initPopper = function () {
@@ -321,8 +576,10 @@ app.component('mobInputTag', {
         placeholder: '<?',        // 输入框占位文本
         clearable: '<?',         // 是否显示清空按钮
         max: '<?',               // 最多可添加的标签数量
-        trigger: '<?',           // 添加标签的触发键，Enter 或 Space
-        delimiter: '<?',         // 分隔符，输入时自动拆分并添加标签
+        delimiter: '<?',         // 分隔符，支持字符串或数组；Enter 始终提交，绑定字符可键盘/粘贴/弹框拆分
+        batchInput: '<?',        // 是否显示批量输入按钮
+        batchInputTitle: '@?',   // 批量输入弹框标题，支持字面量或 {{ }} 插值
+        batchInputPlaceholder: '@?', // 批量输入弹框占位文本，支持字面量或 {{ }} 插值
         saveOnBlur: '<?',        // 失焦时是否将未提交的输入保存为标签
         validateEvent: '<?',     // 标签变更时是否触发 ngModel 校验
         tagType: '<?',           // 标签类型，对应 mob-tag 的 type

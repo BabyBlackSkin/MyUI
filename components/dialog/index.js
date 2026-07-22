@@ -1,13 +1,13 @@
-function controller($scope, $element, $timeout, zIndexManager) {
+function controller($scope, $element, $timeout, $transclude, zIndexManager) {
     const _that = this;
 
     // ---- 默认值 ----
-    this.title              = '';
-    this.width              = '50%';
-    this.showClose          = true;
-    this.lockScroll         = true;
-    this.closeOnClickModal  = true;
-    this.closeOnPressEscape = true;
+    this.dialogTitle              = '';
+    this.width                    = '80%';
+    this.showClose                = true;
+    this.lockScroll               = true;
+    this.closeOnClickModal        = true;
+    this.closeOnPressEscape       = true;
 
     // 动画状态位
     // isVisible — ng-if，控制 DOM 存在
@@ -18,6 +18,9 @@ function controller($scope, $element, $timeout, zIndexManager) {
         _that.isVisible = false;
         _that.isShow    = false;
         _that.isClosing = false;
+
+        // 检查外部是否传入了名为 'footer' 的插槽
+        $scope.$$hasFooter = $transclude.isSlotFilled('footer');
 
         // 监听 ngModel 外部赋值
         _that.ngModel.$render = () => {
@@ -114,12 +117,23 @@ function controller($scope, $element, $timeout, zIndexManager) {
         }
     };
 
-    // 关闭按钮点击
+    // 关闭按钮点击（暴露给默认模板的关闭）
     this.handleClose = function () {
         _that.model = false;
     };
 
-    // 添加 ESC 键监听
+    // 保存按钮点击（暴露给默认模板的保存）
+    this.handleSave = function () {
+        if (_that.onSave) {
+            // 如果外部绑定了 on-save 回调，则调用它
+            // 传入 { close: ... } 可以让外部在异步请求成功后手动关闭弹窗
+            _that.onSave({ close: _that.handleClose });
+        } else {
+            // 如果外部没传 on-save，默认直接关闭
+            _that.model = false;
+        }
+    };
+
     this._addEscListener = function () {
         _that._removeEscListener();
         _that._escHandler = (e) => {
@@ -153,7 +167,7 @@ app.component('mobDialog', {
         ngModel: '^ngModel'
     },
     bindings: {
-        title:              '<?',  // 对话框标题
+        dialogTitle:        '<?',  // 对话框标题
         width:              '<?',  // 对话框宽度，支持 px / % 等
         showClose:          '<?',  // 是否显示关闭按钮，默认 true
         lockScroll:         '<?',  // 是否锁定 body 滚动，默认 true
@@ -163,5 +177,6 @@ app.component('mobDialog', {
         onOpened:           '&?',  // dialog 打开动画结束后回调
         onClose:            '&?',  // dialog 关闭时回调
         onClosed:           '&?',  // dialog 关闭动画结束后回调
+        onSave:             '&?',  // 新增：默认保存按钮的点击事件回调
     }
 });

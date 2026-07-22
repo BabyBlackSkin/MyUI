@@ -21,21 +21,30 @@
             </div>
         </div>
 
-        <h3>自定义触发键</h3>
+        <h3>分隔符</h3>
+        <p>Enter 始终提交当前输入为标签。设置 delimiter 后，输入该字符、粘贴或弹框批量输入时也会自动拆分；未设置时粘贴/失焦支持空格、换行拆分。</p>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
-                <mob-segmented ng-model="trigger" options="triggerOptions"></mob-segmented>
-                <br><br>
+                <p>逗号分隔</p>
                 <mob-input-tag style="display:block;width: 320px;"
-                               ng-model="triggerValue"
-                               trigger="trigger"
-                               placeholder="'请输入'"></mob-input-tag>
+                               ng-model="delimiterValue"
+                               delimiter="','"
+                               placeholder="'输入后按 Enter 或逗号'"></mob-input-tag>
+                <p>值：<span ng-bind="delimiterValue | json"></span></p>
+                <br>
+                <p>空格分隔（按空格提交）</p>
+                <mob-input-tag style="display:block;width: 320px;"
+                               ng-model="spaceDelimiterValue"
+                               delimiter="' '"
+                               placeholder="'输入后按 Enter 或空格'"></mob-input-tag>
+                <p>值：<span ng-bind="spaceDelimiterValue | json"></span></p>
             </div>
             <div class="meta">
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <mob-input-tag ng-model="triggerValue" trigger="trigger"></mob-input-tag>
+                            <mob-input-tag ng-model="delimiterValue" delimiter="','"></mob-input-tag>
+                            <mob-input-tag ng-model="spaceValue" delimiter="' '"></mob-input-tag>
                         --></code>
                     </pre>
             </div>
@@ -133,19 +142,23 @@
             </div>
         </div>
 
-        <h3>分隔符</h3>
+        <h3>批量输入</h3>
+        <p>点击右侧 + 按钮批量输入，弹框内可勾选分隔符（与外部 delimiter 独立）；已有标签会反写到弹框。</p>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <mob-input-tag style="display:block;width: 320px;"
-                               ng-model="delimiterValue"
+                               ng-model="batchInputValue"
                                delimiter="','"
-                               placeholder="'尝试用逗号分隔'"></mob-input-tag>
+                               batch-input-title="输入多个商城店铺ID"
+                               placeholder="'请输入店铺ID'"></mob-input-tag>
+                <p>值：<span ng-bind="batchInputValue | json"></span></p>
             </div>
             <div class="meta">
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <mob-input-tag ng-model="delimiterValue" delimiter="','"></mob-input-tag>
+                            <mob-input-tag ng-model="batchInputValue"
+                                           batch-input-title="输入多个商城店铺ID"></mob-input-tag>
                         --></code>
                     </pre>
             </div>

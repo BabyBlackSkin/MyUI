@@ -1,8 +1,10 @@
-<div class="mob-input mob-input-tag"
+<div class="mob-input-tag__root">
+        <div class="mob-input mob-input-tag"
              ng-class="{
                  'is_clearable': $ctrl.clearable,
                  'is_disabled': $ctrl.ngDisabled,
-                 'is_collapse_tags': $ctrl.collapseTag
+                 'is_collapse_tags': $ctrl.collapseTag,
+                 'is_append_slot': $ctrl.showBatchInput()
              }">
         
             <div class="mob-input__wrapper mob_popper__target" popper-group="inputTag">
@@ -88,4 +90,41 @@
                     </span>
                 </span>
             </div>
+
+            <div class="mob-input_append mob-input-tag__append"
+                 ng-if="$ctrl.showBatchInput()"
+                 ng-mousedown="$event.preventDefault()"
+                 ng-click="$ctrl.openBatchDialog($event)">
+                <mob-icon-increase></mob-icon-increase>
+            </div>
         </div>
+
+        <mob-dialog ng-model="$ctrl.batchDialogVisible"
+                    dialog-title="$ctrl.batchInputTitle"
+                    width="'480px'">
+            <ng-transclude-body>
+                <div class="mob-input-tag__batch-split">
+                    <span class="mob-input-tag__batch-split-label">解析格式</span>
+                    <mob-check-box-group ng-model="$ctrl.batchSelectedDelimiterKeys">
+                        <mob-check-box ng-repeat="option in $ctrl.batchDelimiterOptions track by option.key"
+                                      check-value="option.key"
+                                      label="option.label"></mob-check-box>
+                    </mob-check-box-group>
+                </div>
+                <textarea class="mob-input-tag__batch-textarea"
+                          ng-model="$ctrl.batchInputValue"
+                          ng-keydown="$ctrl.onBatchTextareaKeydown($event)"
+                          ng-keyup="$ctrl.onBatchTextareaKeydown($event)"
+                          placeholder="{{$ctrl.getBatchInputPlaceholder()}}"
+                          rows="8"></textarea>
+            </ng-transclude-body>
+            <ng-transclude-footer>
+                <div class="mob-input-tag__batch-footer">
+                    <mob-button ng-click="$ctrl.cancelBatchInput()">取消</mob-button>
+                    <mob-button type="'primary'"
+                                ng-disabled="!$ctrl.hasBatchDelimiterSelected()"
+                                ng-click="$ctrl.confirmBatchInput()">确定输入</mob-button>
+                </div>
+            </ng-transclude-footer>
+        </mob-dialog>
+</div>

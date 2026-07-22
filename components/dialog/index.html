@@ -13,7 +13,7 @@
             <!-- Header：优先使用 slot，无 slot 则显示 title 绑定值 -->
             <div class="mob-dialog__header">
                 <div class="mob-dialog__header-content" ng-transclude="header">
-                    <span class="mob-dialog__title" ng-bind="$ctrl.title"></span>
+                    <span class="mob-dialog__title" ng-bind="$ctrl.dialogTitle"></span>
                 </div>
                 <button class="mob-dialog__close"
                         ng-if="$ctrl.showClose !== false"
@@ -22,11 +22,16 @@
                 </button>
             </div>
 
-            <!-- Body -->
             <div class="mob-dialog__body" ng-transclude="body"></div>
 
-            <!-- Footer -->
-            <div class="mob-dialog__footer" ng-transclude="footer"></div>
+            <div class="mob-dialog__footer">
+                <div ng-if="$$hasFooter" ng-transclude="footer"></div>
+
+                <div ng-if="!$$hasFooter" style="display: flex;flex:1; justify-content: center; padding: 10px 0 5px 0; gap: 10px">
+                    <mob-button type="'primary'" ng-click="$ctrl.handleSave()">保存</mob-button>
+                    <mob-button type="'danger'" ng-click="$ctrl.handleClose()">关闭</mob-button>
+                </div>
+            </div>
 
         </div>
     </div>
