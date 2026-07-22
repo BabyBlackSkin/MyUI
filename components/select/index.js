@@ -218,8 +218,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 // 判断是不是多选
                 let options = _that.getNgModelOptions()
                 // ngModel、参数、ngModel对应的options
-                let opt = {value: newV,oldValue:oldV, attachment: _that.attachment, options}
-                _that.change({opt: opt})
+                let opt = {value: newV, oldValue: oldV, attachment: _that.attachment, options}
+                try {
+                    _that.change({opt: opt})
+                } catch (e) {
+                    // change hook error 不能影响组件的功能
+                    console.error(e)
+                }
             }
 
             // 判断是否清空
@@ -252,6 +257,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     /**
      * 滚动监听
      */
+    let scrollCounter = 0; // 出发滚动的计数，可以作为页码
     this.initScrollHandler = function (){
         let popper = document.getElementById(`${_that.uuid}_mob-select-popper`)
         let element = popper.querySelectorAll('.mob-popper-down__inner')[0]
@@ -269,13 +275,28 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                     _that.loadStatus = 1;// 更新状态为加载完成
                     let deferred = $q.defer();
                     // 加载
-                    let opt ={deferred: deferred}
-                    _that.load({opt}).then(() => {
-                        _that.loadStatus = 2;// 更新状态为加载完成
-                    }).catch(err => {
+                    scrollCounter++
+                    let opt ={deferred: deferred, scrollCounter:scrollCounter }
+
+                    // 发生异常的处理
+                    function errorHandler(){
+                        scrollCounter--
                         // 更新状态为未加载
                         _that.loadStatus = 0;
-                    })
+                    }
+                    try {
+                        _that.load({opt}).then((val) => {
+                            if (false === val) {
+                                scrollCounter--
+                            }
+                            _that.loadStatus = 2;// 更新状态为加载完成
+                        }).catch(err => {
+                            errorHandler()
+                        })
+                    } catch (e) {
+                        console.error(e)
+                        errorHandler()
+                    }
                 }
             }, 300)()
 
