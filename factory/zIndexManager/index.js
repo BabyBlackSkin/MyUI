@@ -26,6 +26,10 @@
         MESSAGE: 2000,
         MESSAGE_BASE: 2000,
 
+        // 通知类（Notification 角标通知）
+        NOTIFICATION: 2000,
+        NOTIFICATION_BASE: 2000,
+
         // 对话框类（MessageBox 等）
         MESSAGE_BOX: 2000,
         MESSAGE_BOX_BASE: 2000,
@@ -48,6 +52,7 @@
     const instanceCounter = {
         BOOTSTRAP: 0,
         MESSAGE: 0,
+        NOTIFICATION: 0,
         MESSAGE_BOX: 0,
         DRAWER: 0
     };
@@ -79,8 +84,9 @@
          */
         getBaseLevel(type) {
             const levelMap = {
-                MESSAGE:     Z_INDEX_LEVELS.MESSAGE_BASE,
-                MESSAGE_BOX: Z_INDEX_LEVELS.MESSAGE_BOX_BASE,
+                MESSAGE:       Z_INDEX_LEVELS.MESSAGE_BASE,
+                NOTIFICATION:  Z_INDEX_LEVELS.NOTIFICATION_BASE,
+                MESSAGE_BOX:   Z_INDEX_LEVELS.MESSAGE_BOX_BASE,
                 DRAWER:      Z_INDEX_LEVELS.DRAWER_BASE,
                 BOOTSTRAP:   Z_INDEX_LEVELS.BOOTSTRAP,
                 // 兼容旧调用

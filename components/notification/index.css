@@ -1,0 +1,212 @@
+/* ===== mob-notification 宿主元素 ===== */
+mob-notification {
+    display: block;
+    pointer-events: none;
+    transition: top 0.4s ease, bottom 0.4s ease;
+}
+
+/* ===== Notification 通知 ===== */
+.mob-notification {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    padding: 14px 26px 14px 13px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    border: 1px solid var(--mob-light-border-color);
+    background-color: #ffffff;
+    box-shadow: var(--mob-box-shadow-light);
+    position: relative;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    pointer-events: auto;
+    gap: 0;
+    /* 进场初始状态 */
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+}
+
+/* 从右侧滑入 */
+.mob-notification--right {
+    transform: translateX(100%);
+}
+
+.mob-notification--right.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mob-notification--right.is-closing {
+    opacity: 0;
+    transform: translateX(100%);
+    pointer-events: none;
+}
+
+/* 从左侧滑入 */
+.mob-notification--left {
+    transform: translateX(-100%);
+}
+
+.mob-notification--left.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mob-notification--left.is-closing {
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+/* ===== 图标 ===== */
+.mob-notification__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+}
+
+.mob-notification__icon mob-icon-info-filled,
+.mob-notification__icon mob-icon-circle-check-filled,
+.mob-notification__icon mob-icon-warning-filled,
+.mob-notification__icon mob-icon-circle-close-filled {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+}
+
+/* ===== 内容组 ===== */
+.mob-notification__group {
+    flex: 1;
+    min-width: 0;
+    margin-left: 13px;
+    margin-right: 8px;
+    position: relative;
+}
+
+/* ===== 标题 ===== */
+.mob-notification__title {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--mob-primary-text-color);
+    margin: 0;
+}
+
+/* ===== 正文 ===== */
+.mob-notification__content {
+    font-size: 14px;
+    line-height: 24px;
+    margin: 6px 0 0;
+    color: var(--mob-regular-text-color);
+}
+
+.mob-notification__content--no-title {
+    margin: 0;
+}
+
+.mob-notification__content p {
+    margin: 0;
+}
+
+/* ===== 关闭按钮 ===== */
+.mob-notification__close {
+    position: absolute;
+    top: 4px;
+    right: -8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: var(--mob-secondary-text-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.mob-notification__close:hover {
+    color: var(--mob-primary-text-color);
+}
+
+/* ===== 类型变体 ===== */
+
+.mob-notification--primary .mob-notification__icon {
+    color: var(--mob-primary-color);
+}
+
+.mob-notification--success .mob-notification__icon {
+    color: var(--mob-success-color);
+}
+
+.mob-notification--warning .mob-notification__icon {
+    color: var(--mob-warning-color);
+}
+
+.mob-notification--info .mob-notification__icon {
+    color: var(--mob-info-color);
+}
+
+.mob-notification--error .mob-notification__icon {
+    color: var(--mob-danger-color);
+}
+
+/* ===== 底部倒计时进度条 ===== */
+.mob-notification__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    overflow: hidden;
+}
+
+.mob-notification__progress-bar {
+    height: 100%;
+    width: 100%;
+    transform-origin: left center;
+    animation-name: mob-notification-progress-shrink;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes mob-notification-progress-shrink {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
+
+.mob-notification__progress-bar--primary {
+    background-color: var(--mob-primary-color);
+}
+
+.mob-notification__progress-bar--success {
+    background-color: var(--mob-success-color);
+}
+
+.mob-notification__progress-bar--warning {
+    background-color: var(--mob-warning-color);
+}
+
+.mob-notification__progress-bar--info {
+    background-color: var(--mob-info-color);
+}
+
+.mob-notification__progress-bar--error {
+    background-color: var(--mob-danger-color);
+}
+
+.mob-notification__progress-bar--default {
+    background-color: var(--mob-secondary-text-color);
+}

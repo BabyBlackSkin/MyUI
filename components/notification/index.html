@@ -1,0 +1,45 @@
+<div class="mob-notification"
+     ng-class="[
+         $ctrl.hasType() ? 'mob-notification--' + $ctrl.getType() : '',
+         $ctrl.isRight ? 'mob-notification--right' : 'mob-notification--left',
+         $ctrl.isVisible ? 'is-visible' : '',
+         $ctrl.isClosing ? 'is-closing' : ''
+     ]"
+     ng-click="$ctrl.handleClick()"
+     ng-mouseenter="$ctrl.pauseTimer()"
+     ng-mouseleave="$ctrl.resumeTimer()"
+     role="alert">
+
+    <!-- 图标 -->
+    <span class="mob-notification__icon" ng-if="$ctrl.hasType()">
+        <mob-icon-info-filled ng-if="$ctrl.getType() === 'primary' || $ctrl.getType() === 'info'"></mob-icon-info-filled>
+        <mob-icon-circle-check-filled ng-if="$ctrl.getType() === 'success'"></mob-icon-circle-check-filled>
+        <mob-icon-warning-filled ng-if="$ctrl.getType() === 'warning'"></mob-icon-warning-filled>
+        <mob-icon-circle-close-filled ng-if="$ctrl.getType() === 'error'"></mob-icon-circle-close-filled>
+    </span>
+
+    <!-- 内容区域 -->
+    <div class="mob-notification__group">
+        <h2 class="mob-notification__title"
+            ng-if="$ctrl.hasTitle()"
+            ng-bind="$ctrl.options.title"></h2>
+
+        <div class="mob-notification__content"
+             ng-class="{ 'mob-notification__content--no-title': !$ctrl.hasTitle() }">
+            <p ng-bind="$ctrl.options.message"></p>
+        </div>
+
+        <button class="mob-notification__close"
+                ng-if="$ctrl.options.showClose"
+                ng-click="$ctrl.close($event)">
+            <mob-icon-close></mob-icon-close>
+        </button>
+    </div>
+
+    <!-- 底部倒计时进度条 -->
+    <div class="mob-notification__progress" ng-if="$ctrl.showProgress()">
+        <div class="mob-notification__progress-bar"
+             ng-class="'mob-notification__progress-bar--' + ($ctrl.hasType() ? $ctrl.getType() : 'default')"
+             ng-style="$ctrl.getProgressStyle()"></div>
+    </div>
+</div>

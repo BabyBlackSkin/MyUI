@@ -1,0 +1,203 @@
+<div class="demo-container" ng-controller="NotificationCtrl as ctrl">
+    <h2>Notification 通知</h2>
+    <p>悬浮出现在页面角落，用于系统级消息通知。默认从右上角出现，4.5 秒后自动关闭，支持标题 + 正文、多种类型和位置。</p>
+
+    <div class="mob-doc content">
+
+        <!-- ===== 基础用法 ===== -->
+        <h3>基础用法</h3>
+        <p>通过 <code>notification.show()</code> 打开通知，需设置 <code>title</code> 和 <code>message</code>。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showBasic()">打开通知</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.show({
+    title: '通知标题',
+    message: '这是一条会自动关闭的通知消息'
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 不同类型 ===== -->
+        <h3>不同类型</h3>
+        <p>提供 <code>primary</code>、<code>success</code>、<code>warning</code>、<code>info</code>、<code>error</code> 五种类型。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button ng-click="ctrl.showPrimary()">Primary</mob-button>
+                <mob-button type="success" ng-click="ctrl.showSuccess()">Success</mob-button>
+                <mob-button type="warning" ng-click="ctrl.showWarning()">Warning</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showInfo()">Info</mob-button>
+                <mob-button type="danger" ng-click="ctrl.showError()">Error</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.success({
+    title: 'Success',
+    message: '恭喜你，操作成功！'
+});
+notification.error({
+    title: 'Error',
+    message: '错误：操作失败，请稍后重试'
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 无标题 / 无类型 ===== -->
+        <h3>无标题 / 无类型</h3>
+        <p>可以省略 <code>title</code> 或不设置 <code>type</code>（不显示图标）。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button ng-click="ctrl.showNoTitle()">无标题</mob-button>
+                <mob-button ng-click="ctrl.showNoType()">无类型图标</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.info({ message: '这是一条没有标题的通知' });
+
+notification.show({
+    title: '纯文本通知',
+    message: '未设置 type 时不显示图标'
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 自定义时长 ===== -->
+        <h3>自定义时长</h3>
+        <p>通过 <code>duration</code> 控制显示时长（毫秒），设为 <code>0</code> 则不自动关闭。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="success" ng-click="ctrl.showLongDuration()">显示 10 秒</mob-button>
+                <mob-button type="warning" ng-click="ctrl.showPersistent()">永不消失</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.success({
+    title: '自定义时长',
+    message: '这条通知将在 10 秒后消失',
+    duration: 10000
+});
+
+notification.warning({
+    title: '持久通知',
+    message: '这条通知不会自动消失',
+    duration: 0
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 代码主动关闭 ===== -->
+        <h3>代码主动关闭</h3>
+        <p>
+            <code>notification.show()</code> 返回实例，调用 <code>close()</code> 可主动关闭。
+            即使 <code>duration: 0</code>（不自动关闭），也可通过 <code>inst.close()</code> 手动关闭。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showProgrammaticClose()">模拟异步任务（2 秒后关闭）</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+const inst = notification.info({
+    title: '处理中',
+    message: '正在处理，请稍后…',
+    duration: 0,
+    showClose: false
+});
+
+setTimeout(function () {
+    inst.close();
+    notification.success({ title: '完成', message: '处理完成' });
+}, 2000);
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 通知位置 ===== -->
+        <h3>通知位置</h3>
+        <p>
+            通过 <code>position</code> 控制出现位置，支持：
+            <code>top-right</code>（默认）、<code>top-left</code>、
+            <code>bottom-right</code>、<code>bottom-left</code>。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <mob-button type="primary" ng-click="ctrl.showPosition('top-right')">右上角</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPosition('top-left')">左上角</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPosition('bottom-right')">右下角</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPosition('bottom-left')">左下角</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.info({
+    title: '右上角',
+    message: '通知显示在屏幕右上角',
+    position: 'top-right'
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 堆叠 ===== -->
+        <h3>堆叠通知</h3>
+        <p>同一位置的多个通知会自动堆叠，关闭后下方通知会上移。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="success" ng-click="ctrl.showStack()">连续弹出 3 条</mob-button>
+                <mob-button type="danger" ng-click="ctrl.closeAll()">关闭全部</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.success({ title: '通知 1', message: '第一条通知' });
+notification.success({ title: '通知 2', message: '第二条通知' });
+notification.success({ title: '通知 3', message: '第三条通知' });
+
+notification.closeAll();
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ===== 点击回调 ===== -->
+        <h3>点击回调</h3>
+        <p>通过 <code>onClick</code> 设置点击通知时的回调。鼠标悬停时暂停自动关闭计时。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <mob-button type="primary" ng-click="ctrl.showClickable()">可点击通知</mob-button>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-js"><!--
+notification.info({
+    title: '可点击',
+    message: '点击此通知会触发 onClick 回调',
+    duration: 0,
+    onClick: function () {
+        notification.success({ title: 'Clicked', message: '你点击了通知' });
+    }
+});
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -134,6 +134,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/message/index.html',
             controller: 'MessageCtrl'
         })
+        .when('/notification', {
+            templateUrl: './controller/notification/index.html',
+            controller: 'NotificationCtrl'
+        })
         .when('/descriptions', {
             templateUrl: './controller/descriptions/index.html',
             controller: 'Descriptions'
@@ -190,6 +194,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Z-Index 管理器', path: '/z-index-demo', tags: [{title:'experimental', type:'primary'}]},
         {label: 'MessageBox 消息弹出层', path: '/message-box'},
         {label: 'Message 消息提示', path: '/message'},
+        {label: 'Notification 通知', path: '/notification'},
         {label: 'Descriptions 描述', path: '/descriptions'},
     ]
     //通过$on为$rootScope添加路由事件
