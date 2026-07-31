@@ -149,7 +149,7 @@ function controller($scope, $element, $timeout, $compile, zIndexManager) {
         }, 450); // 弹框 0.3s + 遮罩 delay 0.15s + 遮罩淡出 0.25s = 总 0.4s，留余 50ms
     };
 
-    // 执行 beforeClose»若非 false 则关闭，支持同步返回值和 Promise
+    // 执行 beforeClose：自动进入 loading，由 done / Promise / 同步返回值 决定是否关闭
     this.executeWithBeforeClose = function (action, onClose) {
         const beforeClose = _that.options.beforeClose;
 
@@ -159,23 +159,41 @@ function controller($scope, $element, $timeout, $compile, zIndexManager) {
             return;
         }
 
-        // 进入 loading，禁用所有关闭操作
+        if (action === 'confirm') {
+            _that.confirmButtonLoading = true;
+        } else {
+            _that.cancelButtonLoading = true;
+        }
         _that.unbindKeydown();
 
-        const done = function (val) {
-            _that.cancelButtonLoading = false;
-            _that.confirmButtonLoading = false;
-            // 非 false（包含 undefined、null、true 等）均视为允许关闭
-            if (val !== false) {
-                onClose();
-            } else {
-                // 阻止关闭：恢复 ESC 监听
-                if (_that.options.closeOnPressEscape) {
+        let settled = false;
+        const finish = function (val) {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            $scope.$evalAsync(function () {
+                _that.cancelButtonLoading = false;
+                _that.confirmButtonLoading = false;
+                if (val !== false) {
+                    onClose();
+                } else if (_that.options.closeOnPressEscape) {
                     _that.bindKeydown();
                 }
-            }
+            });
+        };
+
+        try {
+            beforeClose({
+                action: action,
+                data: _that.options.inputConfig ? _that.options.inputConfig.model : null,
+                instance: _that,
+                done: finish
+            });
+        } catch (err) {
+            finish(false);
+            throw err;
         }
-        beforeClose({action, data: _that.options.inputConfig ? _that.options.inputConfig.model : null, instance: _that, done});
     };
 
     // 确认按钮点击
@@ -194,8 +212,8 @@ function controller($scope, $element, $timeout, $compile, zIndexManager) {
     // 取消按钮点击
     this.handleCancel = function () {
         if (_that.cancelButtonLoading || _that.confirmButtonLoading) return;
-        _that.executeWithBeforeClose('action', function () {
-            _that.options.deferred.reject({action:'cancel'});
+        _that.executeWithBeforeClose('cancel', function () {
+            _that.options.deferred.reject({action: 'cancel'});
             _that.closeHandle();
         });
     };

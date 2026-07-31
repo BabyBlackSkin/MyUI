@@ -77,6 +77,8 @@ ctx.progressValue = 0.5;
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <mob-button type="primary" ng-click="ctrl.showConfirm()">打开 Confirm</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showConfirmAsync()">Confirm 异步提交</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showConfirmCancelConfirm()">Cancel 二次确认</mob-button>
             </div>
             <div class="meta">
                 <div class="mob-demo-example">
@@ -98,6 +100,7 @@ ctx.progressValue = 0.5;
             <div class="mob-demo-example">
                 <mob-button type="primary" ng-click="ctrl.showMessage()">打开 Message</mob-button>
                 <mob-button type="primary" ng-click="ctrl.showPrompt()">打开 Prompt</mob-button>
+                <mob-button type="primary" ng-click="ctrl.showPromptAsync()">Prompt 异步提交</mob-button>
             </div>
             <div class="meta">
                 <div class="mob-demo-example">
@@ -106,8 +109,45 @@ ctx.progressValue = 0.5;
                 <pre prism>
                         <code class="source-code language-markup language-js language-html language-css"
                         ><!--
-                            <mob-input style="display:block;width: 250px;" ng-model="value"></mob-input>
-                            值：<span ng-bind="value"></span>
+                          this.showMessage = function () {
+                                message.success('修改成功');
+                            };
+                        // 基础 Prompt
+                        this.showPrompt = function () {
+                            messageBox.prompt('请输入您的姓名', '提示', {
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                confirmButtonType: 'primary',
+                                input: {
+                                    pattern: /^[A-Za-z]+$/
+                                }
+                            }).then(function (data) {
+                                console.log('confirm', data);
+                            }).catch(function (data) {
+                                console.log('catch', data);
+                            });
+                        };
+
+                            this.showPromptAsync = function () {
+                                messageBox.prompt('请输入新名称', '重命名', {
+                                    input: {
+                                        placeholder: '仅支持英文字母',
+                                        pattern: /^[A-Za-z]+$/
+                                    },
+                                    beforeClose: function (opt) {
+                                        if (opt.action !== 'confirm') {
+                                            opt.done();
+                                            return;
+                                        }
+                                        setTimeout(function () {
+                                            message.success('已保存：' + opt.data);
+                                            opt.done();
+                                        }, 1500);
+                                    }
+                                }).then(function (data) {
+                                    console.log('saved', data);
+                                });
+                            };
                         --></code>
                     </pre>
             </div>

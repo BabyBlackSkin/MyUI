@@ -68,7 +68,7 @@
                         loading="$ctrl.cancelButtonLoading"
                         ng-if="$ctrl.options.showCancelButton"
                         type="$ctrl.options.cancelButtonType"
-                        ng-disabled="promptForm.$invalid || $ctrl.cancelButtonLoading"
+                        ng-disabled="promptForm.$invalid || $ctrl.cancelButtonLoading || $ctrl.confirmButtonLoading"
                         ng-click="$ctrl.handleCancel()">
                     {{$ctrl.options.cancelButtonText}}
                 </mob-button>
@@ -76,7 +76,7 @@
                         loading="$ctrl.confirmButtonLoading"
                         ng-if="$ctrl.options.showConfirmButton"
                         type="$ctrl.options.confirmButtonType"
-                        ng-disabled="promptForm.$invalid || $ctrl.confirmButtonLoading"
+                        ng-disabled="promptForm.$invalid || $ctrl.cancelButtonLoading || $ctrl.confirmButtonLoading"
                         ng-click="$ctrl.handleConfirm()">
                     {{$ctrl.options.confirmButtonText}}
                 </mob-button>

@@ -70,8 +70,9 @@ function controller($scope, messageBox, message, $interval) {
         messageBox.error('网络连接失败，请重试');
     };
 
-
-
+    this.showMessage = function () {
+        message.success('修改成功');
+    };
 
     // 显示Info消息
     this.showConfirm = function() {
@@ -87,32 +88,76 @@ function controller($scope, messageBox, message, $interval) {
         });
     };
 
-    this.beforeClose = function (opt){
-        console.log(opt)
-        opt.instance.confirmButtonLoading = true
-        message.success("修改成功");
-        // setTimeout(()=>{
-        //     // opt.done()
-        // }, 3000)
-    }
-    this.showMessage = function() {
-        message.success("修改成功");
-    }
-    // 显示Info消息
-    this.showPrompt = function() {
+    // 确认时模拟网络请求：按钮 loading，请求完成后关闭
+    this.showConfirmAsync = function () {
+        messageBox.confirm('确认提交修改吗？', '提示', {
+            beforeClose: function (opt) {
+                if (opt.action !== 'confirm') {
+                    opt.done();
+                    return;
+                }
+                setTimeout(function () {
+                    message.success('修改成功');
+                    opt.done();
+                }, 1500);
+            }
+        });
+    };
 
-        messageBox.prompt('此操作将永久删除该文件, 是否继续?', '提示', {
+    // 取消时二次确认：先结束 loading，弹出确认框后再决定是否关闭
+    this.showConfirmCancelConfirm = function () {
+        messageBox.confirm('确认保存当前内容吗？', '提示', {
+            beforeClose: function (opt) {
+                if (opt.action !== 'cancel') {
+                    opt.done();
+                    return;
+                }
+                opt.done(false);
+                messageBox.confirm('未保存的内容将丢失，确定取消吗？', '提示', {
+                    confirmButtonType: 'danger'
+                }).then(function () {
+                    opt.instance.options.deferred.reject({action: 'cancel'});
+                    opt.instance.closeHandle();
+                });
+            }
+        });
+    };
+
+    // 基础 Prompt
+    this.showPrompt = function () {
+        messageBox.prompt('请输入您的姓名', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             confirmButtonType: 'primary',
-            input:{
-                pattern:/^[A-Za-z]+$/
+            input: {
+                pattern: /^[A-Za-z]+$/
+            }
+        }).then(function (data) {
+            console.log('confirm', data);
+        }).catch(function (data) {
+            console.log('catch', data);
+        });
+    };
+
+    // Prompt 异步提交：确认后 loading，提交成功再关闭并返回输入值
+    this.showPromptAsync = function () {
+        messageBox.prompt('请输入新名称', '重命名', {
+            input: {
+                placeholder: '仅支持英文字母',
+                pattern: /^[A-Za-z]+$/
             },
-            beforeClose:this.beforeClose
-        }).then(data=>{
-            console.log('confirm', data)
-        }).catch(data=>{
-            console.log('catch', data)
+            beforeClose: function (opt) {
+                if (opt.action !== 'confirm') {
+                    opt.done();
+                    return;
+                }
+                setTimeout(function () {
+                    message.success('已保存：' + opt.data);
+                    opt.done(false);
+                }, 1500);
+            }
+        }).then(function (data) {
+            console.log('saved', data);
         });
     };
 
