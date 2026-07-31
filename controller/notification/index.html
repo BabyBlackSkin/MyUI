@@ -74,7 +74,7 @@ notification.show({
 
         <!-- ===== 自定义时长 ===== -->
         <h3>自定义时长</h3>
-        <p>通过 <code>duration</code> 控制显示时长（毫秒），设为 <code>0</code> 则不自动关闭。</p>
+        <p>通过 <code>duration</code> 控制显示时长（毫秒）。设置为 <code>0</code> 或负数（如 <code>-1</code>）则不自动关闭。</p>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
                 <mob-button type="success" ng-click="ctrl.showLongDuration()">显示 10 秒</mob-button>
@@ -92,7 +92,7 @@ notification.success({
 notification.warning({
     title: '持久通知',
     message: '这条通知不会自动消失',
-    duration: 0
+    duration: -1
 });
                     --></code>
                 </pre>
@@ -103,7 +103,7 @@ notification.warning({
         <h3>代码主动关闭</h3>
         <p>
             <code>notification.show()</code> 返回实例，调用 <code>close()</code> 可主动关闭。
-            即使 <code>duration: 0</code>（不自动关闭），也可通过 <code>inst.close()</code> 手动关闭。
+            当 <code>duration &lt;= 0</code>（如 <code>-1</code>）时通知不会自动消失，可通过 <code>inst.close()</code> 手动关闭。
         </p>
         <div class="mob-demo-block">
             <div class="mob-demo-example">
@@ -115,7 +115,7 @@ notification.warning({
 const inst = notification.info({
     title: '处理中',
     message: '正在处理，请稍后…',
-    duration: 0,
+    duration: -1,
     showClose: false
 });
 
@@ -189,7 +189,7 @@ notification.closeAll();
 notification.info({
     title: '可点击',
     message: '点击此通知会触发 onClick 回调',
-    duration: 0,
+    duration: -1,
     onClick: function () {
         notification.success({ title: 'Clicked', message: '你点击了通知' });
     }
