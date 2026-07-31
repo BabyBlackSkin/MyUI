@@ -141,9 +141,12 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             beforeClose: options.beforeClose || null,
             inputConfig: {
                 model: '',  // 必须初始化为空字符串，确保 ng-model 双向绑定正常
-                required:true,// 是否必填
+                required: true,// 是否必填
+                type: getInputOption(options, 'type', 'text'),
                 placeholder: getInputOption(options, 'placeholder', ''),
-                pattern: getInputOption(options, 'pattern', null)
+                pattern: getInputOption(options, 'pattern', null),
+                minlength: getInputOption(options, 'minlength', null),
+                maxlength: getInputOption(options, 'maxlength', null)
             }
         };
         return show(angular.extend({}, config, options));

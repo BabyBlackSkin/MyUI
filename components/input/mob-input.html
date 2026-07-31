@@ -25,6 +25,9 @@
                 ng-disabled="$ctrl.ngDisabled"
                 maxlength="{{$ctrl.ngMaxlength}}"
                 ng-maxlength="$ctrl.ngMaxlength"
+                ng-change="$ctrl.handleInputChange()"
+                ng-blur="$ctrl.handleBlur()"
+                ng-focus="$ctrl.handleFocus()"
         >
 
         <span class="mob-input__suffix">

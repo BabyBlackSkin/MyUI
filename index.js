@@ -1,4 +1,4 @@
-const app = angular.module('mobApp', ['ngRoute', 'ngAnimate'])
+const app = angular.module('mobApp', ['ngRoute', 'ngAnimate', 'ngMessages'])
 // .value('$routerRootComponent', 'mobApp')
 app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProvider) {
     // $logProvider.debugEnabled(true)
