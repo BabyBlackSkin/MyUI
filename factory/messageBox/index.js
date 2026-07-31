@@ -11,6 +11,11 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
         // 组件回调
         config.deferred = $q.defer();
 
+        let messageBoxCtrl = null;
+        config.onInstance = function (ctrl) {
+            messageBoxCtrl = ctrl;
+        };
+
         // 随机 id，避免 scope 属性冲突
         let configKey = uuId.newUUID('_') + '_MessageBoxConfig';
         let closeKey = uuId.newUUID('_') + '_MessageBoxClose';
@@ -37,7 +42,24 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
 
         document.body.appendChild(messageBoxElement[0]);
 
-        return callbackPromise.promise;
+        const promise = callbackPromise.promise;
+
+        function close(action) {
+            if (!messageBoxCtrl || messageBoxCtrl.isClosing) {
+                return;
+            }
+            config.deferred.reject({ action: action || 'close' });
+            messageBoxCtrl.closeHandle();
+        }
+
+        // 对齐 Ant Design Modal：返回 { promise, destroy }，并委托 then/catch/finally 以兼容旧写法
+        return {
+            promise: promise,
+            close: close,
+            then: promise.then.bind(promise),
+            catch: promise.catch.bind(promise),
+            finally: promise.finally.bind(promise)
+        };
     }
 
 
@@ -53,6 +75,9 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             title: title,
             message: message,
             type: 'alert',
+            titleAlign: 'center',
+            messageAlign: 'center',
+            btnAlign: 'center',
             showClose: true,
             showCancelButton: false,
             showConfirmButton: true,
@@ -72,6 +97,9 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             title: title || '确认',
             message: message,
             type: 'confirm',
+            titleAlign: 'center',
+            messageAlign: 'center',
+            btnAlign: 'center',
             showClose: true,
             showCancelButton: true,
             showConfirmButton: true,
@@ -83,7 +111,6 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             closeOnPressEscape: true,
             beforeClose: options.beforeClose || null
         };
-
         return show(angular.extend({}, config, options));
     }
 
@@ -114,70 +141,54 @@ app.factory('messageBox', ['$compile', '$rootScope', '$q', 'uuId', function($com
             beforeClose: options.beforeClose || null,
             inputConfig: {
                 model: '',  // 必须初始化为空字符串，确保 ng-model 双向绑定正常
-                required:false,// 是否必填
+                required:true,// 是否必填
                 placeholder: getInputOption(options, 'placeholder', ''),
                 pattern: getInputOption(options, 'pattern', null)
             }
         };
-
         return show(angular.extend({}, config, options));
     }
 
     // 成功提示弹框（带成功图标，对齐 alert，需用户点击确认才关闭）
     function success(message, title, options) {
         options = options || {};
-        let config = {
+        return show(angular.extend({
             title: title,
             message: message,
-            type: 'alert',
-            iconType: 'success',
-            showClose: false,
-            showCancelButton: false,
-            showConfirmButton: true,
-            confirmButtonText: options.confirmButtonText || '确定',
-            confirmButtonType: options.confirmButtonType || 'primary',
-            closeOnClickModal: false,
-            closeOnPressEscape: false
-        };
-        return show(angular.extend({}, config, options, { type: 'alert', iconType: 'success', closeOnClickModal: false, closeOnPressEscape: false }));
+            titleAlign: 'center',
+            messageAlign: 'center',
+            btnAlign: 'center',
+            confirmButtonText: '确定',
+            confirmButtonType: 'primary'
+        }, options, { type: 'alert', iconType: 'success', closeOnClickModal: false, closeOnPressEscape: false }));
     }
 
-    // 警告提示弹框（带警告图标，对齐 alert，需用户点击确认才关闭）
+    // 警告提示弹框
     function warning(message, title, options) {
         options = options || {};
-        let config = {
+        return show(angular.extend({
             title: title,
             message: message,
-            type: 'alert',
-            iconType: 'warning',
-            showClose: false,
-            showCancelButton: false,
-            showConfirmButton: true,
-            confirmButtonText: options.confirmButtonText || '确定',
-            confirmButtonType: options.confirmButtonType || 'primary',
-            closeOnClickModal: false,
-            closeOnPressEscape: false
-        };
-        return show(angular.extend({}, config, options, { type: 'alert', iconType: 'warning', closeOnClickModal: false, closeOnPressEscape: false }));
+            titleAlign: 'center',
+            messageAlign: 'center',
+            btnAlign: 'center',
+            confirmButtonText: '确定',
+            confirmButtonType: 'primary'
+        }, options, { type: 'alert', iconType: 'warning', closeOnClickModal: false, closeOnPressEscape: false }));
     }
 
-    // 错误提示弹框（带错误图标，对齐 alert，需用户点击确认才关闭）
+    // 错误提示弹框
     function error(message, title, options) {
         options = options || {};
-        let config = {
+        return show(angular.extend({
             title: title,
             message: message,
-            type: 'alert',
-            iconType: 'error',
-            showClose: false,
-            showCancelButton: false,
-            showConfirmButton: true,
-            confirmButtonText: options.confirmButtonText || '确定',
-            confirmButtonType: options.confirmButtonType || 'danger',
-            closeOnClickModal: false,
-            closeOnPressEscape: false
-        };
-        return show(angular.extend({}, config, options, { type: 'alert', iconType: 'error', closeOnClickModal: false, closeOnPressEscape: false }));
+            titleAlign: 'center',
+            messageAlign: 'center',
+            btnAlign: 'center',
+            confirmButtonText: '确定',
+            confirmButtonType: 'danger'
+        }, options, { type: 'alert', iconType: 'error', closeOnClickModal: false, closeOnPressEscape: false }));
     }
 
     return {

@@ -8,7 +8,9 @@ function controller($scope, $element, $timeout, $compile, zIndexManager) {
         type: 'info', // info, success, warning, error
         iconType: null, // success, warning, error 对应状态图标，null 表示不显示大图标
         showHeader: true,// 是否展示标题头部
-        align: 'center',//对齐样式，支持 'left' | 'center' | 'right'
+        titleAlign: 'left',//对齐样式，支持 'left' | 'center' | 'right'
+        messageAlign: 'left',//对齐样式，支持 'left' | 'center' | 'right'
+        btnAlign: 'right',//对齐样式，支持 'left' | 'center' | 'right'
         showClose: true, // 是否显示关闭图标
         showCancelButton: false, // 是否显示取消按钮
         showConfirmButton: true, // 是否显示确认按钮
@@ -35,6 +37,9 @@ function controller($scope, $element, $timeout, $compile, zIndexManager) {
         this.confirmButtonLoading = false;
         this.options = angular.extend({}, this.defaultOptions, this.config || {});
         _that.applyMessageContext();
+        if (this.config && typeof this.config.onInstance === 'function') {
+            this.config.onInstance(this);
+        }
     };
 
     this.$onChanges = function (changes) {
