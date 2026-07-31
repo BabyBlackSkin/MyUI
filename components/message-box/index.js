@@ -227,6 +227,40 @@ function controller($scope, $element, $timeout, $compile, zIndexManager) {
     };
 
 
+    // 获取 prompt 输入框的第一条校验错误（按优先级只返回一条）
+    this.getPromptValidationMessage = function (form) {
+        if (!form || !form.prompt || !form.prompt.$touched || !form.prompt.$invalid) {
+            return '';
+        }
+
+        const field = form.prompt;
+        const errorOrder = ['required', 'pattern', 'minlength', 'maxlength', 'email', 'number'];
+        const messageMap = {
+            required: '该字段为必填项',
+            pattern: '输入格式不正确',
+            email: '请输入有效的邮箱地址',
+            number: '请输入有效的数字'
+        };
+
+        for (let i = 0; i < errorOrder.length; i++) {
+            const key = errorOrder[i];
+            if (!field.$error[key]) {
+                continue;
+            }
+
+            if (key === 'minlength') {
+                return '输入内容至少需要 ' + field.$error.minlength.requiredLength + ' 个字符';
+            }
+            if (key === 'maxlength') {
+                return '输入内容不能超过 ' + field.$error.maxlength.requiredLength + ' 个字符';
+            }
+
+            return messageMap[key];
+        }
+
+        return '';
+    };
+
     // 获取图标类名（优先使用 iconType，回退到 type）
     this.getIconClass = function () {
         const iconMap = {

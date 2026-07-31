@@ -56,14 +56,9 @@
                                    ng-minlength="$ctrl.options.inputConfig.minlength"
                                    ng-maxlength="$ctrl.options.inputConfig.maxlength"></mob-input>
                     </div>
-                    <div ng-messages="promptForm.prompt.$error" ng-if="promptForm.prompt.$touched">
-                        <p class="invalid_msg" ng-message="required">该字段为必填项</p>
-                        <p class="invalid_msg" ng-message="pattern">输入格式不正确</p>
-                        <p class="invalid_msg" ng-message="minlength">输入内容至少需要 {{promptForm.prompt.$error.minlength.requiredLength}} 个字符</p>
-                        <p class="invalid_msg" ng-message="maxlength">输入内容不能超过 {{promptForm.prompt.$error.maxlength.requiredLength}} 个字符</p>
-                        <p class="invalid_msg" ng-message="email">请输入有效的邮箱地址</p>
-                        <p class="invalid_msg" ng-message="number">请输入有效的数字</p>
-                    </div>
+                    <p class="invalid_msg"
+                       ng-bind="$ctrl.getPromptValidationMessage(promptForm)"
+                       ng-show="$ctrl.getPromptValidationMessage(promptForm)"></p>
                 </div>
             </div>
 
