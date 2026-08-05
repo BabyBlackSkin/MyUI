@@ -1,142 +1,127 @@
-/* Date Picker 日期选择器 */
+/* DatePickerPane 日期面板 */
 mob-date-picker-pane {
     display: block;
-    width: 320px;
+    width: 322px;
     user-select: none;
     color: var(--mob-regular-text-color);
-    --mob-date-picker-pane-date-op-width:42px;
-    --mob-date-picker-pane-date-column: repeat(7, var(--mob-date-picker-pane-date-op-width));
-    --mob-date-picker-pane-year-op-width:73.5px;
-    --mob-date-picker-pane-year-column: repeat(4, var(--mob-date-picker-pane-year-op-width));
+    --mob-date-picker-pane-cell: 42px;
+    --mob-date-picker-pane-week-num: 36px;
 }
 
+mob-date-picker-pane .mob-date-picker-pane {
+    padding: 8px 4px 12px;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.is-disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.is-disabled .btn,
+mob-date-picker-pane .mob-date-picker-pane.is-disabled .mob-date-picker__header_title span,
+mob-date-picker-pane .mob-date-picker-pane.is-disabled .mob-date-picker__calendar-row > div {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* ----- 表头 ----- */
 mob-date-picker-pane .mob-date-picker__header {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
 }
 
-mob-date-picker-pane .mob-date-picker__header div {
+mob-date-picker-pane .mob-date-picker__header__container {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(var(--mob-date-picker-pane-cell) * 7);
+}
+
+mob-date-picker-pane .mob-date-picker-pane.has-week-number .mob-date-picker__header__container,
+mob-date-picker-pane .mob-date-picker-pane.has-week-number .mob-date-picker__body_header,
+mob-date-picker-pane .mob-date-picker-pane.has-week-number .mob-date-picker__body_container .mob-date-picker__calendar-row {
+    width: calc(var(--mob-date-picker-pane-cell) * 7 + var(--mob-date-picker-pane-week-num));
+}
+
+mob-date-picker-pane .mob-date-picker__header-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+mob-date-picker-pane .mob-date-picker__header .btn {
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
 }
 
-mob-date-picker-pane .mob-date-picker__header .mob-date-picker__header_title {
+mob-date-picker-pane .mob-date-picker__header .btn:hover {
+    color: var(--mob-primary-color);
+}
+
+mob-date-picker-pane .mob-date-picker__header_title {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
-mob-date-picker-pane .mob-date-picker__header .mob-date-picker__header_title span {
+mob-date-picker-pane .mob-date-picker__header_title span {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
 }
 
-mob-date-picker-pane .mob-date-picker__header .mob-date-picker__header_title span:hover {
+mob-date-picker-pane .mob-date-picker__header_title span:hover {
     color: var(--mob-primary-color);
 }
 
-mob-date-picker-pane .mob-date-picker__header div .btn {
-    cursor: pointer;
+/* ----- 日面板网格 ----- */
+mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__body_header,
+mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__body_container .mob-date-picker__calendar-row {
+    width: calc(var(--mob-date-picker-pane-cell) * 7);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, var(--mob-date-picker-pane-cell));
 }
 
-mob-date-picker-pane .mob-date-picker__header div .btn:hover {
-    color: var(--mob-primary-color);
+mob-date-picker-pane .mob-date-picker-pane.date.has-week-number .mob-date-picker__body_header,
+mob-date-picker-pane .mob-date-picker-pane.date.has-week-number .mob-date-picker__body_container .mob-date-picker__calendar-row {
+    grid-template-columns: var(--mob-date-picker-pane-week-num) repeat(7, var(--mob-date-picker-pane-cell));
 }
 
-mob-date-picker-pane .mob-date-picker__body .mob-date-picker__body_header {
-    font-size: 16px;
+mob-date-picker-pane .mob-date-picker__body_header {
+    font-size: 14px;
     font-weight: 600;
-}
-mob-date-picker-pane .mob-date-picker__body .mob-date-picker__body_header span{
-    display: block;
-    text-align: center;
+    margin-bottom: 4px;
 }
 
-mob-date-picker-pane .mob-date-picker__calendar-row span {
-    display: block;
-}
-
-mob-date-picker-pane .mob-date-picker__calendar-row span:hover {
-    color: var(--mob-primary-color);
-    cursor: pointer;
-}
-
-mob-date-picker-pane .mob-date-picker__calendar-row .current:not(.notCurrentMonth) {
-    color: var(--mob-primary-color)
-}
-
-mob-date-picker-pane .mob-date-picker-pane .mob-date-picker__calendar-row {
-    row-gap: 5px;
-}
-mob-date-picker-pane .mob-date-picker__calendar-row .potential:not(.notCurrentMonth) {
-    background-color:var(--mob-extra-lighter-border-color);
-}
-
-mob-date-picker-pane .mob-date-picker__calendar-row .potential:not(.notCurrentMonth) {
-    background-color: var(--mob-extra-lighter-border-color);
-    border-radius: 50%;
-}
-
-mob-date-picker-pane .mob-date-picker__calendar-row .potential + .potential {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-mob-date-picker-pane .mob-date-picker__calendar-row .potential:has(+ .potential) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-mob-date-picker-pane .mob-date-picker__calendar-row .selected:not(.notCurrentMonth) span {
-    background-color:var(--mob-primary-color);
-    color: var(--mob-info-light-color9)
-}
-
-/*===================*/
-/*date-pane*/
-/*===================*/
-
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__header .mob-date-picker__header__container {
-    width: calc(var(--mob-date-picker-pane-date-op-width) * 7);
-    margin: 0 auto;
-}
-
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__header  .mob-date-picker__header_title span:first-child {
-    margin-left: auto;
-    margin-right: 10px;
-}
-
-
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__header  .mob-date-picker__header_title span:last-child {
-    margin-right: auto;
-    margin-left: 10px;
-}
-
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__body_header {
-    width: calc(7 * 42px);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: var(--mob-date-picker-pane-date-column);
-}
-
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row {
-    width: calc(7 * 42px);
-    display: grid;
-    grid-template-columns: var(--mob-date-picker-pane-date-column);
-    margin: 0 auto;
-}
-
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row div {
+mob-date-picker-pane .mob-date-picker__body_header span {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 38px;
+    height: 32px;
 }
 
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row span {
-    /*width: 30px;*/
-    height: 30px;
+mob-date-picker-pane .mob-date-picker__calendar-row > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--mob-date-picker-pane-cell);
+    height: 36px;
+}
+
+mob-date-picker-pane .mob-date-picker__week-number {
+    width: var(--mob-date-picker-pane-week-num) !important;
+    color: var(--mob-secondary-text-color);
+    font-size: 12px;
+}
+
+mob-date-picker-pane .mob-date-picker__calendar-row span {
+    height: 28px;
+    min-width: 28px;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -144,130 +129,91 @@ mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row s
     border-radius: 50%;
 }
 
-mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row .notCurrentMonth {
-    color: var(--mob-secondary-text-color)
+mob-date-picker-pane .mob-date-picker__calendar-row > div:not(.disabled):not(.mob-date-picker__week-number) {
+    cursor: pointer;
 }
 
-/*===================*/
-/*year-pane*/
-/*===================*/
+mob-date-picker-pane .mob-date-picker__calendar-row > div:not(.disabled):not(.mob-date-picker__week-number):hover span {
+    color: var(--mob-primary-color);
+}
 
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__header .mob-date-picker__header__container {
-    width: calc(var(--mob-date-picker-pane-year-op-width) * 7);
+mob-date-picker-pane .mob-date-picker__calendar-row .current:not(.notCurrentMonth):not(.selected) span {
+    color: var(--mob-primary-color);
+    font-weight: 600;
+}
+
+mob-date-picker-pane .mob-date-picker__calendar-row .notCurrentMonth {
+    color: var(--mob-secondary-text-color);
+}
+
+mob-date-picker-pane .mob-date-picker__calendar-row .selected span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+}
+
+mob-date-picker-pane .mob-date-picker__calendar-row .disabled {
+    color: var(--mob-placeholder-text-color, #c0c4cc);
+    cursor: not-allowed;
+}
+
+mob-date-picker-pane .mob-date-picker__calendar-row .disabled span {
+    background: transparent;
+    cursor: not-allowed;
+}
+
+/* 已选中又被禁用：保留选中底色，但不可点 */
+mob-date-picker-pane .mob-date-picker__calendar-row .selected.disabled span {
+    background-color: var(--mob-primary-color);
+    color: var(--mob-info-light-color9);
+    opacity: 0.55;
+}
+
+mob-date-picker-pane .mob-date-picker__calendar-row.is-week-selected {
+    background-color: var(--mob-extra-lighter-border-color);
+    border-radius: 4px;
+}
+
+/* ----- 月 / 年面板 ----- */
+mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__header__container,
+mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__header__container {
+    width: calc(73.5px * 4);
+}
+
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid {
+    width: calc(73.5px * 4);
     margin: 0 auto;
-}
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__header  .mob-date-picker__header_title span {
-    text-align: center;
-    flex: 1;
-}
-
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row {
-    width: calc(7 * 42px);
     display: grid;
     grid-template-columns: repeat(4, 73.5px);
-    margin: 0 auto;
+    row-gap: 8px;
 }
 
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 48px;
-}
-
-
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid > div,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid > div {
     width: 73.5px;
-    height: 38px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row span {
+
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid span,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid span {
     width: 60px;
     height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 18px;
+    aspect-ratio: auto;
 }
 
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .selected span {
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid .selected span,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid .selected span {
     background-color: var(--mob-primary-color);
     color: var(--mob-info-light-color9);
 }
 
-/* yearRange 样式：potential 的 div 背景色，selected 的 span 背景色 */
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .potential {
-    background-color: var(--mob-extra-lighter-border-color);
-}
-
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .selected span {
-    background-color: var(--mob-primary-color);
-    color: var(--mob-info-light-color9);
-}
-
-/* 确保同时有 selected 和 potential 时，span 的主色背景优先 */
-mob-date-picker-pane .mob-date-picker-pane.year .mob-date-picker__calendar-row .potential.selected span {
-    background-color: var(--mob-primary-color);
-    color: var(--mob-info-light-color9);
-}
-/*===================*/
-/*month-pane*/
-/*===================*/
-
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__header  .mob-date-picker__header_title span {
-    text-align: center;
-    flex: 1;
-}
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row {
-    width: calc(7 * 42px);
-    display: grid;
-    grid-template-columns: repeat(4, 73.5px);
-    margin: 0 auto;
-}
-
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 48px;
-}
-
-
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 73.5px;
-    height: 38px;
-}
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row span {
-    width: 60px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 18px;
-}
-
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .selected span {
-    background-color: var(--mob-primary-color);
-    color: var(--mob-info-light-color9);
-}
-
-/* monthRange 样式：potential 的 div 背景色，selected 的 span 背景色 */
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .potential {
-    background-color: var(--mob-extra-lighter-border-color);
-}
-
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .selected span {
-    background-color: var(--mob-primary-color);
-    color: var(--mob-info-light-color9);
-}
-
-/* 确保同时有 selected 和 potential 时，span 的主色背景优先 */
-mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__calendar-row .potential.selected span {
-    background-color: var(--mob-primary-color);
-    color: var(--mob-info-light-color9);
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid .disabled,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid .disabled {
+    color: var(--mob-placeholder-text-color, #c0c4cc);
+    cursor: not-allowed;
 }

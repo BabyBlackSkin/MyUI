@@ -1,1186 +1,874 @@
-// ISO 周数计算函数
-function getISOWeek(date) {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const dayNum = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+/**
+ * DatePickerPane — 日期面板（无输入框）
+ * 值一律按「公历日历日」写成 UTC 字符串，默认格式 YYYY-MM-DD HH:mm:ss
+ */
+
+const PANE_DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+const PANE_TYPES = {
+    DATE: 'date',
+    DATES: 'dates',
+    WEEK: 'week',
+    MONTH: 'month',
+    MONTHS: 'months',
+    YEAR: 'year',
+    YEARS: 'years'
+};
+
+const MONTH_LABELS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+const WEEKDAY_LABELS = ['日', '一', '二', '三', '四', '五', '六'];
+
+/** 用 UTC 日历分量拼出一个 Date（不做本地时区换算） */
+function makeUtcDate(year, month, day, hour, minute, second) {
+    return new Date(Date.UTC(
+        year,
+        month - 1,
+        day,
+        hour || 0,
+        minute || 0,
+        second || 0
+    ));
 }
 
-function controller($scope, $element, $attrs, $compile) {
-    const $ctrl = this
+function pad2(n) {
+    return String(n).padStart(2, '0');
+}
 
-    const syncDate = function (model) {
-        if (angular.isUndefined(model) || null == model) {
-            return
-        }
-        if (typeof model === 'string') {
-            $ctrl.dayjs = dayjs(model)
+/** 把 UTC Date 按 format 输出字符串（支持 YYYY MM DD HH mm ss） */
+function formatUtcDate(date, format) {
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+        return '';
+    }
+    const map = {
+        YYYY: String(date.getUTCFullYear()),
+        MM: pad2(date.getUTCMonth() + 1),
+        DD: pad2(date.getUTCDate()),
+        HH: pad2(date.getUTCHours()),
+        mm: pad2(date.getUTCMinutes()),
+        ss: pad2(date.getUTCSeconds())
+    };
+    return (format || PANE_DEFAULT_FORMAT).replace(/YYYY|MM|DD|HH|mm|ss/g, function (token) {
+        return map[token];
+    });
+}
+
+/**
+ * 按 format 解析字符串 → UTC Date
+ * 对不上 format 就返回 null（视为非法）
+ */
+function parseUtcDate(text, format) {
+    if (text == null || text === '') {
+        return null;
+    }
+    if (text instanceof Date) {
+        return isNaN(text.getTime()) ? null : text;
+    }
+    if (typeof text !== 'string') {
+        return null;
+    }
+
+    const fmt = format || PANE_DEFAULT_FORMAT;
+    const tokenReg = /YYYY|MM|DD|HH|mm|ss/g;
+    const keys = [];
+    let pattern = '';
+    let lastIndex = 0;
+    let match;
+
+    while ((match = tokenReg.exec(fmt)) !== null) {
+        pattern += escapeRegExp(fmt.slice(lastIndex, match.index));
+        keys.push(match[0]);
+        if (match[0] === 'YYYY') {
+            pattern += '(\\d{4})';
         } else {
-            $ctrl.dayjs = dayjs(model * 1000)
+            pattern += '(\\d{2})';
         }
-        $ctrl.year = $ctrl.dayjs.year();
-        $ctrl.month = $ctrl.dayjs.month() + 1;
-        $ctrl.date = $ctrl.dayjs.date();
-        $ctrl.timestamp = $ctrl.dayjs.unix();
+        lastIndex = match.index + match[0].length;
     }
-    const getDate = function (cellDate, currentDate, today = new Date(), isWeekDate) {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth(); // 0-11
-
-        const todayYear = today.getFullYear();
-        const todayMonth = today.getMonth();
-        const todayDate = today.getDate();
-
-        const cellYear = cellDate.getFullYear();
-        const cellMonth = cellDate.getMonth();
-        const cellDay = cellDate.getDate();
-        const cellDayOfWeek = cellDate.getDay();
-
-        // 计算这是第几周（ISO周标准）
-        const weekNumber = getISOWeek(cellDate);
-        const weekStart = new Date(cellDate);
-        weekStart.setDate(cellDate.getDate() - cellDayOfWeek + (cellDayOfWeek === 0 ? -6 : 0));
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 6);
-        return {
-            year: cellYear,
-            month: cellMonth + 1,
-            date: cellDay,
-            weekNumber: weekNumber,
-            weekStart: isWeekDate ? '' : getDate(weekStart, currentDate, today, 1),
-            weekEnd: isWeekDate ? '' : getDate(weekEnd, currentDate, today, 1),
-            isPrevMonth: cellYear < year || (cellYear === year && cellMonth < month),
-            isNextMonth: cellYear > year || (cellYear === year && cellMonth > month),
-            isToday:
-                cellYear === todayYear &&
-                cellMonth === todayMonth &&
-                cellDay === todayDate,
-            day: cellDayOfWeek,
-            timestamp: cellDate.getTime() / 1000,
-            formattedDate:
-                `${cellYear}-${String(cellMonth + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`,
-            // weekFormatted:
-            //     `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')} ~ ${weekEnd.getFullYear()}-${String(weekEnd.getMonth() + 1).padStart(2, '0')}-${String(weekEnd.getDate()).padStart(2, '0')}`
-        }
-    }
-    const handlers = {
-        week: {
-            syncDate: syncDate,
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                if (angular.isDefined($ctrl.calendarInitOffset)) {
-                    currentDate.setMonth(currentDate.getMonth() + $ctrl.calendarInitOffset)
-                }
-
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth(); // 0-11
-
-                const today = new Date();
-
-                const firstDay = new Date(year, month, 1);
-                const firstDayOfWeek = firstDay.getDay(); // 0=周日
-
-                // 如果1号是周日，强制往前退一整周
-                let offset = firstDayOfWeek === 0 ? 7 : firstDayOfWeek;
-
-                const startDate = new Date(year, month, 1 - offset);
-
-                const totalCells = 42;
-                const calendar = [];
-
-                for (let i = 0; i < totalCells; i++) {
-                    const cellDate = new Date(startDate);
-                    cellDate.setDate(startDate.getDate() + i);
-
-                    calendar.push(getDate(cellDate, currentDate, today));
-                }
-
-                this.calendarOptions = calendar;
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate
-            },
-            calendarSelectedHandler: function (date) {
-                // 周选择：返回该周的起止日期
-                const weekStart = date.weekStart;
-                const weekEnd = date.weekEnd;
-                // const weekValue = {
-                //     start: `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')}`,
-                //     end: `${weekEnd.getFullYear()}-${String(weekEnd.getMonth() + 1).padStart(2, '0')}-${String(weekEnd.getDate()).padStart(2, '0')}`,
-                //     weekNumber: date.weekNumber
-                // };
-                $ctrl.model = [
-                    weekStart,
-                    weekEnd
-                ];
-                $ctrl.syncDate(new Date(date.year, date.month - 1, date.date).getTime() / 1000)
-                // 周选择完成后关闭弹窗
-                if (angular.isDefined($ctrl.onSelectComplete)) {
-                    $ctrl.onSelectComplete();
-                }
-            },
-            isCurrentMonth: function (date) {
-                return date.month === $ctrl.calendarMonth && date.year === $ctrl.calendarYear
-            },
-            isSelected: function (date) {
-                if (!$ctrl.model) return false;
-                return date.timestamp === $ctrl.model[0].timestamp || date.timestamp === $ctrl.model[1].timestamp;
-            },
-            isPotential: function (date) {
-                if (typeof date === 'undefined' || null === date ||
-                    (typeof $ctrl.potentialValue === 'undefined' && null === $ctrl.potentialValue &&
-                        typeof $ctrl.model === 'undefined' && null === $ctrl.model)) {
-                    return false
-                }
-                let isPotential = false;
-                if ($ctrl.model) {
-                    isPotential = $ctrl.model[0].timestamp <= date.timestamp && date.timestamp <= $ctrl.model[1].timestamp
-                }
-                if ($ctrl.potentialValue) {
-                    isPotential = isPotential || $ctrl.potentialValue.weekStart.timestamp <= date.timestamp && date.timestamp <= $ctrl.potentialValue.weekEnd.timestamp
-                }
-                return isPotential;
-            }
-        },
-        months: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    $ctrl.selectedMonths = [];
-                    return
-                }
-                if (Array.isArray(model)) {
-                    $ctrl.selectedMonths = model.map(m => {
-                        if (typeof m === 'string') {
-                            return dayjs(m).unix();
-                        } else {
-                            return m;
-                        }
-                    });
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                const currentYear = currentDate.getFullYear();
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-                const todayMonth = today.getMonth();
-
-                const months = [];
-
-                for (let i = 0; i < 12; i++) {
-                    months.push({
-                        year: currentYear,
-                        month: i + 1,
-                        monthIndex: i,
-                        timestamp: new Date(currentYear, i, 1).getTime() / 1000,
-                        isCurrentYear: currentYear === todayYear,
-                        isCurrentMonth: currentYear === todayYear && i === todayMonth,
-                        formatted: `${currentYear}-${String(i + 1).padStart(2, '0')}`
-                    });
-                }
-                $ctrl.calendarOptions = months;
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate;
-            },
-            calendarSelectedHandler: function (date) {
-                if (!$ctrl.selectedMonths) {
-                    $ctrl.selectedMonths = [];
-                }
-                const timestamp = date.timestamp;
-                const index = $ctrl.selectedMonths.indexOf(timestamp);
-                if (index > -1) {
-                    $ctrl.selectedMonths.splice(index, 1);
-                } else {
-                    $ctrl.selectedMonths.push(timestamp);
-                }
-                $ctrl.selectedMonths.sort((a, b) => a - b);
-                $ctrl.model = $ctrl.selectedMonths.map(ts => {
-                    const d = new Date(ts * 1000);
-                    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                });
-            },
-            isSelected: function (date) {
-                if (!$ctrl.selectedMonths) return false;
-                return $ctrl.selectedMonths.indexOf(date.timestamp) > -1;
-            },
-            isPotential: function (date) {
-                return false;
-            }
-        },
-        years: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    $ctrl.selectedYears = [];
-                    return
-                }
-                if (Array.isArray(model)) {
-                    $ctrl.selectedYears = model.map(y => {
-                        if (typeof y === 'string') {
-                            return parseInt(y, 10);
-                        } else {
-                            return y;
-                        }
-                    });
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                const currentYear = currentDate.getFullYear()
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-
-                let startYear;
-                if (currentYear % 10 >= 5) {
-                    startYear = currentYear - (currentYear % 10);
-                } else {
-                    startYear = currentYear - (currentYear % 10) - 10;
-                }
-
-                const years = [];
-                for (let i = 0; i < 10; i++) {
-                    let yearTitle = startYear + i;
-                    years.push({
-                        year: yearTitle,
-                        isCurrentYear: todayYear === yearTitle
-                    });
-                }
-                this.calendarOptions = years
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate;
-            },
-            calendarSelectedHandler: function (date) {
-                if (!$ctrl.selectedYears) {
-                    $ctrl.selectedYears = [];
-                }
-                const year = date.year;
-                const index = $ctrl.selectedYears.indexOf(year);
-                if (index > -1) {
-                    $ctrl.selectedYears.splice(index, 1);
-                } else {
-                    $ctrl.selectedYears.push(year);
-                }
-                $ctrl.selectedYears.sort((a, b) => a - b);
-                $ctrl.model = $ctrl.selectedYears.map(y => `${y}`);
-            },
-            isSelected: function (date) {
-                if (!$ctrl.selectedYears) return false;
-                return $ctrl.selectedYears.indexOf(date.year) > -1;
-            },
-            isPotential: function (date) {
-                return false;
-            }
-        },
-        dates: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    $ctrl.selectedDates = [];
-                    return
-                }
-                if (Array.isArray(model)) {
-                    $ctrl.selectedDates = model.map(d => {
-                        if (typeof d === 'string') {
-                            return dayjs(d).unix();
-                        } else {
-                            return d;
-                        }
-                    });
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                if (angular.isDefined($ctrl.calendarInitOffset)) {
-                    currentDate.setMonth(currentDate.getMonth() + $ctrl.calendarInitOffset)
-                }
-
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth(); // 0-11
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-                const todayMonth = today.getMonth();
-                const todayDate = today.getDate();
-
-                const firstDay = new Date(year, month, 1);
-                const firstDayOfWeek = firstDay.getDay(); // 0=周日
-
-                // 如果1号是周日，强制往前退一整周
-                let offset = firstDayOfWeek === 0 ? 7 : firstDayOfWeek;
-
-                const startDate = new Date(year, month, 1 - offset);
-
-                const totalCells = 42;
-                const calendar = [];
-
-                for (let i = 0; i < totalCells; i++) {
-                    const cellDate = new Date(startDate);
-                    cellDate.setDate(startDate.getDate() + i);
-
-                    const cellYear = cellDate.getFullYear();
-                    const cellMonth = cellDate.getMonth();
-                    const cellDay = cellDate.getDate();
-
-                    calendar.push({
-                        year: cellYear,
-                        month: cellMonth + 1,
-                        date: cellDay,
-                        isPrevMonth: cellYear < year || (cellYear === year && cellMonth < month),
-                        isNextMonth: cellYear > year || (cellYear === year && cellMonth > month),
-                        isToday:
-                            cellYear === todayYear &&
-                            cellMonth === todayMonth &&
-                            cellDay === todayDate,
-                        day: cellDate.getDay(),
-                        timestamp: cellDate.getTime() / 1000,
-                        formattedDate:
-                            `${cellYear}-${String(cellMonth + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`
-                    });
-                }
-
-                this.calendarOptions = calendar;
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate
-            },
-            calendarSelectedHandler: function (date) {
-                if (!$ctrl.selectedDates) {
-                    $ctrl.selectedDates = [];
-                }
-                const index = $ctrl.selectedDates.indexOf(date.timestamp);
-                if (index > -1) {
-                    // 已选中则取消
-                    $ctrl.selectedDates.splice(index, 1);
-                } else {
-                    // 未选中则添加
-                    $ctrl.selectedDates.push(date.timestamp);
-                }
-                // 排序并转换为日期字符串数组
-                $ctrl.selectedDates.sort((a, b) => a - b);
-                $ctrl.model = $ctrl.selectedDates.map(ts => {
-                    const d = new Date(ts * 1000);
-                    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                });
-                // 多日期选择不自动关闭，让用户可以继续选择
-            },
-            isCurrentMonth: function (date) {
-                return date.month === $ctrl.calendarMonth && date.year === $ctrl.calendarYear
-            },
-            isSelected: function (date) {
-                return $ctrl.selectedDates && $ctrl.selectedDates.indexOf(date.timestamp) > -1;
-            },
-            isPotential: function (date) {
-                return false;
-            }
-        },
-        date: {
-            syncDate: syncDate,
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                if (angular.isDefined($ctrl.calendarInitOffset)) {
-                    currentDate.setMonth(currentDate.getMonth() + $ctrl.calendarInitOffset)
-                }
-
-                // console.log(date, currentDate)
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth(); // 0-11
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-                const todayMonth = today.getMonth();
-                const todayDate = today.getDate();
-
-                const firstDay = new Date(year, month, 1);
-                const firstDayOfWeek = firstDay.getDay(); // 0=周日
-
-                // 如果1号是周日，强制往前退一整周
-                let offset = firstDayOfWeek === 0 ? 7 : firstDayOfWeek;
-
-                const startDate = new Date(year, month, 1 - offset);
-
-                const totalCells = 42;
-                const calendar = [];
-
-                for (let i = 0; i < totalCells; i++) {
-
-                    const cellDate = new Date(startDate);
-                    cellDate.setDate(startDate.getDate() + i);
-
-                    const cellYear = cellDate.getFullYear();
-                    const cellMonth = cellDate.getMonth();
-                    const cellDay = cellDate.getDate();
-
-                    calendar.push({
-                        year: cellYear,
-                        month: cellMonth + 1,
-                        date: cellDay,
-                        isPrevMonth: cellYear < year || (cellYear === year && cellMonth < month),
-                        isNextMonth: cellYear > year || (cellYear === year && cellMonth > month),
-                        isToday:
-                            cellYear === todayYear &&
-                            cellMonth === todayMonth &&
-                            cellDay === todayDate,
-
-                        day: cellDate.getDay(),
-                        timestamp: cellDate.getTime() / 1000,
-                        formattedDate:
-                            `${cellYear}-${String(cellMonth + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`
-                    });
-                }
-
-                this.calendarOptions = calendar;
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate
-            },
-            calendarSelectedHandler: function (date) {
-                $ctrl.model = date.formattedDate
-                // 如果点击的是同一个月的，则不用刷新
-                if (date.year !== $ctrl.calendarYear || date.month !== $ctrl.calendarMonth) {
-                    this.getCalendar(date.formattedDate)
-                }
-                $ctrl.syncDate(new Date(date.year, date.month - 1, date.date).getTime() / 1000)
-                // 单日期选择完成后关闭弹窗
-                if (angular.isDefined($ctrl.onSelectComplete)) {
-                    $ctrl.onSelectComplete();
-                }
-            },
-            isCurrentMonth: function (date) {
-                return date.month === $ctrl.calendarMonth && date.year === $ctrl.calendarYear
-            },
-            isSelected: function (date) {
-                return date.date === $ctrl.date && date.month === $ctrl.month && date.year === $ctrl.year
-            },
-            isPotential: function (date) {
-                return false
-            }
-        },
-        dateRange: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    return
-                }
-                if (typeof model === 'string') {
-                    console.warn('日期同步，warning')
-                    $ctrl.dayjs = dayjs(model)
-                } else if (Array.isArray(model)) {
-                    $ctrl.dayjs = []
-                    for (let date of model) {
-
-                    }
-                } else {
-                    $ctrl.dayjs = dayjs(model * 1000)
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                if (!$ctrl.isInit && angular.isDefined($ctrl.calendarInitOffset)) {
-                    currentDate.setMonth(currentDate.getMonth() + $ctrl.calendarInitOffset)
-                }
-
-                // console.log(date, currentDate)
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth(); // 0-11
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-                const todayMonth = today.getMonth();
-                const todayDate = today.getDate();
-
-                const firstDay = new Date(year, month, 1);
-                const firstDayOfWeek = firstDay.getDay(); // 0=周日
-
-                // 如果1号是周日，强制往前退一整周
-                let offset = firstDayOfWeek === 0 ? 7 : firstDayOfWeek;
-
-                const startDate = new Date(year, month, 1 - offset);
-
-                const totalCells = 42;
-                const calendar = [];
-
-                for (let i = 0; i < totalCells; i++) {
-
-                    const cellDate = new Date(startDate);
-                    cellDate.setDate(startDate.getDate() + i);
-
-                    const cellYear = cellDate.getFullYear();
-                    const cellMonth = cellDate.getMonth();
-                    const cellDay = cellDate.getDate();
-
-
-                    calendar.push({
-                        year: cellYear,
-                        month: cellMonth + 1,
-                        date: cellDay,
-                        isPrevMonth: cellYear < year || (cellYear === year && cellMonth < month),
-                        isNextMonth: cellYear > year || (cellYear === year && cellMonth > month),
-                        isToday:
-                            cellYear === todayYear &&
-                            cellMonth === todayMonth &&
-                            cellDay === todayDate,
-
-                        day: cellDate.getDay(),
-                        timestamp: cellDate.getTime() / 1000,
-                        formattedDate:
-                            `${cellYear}-${String(cellMonth + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`
-                    });
-                }
-
-                this.calendarOptions = calendar;
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate
-            },
-            calendarSelectedHandler: function (date) {
-                // 此时model应该是一个数组
-                if (!Array.isArray($ctrl.model)) {
-                    $ctrl.model = []
-                }
-
-                let isComplete = false;
-                if ($ctrl.model.length === 0) {
-                    $ctrl.model.push(date)
-                } else if ($ctrl.model.length === 1) {
-                    if ($ctrl.model[0].timestamp > date.timestamp) {
-                        $ctrl.model.unshift(date)
-                    } else {
-                        $ctrl.model.push(date)
-                    }
-                    isComplete = true; // 范围选择完成
-                } else {
-                    $ctrl.model = [date]
-                }
-                // 如果点击的是同一个月的，则不用刷新
-                if (date.year !== $ctrl.calendarYear || date.month !== $ctrl.calendarMonth) {
-                    this.getCalendar(date.formattedDate)
-                }
-                $ctrl.syncDate(new Date(date.formattedDate + "T00:00:00").getTime() / 1000)
-
-                if (angular.isDefined($ctrl.calendarSelected)) {
-                    $ctrl.calendarSelected({opt: {rangType: $ctrl.rangeType}})
-                }
-
-                // 范围选择完成后关闭弹窗
-                if (isComplete && angular.isDefined($ctrl.onSelectComplete)) {
-                    $ctrl.onSelectComplete();
-                }
-            },
-            isCurrentMonth: function (date) {
-                return date.month === $ctrl.calendarMonth && date.year === $ctrl.calendarYear
-            },
-            isSelected: function (op) {
-                if (!$ctrl.model) {
-                    return false
-                }
-                for (let model of $ctrl.model) {
-                    let equal = op.date === model.date && op.month === model.month && op.year === model.year
-                    if (equal) {
-                        return equal
-                    }
-                }
-                return false
-            },
-            isPotential: function (date) {
-                if (typeof date === 'undefined' || null === date || typeof $ctrl.potentialValue === 'undefined' || null === $ctrl.potentialValue) {
-                    return false
-                }
-                if (!$ctrl.model) {
-                    return false
-                }
-
-                if ($ctrl.model.length === 1) {
-                    let inRange = $ctrl.comparisonMethod($ctrl.model[0].timestamp, '<=', date.timestamp) && $ctrl.comparisonMethod(date.timestamp, "<=", $ctrl.potentialValue.timestamp)
-                    if (inRange) {
-                        return true
-                    }
-                    return $ctrl.comparisonMethod($ctrl.model[0].timestamp, '>=', date.timestamp) && $ctrl.comparisonMethod(date.timestamp, '>=', $ctrl.potentialValue.timestamp)
-                } else if($ctrl.model.length === 2){
-                    return $ctrl.comparisonMethod($ctrl.model[0].timestamp, '<=', date.timestamp) && $ctrl.comparisonMethod(date.timestamp, "<=", $ctrl.model[1].timestamp)
-                }
-                return false
-            }
-        },
-        year: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    return
-                }
-                if (typeof model === 'string') {
-                    // 年份选择器的 model 是年份字符串，如 "2024"
-                    const year = parseInt(model, 10);
-                    if (!isNaN(year)) {
-                        $ctrl.dayjs = dayjs(`${year}-01-01`);
-                        $ctrl.year = year;
-                        $ctrl.month = 1;
-                        $ctrl.date = 1;
-                        $ctrl.timestamp = $ctrl.dayjs.unix();
-                    }
-                } else if (typeof model === 'number') {
-                    // 时间戳格式
-                    $ctrl.dayjs = dayjs(model * 1000);
-                    $ctrl.year = $ctrl.dayjs.year();
-                    $ctrl.month = $ctrl.dayjs.month() + 1;
-                    $ctrl.date = $ctrl.dayjs.date();
-                    $ctrl.timestamp = $ctrl.dayjs.unix();
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                const currentYear = currentDate.getFullYear()
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-
-                // 计算起始年份：当前年份之前的第5年（如果当前是2026，起始=2020）
-                // 规则：确保10年范围覆盖当前年份前后，使当前年份大致位于中间
-                let startYear;
-                if (currentYear % 10 >= 5) {
-                    // 如果年份个位数>=5，起始年份为 currentYear - (currentYear % 10) + 0
-                    startYear = currentYear - (currentYear % 10);
-                } else {
-                    // 如果年份个位数<5，起始年份为 currentYear - (currentYear % 10) - 10
-                    startYear = currentYear - (currentYear % 10) - 10;
-                }
-
-                // 生成10个年份
-                const years = [];
-                for (let i = 0; i < 10; i++) {
-                    let yearTitle = startYear + i;
-                    years.push({
-                        year: yearTitle,
-                        isCurrentYear: todayYear === yearTitle
-                    });
-                }
-                this.calendarOptions = years
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate;
-            },
-            calendarSelectedHandler: function (date) {
-                // 年份选择器只返回年份
-                $ctrl.model = `${date.year}`;
-                $ctrl.year = date.year;
-                $ctrl.month = 1;
-                $ctrl.date = 1;
-                $ctrl.timestamp = dayjs(`${date.year}-01-01`).unix();
-                // 年份选择完成后关闭弹窗
-                if (angular.isDefined($ctrl.onSelectComplete)) {
-                    $ctrl.onSelectComplete();
-                }
-            },
-            isPotential: function (date) {
-                if (typeof date === 'undefined' || null === date || typeof $ctrl.potentialValue === 'undefined' || null === $ctrl.potentialValue) {
-                    return false
-                }
-                let year = date.year
-                return $ctrl.comparisonMethod(year, $ctrl.potentialValue.year, $ctrl.potentialComparisonMethod)
-            }
-        },
-        yearRange: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    $ctrl.selectedYears = [];
-                    return
-                }
-                if (Array.isArray(model)) {
-                    $ctrl.selectedYears = model.map(y => {
-                        if (typeof y === 'string') {
-                            return parseInt(y, 10);
-                        } else {
-                            return y;
-                        }
-                    });
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                const currentYear = currentDate.getFullYear()
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-
-                // 计算起始年份
-                let startYear;
-                if (currentYear % 10 >= 5) {
-                    startYear = currentYear - (currentYear % 10);
-                } else {
-                    startYear = currentYear - (currentYear % 10) - 10;
-                }
-
-                // 生成10个年份
-                const years = [];
-                for (let i = 0; i < 10; i++) {
-                    let yearTitle = startYear + i;
-                    years.push({
-                        year: yearTitle,
-                        isCurrentYear: todayYear === yearTitle
-                    });
-                }
-                this.calendarOptions = years
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate;
-            },
-            calendarSelectedHandler: function (date) {
-                if (!$ctrl.model) {
-                    $ctrl.model = [];
-                }
-                const year = date.year;
-                const index = $ctrl.model.indexOf(year);
-
-                if ($ctrl.model.length === 0) {
-                    // 第一个选择
-                    $ctrl.model = [year];
-                } else if ($ctrl.model.length === 1) {
-                    // 第二个选择
-                    if ($ctrl.model[0] > year) {
-                        $ctrl.model = [year, $ctrl.model[0]];
-                    } else {
-                        $ctrl.model.push(year);
-                    }
-                } else {
-                    // 已经有两个选择，重新开始
-                    $ctrl.model = [year];
-                }
-
-                // 生成范围内的所有年份
-                if ($ctrl.model.length === 2) {
-                    // 范围选择完成后关闭弹窗
-                    if (angular.isDefined($ctrl.onSelectComplete)) {
-                        $ctrl.onSelectComplete();
-                    }
-                }
-            },
-            isPotential: function (date) {
-                if (!$ctrl.model || $ctrl.model.length === 0) {
-                    return false;
-                }
-                if ($ctrl.model.length >= 2) {
-                    const year = date.year;
-                    const start = Math.min($ctrl.model[0], $ctrl.model[$ctrl.model.length - 1]);
-                    const end = Math.max($ctrl.model[0], $ctrl.model[$ctrl.model.length - 1]);
-                    // 范围内的都显示potential（包括首尾，由CSS控制样式叠加）
-                    return year >= start && year <= end;
-                }
-                return false;
-            },
-            isRangeStart: function (date) {
-                if (!$ctrl.model || $ctrl.model.length === 0) return false;
-                const start = Math.min($ctrl.model[0], $ctrl.model[$ctrl.model.length - 1]);
-                return date.year === start;
-            },
-            isRangeEnd: function (date) {
-                if (!$ctrl.model || $ctrl.model.length === 0) return false;
-                const end = Math.max($ctrl.model[0], $ctrl.model[$ctrl.model.length - 1]);
-                return date.year === end;
-            }
-        },
-        month: {
-            syncDate: syncDate,
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                const currentYear = currentDate.getFullYear();
-                const selectedMonth = currentDate.getMonth(); // 0-11
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-                const todayMonth = today.getMonth();
-
-                const months = [];
-
-                for (let i = 0; i < 12; i++) {
-                    months.push({
-                        year: currentYear,
-                        month: i + 1, // 显示 1-12
-                        monthIndex: i, // 0-11 内部使用
-                        // 当前年份（通常都为true，保留扩展性）
-                        isCurrentYear: currentYear === todayYear,
-                        formatted: `${currentYear}-${String(i + 1).padStart(2, '0')}`
-                    });
-                }
-                $ctrl.calendarOptions = months;
-
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate;
-            },
-            calendarSelectedHandler: function (date) {
-                $ctrl.model = `${date.year}-${String(date.month).padStart(2, '0')}`
-                let dateCalendar = $ctrl.getCalendar($ctrl.model)
-                $ctrl.syncDate(dateCalendar.getTime() / 1000)
-                if ($ctrl.type !== 'month') {
-                    $ctrl.syncCalendarType(this.type)
-                }
-                // 月份选择完成后关闭弹窗
-                if (angular.isDefined($ctrl.onSelectComplete)) {
-                    $ctrl.onSelectComplete();
-                }
-            },
-
-            isPotential: function (date) {
-                if (typeof date === 'undefined' || null === date || typeof $ctrl.potentialValue === 'undefined' || null === $ctrl.potentialValue) {
-                    return false
-                }
-
-                let year = date.year
-                let month = date.month
-
-                let sameYear = $ctrl.comparisonMethod(year, $ctrl.potentialValue.year, '=')
-                if (sameYear) {
-                    return $ctrl.comparisonMethod(month, $ctrl.potentialValue.month, $ctrl.potentialComparisonMethod)
-                } else {
-                    return $ctrl.comparisonMethod(year, $ctrl.potentialValue.year, $ctrl.potentialComparisonMethod)
-                }
-            }
-        },
-        monthRange: {
-            syncDate: function (model) {
-                if (angular.isUndefined(model) || null == model) {
-                    $ctrl.selectedMonths = [];
-                    return
-                }
-                if (Array.isArray(model)) {
-                    $ctrl.selectedMonths = model.map(m => {
-                        if (typeof m === 'string') {
-                            return dayjs(m).unix();
-                        } else {
-                            return m;
-                        }
-                    });
-                }
-            },
-            getCalendar: function (date) {
-                const currentDate = date ? new Date(date) : new Date();
-                const currentYear = currentDate.getFullYear();
-                const selectedMonth = currentDate.getMonth(); // 0-11
-
-                const today = new Date();
-                const todayYear = today.getFullYear();
-                const todayMonth = today.getMonth();
-
-                const months = [];
-
-                for (let i = 0; i < 12; i++) {
-                    months.push({
-                        year: currentYear,
-                        month: i + 1, // 显示 1-12
-                        monthIndex: i, // 0-11 内部使用
-                        timestamp: new Date(currentYear, i, 1).getTime() / 1000,
-                        isCurrentYear: currentYear === todayYear,
-                        isCurrentMonth: currentYear === todayYear && i === todayMonth,
-                        formatted: `${currentYear}-${String(i + 1).padStart(2, '0')}`
-                    });
-                }
-                $ctrl.calendarOptions = months;
-
-                $ctrl.syncCalendarValue(currentDate.getTime() / 1000)
-                return currentDate;
-            },
-            calendarSelectedHandler: function (date) {
-                if (!$ctrl.selectedMonths) {
-                    $ctrl.selectedMonths = [];
-                }
-                const timestamp = date.timestamp;
-                const index = $ctrl.selectedMonths.indexOf(timestamp);
-
-                if ($ctrl.selectedMonths.length === 0) {
-                    // 第一个选择
-                    $ctrl.selectedMonths = [timestamp];
-                } else if ($ctrl.selectedMonths.length === 1) {
-                    // 第二个选择
-                    if ($ctrl.selectedMonths[0] > timestamp) {
-                        $ctrl.selectedMonths = [timestamp, $ctrl.selectedMonths[0]];
-                    } else {
-                        $ctrl.selectedMonths.push(timestamp);
-                    }
-                } else {
-                    // 已经有两个选择，重新开始
-                    $ctrl.selectedMonths = [timestamp];
-                }
-
-                // 生成范围内的所有月份
-                if ($ctrl.selectedMonths.length === 2) {
-                    const start = Math.min($ctrl.selectedMonths[0], $ctrl.selectedMonths[1]);
-                    const end = Math.max($ctrl.selectedMonths[0], $ctrl.selectedMonths[1]);
-                    const range = [];
-                    let current = start;
-                    while (current <= end) {
-                        const d = new Date(current * 1000);
-                        range.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
-                        // 增加一个月
-                        const nextDate = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-                        current = nextDate.getTime() / 1000;
-                    }
-                    $ctrl.model = range;
-                    // 范围选择完成后关闭弹窗
-                    if (angular.isDefined($ctrl.onSelectComplete)) {
-                        $ctrl.onSelectComplete();
-                    }
-                } else {
-                    $ctrl.model = [date.formatted];
-                }
-            },
-            isSelected: function (date) {
-                if (!$ctrl.selectedMonths) return false;
-                return $ctrl.selectedMonths.indexOf(date.timestamp) > -1;
-            },
-            isPotential: function (date) {
-                if (!$ctrl.selectedMonths || $ctrl.selectedMonths.length === 0) {
-                    return false;
-                }
-                if ($ctrl.selectedMonths.length >= 2) {
-                    const timestamp = date.timestamp;
-                    const start = Math.min($ctrl.selectedMonths[0], $ctrl.selectedMonths[$ctrl.selectedMonths.length - 1]);
-                    const end = Math.max($ctrl.selectedMonths[0], $ctrl.selectedMonths[$ctrl.selectedMonths.length - 1]);
-                    // 范围内的都显示potential（包括首尾，由CSS控制样式叠加）
-                    return timestamp >= start && timestamp <= end;
-                }
-                return false;
-            },
-            isRangeStart: function (date) {
-                if (!$ctrl.selectedMonths || $ctrl.selectedMonths.length === 0) return false;
-                const start = Math.min($ctrl.selectedMonths[0], $ctrl.selectedMonths[$ctrl.selectedMonths.length - 1]);
-                return date.timestamp === start;
-            },
-            isRangeEnd: function (date) {
-                if (!$ctrl.selectedMonths || $ctrl.selectedMonths.length === 0) return false;
-                const end = Math.max($ctrl.selectedMonths[0], $ctrl.selectedMonths[$ctrl.selectedMonths.length - 1]);
-                return date.timestamp === end;
-            }
-        },
+    pattern += escapeRegExp(fmt.slice(lastIndex));
+
+    const full = new RegExp('^' + pattern + '$');
+    const parts = text.match(full);
+    if (!parts) {
+        return null;
     }
 
-    // 初始化工作
-    this.$onInit = function () {
-        this.uuid = `mobDatePickerPane_${$scope.$id}`
-        // 日历的数组
-        this.calendarOptions = [];
-        // weenName
-        this.dayNameArr = ['日', '一', '二', '三', '四', '五', '六']
-        // monthName
-        this.monthNameMap = {
-            1: '一月',
-            2: '二月',
-            3: '三月',
-            4: '四月',
-            5: '五月',
-            6: '六月',
-            7: '七月',
-            8: '八月',
-            9: '九月',
-            10: '十月',
-            11: '十一月',
-            12: '十二月'
-        }
-        // 日历面板类型
-        this.type = this.type || 'date'
+    const got = {};
+    keys.forEach(function (key, i) {
+        got[key] = parseInt(parts[i + 1], 10);
+    });
 
-        this.model = null;
+    const year = got.YYYY;
+    const month = got.MM != null ? got.MM : 1;
+    const day = got.DD != null ? got.DD : 1;
+    const hour = got.HH != null ? got.HH : 0;
+    const minute = got.mm != null ? got.mm : 0;
+    const second = got.ss != null ? got.ss : 0;
 
-        this.syncCalendarType(this.type)
-
-        this.syncDate()
+    if (year == null || month < 1 || month > 12 || day < 1 || day > 31) {
+        return null;
     }
 
-    this.$onChanges = function (changes) {
-        console.log(changes)
-        if (changes.type) {
-            this.syncCalendarType(changes.type.currentValue)
-        }
-        if (changes.potentialValue && changes.calendarYear.potentialValue) {
-            console.log(changes.calendarYear.potentialValue)
-            $ctrl.potentialValue = changes.calendarYear.potentialValue
-        }
-
-        // if (changes.calendarMonth && changes.calendarMonth.currentValue) {
-        //     $ctrl.syncCalendar($ctrl.calendarYear, changes.calendarMonth.currentValue)
-        // }
-        // if (changes.calendarDate && changes.calendarDate.currentValue) {
-        //     $ctrl.syncCalendar($ctrl.calendarYear, $ctrl.calendarMonth, changes.calendarDate.currentValue)
-        // }
+    const date = makeUtcDate(year, month, day, hour, minute, second);
+    // 防 2月31 这类被 Date 自动进位
+    if (
+        date.getUTCFullYear() !== year ||
+        date.getUTCMonth() + 1 !== month ||
+        date.getUTCDate() !== day
+    ) {
+        return null;
     }
+    return date;
+}
 
-    this.$onDestroy = function () {
+function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
+/** 某天所在周的周日 00:00:00 UTC */
+function getWeekSunday(date) {
+    const d = makeUtcDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+    d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+    return d;
+}
+
+/** 某天所在周的周六 23:59:59 UTC */
+function getWeekSaturday(date) {
+    const sunday = getWeekSunday(date);
+    return makeUtcDate(
+        sunday.getUTCFullYear(),
+        sunday.getUTCMonth() + 1,
+        sunday.getUTCDate() + 6,
+        23,
+        59,
+        59
+    );
+}
+
+/** 简单周序号：从当年 1/1 所在周算起（周日为一周起点） */
+function getWeekNumber(date) {
+    const sunday = getWeekSunday(date);
+    const yearStart = makeUtcDate(sunday.getUTCFullYear(), 1, 1);
+    const startSunday = getWeekSunday(yearStart);
+    const diffDays = Math.round((sunday - startSunday) / 86400000);
+    return Math.floor(diffDays / 7) + 1;
+}
+
+function sameUtcDay(a, b) {
+    if (!a || !b) {
+        return false;
     }
-    this.$postLink = function () {
-        // ngModel 的值从外部改变时，触发此函数
-        if (this.ngModel) {
-            this.ngModel.$render = () => {
-                this.model = this.ngModel.$viewValue;
-                this.syncDate(this.model)
+    return (
+        a.getUTCFullYear() === b.getUTCFullYear() &&
+        a.getUTCMonth() === b.getUTCMonth() &&
+        a.getUTCDate() === b.getUTCDate()
+    );
+}
+
+function controller($scope) {
+    const $ctrl = this;
+
+    $ctrl.monthLabels = MONTH_LABELS;
+    $ctrl.weekdayLabels = WEEKDAY_LABELS;
+
+    // ---------- 初始化 ----------
+    $ctrl.$onInit = function () {
+        $ctrl.pickerType = $ctrl.type || PANE_TYPES.DATE;
+        $ctrl.valueFormat = $ctrl.valueFormat || PANE_DEFAULT_FORMAT;
+
+        initViewAnchor();
+        syncPanelViewToType();
+        rebuildPanel();
+
+        if ($ctrl.ngModel) {
+            $ctrl.ngModel.$render = function () {
+                applyModelFromOutside($ctrl.ngModel.$viewValue);
             };
+            // 首次把已有值刷进来
+            applyModelFromOutside($ctrl.ngModel.$viewValue);
+        }
+    };
 
-            $scope.$watch(function () {
-                return $ctrl.model;
-            }, function (newV, oldV) {
-                if (newV !== oldV) {
-                    if ($ctrl.type === 'year') {
-                        // year 类型直接返回年份字符串
-                        $ctrl.ngModel.$setViewValue(newV);
-                    } else if ($ctrl.type === 'month') {
-                        // month 类型返回 YYYY-MM 格式
-                        $ctrl.ngModel.$setViewValue(newV);
-                    } else if ($ctrl.type === 'week') {
-                        // week 类型返回周对象
-                        $ctrl.ngModel.$setViewValue(newV);
-                    } else if ($ctrl.type === 'dates') {
-                        // dates 类型返回日期数组
-                        $ctrl.ngModel.$setViewValue(newV);
-                    } else if ($ctrl.type === 'yearRange' || $ctrl.type === 'monthRange') {
-                        // 范围类型返回数组
-                        $ctrl.ngModel.$setViewValue(newV);
-                    } else {
-                        // date, dateRange 等类型
-                        $ctrl.ngModel.$setViewValue(newV);
+    $ctrl.$onChanges = function (changes) {
+        if (!$ctrl.pickerType && !changes.type) {
+            return;
+        }
+
+        if (changes.type && !changes.type.isFirstChange()) {
+            $ctrl.pickerType = $ctrl.type || PANE_TYPES.DATE;
+            // type 变了：清空选中值
+            writeModel(getEmptyValue($ctrl.pickerType), false);
+            syncPanelViewToType();
+            rebuildPanel();
+        }
+
+        if (changes.valueFormat && !changes.valueFormat.isFirstChange()) {
+            $ctrl.valueFormat = $ctrl.valueFormat || PANE_DEFAULT_FORMAT;
+            applyModelFromOutside($ctrl.innerValue);
+            rebuildPanel();
+        }
+
+        if (changes.defaultValue && !changes.defaultValue.isFirstChange()) {
+            if (isEmptyValue($ctrl.innerValue, $ctrl.pickerType)) {
+                initViewAnchor();
+                rebuildPanel();
+            }
+        }
+
+        if (
+            (changes.disabledDate || changes.cellClassName || changes.showWeekNumber || changes.maxSelectLimit) &&
+            !isFirstChangeGroup(changes)
+        ) {
+            rebuildPanel();
+        }
+    };
+
+    function isFirstChangeGroup(changes) {
+        return Object.keys(changes).every(function (key) {
+            return changes[key].isFirstChange && changes[key].isFirstChange();
+        });
+    }
+
+    // ---------- 视图锚点（只影响看到哪个月/年，不写 model） ----------
+    function initViewAnchor() {
+        let anchor = null;
+        if ($ctrl.defaultValue) {
+            anchor = parseUtcDate($ctrl.defaultValue, $ctrl.valueFormat);
+            if (!anchor && typeof $ctrl.defaultValue === 'string') {
+                // default-value 也允许只写日期部分时尽量容错，仅用于视图
+                anchor = parseUtcDate($ctrl.defaultValue + ' 00:00:00', PANE_DEFAULT_FORMAT);
+            }
+        }
+        if (!anchor) {
+            const now = new Date();
+            anchor = makeUtcDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
+        }
+        $ctrl.viewYear = anchor.getUTCFullYear();
+        $ctrl.viewMonth = anchor.getUTCMonth() + 1;
+        $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+    }
+
+    function syncPanelViewToType() {
+        const t = $ctrl.pickerType;
+        if (t === PANE_TYPES.YEAR || t === PANE_TYPES.YEARS) {
+            $ctrl.panelView = 'year';
+        } else if (t === PANE_TYPES.MONTH || t === PANE_TYPES.MONTHS) {
+            $ctrl.panelView = 'month';
+        } else {
+            $ctrl.panelView = 'date';
+        }
+    }
+
+    function getEmptyValue(type) {
+        if (
+            type === PANE_TYPES.DATES ||
+            type === PANE_TYPES.MONTHS ||
+            type === PANE_TYPES.YEARS ||
+            type === PANE_TYPES.WEEK
+        ) {
+            return [];
+        }
+        return null;
+    }
+
+    function isEmptyValue(value, type) {
+        if (
+            type === PANE_TYPES.DATES ||
+            type === PANE_TYPES.MONTHS ||
+            type === PANE_TYPES.YEARS ||
+            type === PANE_TYPES.WEEK
+        ) {
+            return !angular.isArray(value) || value.length === 0;
+        }
+        return value == null || value === '';
+    }
+
+    function isMultiType(type) {
+        return type === PANE_TYPES.DATES || type === PANE_TYPES.MONTHS || type === PANE_TYPES.YEARS;
+    }
+
+    // ---------- 外部 / 内部 model ----------
+    function applyModelFromOutside(raw) {
+        const type = $ctrl.pickerType;
+        const empty = getEmptyValue(type);
+
+        if (raw == null || raw === '') {
+            $ctrl.innerValue = empty;
+            bumpViewFromValue();
+            rebuildPanel();
+            return;
+        }
+
+        if (type === PANE_TYPES.WEEK) {
+            if (!angular.isArray(raw) || raw.length !== 2) {
+                $ctrl.innerValue = [];
+            } else {
+                const start = parseUtcDate(raw[0], $ctrl.valueFormat);
+                const end = parseUtcDate(raw[1], $ctrl.valueFormat);
+                $ctrl.innerValue = start && end ? [formatUtcDate(start, $ctrl.valueFormat), formatUtcDate(end, $ctrl.valueFormat)] : [];
+            }
+        } else if (isMultiType(type)) {
+            if (!angular.isArray(raw)) {
+                $ctrl.innerValue = [];
+            } else {
+                const list = [];
+                raw.forEach(function (item) {
+                    const d = parseUtcDate(item, $ctrl.valueFormat);
+                    if (d) {
+                        list.push(formatUtcDate(normalizeByType(d, type), $ctrl.valueFormat));
                     }
-                }
+                });
+                // 有非法项 → 整份作废
+                $ctrl.innerValue = list.length === raw.length ? list : [];
+            }
+        } else {
+            const d = parseUtcDate(raw, $ctrl.valueFormat);
+            $ctrl.innerValue = d ? formatUtcDate(normalizeByType(d, type), $ctrl.valueFormat) : null;
+        }
+
+        bumpViewFromValue();
+        rebuildPanel();
+    }
+
+    /** 按类型把日期归一到代表日（月初 / 年初 / 当天 0 点） */
+    function normalizeByType(date, type) {
+        const y = date.getUTCFullYear();
+        const m = date.getUTCMonth() + 1;
+        const d = date.getUTCDate();
+        if (type === PANE_TYPES.YEAR || type === PANE_TYPES.YEARS) {
+            return makeUtcDate(y, 1, 1);
+        }
+        if (type === PANE_TYPES.MONTH || type === PANE_TYPES.MONTHS) {
+            return makeUtcDate(y, m, 1);
+        }
+        return makeUtcDate(y, m, d);
+    }
+
+    function bumpViewFromValue() {
+        const type = $ctrl.pickerType;
+        let tip = null;
+
+        if (type === PANE_TYPES.WEEK && angular.isArray($ctrl.innerValue) && $ctrl.innerValue[0]) {
+            tip = parseUtcDate($ctrl.innerValue[0], $ctrl.valueFormat);
+        } else if (isMultiType(type) && angular.isArray($ctrl.innerValue) && $ctrl.innerValue.length) {
+            tip = parseUtcDate($ctrl.innerValue[$ctrl.innerValue.length - 1], $ctrl.valueFormat);
+        } else if (!isMultiType(type) && type !== PANE_TYPES.WEEK && $ctrl.innerValue) {
+            tip = parseUtcDate($ctrl.innerValue, $ctrl.valueFormat);
+        }
+
+        if (tip) {
+            $ctrl.viewYear = tip.getUTCFullYear();
+            $ctrl.viewMonth = tip.getUTCMonth() + 1;
+            $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        }
+    }
+
+    /** 先写 ngModel，再触发 on-change / ng-change */
+    function writeModel(nextValue, fireChange) {
+        $ctrl.innerValue = nextValue;
+        if ($ctrl.ngModel) {
+            $ctrl.ngModel.$setViewValue(nextValue);
+        }
+        if (fireChange !== false) {
+            const payload = {value: nextValue, type: $ctrl.pickerType};
+            if (angular.isFunction($ctrl.onChange)) {
+                $ctrl.onChange(payload);
+            }
+            if (angular.isFunction($ctrl.ngChange)) {
+                $ctrl.ngChange(payload);
+            }
+        }
+        rebuildPanel();
+    }
+
+    function emitPanelChange(mode, view) {
+        const date = makeUtcDate($ctrl.viewYear, $ctrl.viewMonth, 1);
+        if (angular.isFunction($ctrl.onPanelChange)) {
+            // 对齐 EP：date, mode, view
+            $ctrl.onPanelChange({
+                date: date,
+                mode: mode,
+                view: view || $ctrl.panelView
             });
         }
-        this.isInit = true
     }
 
-    /**
-     * 同步日期选择项的年月日
-     * @param value
-     */
-    this.syncCalendarValue = function (value) {
-        if (angular.isDefined(value) && null != value) {
-            if (typeof value === 'string') {
-                this.calendarDayjs = dayjs(value)
-            } else {
-                this.calendarDayjs = dayjs(value * 1000)
+    // ---------- 禁用 / 自定义 class ----------
+    /** 调用户的 disabled-date（传入 UTC Date，对齐 EP；需要字符串时在回调里自己 format） */
+    function isDateDisabled(utcDate) {
+        if (!angular.isFunction($ctrl.disabledDate)) {
+            return false;
+        }
+        return !!$ctrl.disabledDate(utcDate);
+    }
+
+    /** 自定义格子 class，按 cell 的 UTC Date 计算（对齐 EP） */
+    function getCellClass(utcDate) {
+        if (!angular.isFunction($ctrl.cellClassName)) {
+            return '';
+        }
+        return $ctrl.cellClassName(utcDate) || '';
+    }
+
+    function isWeekDisabled(sunday) {
+        for (let i = 0; i < 7; i++) {
+            const day = makeUtcDate(
+                sunday.getUTCFullYear(),
+                sunday.getUTCMonth() + 1,
+                sunday.getUTCDate() + i
+            );
+            if (isDateDisabled(day)) {
+                return true;
             }
+        }
+        return false;
+    }
+
+    // ---------- 拼面板数据 ----------
+    function rebuildPanel() {
+        if ($ctrl.panelView === 'date') {
+            buildDatePanel();
+        } else if ($ctrl.panelView === 'month') {
+            buildMonthPanel();
         } else {
-            this.calendarDayjs = dayjs();
-        }
-        this.calendarYear = this.calendarDayjs.year();
-        this.calendarMonth = this.calendarDayjs.month() + 1;
-        this.calendarDate = this.calendarDayjs.date();
-    }
-
-    $ctrl.syncCalendarType = function (type) {
-        Object.assign($ctrl, handlers[type])
-        $ctrl.calendarType = type
-        $ctrl.syncCalendar()
-    }
-
-    /**
-     * 同步日历
-     */
-    $ctrl.syncCalendar = function (year, month, date) {
-        let dayJS = dayjs()
-        if (year) {
-            dayJS = dayJS.year(year)
-        }
-        if (month) {
-            dayJS = dayJS.month(month)
-        }
-        if (date) {
-            dayJS = dayJS.date(date)
-        }
-        // console.log(dayJS, year, month, date)
-        $ctrl.getCalendar(dayJS.valueOf())
-    }
-
-    /**
-     * 改变年份
-     * @param v
-     */
-    $ctrl.changeCalendarYearHandle = function (v) {
-        let afterDate = `${$ctrl.calendarYear + v}-${$ctrl.calendarMonth}-${$ctrl.calendarDate}`
-        let dateCalendar = $ctrl.getCalendar(afterDate)
-        $ctrl.syncCalendarValue(dateCalendar.getTime() / 1000)
-
-        if (angular.isDefined($ctrl.changeCalendarYear)) {
-            $ctrl.changeCalendarYear({
-                opt: {
-                    rangeType: $ctrl.rangeType,
-                    calendarYear: $ctrl.calendarYear,
-                    calendarMonth: $ctrl.calendarMonth,
-                    calendarDate: $ctrl.calendarDate
-                }
-            })
-        }
-    }
-    /**
-     * 改变月份
-     * @param v
-     */
-    $ctrl.changeCalendarMonthHandle = function (v) {
-        let newYear = $ctrl.calendarYear
-        console.log('changeCalendarMonthHandle')
-        let newMonth = $ctrl.calendarMonth + v
-
-        // 处理月份溢出情况
-        if (newMonth > 12) {
-            // 跨到下一年
-            newYear += Math.floor((newMonth - 1) / 12)
-            newMonth = ((newMonth - 1) % 12) + 1
-        } else if (newMonth < 1) {
-            // 跨到上一年
-            newYear += Math.ceil((newMonth - 12) / 12)
-            newMonth = newMonth % 12 + 12
-        }
-
-        let afterDate = `${newYear}-${newMonth}-${this.calendarDate}`
-        let dateCalendar = this.getCalendar(afterDate)
-        this.syncCalendarValue(dateCalendar.getTime() / 1000)
-
-
-        if (angular.isDefined($ctrl.changeCalendarMonth)) {
-            $ctrl.changeCalendarMonth({
-                opt: {
-                    rangeType: $ctrl.rangeType,
-                    calendarYear: $ctrl.calendarYear,
-                    calendarMonth: $ctrl.calendarMonth,
-                    calendarDate: $ctrl.calendarDate
-                }
-            })
+            buildYearPanel();
         }
     }
 
-    this.switchCalendarType = function (type) {
-        this.syncCalendarType(type)
+    function buildDatePanel() {
+        const year = $ctrl.viewYear;
+        const month = $ctrl.viewMonth;
+        const first = makeUtcDate(year, month, 1);
+        const startOffset = first.getUTCDay(); // 周日=0
+
+        const today = new Date();
+        const todayUtc = makeUtcDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
+
+        const weeks = [];
+        for (let w = 0; w < 6; w++) {
+            const sunday = makeUtcDate(year, month, 1 - startOffset + w * 7);
+            const days = [];
+            for (let d = 0; d < 7; d++) {
+                const cellDate = makeUtcDate(
+                    sunday.getUTCFullYear(),
+                    sunday.getUTCMonth() + 1,
+                    sunday.getUTCDate() + d
+                );
+                days.push(makeDayCell(cellDate, year, month, todayUtc));
+            }
+            weeks.push({
+                weekNumber: getWeekNumber(sunday),
+                sunday: sunday,
+                days: days,
+                disabled: $ctrl.pickerType === PANE_TYPES.WEEK ? isWeekDisabled(sunday) : false,
+                selected: isWeekRowSelected(sunday)
+            });
+        }
+
+        $ctrl.weekRows = weeks;
+        $ctrl.headerYearText = year + ' 年';
+        $ctrl.headerMonthText = MONTH_LABELS[month - 1];
     }
 
-    /**
-     * 值比较方法
-     * @param source 比较值
-     * @param target 目标值
-     * @param method 比较方式 > <
-     */
-    $ctrl.comparisonMethod = function (target, method, source) {
-        if (typeof target === 'undefined' || null === target || typeof source === 'undefined' || null === source) {
-            return false
+    function makeDayCell(cellDate, viewYear, viewMonth, todayUtc) {
+        const y = cellDate.getUTCFullYear();
+        const m = cellDate.getUTCMonth() + 1;
+        const d = cellDate.getUTCDate();
+        let disabled = isDateDisabled(cellDate);
+        // week：周内任一天禁用 → 整周都不可点
+        if ($ctrl.pickerType === PANE_TYPES.WEEK && !disabled) {
+            disabled = isWeekDisabled(getWeekSunday(cellDate));
         }
-        if (">" === method) {
-            return target > source
-        } else if (">=" === method) {
-            return target >= source
-        } else if ("<=" === method) {
-            return target <= source
-        } else if ("<" === method) {
-            return target < source
-        } else if ("=" === method) {
-            return target === source
-        }
-        return false
+
+        return {
+            year: y,
+            month: m,
+            day: d,
+            utcDate: cellDate,
+            text: String(d),
+            isOtherMonth: y !== viewYear || m !== viewMonth,
+            isToday: sameUtcDay(cellDate, todayUtc),
+            disabled: disabled,
+            selected: isDaySelected(cellDate),
+            inSelectedWeek: isDayInSelectedWeek(cellDate),
+            customClass: getCellClass(cellDate)
+        };
     }
 
-
-    $ctrl.calendarMouseEnterHandler = function (date) {
-        // if ($ctrl.type === 'dateRange' || $ctrl.type === 'typeRange' || $ctrl.type === 'monthRange') {
-        $ctrl.potentialValue = date
-        // }
-        console.log('calendarMouseEnterHandler')
-        if (angular.isDefined($ctrl.calendarMouseEnter)) {
-            $ctrl.calendarMouseEnter({opt: {date}})
+    function isDaySelected(cellDate) {
+        const type = $ctrl.pickerType;
+        if (type === PANE_TYPES.DATE) {
+            const cur = parseUtcDate($ctrl.innerValue, $ctrl.valueFormat);
+            return sameUtcDay(cur, cellDate);
         }
+        if (type === PANE_TYPES.DATES) {
+            if (!angular.isArray($ctrl.innerValue)) {
+                return false;
+            }
+            return $ctrl.innerValue.some(function (item) {
+                return sameUtcDay(parseUtcDate(item, $ctrl.valueFormat), cellDate);
+            });
+        }
+        return false;
     }
 
-    $ctrl.calendarMouseLeaveHandler = function (date) {
-        // if ($ctrl.type === 'dateRange' || $ctrl.type === 'typeRange' || $ctrl.type === 'monthRange') {
-        $ctrl.potentialValue = null
-        // }
-        // console.log('calendarMouseEnterHandler')
-        // if (angular.isDefined($ctrl.calendarMouseEnter)) {
-        //     $ctrl.calendarMouseEnter({opt: {date}})
-        // }
+    function isDayInSelectedWeek(cellDate) {
+        if ($ctrl.pickerType !== PANE_TYPES.WEEK) {
+            return false;
+        }
+        if (!angular.isArray($ctrl.innerValue) || $ctrl.innerValue.length !== 2) {
+            return false;
+        }
+        const start = parseUtcDate($ctrl.innerValue[0], $ctrl.valueFormat);
+        const end = parseUtcDate($ctrl.innerValue[1], $ctrl.valueFormat);
+        if (!start || !end) {
+            return false;
+        }
+        return cellDate.getTime() >= start.getTime() && cellDate.getTime() <= end.getTime();
+    }
+
+    function isWeekRowSelected(sunday) {
+        if ($ctrl.pickerType !== PANE_TYPES.WEEK) {
+            return false;
+        }
+        if (!angular.isArray($ctrl.innerValue) || !$ctrl.innerValue[0]) {
+            return false;
+        }
+        const start = parseUtcDate($ctrl.innerValue[0], $ctrl.valueFormat);
+        return sameUtcDay(start, sunday);
+    }
+
+    function buildMonthPanel() {
+        const year = $ctrl.viewYear;
+        const now = new Date();
+        const months = [];
+        for (let m = 1; m <= 12; m++) {
+            const tip = makeUtcDate(year, m, 1);
+            const disabled = isDateDisabled(tip);
+            months.push({
+                year: year,
+                month: m,
+                utcDate: tip,
+                text: MONTH_LABELS[m - 1],
+                isCurrentMonth: year === now.getFullYear() && m === now.getMonth() + 1,
+                disabled: disabled,
+                selected: isMonthSelected(year, m),
+                customClass: getCellClass(tip)
+            });
+        }
+        $ctrl.monthCells = months;
+        $ctrl.headerYearText = year + ' 年';
+    }
+
+    function isMonthSelected(year, month) {
+        const type = $ctrl.pickerType;
+        // 下钻选月时不算「选中值」高亮（高亮只对真正的 month/months 类型）
+        if (type !== PANE_TYPES.MONTH && type !== PANE_TYPES.MONTHS) {
+            return false;
+        }
+        if (type === PANE_TYPES.MONTH) {
+            const cur = parseUtcDate($ctrl.innerValue, $ctrl.valueFormat);
+            return cur && cur.getUTCFullYear() === year && cur.getUTCMonth() + 1 === month;
+        }
+        if (!angular.isArray($ctrl.innerValue)) {
+            return false;
+        }
+        return $ctrl.innerValue.some(function (item) {
+            const cur = parseUtcDate(item, $ctrl.valueFormat);
+            return cur && cur.getUTCFullYear() === year && cur.getUTCMonth() + 1 === month;
+        });
+    }
+
+    function buildYearPanel() {
+        // 一页只展示十年：2026 → 2020~2029；2019 → 2010~2019
+        const start = $ctrl.yearPageStart;
+        const years = [];
+        const nowYear = new Date().getFullYear();
+        for (let y = start; y <= start + 9; y++) {
+            const tip = makeUtcDate(y, 1, 1);
+            years.push({
+                year: y,
+                utcDate: tip,
+                text: String(y),
+                isCurrentYear: y === nowYear,
+                disabled: isDateDisabled(tip),
+                selected: isYearSelected(y),
+                customClass: getCellClass(tip)
+            });
+        }
+        $ctrl.yearCells = years;
+        $ctrl.headerYearRangeText = start + ' 年 - ' + (start + 9) + ' 年';
+    }
+
+    function isYearSelected(year) {
+        const type = $ctrl.pickerType;
+        if (type !== PANE_TYPES.YEAR && type !== PANE_TYPES.YEARS) {
+            return false;
+        }
+        if (type === PANE_TYPES.YEAR) {
+            const cur = parseUtcDate($ctrl.innerValue, $ctrl.valueFormat);
+            return cur && cur.getUTCFullYear() === year;
+        }
+        if (!angular.isArray($ctrl.innerValue)) {
+            return false;
+        }
+        return $ctrl.innerValue.some(function (item) {
+            const cur = parseUtcDate(item, $ctrl.valueFormat);
+            return cur && cur.getUTCFullYear() === year;
+        });
+    }
+
+    // ---------- 模板用 ----------
+    $ctrl.shouldShowWeekNumber = function () {
+        return (
+            !!$ctrl.showWeekNumber &&
+            ($ctrl.pickerType === PANE_TYPES.DATE ||
+                $ctrl.pickerType === PANE_TYPES.DATES ||
+                $ctrl.pickerType === PANE_TYPES.WEEK)
+        );
+    };
+
+    $ctrl.isPaneDisabled = function () {
+        return !!$ctrl.disabled;
+    };
+
+    // ---------- 表头翻页 / 下钻 ----------
+    $ctrl.goPrevYear = function () {
+        if ($ctrl.isPaneDisabled()) {
+            return;
+        }
+        if ($ctrl.panelView === 'year') {
+            $ctrl.yearPageStart -= 10;
+            rebuildPanel();
+            emitPanelChange('year', 'year');
+            return;
+        }
+        $ctrl.viewYear -= 1;
+        $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        rebuildPanel();
+        emitPanelChange('year', $ctrl.panelView);
+    };
+
+    $ctrl.goNextYear = function () {
+        if ($ctrl.isPaneDisabled()) {
+            return;
+        }
+        if ($ctrl.panelView === 'year') {
+            $ctrl.yearPageStart += 10;
+            rebuildPanel();
+            emitPanelChange('year', 'year');
+            return;
+        }
+        $ctrl.viewYear += 1;
+        $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        rebuildPanel();
+        emitPanelChange('year', $ctrl.panelView);
+    };
+
+    $ctrl.goPrevMonth = function () {
+        if ($ctrl.isPaneDisabled() || $ctrl.panelView !== 'date') {
+            return;
+        }
+        $ctrl.viewMonth -= 1;
+        if ($ctrl.viewMonth < 1) {
+            $ctrl.viewMonth = 12;
+            $ctrl.viewYear -= 1;
+            $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        }
+        rebuildPanel();
+        emitPanelChange('month', 'date');
+    };
+
+    $ctrl.goNextMonth = function () {
+        if ($ctrl.isPaneDisabled() || $ctrl.panelView !== 'date') {
+            return;
+        }
+        $ctrl.viewMonth += 1;
+        if ($ctrl.viewMonth > 12) {
+            $ctrl.viewMonth = 1;
+            $ctrl.viewYear += 1;
+            $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        }
+        rebuildPanel();
+        emitPanelChange('month', 'date');
+    };
+
+    /** 点表头「年」→ 年面板 */
+    $ctrl.openYearPanel = function () {
+        if ($ctrl.isPaneDisabled()) {
+            return;
+        }
+        if ($ctrl.pickerType === PANE_TYPES.YEAR || $ctrl.pickerType === PANE_TYPES.YEARS) {
+            return;
+        }
+        $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        $ctrl.panelView = 'year';
+        rebuildPanel();
+        emitPanelChange('year', 'year');
+    };
+
+    /** 点表头「月」→ 月面板 */
+    $ctrl.openMonthPanel = function () {
+        if ($ctrl.isPaneDisabled()) {
+            return;
+        }
+        if (
+            $ctrl.pickerType === PANE_TYPES.MONTH ||
+            $ctrl.pickerType === PANE_TYPES.MONTHS ||
+            $ctrl.pickerType === PANE_TYPES.YEAR ||
+            $ctrl.pickerType === PANE_TYPES.YEARS
+        ) {
+            return;
+        }
+        $ctrl.panelView = 'month';
+        rebuildPanel();
+        emitPanelChange('month', 'month');
+    };
+
+    // ---------- 点击格子 ----------
+    /** 点周序号：按该行周日选整周 */
+    $ctrl.onClickWeekNumber = function (row) {
+        if ($ctrl.isPaneDisabled() || !row || $ctrl.pickerType !== PANE_TYPES.WEEK) {
+            return;
+        }
+        if (row.disabled) {
+            return;
+        }
+        const sunday = row.sunday;
+        const saturday = getWeekSaturday(sunday);
+        $ctrl.viewYear = sunday.getUTCFullYear();
+        $ctrl.viewMonth = sunday.getUTCMonth() + 1;
+        writeModel([
+            formatUtcDate(sunday, $ctrl.valueFormat),
+            formatUtcDate(saturday, $ctrl.valueFormat)
+        ]);
+    };
+
+    $ctrl.onClickDay = function (cell) {
+        if ($ctrl.isPaneDisabled() || !cell || cell.disabled) {
+            return;
+        }
+
+        // 点了别的月：先跳过去（对齐 EP）
+        if (cell.isOtherMonth) {
+            $ctrl.viewYear = cell.year;
+            $ctrl.viewMonth = cell.month;
+            $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+        }
+
+        const type = $ctrl.pickerType;
+
+        if (type === PANE_TYPES.WEEK) {
+            const sunday = getWeekSunday(cell.utcDate);
+            if (isWeekDisabled(sunday)) {
+                rebuildPanel();
+                return;
+            }
+            const saturday = getWeekSaturday(cell.utcDate);
+            writeModel([
+                formatUtcDate(sunday, $ctrl.valueFormat),
+                formatUtcDate(saturday, $ctrl.valueFormat)
+            ]);
+            return;
+        }
+
+        if (type === PANE_TYPES.DATE) {
+            const normalized = makeUtcDate(cell.year, cell.month, cell.day);
+            writeModel(formatUtcDate(normalized, $ctrl.valueFormat));
+            return;
+        }
+
+        if (type === PANE_TYPES.DATES) {
+            toggleMultiValue(formatUtcDate(makeUtcDate(cell.year, cell.month, cell.day), $ctrl.valueFormat));
+            return;
+        }
+
+        rebuildPanel();
+    };
+
+    $ctrl.onClickMonth = function (cell) {
+        if ($ctrl.isPaneDisabled() || !cell || cell.disabled) {
+            return;
+        }
+
+        const type = $ctrl.pickerType;
+        // 下钻：选完月回到日面板
+        if (
+            type === PANE_TYPES.DATE ||
+            type === PANE_TYPES.DATES ||
+            type === PANE_TYPES.WEEK
+        ) {
+            $ctrl.viewMonth = cell.month;
+            $ctrl.viewYear = cell.year;
+            $ctrl.panelView = 'date';
+            rebuildPanel();
+            emitPanelChange('month', 'date');
+            return;
+        }
+
+        if (type === PANE_TYPES.MONTH) {
+            writeModel(formatUtcDate(makeUtcDate(cell.year, cell.month, 1), $ctrl.valueFormat));
+            return;
+        }
+
+        if (type === PANE_TYPES.MONTHS) {
+            toggleMultiValue(formatUtcDate(makeUtcDate(cell.year, cell.month, 1), $ctrl.valueFormat));
+        }
+    };
+
+    $ctrl.onClickYear = function (cell) {
+        if ($ctrl.isPaneDisabled() || !cell || cell.disabled) {
+            return;
+        }
+
+        const type = $ctrl.pickerType;
+
+        // 下钻回月 / 日
+        if (type === PANE_TYPES.MONTH || type === PANE_TYPES.MONTHS) {
+            $ctrl.viewYear = cell.year;
+            $ctrl.panelView = 'month';
+            rebuildPanel();
+            emitPanelChange('year', 'month');
+            return;
+        }
+        if (
+            type === PANE_TYPES.DATE ||
+            type === PANE_TYPES.DATES ||
+            type === PANE_TYPES.WEEK
+        ) {
+            $ctrl.viewYear = cell.year;
+            $ctrl.panelView = 'date';
+            rebuildPanel();
+            emitPanelChange('year', 'date');
+            return;
+        }
+
+        if (type === PANE_TYPES.YEAR) {
+            writeModel(formatUtcDate(makeUtcDate(cell.year, 1, 1), $ctrl.valueFormat));
+            return;
+        }
+
+        if (type === PANE_TYPES.YEARS) {
+            toggleMultiValue(formatUtcDate(makeUtcDate(cell.year, 1, 1), $ctrl.valueFormat));
+        }
+    };
+
+    /** 多选：再点取消；满上限则忽略新项；顺序=点击顺序 */
+    function toggleMultiValue(text) {
+        let list = angular.isArray($ctrl.innerValue) ? $ctrl.innerValue.slice() : [];
+        const index = list.indexOf(text);
+        if (index >= 0) {
+            // 已选中：取消（即便后来被 disabled 命中，也不可再点到这里——外层已挡）
+            list.splice(index, 1);
+            writeModel(list);
+            return;
+        }
+        const limit = $ctrl.maxSelectLimit;
+        if (limit != null && limit > 0 && list.length >= limit) {
+            // 达到上限：忽略
+            return;
+        }
+        list.push(text);
+        writeModel(list);
     }
 }
 
@@ -1191,14 +879,16 @@ app.component('mobDatePickerPane', {
         ngModel: '?ngModel'
     },
     bindings: {
-        type: '<?', // date, month, year,
-        calendarInitOffset: '<?', // 初始化时的偏移量，用于在range中渲染面板用
-        potentialValue: '<?', // 潜在的值
-        rangeType: '<?',
-        calendarSelected: '&?', // 选择回调
-        calendarMouseEnter: '&?',
-        changeCalendarYear: '&?',
-        changeCalendarMonth: '&?',
-        onSelectComplete: '&?' // 选择完成回调，用于通知父组件关闭弹窗
+        type: '<?',
+        valueFormat: '<?',
+        disabled: '<?',
+        disabledDate: '<?',
+        maxSelectLimit: '<?',
+        defaultValue: '<?',
+        showWeekNumber: '<?',
+        cellClassName: '<?',
+        onChange: '&?',
+        ngChange: '&?',
+        onPanelChange: '&?'
     }
-})
+});

@@ -1,126 +1,131 @@
-<div class="mob-date-picker-pane" ng-class="{
-'date':$ctrl.calendarType === 'date' || $ctrl.calendarType === 'week' || $ctrl.calendarType === 'dates' || $ctrl.calendarType === 'dateRange',
-'year':$ctrl.calendarType === 'year' || $ctrl.calendarType === 'years' || $ctrl.calendarType === 'yearRange',
-'month':$ctrl.calendarType === 'month' || $ctrl.calendarType === 'months' || $ctrl.calendarType === 'monthRange'
-}">
-    <div ng-if="$ctrl.calendarType === 'date' || $ctrl.calendarType === 'week' || $ctrl.calendarType === 'dates' || $ctrl.calendarType === 'dateRange'">
+<div class="mob-date-picker-pane"
+     ng-class="{
+        'is-disabled': $ctrl.isPaneDisabled(),
+        'date': $ctrl.panelView === 'date',
+        'month': $ctrl.panelView === 'month',
+        'year': $ctrl.panelView === 'year',
+        'has-week-number': $ctrl.shouldShowWeekNumber() && $ctrl.panelView === 'date'
+     }">
+
+    <!-- ========== 日 / 周面板 ========== -->
+    <div ng-if="$ctrl.panelView === 'date'">
         <div class="mob-date-picker__header">
             <div class="mob-date-picker__header__container">
-                <div>
+                <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-left class="btn"
-                                                ng-click="$ctrl.changeCalendarYearHandle(-1)"></mob-icon-double-arrow-left>
-                    <mob-icon-arrow-left class="btn" ng-click="$ctrl.changeCalendarMonthHandle(-1)"></mob-icon-arrow-left>
+                                                ng-click="$ctrl.goPrevYear()"></mob-icon-double-arrow-left>
+                    <mob-icon-arrow-left class="btn"
+                                         ng-click="$ctrl.goPrevMonth()"></mob-icon-arrow-left>
                 </div>
                 <div class="mob-date-picker__header_title">
-                    <span ng-bind="$ctrl.calendarYear"
-                          date-picker-pane-id="{{$ctrl.uuid}}"
-                          ng-click="$ctrl.switchCalendarType('year')"></span>
-                    <span ng-bind="$ctrl.monthNameMap[$ctrl.calendarMonth]"
-                          date-picker-pane-id="{{$ctrl.uuid}}"
-                          ng-click="$ctrl.switchCalendarType('month')"></span>
+                    <span ng-bind="$ctrl.headerYearText" ng-click="$ctrl.openYearPanel()"></span>
+                    <span ng-bind="$ctrl.headerMonthText" ng-click="$ctrl.openMonthPanel()"></span>
                 </div>
-                <div>
-                    <mob-icon-arrow-right class="btn" ng-click="$ctrl.changeCalendarMonthHandle(1)"></mob-icon-arrow-right>
+                <div class="mob-date-picker__header-btns">
+                    <mob-icon-arrow-right class="btn"
+                                          ng-click="$ctrl.goNextMonth()"></mob-icon-arrow-right>
                     <mob-icon-double-arrow-right class="btn"
-                                                 ng-click="$ctrl.changeCalendarYearHandle(1)"></mob-icon-double-arrow-right>
+                                                 ng-click="$ctrl.goNextYear()"></mob-icon-double-arrow-right>
                 </div>
             </div>
         </div>
 
         <div class="mob-date-picker__body">
             <div class="mob-date-picker__body_header mob-date-picker__calendar-row">
-                <div ng-repeat="dayName in $ctrl.dayNameArr" >
-                    <span ng-bind="dayName"></span>
+                <div class="mob-date-picker__week-number" ng-if="$ctrl.shouldShowWeekNumber()">
+                    <span></span>
+                </div>
+                <div ng-repeat="label in $ctrl.weekdayLabels track by $index">
+                    <span ng-bind="label"></span>
                 </div>
             </div>
+
             <div class="mob-date-picker__body_container">
-                <!--                <div class="mob-date-picker__calendar-row" ng-repeat="week in $ctrl.calendarOptions">-->
-                <div class="mob-date-picker__calendar-row">
-                    <div ng-repeat="op in $ctrl.calendarOptions"
-                         date-picker-pane-id="{{$ctrl.uuid}}"
-                         ng-class="{
-                         'current':op.isToday,
-                         'notCurrentMonth':!$ctrl.isCurrentMonth(op),
-                         'selected':$ctrl.isSelected(op),
-                         'potential':$ctrl.isPotential(op)
-                         }"
-                         ng-mouseenter="$ctrl.calendarMouseEnterHandler(op)"
-                         ng-mouseleave="$ctrl.calendarMouseLeaveHandler(op)"
-                         ng-click="$ctrl.calendarSelectedHandler(op)">
-                        <span ng-bind="op.date"
-                              date-picker-pane-id="{{$ctrl.uuid}}"
-                        ></span>
+                <div class="mob-date-picker__calendar-row"
+                     ng-repeat="row in $ctrl.weekRows track by $index"
+                     ng-class="{'is-week-selected': row.selected, 'is-week-disabled': row.disabled}">
+                    <div class="mob-date-picker__week-number"
+                         ng-if="$ctrl.shouldShowWeekNumber()"
+                         ng-click="$ctrl.onClickWeekNumber(row)">
+                        <span ng-bind="row.weekNumber"></span>
+                    </div>
+                    <div ng-repeat="cell in row.days track by $index"
+                         ng-class="[cell.customClass, {
+                            'current': cell.isToday,
+                            'notCurrentMonth': cell.isOtherMonth,
+                            'selected': cell.selected || cell.inSelectedWeek,
+                            'disabled': cell.disabled
+                         }]"
+                         ng-click="$ctrl.onClickDay(cell)">
+                        <span ng-bind="cell.text"></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div ng-if="$ctrl.calendarType === 'year' || $ctrl.calendarType === 'years' || $ctrl.calendarType === 'yearRange'">
+
+    <!-- ========== 月面板 ========== -->
+    <div ng-if="$ctrl.panelView === 'month'">
         <div class="mob-date-picker__header">
-            <div>
-                <mob-icon-double-arrow-left class="btn"
-                                            ng-click="$ctrl.changeCalendarYearHandle(-10)"></mob-icon-double-arrow-left>
-            </div>
-            <div class="mob-date-picker__header_title">
-                <span ng-bind="$ctrl.calendarOptions[0].year + ' - ' + $ctrl.calendarOptions[$ctrl.calendarOptions.length - 1].year"></span>
-            </div>
-            <div>
-                <mob-icon-double-arrow-right class="btn"
-                                             ng-click="$ctrl.changeCalendarYearHandle(10)"></mob-icon-double-arrow-right>
-            </div>
-        </div>
-        <div class="mob-date-picker__body">
-            <div class="mob-date-picker__body_container">
-                <div class="mob-date-picker__calendar-row">
-                    <div ng-repeat="op in $ctrl.calendarOptions"
-                         date-picker-pane-id="{{$ctrl.uuid}}"
-                         ng-class="{
-                         'current':op.isCurrentYear,
-                         'selected':$ctrl.isSelected ? $ctrl.isSelected(op) : op.year === $ctrl.year,
-                         'potential':$ctrl.isPotential(op),
-                         'range-start':$ctrl.isRangeStart && $ctrl.isRangeStart(op),
-                         'range-end':$ctrl.isRangeEnd && $ctrl.isRangeEnd(op)
-                         }"
-                         ng-mouseenter="$ctrl.calendarMouseEnterHandler(op)"
-                         ng-click="$ctrl.calendarSelectedHandler(op)">
-                        <span ng-bind="op.year"
-                              date-picker-pane-id="{{$ctrl.uuid}}"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div ng-if="$ctrl.calendarType === 'month' || $ctrl.calendarType === 'months' || $ctrl.calendarType === 'monthRange'">
-        <div class="mob-date-picker__body">
-            <div class="mob-date-picker__header">
-                <div>
+            <div class="mob-date-picker__header__container">
+                <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-left class="btn"
-                                                ng-click="$ctrl.changeCalendarYearHandle(-1)"></mob-icon-double-arrow-left>
+                                                ng-click="$ctrl.goPrevYear()"></mob-icon-double-arrow-left>
                 </div>
                 <div class="mob-date-picker__header_title">
-                    <span ng-bind="$ctrl.calendarYear" date-picker-pane-id="{{$ctrl.uuid}}"></span>
+                    <span ng-bind="$ctrl.headerYearText" ng-click="$ctrl.openYearPanel()"></span>
                 </div>
-                <div>
+                <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-right class="btn"
-                                                 ng-click="$ctrl.changeCalendarYearHandle(1)"></mob-icon-double-arrow-right>
+                                                 ng-click="$ctrl.goNextYear()"></mob-icon-double-arrow-right>
                 </div>
             </div>
+        </div>
+        <div class="mob-date-picker__body">
             <div class="mob-date-picker__body_container">
-                <div class="mob-date-picker__calendar-row">
-                    <div ng-class="{
-                        'current':op.isCurrentMonth,
-                        'selected':$ctrl.isSelected ? $ctrl.isSelected(op) : (op.month === $ctrl.month && op.year === $ctrl.year),
-                        'potential':$ctrl.isPotential(op),
-                        'range-start':$ctrl.isRangeStart && $ctrl.isRangeStart(op),
-                        'range-end':$ctrl.isRangeEnd && $ctrl.isRangeEnd(op)
-                         }"
-                         ng-repeat="op in $ctrl.calendarOptions"
-                         date-picker-pane-id="{{$ctrl.uuid}}"
-                         ng-click="$ctrl.calendarSelectedHandler(op)"
-                         ng-mouseenter="$ctrl.calendarMouseEnterHandler(op)"
-                    >
-                        <span ng-bind="$ctrl.monthNameMap[op.month]"
-                              date-picker-pane-id="{{$ctrl.uuid}}"></span>
+                <div class="mob-date-picker__calendar-row month-grid">
+                    <div ng-repeat="cell in $ctrl.monthCells track by cell.month"
+                         ng-class="[cell.customClass, {
+                            'current': cell.isCurrentMonth,
+                            'selected': cell.selected,
+                            'disabled': cell.disabled
+                         }]"
+                         ng-click="$ctrl.onClickMonth(cell)">
+                        <span ng-bind="cell.text"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 年面板 ========== -->
+    <div ng-if="$ctrl.panelView === 'year'">
+        <div class="mob-date-picker__header">
+            <div class="mob-date-picker__header__container">
+                <div class="mob-date-picker__header-btns">
+                    <mob-icon-double-arrow-left class="btn"
+                                                ng-click="$ctrl.goPrevYear()"></mob-icon-double-arrow-left>
+                </div>
+                <div class="mob-date-picker__header_title">
+                    <span ng-bind="$ctrl.headerYearRangeText"></span>
+                </div>
+                <div class="mob-date-picker__header-btns">
+                    <mob-icon-double-arrow-right class="btn"
+                                                 ng-click="$ctrl.goNextYear()"></mob-icon-double-arrow-right>
+                </div>
+            </div>
+        </div>
+        <div class="mob-date-picker__body">
+            <div class="mob-date-picker__body_container">
+                <div class="mob-date-picker__calendar-row year-grid">
+                    <div ng-repeat="cell in $ctrl.yearCells track by cell.year"
+                         ng-class="[cell.customClass, {
+                            'current': cell.isCurrentYear,
+                            'selected': cell.selected,
+                            'disabled': cell.disabled
+                         }]"
+                         ng-click="$ctrl.onClickYear(cell)">
+                        <span ng-bind="cell.text"></span>
                     </div>
                 </div>
             </div>
