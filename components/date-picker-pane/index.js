@@ -174,6 +174,7 @@ function controller($scope) {
     $ctrl.$onInit = function () {
         $ctrl.pickerType = $ctrl.type || PANE_TYPES.DATE;
         $ctrl.valueFormat = $ctrl.valueFormat || PANE_DEFAULT_FORMAT;
+        $ctrl.localRangeHover = null;
 
         initViewAnchor();
         syncPanelViewToType();
@@ -214,13 +215,49 @@ function controller($scope) {
             }
         }
 
+        if (changes.viewDate && !changes.viewDate.isFirstChange()) {
+            applyViewDate($ctrl.viewDate);
+        }
+
         if (
-            (changes.disabledDate || changes.cellClassName || changes.showWeekNumber || changes.maxSelectLimit) &&
+            (changes.rangeStart || changes.rangeEnd || changes.rangeHover || changes.rangePaintTicket) &&
+            !isFirstChangeGroup(changes)
+        ) {
+            // 外层清空 / 重绘：同步清掉 pane 内部残留选中，避免底色残留
+            if ($ctrl.rangeHighlight && !$ctrl.rangeStart && !$ctrl.rangeEnd) {
+                clearInnerValueSilent();
+                $ctrl.localRangeHover = null;
+            }
+            if (changes.rangeStart && !changes.rangeStart.isFirstChange()) {
+                $ctrl.localRangeHover = null;
+            }
+        }
+
+        if (
+            (changes.disabledDate ||
+                changes.cellClassName ||
+                changes.showWeekNumber ||
+                changes.maxSelectLimit ||
+                changes.rangeHighlight ||
+                changes.rangeStart ||
+                changes.rangeEnd ||
+                changes.rangeHover ||
+                changes.rangePaintTicket ||
+                changes.rangeNavSide ||
+                changes.rangePeerViewDate) &&
             !isFirstChangeGroup(changes)
         ) {
             rebuildPanel();
         }
     };
+
+    function clearInnerValueSilent() {
+        const empty = getEmptyValue($ctrl.pickerType);
+        $ctrl.innerValue = empty;
+        if ($ctrl.ngModel) {
+            $ctrl.ngModel.$setViewValue(empty);
+        }
+    }
 
     function isFirstChangeGroup(changes) {
         return Object.keys(changes).every(function (key) {
@@ -231,7 +268,10 @@ function controller($scope) {
     // ---------- 视图锚点（只影响看到哪个月/年，不写 model） ----------
     function initViewAnchor() {
         let anchor = null;
-        if ($ctrl.defaultValue) {
+        if ($ctrl.viewDate) {
+            anchor = parseUtcDate($ctrl.viewDate, $ctrl.valueFormat);
+        }
+        if (!anchor && $ctrl.defaultValue) {
             anchor = parseUtcDate($ctrl.defaultValue, $ctrl.valueFormat);
             if (!anchor && typeof $ctrl.defaultValue === 'string') {
                 // default-value 也允许只写日期部分时尽量容错，仅用于视图
@@ -242,9 +282,276 @@ function controller($scope) {
             const now = new Date();
             anchor = makeUtcDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
         }
+        applyAnchorDate(anchor);
+    }
+
+    function applyAnchorDate(anchor) {
+        if (!anchor) {
+            return;
+        }
         $ctrl.viewYear = anchor.getUTCFullYear();
         $ctrl.viewMonth = anchor.getUTCMonth() + 1;
         $ctrl.yearPageStart = Math.floor($ctrl.viewYear / 10) * 10;
+    }
+
+    /** 外部强制视图（range 双面板联动）；不触发 on-panel-change */
+    function applyViewDate(text) {
+        if (!text) {
+            return;
+        }
+        const anchor = parseUtcDate(text, $ctrl.valueFormat);
+        if (!anchor) {
+            return;
+        }
+        if (
+            $ctrl.viewYear === anchor.getUTCFullYear() &&
+            $ctrl.viewMonth === anchor.getUTCMonth() + 1 &&
+            $ctrl.yearPageStart === Math.floor(anchor.getUTCFullYear() / 10) * 10
+        ) {
+            return;
+        }
+        applyAnchorDate(anchor);
+        rebuildPanel();
+    }
+
+    /**
+     * range 展示：按 type 粒度比较
+     * 返回 { isRangeStart, isRangeEnd, isInRange, selected }
+     */
+    function getRangeCellFlags(cellDate) {
+        const empty = {
+            isRangeStart: false,
+            isRangeEnd: false,
+            isInRange: false,
+            rangeSelected: false
+        };
+        if (!$ctrl.rangeHighlight || !cellDate) {
+            return empty;
+        }
+        const start = parseUtcDate($ctrl.rangeStart, $ctrl.valueFormat);
+        if (!start) {
+            return empty;
+        }
+        const endConfirmed = parseUtcDate($ctrl.rangeEnd, $ctrl.valueFormat);
+        // 优先本地悬停（更及时），其次外层 rangeHover
+        const hover = parseUtcDate($ctrl.localRangeHover || $ctrl.rangeHover, $ctrl.valueFormat);
+        const endPaint = endConfirmed || hover;
+
+        const cellKey = rangeCompareKey(cellDate);
+        const startKey = rangeCompareKey(start);
+
+        if (!endPaint) {
+            const isStart = cellKey === startKey;
+            return {
+                isRangeStart: isStart,
+                isRangeEnd: false,
+                isInRange: false,
+                rangeSelected: isStart
+            };
+        }
+
+        let minKey = startKey;
+        let maxKey = rangeCompareKey(endPaint);
+        if (minKey > maxKey) {
+            const tmp = minKey;
+            minKey = maxKey;
+            maxKey = tmp;
+        }
+
+        const isRangeStart = cellKey === minKey;
+        const isRangeEnd = cellKey === maxKey;
+        const isInRange = cellKey > minKey && cellKey < maxKey;
+        // 主色圆点：已确认的起止；仅 start 未选 end 时只亮 start
+        let rangeSelected = false;
+        if (endConfirmed) {
+            const endKey = rangeCompareKey(endConfirmed);
+            const a = startKey <= endKey ? startKey : endKey;
+            const b = startKey <= endKey ? endKey : startKey;
+            rangeSelected = cellKey === a || cellKey === b;
+        } else {
+            rangeSelected = cellKey === startKey;
+        }
+
+        return {
+            isRangeStart: isRangeStart,
+            isRangeEnd: isRangeEnd,
+            isInRange: isInRange,
+            rangeSelected: rangeSelected
+        };
+    }
+
+    /** 日 / 月 / 年 统一可比 key（越大越靠后） */
+    function rangeCompareKey(date) {
+        const y = date.getUTCFullYear();
+        const m = date.getUTCMonth() + 1;
+        const d = date.getUTCDate();
+        const t = $ctrl.pickerType;
+        if (t === PANE_TYPES.YEAR || t === PANE_TYPES.YEARS) {
+            return y;
+        }
+        if (t === PANE_TYPES.MONTH || t === PANE_TYPES.MONTHS) {
+            return y * 100 + m;
+        }
+        return y * 10000 + m * 100 + d;
+    }
+
+    function emitRangeHover(text) {
+        if (!$ctrl.rangeHighlight) {
+            return;
+        }
+        if (angular.isFunction($ctrl.onRangeHover)) {
+            $ctrl.onRangeHover({value: text});
+        }
+    }
+
+    /** range 双面板：是否启用导航钳制（仅 DatePicker range 传入 side） */
+    function hasRangeNavLimit() {
+        return $ctrl.rangeNavSide === 'left' || $ctrl.rangeNavSide === 'right';
+    }
+
+    function getPeerDate() {
+        if (!$ctrl.rangePeerViewDate) {
+            return null;
+        }
+        return parseUtcDate($ctrl.rangePeerViewDate, $ctrl.valueFormat);
+    }
+
+    /** 统一成「年月」key：yyyy * 100 + mm，便于比较 */
+    function toYearMonthKey(year, month) {
+        return year * 100 + month;
+    }
+
+    function getSelfYearMonthKey() {
+        if ($ctrl.pickerType === PANE_TYPES.YEAR || $ctrl.pickerType === PANE_TYPES.YEARS) {
+            const page = $ctrl.yearPageStart != null ? $ctrl.yearPageStart : $ctrl.viewYear;
+            return toYearMonthKey(page, 1);
+        }
+        if ($ctrl.pickerType === PANE_TYPES.MONTH || $ctrl.pickerType === PANE_TYPES.MONTHS) {
+            return toYearMonthKey($ctrl.viewYear, 1);
+        }
+        return toYearMonthKey($ctrl.viewYear, $ctrl.viewMonth);
+    }
+
+    function getPeerYearMonthKey(peer) {
+        if (!peer) {
+            return null;
+        }
+        if ($ctrl.pickerType === PANE_TYPES.YEAR || $ctrl.pickerType === PANE_TYPES.YEARS) {
+            return toYearMonthKey(Math.floor(peer.getUTCFullYear() / 10) * 10, 1);
+        }
+        if ($ctrl.pickerType === PANE_TYPES.MONTH || $ctrl.pickerType === PANE_TYPES.MONTHS) {
+            return toYearMonthKey(peer.getUTCFullYear(), 1);
+        }
+        return toYearMonthKey(peer.getUTCFullYear(), peer.getUTCMonth() + 1);
+    }
+
+    function shiftYearMonthKey(key, yearDelta, monthDelta) {
+        let y = Math.floor(key / 100);
+        let m = key % 100;
+        y += yearDelta || 0;
+        m += monthDelta || 0;
+        while (m > 12) {
+            m -= 12;
+            y += 1;
+        }
+        while (m < 1) {
+            m += 12;
+            y -= 1;
+        }
+        return toYearMonthKey(y, m);
+    }
+
+    /**
+     * 移动后是否仍满足 左 < 右
+     * @param {'month'|'year'|'decade'} step
+     * @param {number} dir +1 next / -1 prev
+     */
+    function wouldCrossPeer(step, dir) {
+        if (!hasRangeNavLimit()) {
+            return false;
+        }
+        const peer = getPeerDate();
+        if (!peer) {
+            return false;
+        }
+        const selfKey = getSelfYearMonthKey();
+        const peerKey = getPeerYearMonthKey(peer);
+        let nextKey = selfKey;
+        if (step === 'month') {
+            nextKey = shiftYearMonthKey(selfKey, 0, dir);
+        } else if (step === 'year') {
+            nextKey = shiftYearMonthKey(selfKey, dir, 0);
+        } else if (step === 'decade') {
+            nextKey = shiftYearMonthKey(selfKey, dir * 10, 0);
+        }
+        if ($ctrl.rangeNavSide === 'left') {
+            return nextKey >= peerKey;
+        }
+        if ($ctrl.rangeNavSide === 'right') {
+            return nextKey <= peerKey;
+        }
+        return false;
+    }
+
+    /** 月按钮：按 ±1 月判断 */
+    $ctrl.isPrevMonthNavDisabled = function () {
+        return hasRangeNavLimit() && $ctrl.rangeNavSide === 'right' && wouldCrossPeer('month', -1);
+    };
+
+    $ctrl.isNextMonthNavDisabled = function () {
+        return hasRangeNavLimit() && $ctrl.rangeNavSide === 'left' && wouldCrossPeer('month', 1);
+    };
+
+    /** 年按钮：按 ±1 年判断（月不变） */
+    $ctrl.isPrevYearNavDisabled = function () {
+        // 年面板双箭头是十年；月/日面板双箭头是一年
+        if ($ctrl.panelView === 'year' || $ctrl.pickerType === PANE_TYPES.YEAR || $ctrl.pickerType === PANE_TYPES.YEARS) {
+            return hasRangeNavLimit() && $ctrl.rangeNavSide === 'right' && wouldCrossPeer('decade', -1);
+        }
+        return hasRangeNavLimit() && $ctrl.rangeNavSide === 'right' && wouldCrossPeer('year', -1);
+    };
+
+    $ctrl.isNextYearNavDisabled = function () {
+        if ($ctrl.panelView === 'year' || $ctrl.pickerType === PANE_TYPES.YEAR || $ctrl.pickerType === PANE_TYPES.YEARS) {
+            return hasRangeNavLimit() && $ctrl.rangeNavSide === 'left' && wouldCrossPeer('decade', 1);
+        }
+        return hasRangeNavLimit() && $ctrl.rangeNavSide === 'left' && wouldCrossPeer('year', 1);
+    };
+
+    // 兼容旧名（若别处误用）
+    $ctrl.isPrevNavDisabled = $ctrl.isPrevYearNavDisabled;
+    $ctrl.isNextNavDisabled = $ctrl.isNextYearNavDisabled;
+
+    /** 下钻选年/月时，按 peer 禁用会越界的格子 */
+    function isNavCellDisabled(cellDate) {
+        if (!hasRangeNavLimit()) {
+            return false;
+        }
+        const peer = getPeerDate();
+        if (!peer || !cellDate) {
+            return false;
+        }
+        const t = $ctrl.pickerType;
+        // yearrange 选值不按 peer 禁格子，只禁 decade 翻页按钮
+        if (t === PANE_TYPES.YEAR || t === PANE_TYPES.YEARS) {
+            return false;
+        }
+
+        let cellKey;
+        let peerKey;
+        if (t === PANE_TYPES.MONTH || t === PANE_TYPES.MONTHS) {
+            cellKey = cellDate.getUTCFullYear();
+            peerKey = peer.getUTCFullYear();
+        } else {
+            // date：按下钻目标年月比
+            cellKey = cellDate.getUTCFullYear() * 100 + (cellDate.getUTCMonth() + 1);
+            peerKey = peer.getUTCFullYear() * 100 + (peer.getUTCMonth() + 1);
+        }
+
+        if ($ctrl.rangeNavSide === 'left') {
+            return cellKey >= peerKey;
+        }
+        return cellKey <= peerKey;
     }
 
     function syncPanelViewToType() {
@@ -381,7 +688,10 @@ function controller($scope) {
     }
 
     function emitPanelChange(mode, view) {
-        const date = makeUtcDate($ctrl.viewYear, $ctrl.viewMonth, 1);
+        // 年面板翻页时以 decade 起点为准，便于外层 range 双面板联动
+        const date = $ctrl.panelView === 'year'
+            ? makeUtcDate($ctrl.yearPageStart, 1, 1)
+            : makeUtcDate($ctrl.viewYear, $ctrl.viewMonth, 1);
         if (angular.isFunction($ctrl.onPanelChange)) {
             // 对齐 EP：date, mode, view
             $ctrl.onPanelChange({
@@ -479,6 +789,11 @@ function controller($scope) {
             disabled = isWeekDisabled(getWeekSunday(cellDate));
         }
 
+        const rangeFlags = getRangeCellFlags(cellDate);
+        const selected = $ctrl.rangeHighlight
+            ? rangeFlags.rangeSelected
+            : isDaySelected(cellDate);
+
         return {
             year: y,
             month: m,
@@ -488,8 +803,11 @@ function controller($scope) {
             isOtherMonth: y !== viewYear || m !== viewMonth,
             isToday: sameUtcDay(cellDate, todayUtc),
             disabled: disabled,
-            selected: isDaySelected(cellDate),
+            selected: selected,
             inSelectedWeek: isDayInSelectedWeek(cellDate),
+            isRangeStart: rangeFlags.isRangeStart,
+            isRangeEnd: rangeFlags.isRangeEnd,
+            isInRange: rangeFlags.isInRange,
             customClass: getCellClass(cellDate)
         };
     }
@@ -543,7 +861,11 @@ function controller($scope) {
         const months = [];
         for (let m = 1; m <= 12; m++) {
             const tip = makeUtcDate(year, m, 1);
-            const disabled = isDateDisabled(tip);
+            const disabled = isDateDisabled(tip) || isNavCellDisabled(tip);
+            const rangeFlags = getRangeCellFlags(tip);
+            const selected = $ctrl.rangeHighlight
+                ? rangeFlags.rangeSelected
+                : isMonthSelected(year, m);
             months.push({
                 year: year,
                 month: m,
@@ -551,7 +873,10 @@ function controller($scope) {
                 text: MONTH_LABELS[m - 1],
                 isCurrentMonth: year === now.getFullYear() && m === now.getMonth() + 1,
                 disabled: disabled,
-                selected: isMonthSelected(year, m),
+                selected: selected,
+                isRangeStart: rangeFlags.isRangeStart,
+                isRangeEnd: rangeFlags.isRangeEnd,
+                isInRange: rangeFlags.isInRange,
                 customClass: getCellClass(tip)
             });
         }
@@ -585,13 +910,24 @@ function controller($scope) {
         const nowYear = new Date().getFullYear();
         for (let y = start; y <= start + 9; y++) {
             const tip = makeUtcDate(y, 1, 1);
+            // date 下钻选年：用「该年 + 当前 viewMonth」参与 peer 比较
+            const navTip = ($ctrl.pickerType === PANE_TYPES.DATE || $ctrl.pickerType === PANE_TYPES.DATES || $ctrl.pickerType === PANE_TYPES.WEEK)
+                ? makeUtcDate(y, $ctrl.viewMonth, 1)
+                : tip;
+            const rangeFlags = getRangeCellFlags(tip);
+            const selected = $ctrl.rangeHighlight
+                ? rangeFlags.rangeSelected
+                : isYearSelected(y);
             years.push({
                 year: y,
                 utcDate: tip,
                 text: String(y),
                 isCurrentYear: y === nowYear,
-                disabled: isDateDisabled(tip),
-                selected: isYearSelected(y),
+                disabled: isDateDisabled(tip) || isNavCellDisabled(navTip),
+                selected: selected,
+                isRangeStart: rangeFlags.isRangeStart,
+                isRangeEnd: rangeFlags.isRangeEnd,
+                isInRange: rangeFlags.isInRange,
                 customClass: getCellClass(tip)
             });
         }
@@ -633,7 +969,7 @@ function controller($scope) {
 
     // ---------- 表头翻页 / 下钻 ----------
     $ctrl.goPrevYear = function () {
-        if ($ctrl.isPaneDisabled()) {
+        if ($ctrl.isPaneDisabled() || $ctrl.isPrevYearNavDisabled()) {
             return;
         }
         if ($ctrl.panelView === 'year') {
@@ -649,7 +985,7 @@ function controller($scope) {
     };
 
     $ctrl.goNextYear = function () {
-        if ($ctrl.isPaneDisabled()) {
+        if ($ctrl.isPaneDisabled() || $ctrl.isNextYearNavDisabled()) {
             return;
         }
         if ($ctrl.panelView === 'year') {
@@ -665,7 +1001,7 @@ function controller($scope) {
     };
 
     $ctrl.goPrevMonth = function () {
-        if ($ctrl.isPaneDisabled() || $ctrl.panelView !== 'date') {
+        if ($ctrl.isPaneDisabled() || $ctrl.isPrevMonthNavDisabled() || $ctrl.panelView !== 'date') {
             return;
         }
         $ctrl.viewMonth -= 1;
@@ -679,7 +1015,7 @@ function controller($scope) {
     };
 
     $ctrl.goNextMonth = function () {
-        if ($ctrl.isPaneDisabled() || $ctrl.panelView !== 'date') {
+        if ($ctrl.isPaneDisabled() || $ctrl.isNextMonthNavDisabled() || $ctrl.panelView !== 'date') {
             return;
         }
         $ctrl.viewMonth += 1;
@@ -741,6 +1077,49 @@ function controller($scope) {
             formatUtcDate(sunday, $ctrl.valueFormat),
             formatUtcDate(saturday, $ctrl.valueFormat)
         ]);
+    };
+
+    /** 是否处于「已选 start、待选 end」可预览态 */
+    function canPreviewRangeHover() {
+        return !!(
+            $ctrl.rangeHighlight &&
+            $ctrl.rangeStart &&
+            !$ctrl.rangeEnd
+        );
+    }
+
+    /** range 悬停预览：本地立刻重绘 + 通知外层 */
+    $ctrl.onCellMouseEnter = function (cell) {
+        if ($ctrl.isPaneDisabled() || !cell || cell.disabled || !canPreviewRangeHover()) {
+            return;
+        }
+        let tip = cell.utcDate;
+        if (!tip && cell.year != null) {
+            tip = makeUtcDate(cell.year, cell.month || 1, cell.day || 1);
+        }
+        if (!tip) {
+            return;
+        }
+        const normalized = normalizeByType(tip, $ctrl.pickerType);
+        const text = formatUtcDate(normalized, $ctrl.valueFormat);
+        if ($ctrl.localRangeHover === text) {
+            return;
+        }
+        $ctrl.localRangeHover = text;
+        rebuildPanel();
+        emitRangeHover(text);
+    };
+
+    $ctrl.onPanelMouseLeave = function () {
+        if (!canPreviewRangeHover()) {
+            return;
+        }
+        if ($ctrl.localRangeHover == null) {
+            return;
+        }
+        $ctrl.localRangeHover = null;
+        rebuildPanel();
+        emitRangeHover(null);
     };
 
     $ctrl.onClickDay = function (cell) {
@@ -885,10 +1264,19 @@ app.component('mobDatePickerPane', {
         disabledDate: '<?',
         maxSelectLimit: '<?',
         defaultValue: '<?',
+        viewDate: '<?',
         showWeekNumber: '<?',
         cellClassName: '<?',
+        rangeHighlight: '<?',
+        rangeStart: '<?',
+        rangeEnd: '<?',
+        rangeHover: '<?',
+        rangePaintTicket: '<?',
+        rangeNavSide: '<?',
+        rangePeerViewDate: '<?',
         onChange: '&?',
         ngChange: '&?',
-        onPanelChange: '&?'
+        onPanelChange: '&?',
+        onRangeHover: '&?'
     }
 });

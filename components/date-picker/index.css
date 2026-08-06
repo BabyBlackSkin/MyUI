@@ -1,40 +1,73 @@
-/* Date Picker 日期选择器 */
+/* DatePicker 日期选择器（输入框 + 弹层） */
 mob-date-picker {
-    display: block;
+    display: inline-block;
     width: 240px;
+    vertical-align: middle;
 }
-.mob-date-picker .mob-date-picker-wrapper{
 
+mob-date-picker.is-range {
+    width: 350px;
+}
+
+.mob-date-picker {
+    width: 100%;
+}
+
+.mob-date-picker .mob-date-picker-wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
 }
+
+.mob-date-picker.is-disabled .mob-date-picker-wrapper {
+    cursor: not-allowed;
+}
+
 .mob-date-picker .mob-date-picker-wrapper .icon {
     color: var(--mob-placeholder-text-color);
 }
-.mob-date-picker .mob-date-picker-wrapper input{
-    text-align: center;
+
+.mob-date-picker .mob-date-picker-wrapper input {
+    text-align: left;
+    cursor: pointer;
 }
 
+.mob-date-picker.is-disabled .mob-date-picker-wrapper input {
+    cursor: not-allowed;
+}
+
+.mob-date-picker--large .mob-input__wrapper {
+    min-height: 40px;
+}
+
+.mob-date-picker--small .mob-input__wrapper {
+    min-height: 24px;
+}
+
+.mob-date-picker--small .mob-input__inner {
+    font-size: 12px;
+}
+
+/* 弹层布局（尺寸是否限制由 popper-fit-content 控制，见 mob-popper.css） */
 .mob-popper-down.mob-date-picker .mob-popper-down__wrapper {
     padding: 12px;
 }
 
-.mob-popper-down.mob-date-picker .mob-popper-down__wrapper {
-    max-height: calc(max(var(--mob-popper-max-height), 390px) - 10px);
-}
 .mob-popper-down.mob-date-picker .mob-popper-down__wrapper .mob-popper-down__inner {
     display: flex;
-    justify-content: center;
-    max-height: calc(max(var(--mob-popper-max-height), 390px) - 20px);
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
+.mob-popper-down.mob-date-picker .mob-date-picker__popper_down_inner_container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
 
-/*.mob-popper-down.mob-date-picker-date-range .mob-popper-down__inner{*/
-/*    display: flex;*/
-/*}*/
-
-/* 快捷方式样式 */
+/* 快捷方式 */
 .mob-date-picker__shortcuts {
     display: flex;
     flex-direction: column;
@@ -51,6 +84,7 @@ mob-date-picker {
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.2s;
+    white-space: nowrap;
 }
 
 .mob-date-picker__shortcut:hover {
@@ -58,29 +92,23 @@ mob-date-picker {
     background-color: var(--mob-fill-color-light);
 }
 
-/* 范围选择器输入框布局 */
+/* 范围输入 */
 .mob-date-picker__range-inputs {
     display: flex;
     align-items: center;
     flex: 1;
+    min-width: 0;
 }
 
 .mob-date-picker__range-inputs input {
     flex: 1;
     min-width: 0;
+    text-align: center;
 }
 
 .mob-date-picker__range-separator {
     padding: 0 8px;
     color: var(--mob-text-color-regular);
     white-space: nowrap;
-}
-
-/* 确定按钮样式 */
-.mob-date-picker__footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 12px;
-    border-top: 1px solid var(--mob-border-color);
-    margin-top: 12px;
+    flex-shrink: 0;
 }

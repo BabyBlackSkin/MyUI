@@ -1,51 +1,70 @@
-<div class="mob-date-picker" ng-class="{
-'date':$ctrl.type === 'date',
-'week':$ctrl.type === 'week',
-'year':$ctrl.type === 'year',
-'month':$ctrl.type === 'month',
-'dates':$ctrl.type === 'dates',
-'dateRange':$ctrl.type === 'dateRange',
-'monthRange':$ctrl.type === 'monthRange',
-'yearRange':$ctrl.type === 'yearRange'
-}">
-    <div class="mob-date-picker-wrapper mob_popper__target" popper-group="mobDatePicker">
-        <div class="mob-input">
-            <div class="mob-input__wrapper">
-                <mob-icon-calendar class="icon"></mob-icon-calendar>
-                
-                <!-- 单日期选择 -->
-                <input ng-if="$ctrl.type === 'date' || $ctrl.type === 'month' || $ctrl.type === 'year'"
-                       type="text"
-                       class="mob-input__inner custom"
-                       ng-model="$ctrl.model"
-                       placeholder="请选择时间"/>
+<div class="mob-date-picker"
+     ng-class="{
+        'is-disabled': $ctrl.disabled,
+        'is-range': $ctrl.isRange(),
+        'mob-date-picker--large': $ctrl.size === 'large',
+        'mob-date-picker--small': $ctrl.size === 'small',
+        'date': $ctrl.pickerType === 'date',
+        'dates': $ctrl.pickerType === 'dates',
+        'week': $ctrl.pickerType === 'week',
+        'month': $ctrl.pickerType === 'month',
+        'months': $ctrl.pickerType === 'months',
+        'year': $ctrl.pickerType === 'year',
+        'years': $ctrl.pickerType === 'years',
+        'daterange': $ctrl.pickerType === 'daterange',
+        'monthrange': $ctrl.pickerType === 'monthrange',
+        'yearrange': $ctrl.pickerType === 'yearrange'
+     }">
+    <div class="mob-input"
+         ng-class="{'is_clearable': $ctrl.clearable, 'is_disabled': $ctrl.disabled}">
+        <div class="mob-input__wrapper mob-date-picker-wrapper mob_popper__target"
+             popper-group="mobDatePicker">
+            <span class="mob-input__prefix">
+                <span class="mob-input__prefix-inner">
+                    <mob-icon-calendar class="icon"></mob-icon-calendar>
+                </span>
+            </span>
 
-                <!-- 多日期选择 -->
-                <input ng-if="$ctrl.type === 'dates' || $ctrl.type === 'yearRange' || $ctrl.type === 'monthRange'"
-                       type="text"
+            <!-- 非 range：单个只读输入 -->
+            <input ng-if="!$ctrl.isRange()"
+                   type="text"
+                   readonly
+                   autocomplete="off"
+                   class="mob-input__inner custom"
+                   ng-value="$ctrl.displayText"
+                   placeholder="{{$ctrl.placeholder}}"
+                   ng-disabled="$ctrl.disabled"
+                   ng-focus="$ctrl.onInputFocus()"
+                   ng-blur="$ctrl.onInputBlur()"/>
+
+            <!-- range：起止展示 -->
+            <span ng-if="$ctrl.isRange()" class="mob-date-picker__range-inputs">
+                <input type="text"
+                       readonly
+                       autocomplete="off"
                        class="mob-input__inner custom"
-                       ng-value="$ctrl.model ? $ctrl.model.join(', ') : ''"
-                       placeholder="请选择时间"/>
-                
-                <!-- 日期范围 - 使用flex布局确保在一行 -->
-                <span ng-if="$ctrl.type === 'dateRange' || $ctrl.type === 'week'" class="mob-date-picker__range-inputs">
-                    <input type="text"
-                           class="mob-input__inner custom"
-                           ng-value="$ctrl.model && $ctrl.model[0] ? $ctrl.model[0].formattedDate : ''"
-                           placeholder="开始日期"/>
-                    <span class="mob-date-picker__range-separator">To</span>
-                    <input type="text"
-                           class="mob-input__inner custom"
-                           ng-value="$ctrl.model && $ctrl.model[1] ? $ctrl.model[1].formattedDate : ''"
-                           placeholder="结束日期"/>
+                       ng-value="$ctrl.displayStart"
+                       placeholder="{{$ctrl.placeholder}}"
+                       ng-disabled="$ctrl.disabled"
+                       ng-focus="$ctrl.onInputFocus()"
+                       ng-blur="$ctrl.onInputBlur()"/>
+                <span class="mob-date-picker__range-separator" ng-bind="$ctrl.rangeSeparator"></span>
+                <input type="text"
+                       readonly
+                       autocomplete="off"
+                       class="mob-input__inner custom"
+                       ng-value="$ctrl.displayEnd"
+                       placeholder="{{$ctrl.placeholder}}"
+                       ng-disabled="$ctrl.disabled"
+                       ng-focus="$ctrl.onInputFocus()"
+                       ng-blur="$ctrl.onInputBlur()"/>
+            </span>
+
+            <span class="mob-input__suffix" ng-if="$ctrl.showClear()" ng-click="$ctrl.clearModel($event)">
+                <span class="mob-input__suffix-inner">
+                    <mob-icon-circle-close class="mob-input_clear"></mob-icon-circle-close>
                 </span>
-                
-                <span class="mob-input__suffix" ng-click="$ctrl.clearModel($event)">
-                    <span class="mob-input__suffix-inner">
-                        <mob-icon-circle-close class="mob-input_clear"></mob-icon-circle-close>
-                    </span>
-                </span>
-            </div>
+            </span>
         </div>
     </div>
 </div>

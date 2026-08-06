@@ -1,6 +1,18 @@
 app
     .factory('popper', ['uuId', 'floating','$debounce', function (uuId, floating, $debounce) {
 
+        /** popper-fit-content：为 true 时宽度随内容、不套用 max-height 限制（默认 false，保持限制） */
+        function isFitContentAttr(el) {
+            if (!el || !el.getAttribute) {
+                return false;
+            }
+            const v = el.getAttribute('popper-fit-content');
+            if (v == null) {
+                return false;
+            }
+            return v === '' || v === 'true' || v === '1';
+        }
+
         function showAutoUpdate(scope, popper, timer = {render: true}) {
             let { tooltip } = popper
             tooltip.style.display = 'block';
@@ -9,13 +21,21 @@ app
             popper.showAutoUpdateCleanUp = floating.autoUpdateComputePosition(scope, popper, timer.render)
             timer.render = false
             timer.tooltipCss = setTimeout(() => {
-                tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'auto';
+                const inner = tooltip.querySelector('.mob-popper-down__inner');
+                if (!inner) {
+                    return;
+                }
+                // 限制模式下内容超出可滚动；fit-content 不裁切
+                inner.style.overflow = popper.popperFitContent ? 'visible' : 'auto';
             }, 300)
         }
 
         function hide(scope, popper, timer = {render: true}) {
             let {target, tooltip} = popper
-            tooltip.querySelector('.mob-popper-down__inner').style.overflow = 'hidden';
+            const inner = tooltip.querySelector('.mob-popper-down__inner');
+            if (inner) {
+                inner.style.overflow = 'hidden';
+            }
             tooltip.style.opacity = 0;
             tooltip.style.transform = 'scaleY(0)';
             popper.showAutoUpdateCleanUp && popper.showAutoUpdateCleanUp()
@@ -82,12 +102,20 @@ app
                     if (angular.isUndefined(location)) {
                         location = target
                     }
-                    let popperWidthAuto = popperConfig[name].popperWidthAuto || false;
+                    // 优先读 tooltip 上的 popper-fit-content；未声明时仍可读配置里的 popperWidthAuto
+                    const popperFitContent = isFitContentAttr(tooltip);
+                    let popperWidthAuto = popperFitContent || popperConfig[name].popperWidthAuto || false;
+                    if (popperFitContent) {
+                        tooltip.classList.add('is-fit-content');
+                    } else {
+                        tooltip.classList.remove('is-fit-content');
+                    }
                     scope.$popper[name] = {
                         target,
                         tooltip,
                         location,
                         popperWidthAuto,
+                        popperFitContent,
                         hide: function (timer = {render: true}) {
                             this.popperShow = false
                             hide(scope, this, timer)

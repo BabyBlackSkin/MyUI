@@ -65,6 +65,8 @@
     --mob-lighter-fill-color: #FAFAFA;
     --mob-extra-light-fill-color: #FAFCFF;
     --mob-blank-light-fill-color: #FFFFFF;
+    /* DatePicker range 区间底色 */
+    --mob-fill-color-light: #F2F6FC;
 
     /* basic */
     --mob-basic-black-color:#000000;

@@ -60,6 +60,18 @@ mob-date-picker-pane .mob-date-picker__header .btn:hover {
     color: var(--mob-primary-color);
 }
 
+/* range 双面板内侧箭头禁用 */
+mob-date-picker-pane .mob-date-picker__header .btn.is-disabled {
+    cursor: not-allowed;
+    color: var(--mob-placeholder-text-color, #c0c4cc);
+    pointer-events: none;
+    opacity: 0.45;
+}
+
+mob-date-picker-pane .mob-date-picker__header .btn.is-disabled:hover {
+    color: var(--mob-placeholder-text-color, #c0c4cc);
+}
+
 mob-date-picker-pane .mob-date-picker__header_title {
     flex: 1;
     display: flex;
@@ -172,6 +184,53 @@ mob-date-picker-pane .mob-date-picker__calendar-row.is-week-selected {
     background-color: var(--mob-extra-lighter-border-color);
     border-radius: 4px;
 }
+
+/* ----- range 区间高亮（date / month / year 同一套） ----- */
+mob-date-picker-pane .mob-date-picker__calendar-row > div.range-start,
+mob-date-picker-pane .mob-date-picker__calendar-row > div.range-end,
+mob-date-picker-pane .mob-date-picker__calendar-row > div.in-range {
+    background-color: var(--mob-fill-color-light, #f2f6fc);
+}
+
+/* 日起始：左半圆 / 右直角 */
+mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row > div.range-start {
+    border-radius: 18px 0 0 18px;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row > div.range-end {
+    border-radius: 0 18px 18px 0;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row > div.range-start.range-end {
+    border-radius: 18px;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.date .mob-date-picker__calendar-row > div.in-range {
+    border-radius: 0;
+}
+
+/* 月 / 年格子：同样半圆条带 */
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid > div.range-start,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid > div.range-start {
+    border-radius: 24px 0 0 24px;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid > div.range-end,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid > div.range-end {
+    border-radius: 0 24px 24px 0;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid > div.range-start.range-end,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid > div.range-start.range-end {
+    border-radius: 24px;
+}
+
+mob-date-picker-pane .mob-date-picker-pane.month .month-grid > div.in-range,
+mob-date-picker-pane .mob-date-picker-pane.year .year-grid > div.in-range {
+    border-radius: 0;
+}
+
+/* 起止保留主色圆点（selected 已画在 span 上），区间底在格子上 */
 
 /* ----- 月 / 年面板 ----- */
 mob-date-picker-pane .mob-date-picker-pane.month .mob-date-picker__header__container,

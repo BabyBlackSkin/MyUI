@@ -51,6 +51,23 @@
     max-height: calc(var(--mob-popper-max-height) - 20px);
     overflow: hidden;
 }
+
+/* popper-fit-content="true"：不限制宽高（DatePicker 等需完整展示内容的组件开启；Select 等默认限制） */
+.mob-popper-down.is-fit-content {
+    max-height: none;
+    overflow: visible;
+    width: max-content;
+}
+
+.mob-popper-down.is-fit-content .mob-popper-down__wrapper {
+    width: max-content;
+    max-height: none;
+}
+
+.mob-popper-down.is-fit-content .mob-popper-down__wrapper .mob-popper-down__inner {
+    max-height: none;
+    overflow: visible;
+}
 .mob-popper-down .mob-popper-down__wrapper .mob-popper-down__inner::-webkit-scrollbar {
     /* 对应纵向滚动条的宽度 */
     width: 8px;

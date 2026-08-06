@@ -4,8 +4,10 @@
         'date': $ctrl.panelView === 'date',
         'month': $ctrl.panelView === 'month',
         'year': $ctrl.panelView === 'year',
-        'has-week-number': $ctrl.shouldShowWeekNumber() && $ctrl.panelView === 'date'
-     }">
+        'has-week-number': $ctrl.shouldShowWeekNumber() && $ctrl.panelView === 'date',
+        'is-range-highlight': $ctrl.rangeHighlight
+     }"
+     ng-mouseleave="$ctrl.onPanelMouseLeave()">
 
     <!-- ========== 日 / 周面板 ========== -->
     <div ng-if="$ctrl.panelView === 'date'">
@@ -13,8 +15,10 @@
             <div class="mob-date-picker__header__container">
                 <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-left class="btn"
+                                                ng-class="{'is-disabled': $ctrl.isPrevYearNavDisabled()}"
                                                 ng-click="$ctrl.goPrevYear()"></mob-icon-double-arrow-left>
                     <mob-icon-arrow-left class="btn"
+                                         ng-class="{'is-disabled': $ctrl.isPrevMonthNavDisabled()}"
                                          ng-click="$ctrl.goPrevMonth()"></mob-icon-arrow-left>
                 </div>
                 <div class="mob-date-picker__header_title">
@@ -23,8 +27,10 @@
                 </div>
                 <div class="mob-date-picker__header-btns">
                     <mob-icon-arrow-right class="btn"
+                                          ng-class="{'is-disabled': $ctrl.isNextMonthNavDisabled()}"
                                           ng-click="$ctrl.goNextMonth()"></mob-icon-arrow-right>
                     <mob-icon-double-arrow-right class="btn"
+                                                 ng-class="{'is-disabled': $ctrl.isNextYearNavDisabled()}"
                                                  ng-click="$ctrl.goNextYear()"></mob-icon-double-arrow-right>
                 </div>
             </div>
@@ -54,9 +60,13 @@
                             'current': cell.isToday,
                             'notCurrentMonth': cell.isOtherMonth,
                             'selected': cell.selected || cell.inSelectedWeek,
-                            'disabled': cell.disabled
+                            'disabled': cell.disabled,
+                            'range-start': cell.isRangeStart,
+                            'range-end': cell.isRangeEnd,
+                            'in-range': cell.isInRange
                          }]"
-                         ng-click="$ctrl.onClickDay(cell)">
+                         ng-click="$ctrl.onClickDay(cell)"
+                         ng-mouseenter="$ctrl.onCellMouseEnter(cell)">
                         <span ng-bind="cell.text"></span>
                     </div>
                 </div>
@@ -70,6 +80,7 @@
             <div class="mob-date-picker__header__container">
                 <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-left class="btn"
+                                                ng-class="{'is-disabled': $ctrl.isPrevYearNavDisabled()}"
                                                 ng-click="$ctrl.goPrevYear()"></mob-icon-double-arrow-left>
                 </div>
                 <div class="mob-date-picker__header_title">
@@ -77,6 +88,7 @@
                 </div>
                 <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-right class="btn"
+                                                 ng-class="{'is-disabled': $ctrl.isNextYearNavDisabled()}"
                                                  ng-click="$ctrl.goNextYear()"></mob-icon-double-arrow-right>
                 </div>
             </div>
@@ -88,9 +100,13 @@
                          ng-class="[cell.customClass, {
                             'current': cell.isCurrentMonth,
                             'selected': cell.selected,
-                            'disabled': cell.disabled
+                            'disabled': cell.disabled,
+                            'range-start': cell.isRangeStart,
+                            'range-end': cell.isRangeEnd,
+                            'in-range': cell.isInRange
                          }]"
-                         ng-click="$ctrl.onClickMonth(cell)">
+                         ng-click="$ctrl.onClickMonth(cell)"
+                         ng-mouseenter="$ctrl.onCellMouseEnter(cell)">
                         <span ng-bind="cell.text"></span>
                     </div>
                 </div>
@@ -104,6 +120,7 @@
             <div class="mob-date-picker__header__container">
                 <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-left class="btn"
+                                                ng-class="{'is-disabled': $ctrl.isPrevYearNavDisabled()}"
                                                 ng-click="$ctrl.goPrevYear()"></mob-icon-double-arrow-left>
                 </div>
                 <div class="mob-date-picker__header_title">
@@ -111,6 +128,7 @@
                 </div>
                 <div class="mob-date-picker__header-btns">
                     <mob-icon-double-arrow-right class="btn"
+                                                 ng-class="{'is-disabled': $ctrl.isNextYearNavDisabled()}"
                                                  ng-click="$ctrl.goNextYear()"></mob-icon-double-arrow-right>
                 </div>
             </div>
@@ -122,9 +140,13 @@
                          ng-class="[cell.customClass, {
                             'current': cell.isCurrentYear,
                             'selected': cell.selected,
-                            'disabled': cell.disabled
+                            'disabled': cell.disabled,
+                            'range-start': cell.isRangeStart,
+                            'range-end': cell.isRangeEnd,
+                            'in-range': cell.isInRange
                          }]"
-                         ng-click="$ctrl.onClickYear(cell)">
+                         ng-click="$ctrl.onClickYear(cell)"
+                         ng-mouseenter="$ctrl.onCellMouseEnter(cell)">
                         <span ng-bind="cell.text"></span>
                     </div>
                 </div>

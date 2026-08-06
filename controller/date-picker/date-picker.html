@@ -1,0 +1,375 @@
+<section class="mob-doc content">
+    <h2>DatePicker 日期选择器</h2>
+    <p class="mob-doc-desc">
+        在 DatePickerPane 之上提供输入框与弹出层。值契约与 Pane 一致（civil date → UTC 字符串），
+        默认 <code>value-format</code> 为 <code>YYYY-MM-DD HH:mm:ss</code>；输入框展示由 <code>format</code> 控制。
+    </p>
+
+    <div class="mob-doc content">
+
+        <!-- ========== 基础用法 ========== -->
+        <h3>基础用法</h3>
+        <p>以「日」为基本单位。输入框只读，点击打开面板，选完关闭。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-picker
+                        ng-model="ctrl.date1"
+                        type="'date'"
+                        clearable="true"
+                        on-change="ctrl.onChange(value, type)">
+                    </mob-date-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.date1}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker ng-model="date" type="'date'"></mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ========== 周 / 月 / 年 ========== -->
+        <h3>周 / 月 / 年</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">week</p>
+                        <mob-date-picker ng-model="ctrl.week1" type="'week'"></mob-date-picker>
+                        <p style="margin-top:8px;color:#909399;font-size:13px;max-width:240px;word-break:break-all;">{{ctrl.week1}}</p>
+                    </div>
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">month</p>
+                        <mob-date-picker ng-model="ctrl.month1" type="'month'"></mob-date-picker>
+                        <p style="margin-top:8px;color:#909399;font-size:13px;">{{ctrl.month1}}</p>
+                    </div>
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">year</p>
+                        <mob-date-picker ng-model="ctrl.year1" type="'year'"></mob-date-picker>
+                        <p style="margin-top:8px;color:#909399;font-size:13px;">{{ctrl.year1}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker ng-model="week" type="'week'"></mob-date-picker>
+                        <mob-date-picker ng-model="month" type="'month'"></mob-date-picker>
+                        <mob-date-picker ng-model="year" type="'year'"></mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ========== 多选 ========== -->
+        <h3>多选</h3>
+        <p><code>dates</code> / <code>months</code> / <code>years</code> 点选即时写入，点面板外关闭。可用 <code>max-select-limit</code>。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <div>
+                        <mob-date-picker
+                            ng-model="ctrl.dates1"
+                            type="'dates'"
+                            max-select-limit="3"
+                            style="width:280px;">
+                        </mob-date-picker>
+                        <p style="margin-top:8px;color:#909399;font-size:13px;max-width:280px;word-break:break-all;">{{ctrl.dates1}}</p>
+                    </div>
+                    <div>
+                        <mob-date-picker ng-model="ctrl.months1" type="'months'" style="width:280px;"></mob-date-picker>
+                    </div>
+                    <div>
+                        <mob-date-picker ng-model="ctrl.years1" type="'years'" style="width:280px;"></mob-date-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker ng-model="dates" type="'dates'" max-select-limit="3"></mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ========== 范围 ========== -->
+        <h3>日期范围</h3>
+        <p>
+            <code>type="'daterange'"</code>。支持 <code>start</code> / <code>end</code> 与 <code>ng-model</code> 同步；
+            选齐后保证 start ≤ end。分隔符默认 <code>~</code>，可由 <code>range-separator</code> 配置。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-picker
+                        ng-model="ctrl.dateRange1"
+                        start="ctrl.dateRangeStart"
+                        end="ctrl.dateRangeEnd"
+                        type="'daterange'"
+                        range-separator="'~'"
+                        on-calendar-change="ctrl.onCalendarChange(dates)"
+                        on-visible-change="ctrl.onVisibleChange(visible)">
+                    </mob-date-picker>
+                    <div style="margin-top:8px;font-size:13px;color:#909399;">
+                        <div>ngModel：{{ctrl.dateRange1}}</div>
+                        <div>start：{{ctrl.dateRangeStart}}　end：{{ctrl.dateRangeEnd}}</div>
+                        <div>calendar-change：{{ctrl.calendarDates}}</div>
+                        <div>visible：{{ctrl.visible}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker
+                            ng-model="range"
+                            start="start"
+                            end="end"
+                            type="'daterange'">
+                        </mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>月份 / 年份范围</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <mob-date-picker ng-model="ctrl.monthRange1" type="'monthrange'"></mob-date-picker>
+                    <mob-date-picker ng-model="ctrl.yearRange1" type="'yearrange'"></mob-date-picker>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker ng-model="monthRange" type="'monthrange'"></mob-date-picker>
+                        <mob-date-picker ng-model="yearRange" type="'yearrange'"></mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ========== 快捷方式 ========== -->
+        <h3>快捷选项</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <mob-date-picker
+                        ng-model="ctrl.date3"
+                        type="'date'"
+                        shortcuts="ctrl.dateShortcuts">
+                    </mob-date-picker>
+                    <mob-date-picker
+                        ng-model="ctrl.dateRange2"
+                        type="'daterange'"
+                        shortcuts="ctrl.rangeShortcuts">
+                    </mob-date-picker>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker
+                            ng-model="date"
+                            type="'date'"
+                            shortcuts="shortcuts">
+                        </mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ========== 禁用 ========== -->
+        <h3>禁用</h3>
+        <p>整控件 <code>disabled</code>；或透传 <code>disabled-date</code> 禁用部分日期。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <mob-date-picker ng-model="ctrl.date2" type="'date'" disabled="true"></mob-date-picker>
+                    <mob-date-picker
+                        ng-model="ctrl.date1"
+                        type="'date'"
+                        disabled-date="ctrl.disableBeforeToday">
+                    </mob-date-picker>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-picker ng-model="date" disabled="true"></mob-date-picker>
+                        <mob-date-picker ng-model="date" disabled-date="disableBeforeToday"></mob-date-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <!-- ========== API ========== -->
+        <h3>API</h3>
+        <h4>Attributes</h4>
+        <div class="mob-doc-table-wrapper">
+            <table class="mob-doc-table">
+                <thead>
+                <tr>
+                    <th>属性名</th>
+                    <th>说明</th>
+                    <th>类型</th>
+                    <th>可选值</th>
+                    <th>默认值</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>ng-model</code></td>
+                    <td>绑定值</td>
+                    <td>string / string[] / null</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code>start</code> / <code>end</code></td>
+                    <td>仅 range，与 ngModel 双向同步</td>
+                    <td>string / null</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code>type</code></td>
+                    <td>选择类型</td>
+                    <td>string</td>
+                    <td>date / dates / week / month / months / year / years / daterange / monthrange / yearrange</td>
+                    <td>date</td>
+                </tr>
+                <tr>
+                    <td><code>value-format</code></td>
+                    <td>绑定值格式（透传 Pane）</td>
+                    <td>string</td>
+                    <td>—</td>
+                    <td>YYYY-MM-DD HH:mm:ss</td>
+                </tr>
+                <tr>
+                    <td><code>format</code></td>
+                    <td>输入框展示格式</td>
+                    <td>string</td>
+                    <td>—</td>
+                    <td>按 type 不同</td>
+                </tr>
+                <tr>
+                    <td><code>placeholder</code></td>
+                    <td>占位文案</td>
+                    <td>string</td>
+                    <td>—</td>
+                    <td>请选择日期</td>
+                </tr>
+                <tr>
+                    <td><code>disabled</code></td>
+                    <td>禁用整控件</td>
+                    <td>boolean</td>
+                    <td>—</td>
+                    <td>false</td>
+                </tr>
+                <tr>
+                    <td><code>disabled-date</code></td>
+                    <td>日期禁用函数，透传 Pane</td>
+                    <td>Function</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code>clearable</code></td>
+                    <td>是否可清空（禁用时不展示）</td>
+                    <td>boolean</td>
+                    <td>—</td>
+                    <td>true</td>
+                </tr>
+                <tr>
+                    <td><code>shortcuts</code></td>
+                    <td>快捷选项</td>
+                    <td>Array&lt;{text, value}&gt;</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code>default-value</code></td>
+                    <td>无值时面板锚点，透传 Pane</td>
+                    <td>string</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code>max-select-limit</code></td>
+                    <td>多选上限</td>
+                    <td>number</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code>range-separator</code></td>
+                    <td>范围分隔符</td>
+                    <td>string</td>
+                    <td>—</td>
+                    <td>~</td>
+                </tr>
+                <tr>
+                    <td><code>size</code></td>
+                    <td>输入框尺寸</td>
+                    <td>string</td>
+                    <td>large / default / small</td>
+                    <td>—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Events</h4>
+        <div class="mob-doc-table-wrapper">
+            <table class="mob-doc-table">
+                <thead>
+                <tr>
+                    <th>事件名</th>
+                    <th>说明</th>
+                    <th>回调参数</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>on-change</code> / <code>ng-change</code></td>
+                    <td>值变化，先更新 ngModel</td>
+                    <td><code>(value, type)</code></td>
+                </tr>
+                <tr>
+                    <td><code>on-visible-change</code></td>
+                    <td>弹层打开 / 关闭</td>
+                    <td><code>(visible)</code></td>
+                </tr>
+                <tr>
+                    <td><code>on-panel-change</code></td>
+                    <td>面板翻页 / 下钻（透传 Pane）</td>
+                    <td><code>(date, mode, view)</code></td>
+                </tr>
+                <tr>
+                    <td><code>on-calendar-change</code></td>
+                    <td>仅 range 选点过程</td>
+                    <td><code>(dates)</code></td>
+                </tr>
+                <tr>
+                    <td><code>on-focus</code> / <code>on-blur</code></td>
+                    <td>聚焦 / 失焦</td>
+                    <td>—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
