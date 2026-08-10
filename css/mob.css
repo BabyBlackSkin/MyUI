@@ -143,35 +143,9 @@
     --mob-table-fixed-right-column: inset -10px 0 10px -10px rgba(0, 0, 0, .15);
 
     /* date-picker */
-    --mob-date-off-text-color: var(--mob-placeholder-text-color);
-
-
-    /*--mob-calendar-col-height:60px;*/
-    --mob-calendar-col-padding:10px;
-    --mob-calendar-col-span-width:60px;
-    --mob-calendar-col-span-height:40px;
-    --mob-calendar-col-span-border-radius: 30px;
-    --mob-calendar-date-col-width:45px;
-    --mob-calendar-date-width:45px;
-    --mob-calendar-date-height:32px;
-    --mob-calendar-date-col-padding:4px;
-    --mob-calendar-date-col-span-width:24px;
-    --mob-calendar-date-col-span-fontSize:12px;
-
-    --mob-calendar-header-padding:10px;
-
-
-    --mob-date-sider-width:110px;
-    --mob-date-sider-button-line-height: 28px;
-
-    --mob-date-container-padding: 10px;
-    --mob-date-yeaer-month-col: 4;
-    --mob-date-container-year-month-col-width: calc((var(--mob-calendar-col-padding) * 2 + var(--mob-calendar-col-span-width)));
-    --mob-date-container-date-col-width: calc((var(--mob-calendar-date-col-padding) * 2 + var(--mob-calendar-date-col-span-width)));
-    --mob-date-container-year-month-width: calc(var(--mob-date-container-year-month-col-width) * var(--mob-date-yeaer-month-col));
-    --mob-date-year-month-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) + var(--mob-date-sider-width)));
-    --mob-date-year-month-range-maxWidth: calc((var(--mob-date-container-year-month-width) * 2));
-    --mob-date-year-month-range-shortcuts-maxWidth: calc((var(--mob-date-container-year-month-width) * 2 + var(--mob-date-sider-width)));
+    --date-picker-pane-width: 320px;
+    --mob-date-picker-pane-cell: 42px;
+    --mob-date-picker-pane-week-num: 36px;
 
     --mob-collapse-header-height: 48px;
     --mob-collapse-border-color: var(--mob-lighter-border-color);
@@ -290,12 +264,12 @@ mob-date-year, mob-date-month, mob-date-date,mob-date-year-range,mob-date-month-
     display: inline-block;
 }
 
-mob-input,mob-select, mob-tree-select,  mob-time-spinner {
+mob-input,mob-select, mob-tree-select {
     min-width: 200px;
     width: 100%;
 }
 
-mob-time-picker, mob-select, mob-time-spinner, mob-divider, mob-tree-select, mob-date, mob-date-picker {
+mob-time-picker, mob-select, mob-divider, mob-tree-select, mob-date, mob-date-picker {
     display: block;
 }
 

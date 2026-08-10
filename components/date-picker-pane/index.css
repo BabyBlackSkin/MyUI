@@ -1,11 +1,9 @@
 /* DatePickerPane 日期面板 */
 mob-date-picker-pane {
     display: block;
-    width: 322px;
+    width: var(--date-picker-pane-width);
     user-select: none;
     color: var(--mob-regular-text-color);
-    --mob-date-picker-pane-cell: 42px;
-    --mob-date-picker-pane-week-num: 36px;
 }
 
 mob-date-picker-pane .mob-date-picker-pane {
@@ -145,7 +143,7 @@ mob-date-picker-pane .mob-date-picker__calendar-row > div:not(.disabled):not(.mo
     cursor: pointer;
 }
 
-mob-date-picker-pane .mob-date-picker__calendar-row > div:not(.disabled):not(.mob-date-picker__week-number):hover span {
+mob-date-picker-pane .mob-date-picker__calendar-row > div:not(.disabled):not(.mob-date-picker__week-number):not(.selected):hover span {
     color: var(--mob-primary-color);
 }
 
