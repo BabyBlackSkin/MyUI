@@ -1,0 +1,36 @@
+<div class="mob-time-picker"
+     ng-class="{
+        'is-disabled': $ctrl.disabled,
+        'mob-time-picker--large': $ctrl.size === 'large',
+        'mob-time-picker--small': $ctrl.size === 'small'
+     }">
+    <div class="mob-input"
+         ng-class="{'is_clearable': $ctrl.clearable, 'is_disabled': $ctrl.disabled}">
+        <div class="mob-input__wrapper mob-time-picker-wrapper mob_popper__target"
+             popper-group="mobTimePicker">
+            <span class="mob-input__prefix">
+                <span class="mob-input__prefix-inner">
+                    <mob-icon-clock class="icon"></mob-icon-clock>
+                </span>
+            </span>
+
+            <input type="text"
+                   autocomplete="off"
+                   class="mob-input__inner custom"
+                   ng-readonly="!$ctrl.editable || $ctrl.disabled"
+                   ng-model="$ctrl.displayText"
+                   ng-model-options="{updateOn: 'default blur', debounce: {default: 0, blur: 0}}"
+                   placeholder="{{$ctrl.placeholder}}"
+                   ng-disabled="$ctrl.disabled"
+                   ng-focus="$ctrl.onInputFocus()"
+                   ng-blur="$ctrl.onInputBlur()"
+                   ng-keydown="$ctrl.onInputKeydown($event)"/>
+
+            <span class="mob-input__suffix" ng-if="$ctrl.showClear()" ng-click="$ctrl.clearModel($event)">
+                <span class="mob-input__suffix-inner">
+                    <mob-icon-circle-close class="mob-input_clear"></mob-icon-circle-close>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>

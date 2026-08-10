@@ -1,0 +1,39 @@
+<div class="mob-time-spinner"
+     ng-class="{
+        'has-seconds': $ctrl.hasSeconds(),
+        'is-arrow': $ctrl.arrowControl
+     }">
+    <div class="mob-time-spinner__wrapper"
+         ng-repeat="col in $ctrl.columns track by col.type">
+        <!-- 箭头模式 -->
+        <div class="mob-time-spinner__arrow-wrap" ng-if="$ctrl.arrowControl">
+            <span class="mob-time-spinner__arrow"
+                  ng-class="{'is-disabled': $ctrl.isArrowDisabled(col.type, -1)}"
+                  ng-click="$ctrl.stepColumn(col.type, -1, $event)">
+                <mob-icon-arrow-up></mob-icon-arrow-up>
+            </span>
+            <span class="mob-time-spinner__arrow-value"
+                  ng-bind="$ctrl.getPartLabel(col.type)"></span>
+            <span class="mob-time-spinner__arrow"
+                  ng-class="{'is-disabled': $ctrl.isArrowDisabled(col.type, 1)}"
+                  ng-click="$ctrl.stepColumn(col.type, 1, $event)">
+                <mob-icon-arrow-down></mob-icon-arrow-down>
+            </span>
+        </div>
+
+        <!-- 滚动列表模式 -->
+        <ul class="mob-time-spinner__list"
+            ng-if="!$ctrl.arrowControl"
+            ng-attr-data-type="{{col.type}}">
+            <li class="mob-time-spinner__item"
+                ng-repeat="item in col.list track by item.value"
+                ng-class="{
+                    'is-active': item.value === $ctrl.parts[col.type],
+                    'is-disabled': item.disabled
+                }"
+                ng-click="$ctrl.selectPart(col.type, item, $event)"
+                ng-bind="item.label">
+            </li>
+        </ul>
+    </div>
+</div>

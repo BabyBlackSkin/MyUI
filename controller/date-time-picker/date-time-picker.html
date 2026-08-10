@@ -1,0 +1,260 @@
+<section class="mob-doc content">
+    <h2>DateTimePicker 日期时间选择器</h2>
+    <p class="mob-doc-desc">
+        独立组件，内部拼 DatePickerPane + TimeSpinner。
+        支持 <code>type="'datetime'"</code>（默认）与 <code>type="'datetimerange'"</code>。
+        默认 <code>format</code> / <code>value-format</code> 均为 <code>YYYY-MM-DD HH:mm:ss</code>。
+        顶部日期 + 时间入口（二级下拉）；外层「确定」写入。Esc / 点外面：先关二级再关主面板。
+    </p>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <p>点输入框打开面板；顶部点时间框弹出二级时间面板（取消 / 确定）；选完后点底部「确定」写入。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        ng-model="ctrl.dt1"
+                        on-change="ctrl.onChange(value)"
+                        on-visible-change="ctrl.onVisibleChange(visible)"
+                        on-calendar-change="ctrl.onCalendarChange(dates)">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.dt1}}</span>
+                    <div style="margin-top:8px;font-size:13px;color:#909399;">
+                        visible：{{ctrl.visible}}　lastChange：{{ctrl.lastChange}}　calendar：{{ctrl.lastCalendar}}
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker ng-model="datetime"></mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>展示格式</h3>
+        <p><code>format="'YYYY-MM-DD HH:mm'"</code> 时时间列不出秒；写入 <code>value-format</code> 时秒补 <code>00</code>。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        ng-model="ctrl.dt2"
+                        format="'YYYY-MM-DD HH:mm'"
+                        value-format="'YYYY-MM-DD HH:mm:ss'">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.dt2}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker
+                            ng-model="datetime"
+                            format="'YYYY-MM-DD HH:mm'"
+                            value-format="'YYYY-MM-DD HH:mm:ss'">
+                        </mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>箭头选择</h3>
+        <p><code>arrow-control</code> 为 true 时时间列使用上下箭头。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        ng-model="ctrl.dtArrow"
+                        arrow-control="true">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.dtArrow}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker ng-model="datetime" arrow-control="true"></mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>禁用日期 / 时刻</h3>
+        <p>
+            <code>disabled-date</code> 透传 Pane；
+            <code>disabled-hours</code> / <code>disabled-minutes</code> / <code>disabled-seconds</code> 透传 Spinner。
+            临时值非法时「确定」不可用；「此刻」落在禁用上不写入。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        ng-model="ctrl.dt4"
+                        disabled-date="ctrl.disabledDate"
+                        disabled-hours="ctrl.disabledHours"
+                        disabled-minutes="ctrl.disabledMinutes"
+                        disabled-seconds="ctrl.disabledSeconds">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.dt4}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker
+                            ng-model="datetime"
+                            disabled-date="disabledDate"
+                            disabled-hours="disabledHours">
+                        </mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>快捷选项</h3>
+        <p>点快捷项立刻写入并关层；值须为完整日期时间字符串（按 <code>value-format</code>）。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        ng-model="ctrl.dtShortcut"
+                        shortcuts="ctrl.shortcuts">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.dtShortcut}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker
+                            ng-model="datetime"
+                            shortcuts="shortcuts">
+                        </mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>只读输入 / 禁用</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">editable=false</p>
+                        <mob-date-time-picker
+                            ng-model="ctrl.dt3"
+                            editable="false">
+                        </mob-date-time-picker>
+                    </div>
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">disabled</p>
+                        <mob-date-time-picker
+                            ng-model="ctrl.dt5"
+                            disabled="true">
+                        </mob-date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker ng-model="datetime" editable="false"></mob-date-time-picker>
+                        <mob-date-time-picker ng-model="datetime" disabled="true"></mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>日期时间范围</h3>
+        <p>
+            <code>type="'datetimerange'"</code>：顶栏起止日期/时间铺满，双日历选范围；页脚仅「确定」（无「此刻」）。
+            <code>ngModel</code> 为 <code>[start, end]</code>；可选双向 <code>start</code> / <code>end</code>。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        type="'datetimerange'"
+                        ng-model="ctrl.range1"
+                        start="ctrl.rangeStart"
+                        end="ctrl.rangeEnd"
+                        on-change="ctrl.onChange(value)"
+                        on-calendar-change="ctrl.onCalendarChange(dates)">
+                    </mob-date-time-picker>
+                    <div style="margin-top:8px;font-size:13px;color:#909399;">
+                        model：{{ctrl.range1}}　start：{{ctrl.rangeStart}}　end：{{ctrl.rangeEnd}}
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker
+                            type="'datetimerange'"
+                            ng-model="range"
+                            start="start"
+                            end="end">
+                        </mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>范围默认值</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        type="'datetimerange'"
+                        ng-model="ctrl.range2">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.range2}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker type="'datetimerange'" ng-model="range"></mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>范围快捷选项</h3>
+        <p>快捷须返回长度 2 的完整日期时间数组，点后立刻写入并关层。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-date-time-picker
+                        type="'datetimerange'"
+                        ng-model="ctrl.rangeShortcut"
+                        shortcuts="ctrl.rangeShortcuts">
+                    </mob-date-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.rangeShortcut}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-date-time-picker
+                            type="'datetimerange'"
+                            ng-model="range"
+                            shortcuts="rangeShortcuts">
+                        </mob-date-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+</section>

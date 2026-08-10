@@ -1,0 +1,174 @@
+<section class="mob-doc content">
+    <h2>TimePicker 时间选择器</h2>
+    <p class="mob-doc-desc">
+        输入框 + 弹层，内部复用 TimeSpinner。
+        <code>ngModel</code> 为纯时间字符串；默认 <code>format</code> / <code>value-format</code> 均为 <code>HH:mm:ss</code>。
+        面板内为临时选中，点「确定」写入；Esc / 点外面丢弃。
+    </p>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <p>点击输入框打开面板，选择后点「确定」。支持「此刻」、清空。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-time-picker
+                        ng-model="ctrl.time1"
+                        on-change="ctrl.onChange(value)"
+                        on-visible-change="ctrl.onVisibleChange(visible)">
+                    </mob-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.time1}}</span>
+                    <div style="margin-top:8px;font-size:13px;color:#909399;">
+                        visible：{{ctrl.visible}}　lastChange：{{ctrl.lastChange}}
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-picker ng-model="time"></mob-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>展示格式</h3>
+        <p><code>format="'HH:mm'"</code> 时面板只出时、分两列；写入 <code>value-format</code> 时秒补 <code>00</code>。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-time-picker
+                        ng-model="ctrl.time2"
+                        format="'HH:mm'"
+                        value-format="'HH:mm:ss'">
+                    </mob-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.time2}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-picker
+                            ng-model="time"
+                            format="'HH:mm'"
+                            value-format="'HH:mm:ss'">
+                        </mob-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>箭头选择</h3>
+        <p><code>arrow-control</code> 为 true 时使用上下箭头。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-time-picker
+                        ng-model="ctrl.timeArrow"
+                        arrow-control="true">
+                    </mob-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.timeArrow}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-picker ng-model="time" arrow-control="true"></mob-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>禁用时刻</h3>
+        <p>
+            <code>disabled-hours</code> / <code>disabled-minutes</code> / <code>disabled-seconds</code>。
+            禁用项灰显；临时值非法时「确定」不可用；「此刻」落在禁用上不写入。
+        </p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child">
+                    <mob-time-picker
+                        ng-model="ctrl.time4"
+                        disabled-hours="ctrl.disabledHours"
+                        disabled-minutes="ctrl.disabledMinutes"
+                        disabled-seconds="ctrl.disabledSeconds">
+                    </mob-time-picker>
+                    <span style="margin-left:12px;">值：{{ctrl.time4}}</span>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-picker
+                            ng-model="time"
+                            disabled-hours="disabledHours"
+                            disabled-minutes="disabledMinutes">
+                        </mob-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>只读输入 / 禁用</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">editable=false</p>
+                        <mob-time-picker ng-model="ctrl.time3" editable="false"></mob-time-picker>
+                    </div>
+                    <div>
+                        <p style="margin-bottom:8px;font-weight:600;">disabled</p>
+                        <mob-time-picker ng-model="ctrl.time5" disabled="true"></mob-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-picker ng-model="time" editable="false"></mob-time-picker>
+                        <mob-time-picker ng-model="time" disabled="true"></mob-time-picker>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>Attributes</h3>
+        <table class="mob-doc-table">
+            <thead>
+            <tr><th>属性</th><th>说明</th><th>类型</th><th>默认</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>ng-model</td><td>绑定值（纯时间字符串 / null）</td><td>string / null</td><td>—</td></tr>
+            <tr><td>format</td><td>输入框展示格式，并决定面板列</td><td>string</td><td>HH:mm:ss</td></tr>
+            <tr><td>value-format</td><td>绑定格式</td><td>string</td><td>HH:mm:ss</td></tr>
+            <tr><td>placeholder</td><td>占位文案</td><td>string</td><td>选择时间</td></tr>
+            <tr><td>disabled</td><td>是否禁用</td><td>boolean</td><td>false</td></tr>
+            <tr><td>editable</td><td>输入框是否可键盘编辑</td><td>boolean</td><td>true</td></tr>
+            <tr><td>clearable</td><td>是否可清空</td><td>boolean</td><td>true</td></tr>
+            <tr><td>arrow-control</td><td>是否使用箭头选择</td><td>boolean</td><td>false</td></tr>
+            <tr><td>disabled-hours</td><td>() =&gt; number[]</td><td>Function</td><td>—</td></tr>
+            <tr><td>disabled-minutes</td><td>(hour) =&gt; number[]</td><td>Function</td><td>—</td></tr>
+            <tr><td>disabled-seconds</td><td>(hour, minute) =&gt; number[]</td><td>Function</td><td>—</td></tr>
+            <tr><td>size</td><td>large / default / small</td><td>string</td><td>—</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="mob-doc-table">
+            <thead>
+            <tr><th>事件</th><th>说明</th><th>参数</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>on-change / ng-change</td><td>确定 / 合法输入 / 清空 / 成功的「此刻」后</td><td>value</td></tr>
+            <tr><td>on-visible-change</td><td>弹层显隐</td><td>visible</td></tr>
+            <tr><td>on-focus / on-blur</td><td>焦点</td><td>—</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

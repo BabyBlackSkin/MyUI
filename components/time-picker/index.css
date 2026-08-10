@@ -1,0 +1,108 @@
+/* TimePicker 时间选择器（输入框 + 弹层） */
+mob-time-picker {
+    display: inline-block;
+    width: 180px;
+    vertical-align: middle;
+}
+
+.mob-time-picker {
+    width: 100%;
+}
+
+.mob-time-picker .mob-time-picker-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+.mob-time-picker.is-disabled .mob-time-picker-wrapper {
+    cursor: not-allowed;
+}
+
+.mob-time-picker .mob-time-picker-wrapper .icon {
+    color: var(--mob-placeholder-text-color);
+}
+
+.mob-time-picker .mob-time-picker-wrapper input {
+    text-align: left;
+    cursor: pointer;
+}
+
+.mob-time-picker .mob-time-picker-wrapper input:not([readonly]) {
+    cursor: text;
+}
+
+.mob-time-picker.is-disabled .mob-time-picker-wrapper input {
+    cursor: not-allowed;
+}
+
+.mob-time-picker--large .mob-input__wrapper {
+    min-height: 40px;
+}
+
+.mob-time-picker--small .mob-input__wrapper {
+    min-height: 24px;
+}
+
+.mob-time-picker--small .mob-input__inner {
+    font-size: 12px;
+}
+
+.mob-popper-down.mob-time-picker .mob-popper-down__wrapper {
+    padding: 0;
+}
+
+.mob-popper-down.mob-time-picker .mob-popper-down__inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 140px;
+    box-sizing: border-box;
+}
+
+.mob-time-picker__panel {
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mob-time-picker__panel mob-time-spinner,
+.mob-time-picker__panel .mob-time-spinner {
+    width: 100%;
+}
+
+.mob-time-picker__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    border-top: 1px solid var(--mob-border-color);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mob-time-picker__btn {
+    border: none;
+    background: transparent;
+    color: var(--mob-primary-color);
+    font-size: 12px;
+    line-height: 28px;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.mob-time-picker__btn:hover:not(:disabled) {
+    color: var(--mob-primary-light-color2, #66b1ff);
+}
+
+.mob-time-picker__btn:disabled,
+.mob-time-picker__btn.is-disabled {
+    color: var(--mob-disabled-text-color, #c0c4cc);
+    cursor: not-allowed;
+}
+
+.mob-time-picker__btn.is-confirm {
+    font-weight: 600;
+}

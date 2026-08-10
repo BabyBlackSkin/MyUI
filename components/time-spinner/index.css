@@ -1,0 +1,133 @@
+/* TimeSpinner 时分秒列 */
+mob-time-spinner {
+    display: block;
+    vertical-align: top;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.mob-time-spinner {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.mob-time-spinner__wrapper {
+    flex: 1 1 0;
+    min-width: 56px;
+    width: auto;
+    max-height: 192px;
+    overflow: hidden;
+    border-right: 1px solid var(--mob-border-color);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.mob-time-spinner__wrapper:last-child {
+    border-right: none;
+}
+
+.mob-time-spinner__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 192px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.mob-time-spinner__item {
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--mob-text-color-regular);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.mob-time-spinner__item:hover:not(.is-disabled) {
+    background-color: var(--mob-fill-color-light);
+    color: var(--mob-primary-color);
+}
+
+.mob-time-spinner__item.is-active {
+    color: var(--mob-primary-color);
+    font-weight: 600;
+    background-color: var(--mob-primary-light-color9, #ecf5ff);
+}
+
+.mob-time-spinner__item.is-disabled {
+    color: var(--mob-disabled-text-color, #c0c4cc);
+    cursor: not-allowed;
+    background-color: transparent;
+}
+
+/* 箭头模式 */
+.mob-time-spinner.is-arrow .mob-time-spinner__wrapper {
+    max-height: none;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+}
+
+.mob-time-spinner__arrow-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+}
+
+.mob-time-spinner__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 24px;
+    cursor: pointer;
+    color: var(--mob-secondary-text-color, #909399);
+    font-size: 14px;
+    line-height: 1;
+}
+
+.mob-time-spinner__arrow mob-icon-arrow-up,
+.mob-time-spinner__arrow mob-icon-arrow-down,
+.mob-time-spinner__arrow mob-icon,
+.mob-time-spinner__arrow .mob-icon__wrapper {
+    display: inline-flex;
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+}
+
+.mob-time-spinner__arrow svg {
+    width: 14px;
+    height: 14px;
+}
+
+.mob-time-spinner__arrow:hover:not(.is-disabled) {
+    color: var(--mob-primary-color);
+}
+
+.mob-time-spinner__arrow.is-disabled {
+    color: var(--mob-disabled-text-color, #c0c4cc);
+    cursor: not-allowed;
+}
+
+.mob-time-spinner__arrow-value {
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mob-text-color-primary);
+}

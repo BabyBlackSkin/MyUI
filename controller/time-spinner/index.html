@@ -1,0 +1,113 @@
+<section class="mob-doc content">
+    <h2>TimeSpinner 时间面板</h2>
+    <p class="mob-doc-desc">
+        时 / 分 / 秒滚动列（或箭头）。独立使用时列变即写 <code>ngModel</code>；
+        嵌在 TimePicker 内时只改临时值，由 Picker 页脚确认。
+    </p>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="width:168px;border:1px solid #ebeef5;border-radius:4px;">
+                    <mob-time-spinner
+                        ng-model="ctrl.spinner1"
+                        on-change="ctrl.onChange(value)">
+                    </mob-time-spinner>
+                </div>
+                <p style="margin-top:8px;">值：{{ctrl.spinner1}}</p>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-spinner ng-model="time"></mob-time-spinner>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>仅时分 / 箭头</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+                    <div style="width:120px;border:1px solid #ebeef5;border-radius:4px;overflow:hidden;">
+                        <p style="padding:8px;margin:0;font-size:13px;color:#909399;">HH:mm</p>
+                        <mob-time-spinner
+                            ng-model="ctrl.spinner2"
+                            format="'HH:mm'"
+                            value-format="'HH:mm:ss'">
+                        </mob-time-spinner>
+                        <p style="padding:8px;margin:0;font-size:13px;">{{ctrl.spinner2}}</p>
+                    </div>
+                    <div style="width:168px;border:1px solid #ebeef5;border-radius:4px;overflow:hidden;">
+                        <p style="padding:8px;margin:0;font-size:13px;color:#909399;">arrow-control</p>
+                        <mob-time-spinner
+                            ng-model="ctrl.spinner3"
+                            arrow-control="true">
+                        </mob-time-spinner>
+                        <p style="padding:8px;margin:0;font-size:13px;">{{ctrl.spinner3}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-spinner ng-model="t" format="'HH:mm'" value-format="'HH:mm:ss'"></mob-time-spinner>
+                        <mob-time-spinner ng-model="t" arrow-control="true"></mob-time-spinner>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>禁用项（灰显）</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <div class="mob-demo-example-child" style="width:168px;border:1px solid #ebeef5;border-radius:4px;">
+                    <mob-time-spinner
+                        ng-model="ctrl.spinner1"
+                        disabled-hours="ctrl.disabledHours"
+                        disabled-minutes="ctrl.disabledMinutes"
+                        disabled-seconds="ctrl.disabledSeconds">
+                    </mob-time-spinner>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                    <code class="source-code language-markup language-js language-html language-css"
+                    ><!--
+                        <mob-time-spinner
+                            ng-model="time"
+                            disabled-hours="disabledHours">
+                        </mob-time-spinner>
+                    --></code>
+                </pre>
+            </div>
+        </div>
+
+        <h3>Attributes</h3>
+        <table class="mob-doc-table">
+            <thead>
+            <tr><th>属性</th><th>说明</th><th>类型</th><th>默认</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>ng-model</td><td>绑定值</td><td>string</td><td>—</td></tr>
+            <tr><td>format</td><td>决定显示哪些列</td><td>string</td><td>HH:mm:ss</td></tr>
+            <tr><td>value-format</td><td>写出格式</td><td>string</td><td>HH:mm:ss</td></tr>
+            <tr><td>arrow-control</td><td>箭头模式</td><td>boolean</td><td>false</td></tr>
+            <tr><td>disabled-hours / minutes / seconds</td><td>禁用函数</td><td>Function</td><td>—</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="mob-doc-table">
+            <thead>
+            <tr><th>事件</th><th>说明</th><th>参数</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>on-change</td><td>列值变化</td><td>value</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
