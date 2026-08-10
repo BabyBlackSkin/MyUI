@@ -258,6 +258,8 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
     let viewSyncing = false;
     let timePanelBackup = null;
     let rangeAwaitingEnd = false;
+    let timePanelCloseTimer = null;
+    const TIME_PANEL_ANIM_MS = 200;
 
     $ctrl.$onInit = function () {
         $ctrl.pickerType = normalizeType($ctrl.type);
@@ -281,6 +283,7 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
         $ctrl.provisionalEndTime = dtpZeroTime($ctrl.valueFormat);
         $ctrl.draftTime = $ctrl.provisionalTime;
         $ctrl.timePanelOpen = false;
+        $ctrl.timePanelShow = false;
         $ctrl.timePanelSide = null;
         $ctrl.timePanelStyle = {left: '0px', right: 'auto'};
         $ctrl.provRangeStart = null;
@@ -378,6 +381,7 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
     };
 
     $ctrl.$onDestroy = function () {
+        cancelTimePanelCloseTimer();
         unbindEsc();
         if ($scope.$popper && $scope.$popper.destroy) {
             $scope.$popper.destroy();
@@ -461,13 +465,17 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
             return;
         }
         const nextSide = $ctrl.isRange() ? (side || 'start') : 'single';
+        cancelTimePanelCloseTimer();
+
+        // 同一侧已展开：忽略；若正在收起则取消收起并重新展开
         if ($ctrl.timePanelOpen && $ctrl.timePanelSide === nextSide) {
+            if ($ctrl.timePanelShow) {
+                return;
+            }
+            $ctrl.timePanelShow = true;
             return;
         }
-        if ($ctrl.timePanelOpen) {
-            closeTimePanel(false);
-        }
-        $ctrl.timePanelSide = nextSide;
+
         if (nextSide === 'end') {
             timePanelBackup = $ctrl.provisionalEndTime;
             $ctrl.draftTime = $ctrl.provisionalEndTime;
@@ -478,9 +486,24 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
             timePanelBackup = $ctrl.provisionalTime;
             $ctrl.draftTime = $ctrl.provisionalTime;
         }
-        // 先算好 left，再打开，避免首帧 left:0 再跳动
+        $ctrl.timePanelSide = nextSide;
+        // 先算好 left，再挂载，避免首帧错位
         $ctrl.timePanelStyle = calcTimePanelStyle($event && $event.currentTarget);
+
+        // 已打开时切换起止：只换位置，不重播收起/展开
+        if ($ctrl.timePanelOpen) {
+            $ctrl.timePanelShow = true;
+            return;
+        }
+
         $ctrl.timePanelOpen = true;
+        $ctrl.timePanelShow = false;
+        // 延迟一帧再加 is-show，确保 transition 生效
+        $timeout(function () {
+            if ($ctrl.timePanelOpen) {
+                $ctrl.timePanelShow = true;
+            }
+        }, 16);
     };
 
     $ctrl.cancelTimePanel = function ($event) {
@@ -841,6 +864,13 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
         }
     }
 
+    function cancelTimePanelCloseTimer() {
+        if (timePanelCloseTimer) {
+            $timeout.cancel(timePanelCloseTimer);
+            timePanelCloseTimer = null;
+        }
+    }
+
     function calcTimePanelStyle(triggerEl) {
         const style = {left: '0px', right: 'auto'};
         if (!popperDom || !triggerEl) {
@@ -865,14 +895,31 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
         return style;
     }
 
-    function closeTimePanel(confirmed) {
+    function closeTimePanel(confirmed, immediate) {
+        cancelTimePanelCloseTimer();
         if (!confirmed && timePanelBackup != null) {
             $ctrl.draftTime = timePanelBackup;
         }
-        $ctrl.timePanelOpen = false;
-        $ctrl.timePanelSide = null;
-        $ctrl.timePanelStyle = {left: '0px', right: 'auto'};
         timePanelBackup = null;
+
+        const resetPanelState = function () {
+            $ctrl.timePanelOpen = false;
+            $ctrl.timePanelShow = false;
+            $ctrl.timePanelSide = null;
+            $ctrl.timePanelStyle = {left: '0px', right: 'auto'};
+        };
+
+        if (!$ctrl.timePanelOpen || immediate) {
+            resetPanelState();
+            return;
+        }
+
+        // 先播收起动画，结束后再销毁 DOM
+        $ctrl.timePanelShow = false;
+        timePanelCloseTimer = $timeout(function () {
+            timePanelCloseTimer = null;
+            resetPanelState();
+        }, TIME_PANEL_ANIM_MS);
     }
 
     function getSingleProvisionalText() {
@@ -1287,7 +1334,7 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
     function getTimePanelHtml() {
         return `
             <div class="mob-date-time-picker__time-panel"
-                 ng-class="{'is-end': $ctrl.timePanelSide === 'end'}"
+                 ng-class="{'is-end': $ctrl.timePanelSide === 'end', 'is-show': $ctrl.timePanelShow}"
                  ng-style="$ctrl.timePanelStyle"
                  ng-if="$ctrl.timePanelOpen"
                  ng-click="$event.stopPropagation()">
@@ -1470,7 +1517,7 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
     }
 
     function hidePopper() {
-        closeTimePanel(false);
+        closeTimePanel(false, true);
         const ref = getPopperRef();
         if (ref && ref.popperShow) {
             ref.hide();
