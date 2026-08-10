@@ -111,36 +111,36 @@ function timePickerController($scope, $element, $compile, $document, $timeout, p
     };
 
     $ctrl.$onChanges = function (changes) {
-        if (changes.valueFormat && !changes.valueFormat.isFirstChange()) {
+        if (changes.valueFormat) {
             $ctrl.valueFormat = $ctrl.valueFormat || TIME_DEFAULT_FORMAT;
             applyExternalModel($ctrl.innerValue);
         }
-        if (changes.format && !changes.format.isFirstChange()) {
+        if (changes.format) {
             $ctrl.format = $ctrl.format || TIME_DEFAULT_FORMAT;
             refreshDisplay();
             rebuildPopper();
         }
-        if (changes.placeholder && !changes.placeholder.isFirstChange()) {
+        if (changes.placeholder) {
             $ctrl.placeholder = angular.isDefined($ctrl.placeholder) ? $ctrl.placeholder : '选择时间';
         }
-        if (changes.disabled && !changes.disabled.isFirstChange()) {
+        if (changes.disabled) {
             $ctrl.disabled = !!$ctrl.disabled;
             syncHostClass();
             if ($ctrl.disabled) {
                 hidePopper();
             }
         }
-        if (changes.editable && !changes.editable.isFirstChange()) {
+        if (changes.editable) {
             $ctrl.editable = $ctrl.editable !== false;
         }
-        if (changes.clearable && !changes.clearable.isFirstChange()) {
+        if (changes.clearable) {
             $ctrl.clearable = $ctrl.clearable !== false;
         }
-        if (changes.arrowControl && !changes.arrowControl.isFirstChange()) {
+        if (changes.arrowControl) {
             $ctrl.arrowControl = !!$ctrl.arrowControl;
             rebuildPopper();
         }
-        if (changes.size && !changes.size.isFirstChange()) {
+        if (changes.size) {
             syncHostClass();
         }
     };

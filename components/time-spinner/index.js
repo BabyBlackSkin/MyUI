@@ -112,23 +112,20 @@ function controller($element, $timeout) {
     };
 
     $ctrl.$onChanges = function (changes) {
-        if (changes.format && !changes.format.isFirstChange()) {
+        if (changes.format) {
             $ctrl.format = $ctrl.format || SPINNER_DEFAULT_FORMAT;
             rebuildColumns();
             scrollActiveIntoView();
         }
-        if (changes.valueFormat && !changes.valueFormat.isFirstChange()) {
+        if (changes.valueFormat) {
             $ctrl.valueFormat = $ctrl.valueFormat || SPINNER_DEFAULT_FORMAT;
             applyExternalModel($ctrl.ngModel ? $ctrl.ngModel.$viewValue : formatTimeParts($ctrl.parts, $ctrl.valueFormat));
         }
-        if (changes.arrowControl && !changes.arrowControl.isFirstChange()) {
+        if (changes.arrowControl) {
             $ctrl.arrowControl = !!$ctrl.arrowControl;
             $timeout(scrollActiveIntoView, 0);
         }
-        if ((changes.disabledHours || changes.disabledMinutes || changes.disabledSeconds) &&
-            !((changes.disabledHours && changes.disabledHours.isFirstChange()) ||
-                (changes.disabledMinutes && changes.disabledMinutes.isFirstChange()) ||
-                (changes.disabledSeconds && changes.disabledSeconds.isFirstChange()))) {
+        if (changes.disabledHours || changes.disabledMinutes || changes.disabledSeconds) {
             rebuildColumns();
         }
     };

@@ -193,8 +193,7 @@ function controller($scope) {
         if (!$ctrl.pickerType && !changes.type) {
             return;
         }
-
-        if (changes.type && !changes.type.isFirstChange()) {
+        if (changes.type) {
             $ctrl.pickerType = $ctrl.type || PANE_TYPES.DATE;
             // type 变了：清空选中值
             writeModel(getEmptyValue($ctrl.pickerType), false);
@@ -202,50 +201,46 @@ function controller($scope) {
             rebuildPanel();
         }
 
-        if (changes.valueFormat && !changes.valueFormat.isFirstChange()) {
+        if (changes.valueFormat) {
             $ctrl.valueFormat = $ctrl.valueFormat || PANE_DEFAULT_FORMAT;
             applyModelFromOutside($ctrl.innerValue);
             rebuildPanel();
         }
 
-        if (changes.defaultValue && !changes.defaultValue.isFirstChange()) {
+        if (changes.defaultValue) {
             if (isEmptyValue($ctrl.innerValue, $ctrl.pickerType)) {
                 initViewAnchor();
                 rebuildPanel();
             }
         }
 
-        if (changes.viewDate && !changes.viewDate.isFirstChange()) {
+        if (changes.viewDate) {
             applyViewDate($ctrl.viewDate);
         }
 
-        if (
-            (changes.rangeStart || changes.rangeEnd || changes.rangeHover || changes.rangePaintTicket) &&
-            !isFirstChangeGroup(changes)
-        ) {
+        if (changes.rangeStart || changes.rangeEnd || changes.rangeHover || changes.rangePaintTicket) {
             // 外层清空 / 重绘：同步清掉 pane 内部残留选中，避免底色残留
             if ($ctrl.rangeHighlight && !$ctrl.rangeStart && !$ctrl.rangeEnd) {
                 clearInnerValueSilent();
                 $ctrl.localRangeHover = null;
             }
-            if (changes.rangeStart && !changes.rangeStart.isFirstChange()) {
+            if (changes.rangeStart) {
                 $ctrl.localRangeHover = null;
             }
         }
 
         if (
-            (changes.disabledDate ||
-                changes.cellClassName ||
-                changes.showWeekNumber ||
-                changes.maxSelectLimit ||
-                changes.rangeHighlight ||
-                changes.rangeStart ||
-                changes.rangeEnd ||
-                changes.rangeHover ||
-                changes.rangePaintTicket ||
-                changes.rangeNavSide ||
-                changes.rangePeerViewDate) &&
-            !isFirstChangeGroup(changes)
+            changes.disabledDate ||
+            changes.cellClassName ||
+            changes.showWeekNumber ||
+            changes.maxSelectLimit ||
+            changes.rangeHighlight ||
+            changes.rangeStart ||
+            changes.rangeEnd ||
+            changes.rangeHover ||
+            changes.rangePaintTicket ||
+            changes.rangeNavSide ||
+            changes.rangePeerViewDate
         ) {
             rebuildPanel();
         }
@@ -257,12 +252,6 @@ function controller($scope) {
         if ($ctrl.ngModel) {
             $ctrl.ngModel.$setViewValue(empty);
         }
-    }
-
-    function isFirstChangeGroup(changes) {
-        return Object.keys(changes).every(function (key) {
-            return changes[key].isFirstChange && changes[key].isFirstChange();
-        });
     }
 
     // ---------- 视图锚点（只影响看到哪个月/年，不写 model） ----------

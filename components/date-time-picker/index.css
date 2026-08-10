@@ -30,8 +30,8 @@ mob-date-time-picker.is-range {
 }
 
 .mob-date-time-picker .mob-date-time-picker-wrapper input {
-    text-align: left;
     cursor: pointer;
+    text-align: center;
 }
 
 .mob-date-time-picker .mob-date-time-picker-wrapper input:not([readonly]) {

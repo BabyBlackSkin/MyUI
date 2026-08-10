@@ -306,53 +306,53 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
     };
 
     $ctrl.$onChanges = function (changes) {
-        if (changes.type && !changes.type.isFirstChange()) {
+        if (changes.type) {
             $ctrl.pickerType = normalizeType($ctrl.type);
             writeModel(null, false);
             syncHostClass();
             rebuildPopper();
         }
-        if (changes.valueFormat && !changes.valueFormat.isFirstChange()) {
+        if (changes.valueFormat) {
             $ctrl.valueFormat = $ctrl.valueFormat || DTP_DEFAULT_FORMAT;
             $ctrl.timeValueFormat = dtpDeriveTimeFormat($ctrl.valueFormat);
             applyExternalModel($ctrl.innerValue);
             rebuildPopper();
         }
-        if (changes.format && !changes.format.isFirstChange()) {
+        if (changes.format) {
             $ctrl.format = $ctrl.format || DTP_DEFAULT_FORMAT;
             $ctrl.timeFormat = dtpDeriveTimeFormat($ctrl.format);
             $ctrl.dateFormat = dtpDeriveDateFormat($ctrl.format);
             refreshDisplay();
             rebuildPopper();
         }
-        if (changes.placeholder && !changes.placeholder.isFirstChange()) {
+        if (changes.placeholder) {
             $ctrl.placeholder = angular.isDefined($ctrl.placeholder) ? $ctrl.placeholder : '选择日期时间';
         }
-        if (changes.rangeSeparator && !changes.rangeSeparator.isFirstChange()) {
+        if (changes.rangeSeparator) {
             $ctrl.rangeSeparator = angular.isDefined($ctrl.rangeSeparator) ? $ctrl.rangeSeparator : '~';
             refreshDisplay();
         }
-        if (changes.disabled && !changes.disabled.isFirstChange()) {
+        if (changes.disabled) {
             $ctrl.disabled = !!$ctrl.disabled;
             syncHostClass();
             if ($ctrl.disabled) {
                 hidePopper();
             }
         }
-        if (changes.editable && !changes.editable.isFirstChange()) {
+        if (changes.editable) {
             $ctrl.editable = $ctrl.editable !== false;
         }
-        if (changes.clearable && !changes.clearable.isFirstChange()) {
+        if (changes.clearable) {
             $ctrl.clearable = $ctrl.clearable !== false;
         }
-        if (changes.arrowControl && !changes.arrowControl.isFirstChange()) {
+        if (changes.arrowControl) {
             $ctrl.arrowControl = !!$ctrl.arrowControl;
             rebuildPopper();
         }
-        if (changes.size && !changes.size.isFirstChange()) {
+        if (changes.size) {
             syncHostClass();
         }
-        if (changes.shortcuts && !changes.shortcuts.isFirstChange()) {
+        if (changes.shortcuts) {
             rebuildPopper();
         }
     };

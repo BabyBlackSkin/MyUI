@@ -231,8 +231,9 @@ function controller($scope, $element, $document, $compile, popper) {
         syncHostClass();
     };
 
+    // AngularJS 1.5.3 的 $onChanges 变更对象只有 previousValue/currentValue，无 isFirstChange()
     $ctrl.$onChanges = function (changes) {
-        if (changes.type && !changes.type.isFirstChange()) {
+        if (changes.type) {
             $ctrl.pickerType = normalizeType($ctrl.type);
             $ctrl.paneType = toPaneType($ctrl.pickerType);
             if (!$ctrl.format || changes.type) {
@@ -242,28 +243,28 @@ function controller($scope, $element, $document, $compile, popper) {
             syncHostClass();
             rebuildPopper();
         }
-        if (changes.valueFormat && !changes.valueFormat.isFirstChange()) {
+        if (changes.valueFormat) {
             $ctrl.valueFormat = $ctrl.valueFormat || PICKER_DEFAULT_VALUE_FORMAT;
             applyExternalModel($ctrl.innerValue);
         }
-        if (changes.format && !changes.format.isFirstChange()) {
+        if (changes.format) {
             refreshDisplay();
         }
-        if (changes.placeholder && !changes.placeholder.isFirstChange()) {
+        if (changes.placeholder) {
             $ctrl.placeholder = angular.isDefined($ctrl.placeholder) ? $ctrl.placeholder : '请选择日期';
         }
-        if (changes.rangeSeparator && !changes.rangeSeparator.isFirstChange()) {
+        if (changes.rangeSeparator) {
             $ctrl.rangeSeparator = angular.isDefined($ctrl.rangeSeparator) ? $ctrl.rangeSeparator : '~';
             refreshDisplay();
         }
-        if (changes.disabled && !changes.disabled.isFirstChange()) {
+        if (changes.disabled) {
             $ctrl.disabled = !!$ctrl.disabled;
             syncHostClass();
             if ($ctrl.disabled) {
                 hidePopper();
             }
         }
-        if (changes.defaultValue && !changes.defaultValue.isFirstChange()) {
+        if (changes.defaultValue) {
             initRangeDefaults();
         }
     };

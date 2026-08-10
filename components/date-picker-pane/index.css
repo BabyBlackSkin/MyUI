@@ -82,6 +82,7 @@ mob-date-picker-pane .mob-date-picker__header_title span {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 mob-date-picker-pane .mob-date-picker__header_title span:hover {
