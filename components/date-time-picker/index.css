@@ -250,18 +250,30 @@ mob-date-time-picker.is-range {
     font-weight: 600;
 }
 
-/* 二级时间下拉：由 JS 锚定到对应 time-input 下方 */
+/* 二级时间下拉：由 JS 锚定到对应 time-input 下方，scaleY 展开/收起 */
 .mob-date-time-picker__time-panel {
     position: absolute;
     top: 44px;
     left: 0;
     z-index: 20;
     min-width: 140px;
-    background: var(--mob-bg-color-overlay, #fff);
+    background: var(--mob-overlay-background-color, #fff);
     border: 1px solid var(--mob-border-color);
     border-radius: 4px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: center top;
+    pointer-events: none;
+    transition: transform var(--mob-transition-duration, .2s) var(--mob-transition-animate, cubic-bezier(.645, .045, .355, 1)),
+                opacity var(--mob-transition-duration, .2s) var(--mob-transition-animate, cubic-bezier(.645, .045, .355, 1));
+}
+
+.mob-date-time-picker__time-panel.is-show {
+    opacity: 1;
+    transform: scaleY(1);
+    pointer-events: auto;
 }
 
 .mob-date-time-picker__time-panel-body {
