@@ -20,6 +20,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/input/input.html',
             controller: 'InputCtrl'
         })
+        .when('/inputTag', {
+            templateUrl: './controller/input-tag/input-tag.html',
+            controller: 'InputTagCtrl'
+        })
         .when('/radio', {
             templateUrl: './controller/radio/radio.html',
             controller: 'RadioCtrl'
@@ -55,6 +59,22 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             controller: 'TimepickerCtrl',
             controllerAs: 'timepicker',
         })
+        .when('/timePicker', {
+            templateUrl: './controller/time-picker/time-picker.html',
+            controller: 'TimePickerCtrl',
+            controllerAs: 'ctrl',
+        })
+        .when('/timeSpinner', {
+            templateUrl: './controller/time-spinner/index.html',
+            controller: 'TimeSpinnerCtrl',
+            controllerAs: 'ctrl',
+        })
+        .when('/dateTimePicker', {
+            templateUrl: './controller/date-time-picker/date-time-picker.html',
+            controller: 'DateTimePickerCtrl',
+            controllerAs: 'ctrl',
+        })
+
         .when('/form', {
             templateUrl: './controller/form/form.html',
             controller: 'FormCtrl',
@@ -142,6 +162,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/descriptions/index.html',
             controller: 'Descriptions'
         })
+        .when('/progress', {
+            templateUrl: './controller/progress/index.html',
+            controller: 'ProgressCtrl'
+        })
         .otherwise({redirectTo: '/home'})
 }]);
 app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate) {
@@ -170,6 +194,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Form', type: 1},
         {label: 'popper容器', path: '/popper', },
         {label: 'Input输入框', path: '/input'},
+        {label: 'InputTag 标签输入框', path: '/inputTag'},
         {label: 'Input Number 输入框', path: '/inputNumber'},
         {label: 'Radio单选框', path: '/radio'},
         {label: 'CheckBox多选框', path: '/checkBox'},
@@ -179,13 +204,18 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Tree树形控件', path: '/tree'},
         {label: 'Form表单', path: '/form', tags: [{title:'developing', type:'danger'}]},
         {label: 'Date日历', path: '/date', tags: [{title:'developing', type:'danger'}]},
-        {label: 'DatePicker 日期选择器', path: '/datePickerPane'},
+        {label: 'DatePickerPane 日期面板', path: '/datePickerPane'},
+        {label: 'DatePicker 日期选择器', path: '/datePicker'},
+        {label: 'TimeSpinner 时间面板', path: '/timeSpinner'},
+        {label: 'TimePicker 时间选择器', path: '/timePicker'},
+        {label: 'DateTimePicker 日期时间选择器', path: '/dateTimePicker'},
         // {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Data数据展示', type: 1},
         {label: 'Table表格', path: '/table'},
         {label: 'Pagination 分页', path: '/pagination'},
         {label: 'Collapse 折叠面板', path: '/collapse'},
         {label: 'Empty 空状态', path: '/empty'},
+        {label: 'Progress 进度条', path: '/progress'},
         {label: 'Segmented 分段控制器', path: '/segmented'},
         {label: 'FeedBack反馈组件', type: 1},
         {label: 'drawer 抽屉', path: '/drawer'},
