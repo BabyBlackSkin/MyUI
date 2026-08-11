@@ -456,6 +456,36 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
         $ctrl.draftTime = value;
     };
 
+    $ctrl.formatTimeShortcut = function (hour, minute, second) {
+        const masked = dtpPartsForValueFormat(
+            {hour: hour, minute: minute, second: second},
+            $ctrl.format
+        );
+        return dtpFormatTimeParts(masked, $ctrl.timeFormat);
+    };
+
+    $ctrl.isTimeShortcutDisabled = function (hour, minute, second) {
+        const masked = dtpPartsForValueFormat(
+            {hour: hour, minute: minute, second: second},
+            $ctrl.format
+        );
+        return isTimeDisabled(masked.hour, masked.minute, masked.second);
+    };
+
+    $ctrl.pickTimeShortcut = function (hour, minute, second, $event) {
+        if ($event) {
+            $event.stopPropagation();
+        }
+        const masked = dtpPartsForValueFormat(
+            {hour: hour, minute: minute, second: second},
+            $ctrl.format
+        );
+        if (isTimeDisabled(masked.hour, masked.minute, masked.second)) {
+            return;
+        }
+        $ctrl.draftTime = dtpFormatTimeParts(masked, $ctrl.timeValueFormat);
+    };
+
     $ctrl.openTimePanel = function (side, $event) {
         if ($event) {
             $event.stopPropagation();
@@ -883,7 +913,7 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
         const contentRect = content.getBoundingClientRect();
         const triggerRect = triggerEl.getBoundingClientRect();
         // 面板尚未挂载时用 min-width 估算，避免右侧溢出
-        const panelWidth = 140;
+        const panelWidth = 240;
         let left = triggerRect.left - contentRect.left;
         const maxLeft = Math.max(0, contentRect.width - panelWidth);
         if (left < 0) {
@@ -1351,13 +1381,27 @@ function dateTimePickerController($scope, $element, $compile, $document, $timeou
                     </mob-time-spinner>
                 </div>
                 <div class="mob-date-time-picker__time-panel-footer">
-                    <button type="button"
-                            class="mob-date-time-picker__btn"
-                            ng-click="$ctrl.cancelTimePanel($event)">取消</button>
-                    <button type="button"
-                            class="mob-date-time-picker__btn is-confirm"
-                            ng-click="$ctrl.confirmTimePanel($event)"
-                            ng-disabled="!$ctrl.canConfirmTime()">确定</button>
+                    <div class="mob-date-time-picker__time-shortcuts">
+                        <button type="button"
+                                class="mob-date-time-picker__btn"
+                                ng-click="$ctrl.pickTimeShortcut(0, 0, 0, $event)"
+                                ng-disabled="$ctrl.isTimeShortcutDisabled(0, 0, 0)"
+                                ng-bind="$ctrl.formatTimeShortcut(0, 0, 0)"></button>
+                        <button type="button"
+                                class="mob-date-time-picker__btn"
+                                ng-click="$ctrl.pickTimeShortcut(23, 59, 59, $event)"
+                                ng-disabled="$ctrl.isTimeShortcutDisabled(23, 59, 59)"
+                                ng-bind="$ctrl.formatTimeShortcut(23, 59, 59)"></button>
+                    </div>
+                    <div class="mob-date-time-picker__time-panel-actions">
+                        <button type="button"
+                                class="mob-date-time-picker__btn"
+                                ng-click="$ctrl.cancelTimePanel($event)">取消</button>
+                        <button type="button"
+                                class="mob-date-time-picker__btn is-confirm"
+                                ng-click="$ctrl.confirmTimePanel($event)"
+                                ng-disabled="!$ctrl.canConfirmTime()">确定</button>
+                    </div>
                 </div>
             </div>`;
     }

@@ -1,12 +1,13 @@
 /* DateTimePicker 日期时间选择器（输入框 + 弹层） */
 mob-date-time-picker {
-    display: inline-block;
-    width: 220px;
+    display: flex;
+    flex:1;
+    min-width: 220px;
     vertical-align: middle;
 }
 
 mob-date-time-picker.is-range {
-    width: 380px;
+    min-width: 380px;
 }
 
 .mob-date-time-picker {
@@ -256,7 +257,7 @@ mob-date-time-picker.is-range {
     top: 44px;
     left: 0;
     z-index: 20;
-    min-width: 140px;
+    min-width: 240px;
     background: var(--mob-overlay-background-color, #fff);
     border: 1px solid var(--mob-border-color);
     border-radius: 4px;
@@ -283,14 +284,26 @@ mob-date-time-picker.is-range {
 .mob-date-time-picker__time-panel-body mob-time-spinner,
 .mob-date-time-picker__time-panel-body .mob-time-spinner {
     width: 100%;
-    min-width: 140px;
+    min-width: 240px;
 }
 
 .mob-date-time-picker__time-panel-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
     padding: 4px 8px;
     border-top: 1px solid var(--mob-border-color);
     box-sizing: border-box;
+}
+
+.mob-date-time-picker__time-shortcuts,
+.mob-date-time-picker__time-panel-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.mob-date-time-picker__time-shortcuts .mob-date-time-picker__btn {
+    padding: 0 4px;
 }
