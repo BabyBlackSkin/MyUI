@@ -40,6 +40,42 @@
         </div>
 
 
+        <h3>下拉框内过滤</h3>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example">
+                <p>单选</p>
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px" ng-model="filterValue" filterable="true" options="select.optionsBase"></mob-select>
+                </div>
+                <p>多选</p>
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px" ng-model="filterMultiple" filterable="true" multiple="true" collapse-tag="true" options="select.optionsDisabled"></mob-select>
+                </div>
+                <p>分组</p>
+                <div class="mob-demo-example-child">
+                    <mob-select style="display: block;width: 200px" ng-model="filterGroupValue" filterable="true" group="true" options="groupOptions"></mob-select>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism>
+                        <code class="source-code language-markup language-js language-html language-css"
+                        ><!--
+                            <html>
+                                <mob-select ng-model="filterValue" filterable="true" options="select.optionsBase"></mob-select>
+                                <mob-select ng-model="filterMultiple" filterable="true" multiple="true" options="select.optionsDisabled"></mob-select>
+                                <mob-select ng-model="filterGroupValue" filterable="true" group="true" options="groupOptions"></mob-select>
+                            </html>
+                            <script>
+                                $scope.filterValue = '上海'
+                                $scope.filterMultiple = ['香港', '上海']
+                                $scope.filterGroupValue = 'Shanghai'
+                            </script>
+                        --></code>
+                    </pre>
+            </div>
+        </div>
+
+
         <h3>有禁用选项</h3>
         <div class="mob-demo-block">
             <div class="mob-demo-example">

@@ -36,6 +36,9 @@ app
         $scope.value = ['香港']
         $scope.value3 = '香港'
         $scope.valueMultiple = ['香港','1','上海','北京']
+        $scope.filterValue = '上海'
+        $scope.filterMultiple = ['香港', '上海']
+        $scope.filterGroupValue = 'Shanghai'
 
 
         this.optionsBaseAllowCreate = [

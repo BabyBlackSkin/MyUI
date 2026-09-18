@@ -114,6 +114,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/table/index.html',
             controller: 'TableCtrl'
         })
+        .when('/transfer', {
+            templateUrl: './controller/transfer/index.html',
+            controller: 'TransferCtrl'
+        })
         .when('/pagination', {
             templateUrl: './controller/pagination/index.html',
             controller: 'Pagination'
@@ -212,6 +216,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         // {label: 'DateTimepicker时间选择器', path: '/timepicker', tags: [{title:'developing', type:'danger'}]},
         {label: 'Data数据展示', type: 1},
         {label: 'Table表格', path: '/table'},
+        {label: 'Transfer 穿梭框', path: '/transfer'},
         {label: 'Pagination 分页', path: '/pagination'},
         {label: 'Collapse 折叠面板', path: '/collapse'},
         {label: 'Empty 空状态', path: '/empty'},

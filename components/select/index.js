@@ -68,8 +68,18 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.initEvent = function () {
 
         $scope.$popper[`selectDrown_${$scope.$id}`].focus = async function () {
+            const selectPopper = $scope.$popper[`selectDrown_${$scope.$id}`]
+            const isClosing = selectPopper.popperShow
             if (!_that.ngDisabled) {
                 _that.expand = !_that.expand
+            }
+            if (!_that.ngDisabled && _that.filterable && isClosing) {
+                $scope.filterableText = ''
+            }
+            if (!_that.ngDisabled && _that.filterable && !isClosing) {
+                $timeout(function () {
+                    $scope.focus()
+                })
             }
             return !_that.ngDisabled
         }
@@ -335,6 +345,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 <div class="mob-popper-down mob-select-popper" id="${_that.uuid}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
+                        ${_that.filterable ? `
+                        <div class="mob-select__filter-input-wrapper" ng-click="$event.stopPropagation()">
+                            <span class="mob-select__filter-icon">
+                                <mob-icon-search></mob-icon-search>
+                            </span>
+                            <input type="text" autocomplete="off" placeholder="请输入关键词" class="mob-input__inner mob-input-filterable custom" ng-model="filterableText">
+                        </div>
+                        ` : ''}
                         <div class="mob-popper-down__inner">
                             
                             <mob-select-group ng-repeat="group in $ctrl.options track by $index" ng-if="!isNoSelectableOptions(group.options)" select-uuid="${_that.uuid}" label="group.label">
@@ -364,6 +382,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 <div class="mob-popper-down mob-select-popper" id="${_that.uuid}_mob-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
+                        ${_that.filterable ? `
+                        <div class="mob-select__filter-input-wrapper" ng-click="$event.stopPropagation()">
+                            <span class="mob-select__filter-icon">
+                                <mob-icon-search></mob-icon-search>
+                            </span>
+                            <input type="text" autocomplete="off" placeholder="请输入关键词" class="mob-input__inner mob-input-filterable custom" ng-model="filterableText">
+                        </div>
+                        ` : ''}
                         <div class="mob-popper-down__inner">
                             <mob-select-options ng-repeat="o in $ctrl.options track by $index" 
                             select-uuid="${_that.uuid}" 
@@ -591,9 +617,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * @returns {false|string|boolean|*|boolean}
      */
     $scope.isSpanPlaceholder = function () {
-        // 不是可过滤
-        // 且  不是多选 或者多选时并没有选中
-        return !_that.filterable && (!_that.multiple || _that.multiple && (!_that.ngModel || _that.ngModel.length === 0))
+        // 不是多选，或者多选时并没有选中
+        return !_that.multiple || !_that.ngModel || _that.ngModel.length === 0
     }
 
     /**
@@ -628,11 +653,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 重新聚焦
      */
     $scope.focus = function () {
-        if (this.filterable) {
-            let input = $element[0].querySelector('.mob-input__inner')
-            input.focus()
+        let input
+        if (_that.filterable) {
+            let popper = document.getElementById(`${_that.uuid}_mob-select-popper`)
+            input = popper && popper.querySelector('.mob-input-filterable')
         } else {
-            let input = $element[0].querySelector('.mob-input-filterable')
+            input = $element[0].querySelector('.mob-select__input-wrapper .mob-input__inner')
+        }
+        if (input) {
             input.focus()
         }
     }

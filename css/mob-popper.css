@@ -16,7 +16,7 @@
     display: none;
     overflow: hidden;
     padding: 5px;
-    max-height: var(--mob-popper-max-height) + 'px';
+    max-height: var(--mob-popper-max-height);
     opacity: 0;
     box-sizing: border-box;
     transform: scaleY(0);
