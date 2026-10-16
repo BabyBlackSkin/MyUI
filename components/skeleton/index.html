@@ -1,0 +1,15 @@
+<div class="mob-skeleton"
+     ng-class="{'is-animated': $ctrl.animated}">
+    <div class="mob-skeleton__header" ng-if="$ctrl.avatar || $ctrl.title">
+        <span class="mob-skeleton__avatar" ng-if="$ctrl.avatar"></span>
+        <div class="mob-skeleton__heading" ng-if="$ctrl.title">
+            <span class="mob-skeleton__title"></span>
+            <span class="mob-skeleton__line mob-skeleton__line--short"></span>
+        </div>
+    </div>
+    <div class="mob-skeleton__body">
+        <span class="mob-skeleton__line"
+              ng-repeat="row in $ctrl.rowIndexes track by $index"
+              ng-class="{'mob-skeleton__line--last': $last}"></span>
+    </div>
+</div>

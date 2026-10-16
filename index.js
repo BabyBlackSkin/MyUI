@@ -142,6 +142,10 @@ app.config(['$logProvider', '$routeProvider', function ($logProvider, $routeProv
             templateUrl: './controller/segmented/index.html',
             controller: 'SegmentedCtrl'
         })
+        .when('/skeleton', {
+            templateUrl: './controller/skeleton/index.html',
+            controller: 'SkeletonCtrl'
+        })
         .when('/tag', {
             templateUrl: './controller/tag/index.html',
             controller: 'TagCtrl'
@@ -222,6 +226,7 @@ app.run(['$rootScope', '$log', '$animate', function ($rootScope, $log, $animate)
         {label: 'Empty 空状态', path: '/empty'},
         {label: 'Progress 进度条', path: '/progress'},
         {label: 'Segmented 分段控制器', path: '/segmented'},
+        {label: 'Skeleton 骨架屏', path: '/skeleton'},
         {label: 'FeedBack反馈组件', type: 1},
         {label: 'drawer 抽屉', path: '/drawer'},
         {label: 'Dialog 对话框', path: '/dialog'},
