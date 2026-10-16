@@ -33,7 +33,7 @@ const mobTable = [
                 let columnUid = 0
                 vm._expandRowKeys = []
                 vm._defaultRowKeys = 'id'
-                vm._expandTemplateNodes = []
+                vm._expandTemplateLinkFn = null
                 vm._hasExpandTemplate = false
                 vm._enteringParentKey = null
                 vm._leavingRows = []
@@ -55,8 +55,8 @@ const mobTable = [
                         col.type === "selection"
                             ? "__selection__"
                             : col.type === "expand"
-                            ? "__expand__"
-                            : col.prop || col._uid
+                                ? "__expand__"
+                                : col.prop || col._uid
                     if (hasRegisteredColumn.has(key)) {
                         return
                     }
@@ -103,27 +103,18 @@ const mobTable = [
                     return vm._hasExpandTemplate
                 }
 
-                vm.registerExpandTemplate = function (clone) {
-                    vm._expandTemplateNodes = []
-                    angular.forEach(clone, function (node) {
-                        if (
-                            node.nodeType === 1 ||
-                            (node.nodeType === 3 && node.nodeValue.trim())
-                        ) {
-                            vm._expandTemplateNodes.push(node)
-                        }
-                    })
-                    vm._hasExpandTemplate = vm._expandTemplateNodes.length > 0
+                vm.registerExpandTemplate = function (linkFn) {
+                    vm._expandTemplateLinkFn = angular.isFunction(linkFn)
+                        ? linkFn
+                        : null
+                    vm._hasExpandTemplate = !!vm._expandTemplateLinkFn
                 }
 
-                vm.getExpandTemplateClone = function () {
-                    if (!vm._expandTemplateNodes.length) {
+                vm.getExpandTemplateClone = function (scope) {
+                    if (!vm._expandTemplateLinkFn || !scope) {
                         return null
                     }
-                    const nodes = vm._expandTemplateNodes.map(function (node) {
-                        return node.cloneNode(true)
-                    })
-                    return angular.element(nodes)
+                    return vm._expandTemplateLinkFn(scope)
                 }
 
                 function hasRowKey() {
@@ -414,11 +405,11 @@ const mobTable = [
                         })
                         vm._leavingRows = expandMeta
                             ? [
-                                  angular.extend({}, expandMeta, {
-                                      leaving: true,
-                                      entering: false,
-                                  }),
-                              ]
+                                angular.extend({}, expandMeta, {
+                                    leaving: true,
+                                    entering: false,
+                                }),
+                            ]
                             : []
                         keys.splice(index, 1)
                         skipExpandKeysRebuild = true
@@ -623,6 +614,12 @@ const mobTable = [
                     return !!vm.selection[vm.getRowIdentity(row)]
                 }
 
+                vm.getSelectionRows = function () {
+                    return collectAllDataRows($scope.data).filter(function (row) {
+                        return vm.isRowSelected(row)
+                    })
+                }
+
                 function emitSelectionChange() {
                     syncScopeSelection()
                     if (angular.isFunction($scope.onSelectionChange)) {
@@ -803,6 +800,14 @@ const mobTable = [
                 $scope.$watchCollection("selection", function () {
                     updateHeaderSelectionState()
                 })
+
+                $scope.getSelectionRows = function () {
+                    return vm.getSelectionRows()
+                }
+
+                $scope.clearSelection = function () {
+                    clearSelection()
+                }
 
                 initExpandKeys()
                 rebuildDisplayRows()

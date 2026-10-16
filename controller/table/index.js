@@ -125,6 +125,7 @@ app
         }
 
         $scope.selectedRows = {}
+        $scope.selectedRowLabels = []
         $scope.treeSelectedRows = {}
         $scope.expandRowKeys = []
         $scope.treeProps = {children: 'children'}
@@ -163,6 +164,16 @@ app
 
         $scope.restoreSelectionData = function () {
             $scope.data = angular.copy($scope.dataBackup)
+        }
+
+        $scope.logSelectedRows = function () {
+            if (!$scope.$refs || !$scope.$refs.tableRef) {
+                return
+            }
+            var rows = $scope.$refs.tableRef.getSelectionRows()
+            $scope.selectedRowLabels = rows.map(function (row) {
+                return row.refundOrderSn
+            })
         }
 
         $scope.noRowKeyData = angular.copy($scope.data).slice(0, 3)

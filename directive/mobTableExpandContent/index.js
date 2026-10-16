@@ -1,8 +1,7 @@
 (function () {
     const mobTableExpandContent = [
-        "$compile",
         "mobTableRowAnimUtil",
-        function ($compile, mobTableRowAnimUtil) {
+        function (mobTableRowAnimUtil) {
             return {
                 restrict: "A",
                 require: "^mobTable",
@@ -10,14 +9,19 @@
                     const rowMeta =
                         (attrs.context && scope.$eval(attrs.context)) ||
                         scope.rowMeta
-                    const clone = mobTableController.getExpandTemplateClone()
-                    if (!clone || !clone.length) {
+                    const templateInstance =
+                        mobTableController.getExpandTemplateInstance(rowMeta)
+                    if (
+                        !templateInstance ||
+                        !templateInstance.clone ||
+                        !templateInstance.clone.length
+                    ) {
+                        if (templateInstance && templateInstance.scope) {
+                            templateInstance.scope.$destroy()
+                        }
                         return
                     }
-
-                    const childScope = scope.$new()
-                    childScope.$context = rowMeta
-                    element.append($compile(clone)(childScope))
+                    element.append(templateInstance.clone)
 
                     const tr = element[0].closest("tr")
                     if (tr) {
@@ -28,7 +32,7 @@
                     }
 
                     scope.$on("$destroy", function () {
-                        childScope.$destroy()
+                        templateInstance.scope.$destroy()
                     })
                 },
             }

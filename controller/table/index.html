@@ -115,10 +115,13 @@
         <mob-button ng-click="replaceSelectionData()">替换 data（新数组，清空选中）</mob-button>
         <mob-button ng-click="spliceFirstRow()">splice 删除首行（cleanSelection）</mob-button>
         <mob-button ng-click="restoreSelectionData()">恢复 data</mob-button>
+        <mob-button ng-click="logSelectedRows()">获取选中行</mob-button>
     </p>
+    <p ng-if="selectedRowLabels.length">getSelectionRows：{{selectedRowLabels.join('、')}}</p>
     <div class="mob-demo-block">
         <div class="mob-demo-example">
-            <mob-table data="data"
+            <mob-table ref="tableRef"
+                       data="data"
                        border="true"
                        selection="selectedRows"
                        row-key="'refundOrderSn'"

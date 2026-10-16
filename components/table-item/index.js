@@ -51,6 +51,7 @@
                     label: "=",
                     width: "=",
                     type: "=",
+                    defaultValue: "=?",
                 },
                 require: "^mobTable",
                 replace: true,
@@ -70,8 +71,22 @@
                                 mobTableController,
                                 $transclude
                             ) {
-                                $transclude(function (clone) {
-                                    mobTableController.registerExpandTemplate(clone)
+                                // Use the original transcluded scope as the parent so
+                                // nested components (for example mob-button) retain
+                                // Angular's transclusion/controller context.
+                                const templateParentScope = $scope.$parent
+                                // Keep Angular's compiled transclusion function, but do
+                                // not link the extension content until a row is expanded.
+                                // Structural directives such as ng-if need that row's
+                                // $context during their first link.
+                                mobTableController.registerExpandTemplate(function (rowMeta) {
+                                    const scope = templateParentScope.$new()
+                                    scope.$context = rowMeta
+                                    let clone = null
+                                    $transclude(scope, function (nodes) {
+                                        clone = nodes
+                                    })
+                                    return { clone: clone, scope: scope }
                                 })
                                 $element.remove()
                             },
@@ -80,20 +95,53 @@
 
                     return {
                         pre: function ($scope) {
+                            const emptyContext = {}
+                            let sourceContext = null
+                            let transcludedContext = null
+
+                            $scope.getContext = function () {
+                                const parent = $scope.$parent
+                                const context = (parent && parent.$context) || $scope.$context
+                                return context
+                                    ? context.rowMeta || context
+                                    : emptyContext
+                            }
+
+                            $scope.getTranscludeContext = function () {
+                                const context = $scope.getContext()
+                                if (context !== sourceContext) {
+                                    sourceContext = context
+                                    transcludedContext = angular.extend({}, context)
+                                    transcludedContext.toggleExpand = function ($event) {
+                                        if ($event) {
+                                            $event.stopPropagation()
+                                        }
+                                        const row = context.row
+                                        if (row && $scope.tableVm) {
+                                            $scope.tableVm.toggleRowExpansion(row, $event)
+                                        }
+                                    }
+                                    transcludedContext.isExpanded = function () {
+                                        const row = context.row
+                                        return !!(
+                                            row &&
+                                            $scope.tableVm &&
+                                            $scope.tableVm.isRowExpanded(row)
+                                        )
+                                    }
+                                }
+                                return transcludedContext
+                            }
+
                             $scope.transcludeContext = {
-                                "$parent.$context": {
-                                    name: "$parent.$context",
+                                "$context": {
+                                    name: "getTranscludeContext()",
                                     alias: "$context",
                                 },
                             }
                         },
                         post: function ($scope, $element, $attrs, mobTableController) {
                             $scope.tableVm = mobTableController
-
-                            $scope.getContext = function () {
-                                const parent = $scope.$parent
-                                return (parent && parent.$context) || {}
-                            }
 
                             $scope.getRow = function () {
                                 return $scope.getContext().row
@@ -177,7 +225,19 @@
                             return
                         }
                         const row = $scope.getRow && $scope.getRow()
-                        return row ? getter(row) : undefined
+                        const defaultValue = $scope.defaultValue || '-'
+                        if (!row) {
+                            return defaultValue
+                        }
+                        const value = getter(row)
+                        if (
+                            value === null ||
+                            angular.isUndefined(value) ||
+                            value === ""
+                        ) {
+                            return defaultValue
+                        }
+                        return value
                     }
                 },
             }
