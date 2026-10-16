@@ -1,0 +1,122 @@
+<section class="mob-doc content">
+    <h2>Skeleton 骨架屏</h2>
+    <p>在内容加载完成前显示占位轮廓，降低页面等待时的空白感。</p>
+
+    <div class="mob-doc content">
+        <h3>基础用法</h3>
+        <p><code>rows</code> 设置正文占位行数，默认为 3 行。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example" style="max-width: 520px;">
+                <mob-skeleton></mob-skeleton>
+            </div>
+            <div class="meta">
+                <pre prism><code class="source-code language-markup language-html"><!--
+<mob-skeleton></mob-skeleton>
+                --></code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>设置行数和动画</h3>
+        <p>可用 <code>animated</code> 开启流光动画；用户系统启用减少动态效果时，动画会自动停用。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example" style="max-width: 520px;">
+                <mob-skeleton rows="customRows" animated="true" avatar="true" title="true"></mob-skeleton>
+            </div>
+            <div class="meta">
+                <pre prism><code class="source-code language-markup language-html language-js"><!--
+<mob-skeleton rows="customRows" animated="true" avatar="true" title="true"></mob-skeleton>
+
+// 控制器中：
+$scope.customRows = 4;
+                --></code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>单个占位块</h3>
+        <p><code>mob-skeleton-item</code> 可单独用于头像、卡片或自定义布局。<code>type</code> 支持 <code>line</code>（默认）、<code>circle</code> 和 <code>block</code>，也可以通过 <code>width</code> 指定宽度。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example" style="display: flex; align-items: center; gap: 16px;">
+                <mob-skeleton-item type="circle" animated="true"></mob-skeleton-item>
+                <div style="width: 260px; display: flex; flex-direction: column; gap: 10px;">
+                    <mob-skeleton-item width="70%" animated="true"></mob-skeleton-item>
+                    <mob-skeleton-item width="100%" animated="true"></mob-skeleton-item>
+                </div>
+            </div>
+            <div class="meta">
+                <pre prism><code class="source-code language-markup language-html"><!--
+<mob-skeleton-item type="circle" animated="true"></mob-skeleton-item>
+<mob-skeleton-item width="70%" animated="true"></mob-skeleton-item>
+                --></code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="mob-doc content">
+        <h3>表格数据加载</h3>
+        <p>按商品退款明细的字段展示表格骨架；数据请求完成后，可将占位行替换为真实数据行。</p>
+        <div class="mob-demo-block">
+            <div class="mob-demo-example" style="max-width: 720px;">
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 0.8fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #ebeef5;">
+                    <span style="font-weight: 600;">用户</span>
+                    <span style="font-weight: 600;">状态</span>
+                    <span style="font-weight: 600;">更新时间</span>
+                    <span style="font-weight: 600;">操作</span>
+                </div>
+                <div ng-repeat="row in tableRows track by $index"
+                     style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 0.8fr; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid #ebeef5;">
+                    <mob-skeleton-item width="72%" animated="true"></mob-skeleton-item>
+                    <mob-skeleton-item width="58%" animated="true"></mob-skeleton-item>
+                    <mob-skeleton-item width="82%" animated="true"></mob-skeleton-item>
+                    <mob-skeleton-item width="48%" animated="true"></mob-skeleton-item>
+                </div>
+            </div>
+
+            <div class="mob-demo-example" style="overflow-x: auto;">
+
+                <table style="width: 100%; min-width: 1500px; border-collapse: collapse; table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="column in tableColumns track by $index"
+                            ng-bind="column"
+                            style="padding: 12px 8px; text-align: left; white-space: nowrap; border-bottom: 1px solid #ebeef5;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in tableRows track by $index">
+                        <td ng-repeat="column in tableColumns track by $index"
+                            style="padding: 14px 8px; border-bottom: 1px solid #ebeef5;">
+                            <mob-skeleton-item width="72%" animated="true"></mob-skeleton-item>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="meta">
+                <pre prism><code class="source-code language-markup language-html language-js"><!--
+<table>
+    <thead>
+        <tr><th ng-repeat="column in tableColumns" ng-bind="column"></th></tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in tableRows">
+            <td ng-repeat="column in tableColumns">
+                <mob-skeleton-item width="72%" animated="true"></mob-skeleton-item>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+// 控制器中：
+$scope.tableColumns = ['序号', '商品名称', '商品图片', '商品品类', '品牌', '品牌业态',
+    '提货/使用截止时间', '提货状态', '下单数量', '已退款数量', '本次退款数量',
+    '支付金额', '支付积分', '支付成长值', '提货编码'];
+$scope.tableRows = [0, 1, 2, 3];
+                --></code></pre>
+            </div>
+        </div>
+    </div>
+</section>
