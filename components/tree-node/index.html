@@ -6,7 +6,7 @@
         }"
 >
     <div class="mob-tree-node-content" ng-click="$ctrl.nodeClickHandler($event)"
-         ng-style="{'padding-left': 16 * ($ctrl.data.level) +'px', 'padding-right': ($ctrl.data.children && $ctrl.data.children.length > 0) ? 0 + 'px' : 16 + 'px'}">
+         ng-style="{'padding-left': 16 * ($ctrl.data.level) +'px', 'padding-right': ($ctrl.data[($ctrl.props || {}).children || 'children'] && $ctrl.data[($ctrl.props || {}).children || 'children'].length > 0) ? 0 + 'px' : 16 + 'px'}">
         <!-- icon -->
         <div class="mob-tree-node-expand">
             <mob-icon-caret-right ng-if="$ctrl.canExpand()"
@@ -24,20 +24,20 @@
             ></mob-check-box>
         </div>
         <div class="mob-tree-node-label">
-            <span ng-bind="$ctrl.data[$ctrl.props['label']]"></span>
+            <span ng-bind="$ctrl.data[$ctrl.props['label'] || 'label']"></span>
         </div>
     </div>
     <!-- 子节点 -->
-    <div class="mob-tree-node-children" ng-if="$ctrl.data.children && $ctrl.data.children.length > 0">
-        <mob-tree-node ng-if="$ctrl.data.expand"
-                       ng-repeat="node in $ctrl.data.children"
-                       show-checkbox="node.showCheckbox"
-                       allow-check="node.allowCheck"
-                       data="node"
-                       node-key="$ctrl.nodeKey"
-                       props="$ctrl.props"
-                       expand-on-click-node="$ctrl.expandOnClickNode"
-                       check-on-click-node="$ctrl.checkOnClickNode"
-                       on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>
+    <div class="mob-tree-node-children" ng-if="$ctrl.data[($ctrl.props || {}).children || 'children'] && $ctrl.data[($ctrl.props || {}).children || 'children'].length > 0">
+        <mob-tree-node
+                ng-if="$ctrl.data.expand"
+                ng-repeat="node in $ctrl.data[($ctrl.props || {}).children || 'children']"
+                show-checkbox="node.showCheckbox"
+                data="node"
+                node-key="$ctrl.nodeKey"
+                props="$ctrl.props"
+                expand-on-click-node="$ctrl.expandOnClickNode"
+                check-on-click-node="$ctrl.checkOnClickNode"
+                on-repeat-finish="treeNodeRepeatFinish"></mob-tree-node>
     </div>
 </div>

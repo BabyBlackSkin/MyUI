@@ -42,8 +42,9 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.canExpand = function () {
         let isLeaf = this.data.leaf
+        let childrenKey = (this.props && this.props.children) || "children"
         //存在子节点时，默认允许展开
-        let hasChild = this.data.children && this.data.children.length > 0 && this.data.loadStatus !== 2
+        let hasChild = this.data[childrenKey] && this.data[childrenKey].length > 0 && this.data.loadStatus !== 2
         // 是否懒加载。且未加载过
         let notLoad = _that.data.loadStatus === 0
         // 如果包含子节点，则允许展开
@@ -65,13 +66,13 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      * 当节点被点击时
      */
     this.nodeClickHandler = function () {
+        let checkValue = !_that.data.check;
         if (angular.isFunction(this.tree.nodeClick)) {
-            let opt = {node: this.data, attachment: this.tree.attachment}
+            let opt = {node: this.data,check:checkValue, attachment: this.tree.attachment}
             this.tree.nodeClick({opt: opt})
         }
         if (this.checkOnClickNode) {
-            this.changeHandler({value: !_that.data.check})
-            return
+            this.changeHandler({value: checkValue})
         }
         // 判断点击节点是否展开，这里再判断一下是否为undefined，不知道为什么有undefined的情况
         if (this.expandOnClickNode) {
@@ -117,7 +118,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 }
                 // 将节点添加到tree中
                 this.tree.parseNode(data, this.getNodeKeyValue())
-                this.data.children = data
+                let childrenKey = (this.props && this.props.children) || "children"
+                this.data[childrenKey] = data
             }).catch(err => {
                 _that.data.loadStatus = 0
             })
@@ -131,7 +133,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
      */
     this.expandOrCollapse = function () {
         let isExpand = _that.data.expand ? 1 : 0
-        if (angular.isUndefined(this.data.children) || this.data.children.length === 0) {
+        let childrenKey = (this.props && this.props.children) || "children"
+        if (angular.isUndefined(this.data[childrenKey]) || this.data[childrenKey].length === 0) {
             return
         }
         let childContent = $element[0].querySelector('.mob-tree-node-children')
@@ -152,17 +155,14 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
                 // childContent.style.display = 'none'
                 _that.data.expand = false
             }, 300)
-
         } else {
             _that.data.expand = true
-            _that.data.loadStatus = 2
 
             if (angular.isFunction(this.tree.nodeCollapse)) {
                 let opt = {node: _that.data, attachment: this.tree.attachment}
                 this.tree.nodeExpand({opt: opt})
             }
             $timeout(function (){
-                _that.data.loadStatus = 1
                 childContent.style.display = 'block'
                 childContent.style.height = 'auto'
                 let {height} = childContent.getBoundingClientRect()
@@ -173,8 +173,8 @@ function controller($scope, $element, $attrs, $injector, $timeout, $q) {
 
                 $timeout(function () {
                     childContent.style.height = 'auto'
-                }, 300)
-            },1)
+                }, 400)
+            },100)
         }
     }
 }

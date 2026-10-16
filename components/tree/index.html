@@ -3,9 +3,9 @@
         ng-class="{
         'is_disabled':$ctrl.ngDisabled,
     }"
-        refs="$ctrl.ngRef"
-        ng-click="$ctrl.clickHandle()">
-    <mob-tree-node ng-repeat="node in $ctrl.nodeList"
+        refs="$ctrl.ngRef">
+    <mob-tree-node ng-repeat="node in $ctrl.nodeList track by $index"
+                   ng-if="node._filterVisible !== false"
                    data="node"
                    node-key="$ctrl.nodeKey"
                    expand-on-click-node="$ctrl.expandOnClickNode"

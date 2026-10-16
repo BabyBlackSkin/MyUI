@@ -3,17 +3,17 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     // 初始化工作
     this.$onInit = function () {
         this.$type = "mobTreeSelect"
-        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "multiple", "collapseTag", "collapseTagTooltip", "lazy", "loadPerExpand", "expandOnClickNode", "checkOnClickNode"]
+        let abbParams = ['appendToBody', 'clearable', 'filterable', "group", "multiple", "collapseTag", "collapseTagTooltip", "lazy", "loadPerExpand", "expandOnClickNode", "checkOnClickNode", "checkStrictly"]
         attrHelp.abbAttrsTransfer(this, abbParams, $attrs)
 
-        // 初始化一个map，存放ngModel的keyValue
+        // 初始化一个map，存放model的keyValue
         if (angular.isUndefined(this.multiple)) {
             this.multiple = false
-            this.ngModel = ''
+            // this.model = ''
         }
         else {
             if (this.multiple) {
-                this.ngModel = []
+                this.model = Array.isArray(this.model) ? this.model : [];
             }
             $scope.collapseTagsList = [];
         }
@@ -73,6 +73,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     }
 
     this.$postLink = function () {
+        // 双向绑定model
+        this.modelValueBind()
 
         // 获取target
         const targetList = $element[0].querySelectorAll('.mob_popper__target');
@@ -88,13 +90,40 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
     }
 
+    this.modelValueBind = function () {
+        // ngModel 的值从外部改变时，触发此函数
+        this.ngModel.$render = () => {
+            this.model = this.ngModel.$viewValue;
+        };
+
+        $scope.$watch(function () {
+            return _that.model;
+        }, function (newV, oldV) {
+            if (newV !== oldV){
+                _that.ngModel.$setViewValue(newV);
+            }
+        });
+    }
+
     // 初始化事件监听
     this.initEvent = function () {
 
+        $scope.$on(`${_that.name}FilterResult`, function (event, result) {
+            $scope.filterResult.anyMatch = result.anyMatch
+        })
+
         $scope.$popper[`selectDrown_${$scope.$id}`].focus = async function () {
+            const selectPopper = $scope.$popper[`selectDrown_${$scope.$id}`]
+            const isClosing = selectPopper.popperShow
             // 被禁用时，不显示下拉框
             if (_that.ngDisabled) {
                 return false
+            }
+            if (_that.filterable && isClosing) {
+                _that.clearFilter()
+            }
+            if (_that.filterable && !isClosing) {
+                $timeout(() => $scope.focus())
             }
             // 未定义加载方法
             if (angular.isUndefined($attrs.load)) {
@@ -117,6 +146,10 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                 return _that.initLoad()
             }
         }
+        $scope.$popper[`selectDrown_${$scope.$id}`].focusOut = async function () {
+            if (_that.filterable) _that.clearFilter()
+            return true
+        }
 
         // 标签工具集
         if (this.collapseTagTooltip) {
@@ -138,7 +171,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      */
     this.initWatcher = function () {
         $scope.$watchCollection(() => {
-            return _that.ngModel
+            return _that.model
         }, async function (newV, oldV) {
             if (angular.isUndefined(newV) && angular.isUndefined(oldV)) {
                 return
@@ -151,15 +184,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             // 判断当前是否已经加载了load
             if (_that.loadStatus === 0) {
                 await _that.initLoad()
-                _that.ngModelWatchHandler(newV, oldV)
+                _that.modelWatchHandler(newV, oldV)
             }
             else {
-                _that.ngModelWatchHandler(newV, oldV)
+                _that.modelWatchHandler(newV, oldV)
             }
         })
     }
 
-    this.ngModelWatchHandler = function (newV, oldV){
+    this.modelWatchHandler = function (newV, oldV){
         if (this.multiple) {
             $scope.collapseTagsList = []
             for (let v of newV) {
@@ -172,11 +205,11 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         }
 
         if (angular.isDefined($attrs.change)) {
-            let opt = {value: this.ngModel, attachment: this.attachment}
+            let opt = {value: this.model, attachment: this.attachment}
             this.change({opt: opt})
         }
-        // 反向通知group下所有的radio绑定的ngModel TODO
-        // $scope.$broadcast(`${_that.name}Change`, _that.ngModel)
+        // 反向通知group下所有的radio绑定的model TODO
+        // $scope.$broadcast(`${_that.name}Change`, _that.model)
     }
     /**
      * 一维化tree
@@ -189,14 +222,15 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
     this.parseOptions = function (optionsList) {
         let nodeKey = angular.isDefined(this.nodeKey) ? this.nodeKey : "id"
+        let childrenKey = (this.props && this.props.children) || "children"
         if (angular.isUndefined(optionsList)) {
             return
         }
         for (let options of optionsList) {
             this.optionsCache[options[nodeKey]] = options
 
-            if (angular.isDefined(options.children)) {
-                this.parseOptions(options.children)
+            if (angular.isDefined(options[childrenKey])) {
+                this.parseOptions(options[childrenKey])
             }
         }
     }
@@ -214,23 +248,28 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         let loadDeferred = $q.defer();
         let deferred = $q.defer();
         let opt = {node: {level: 0}, deferred: deferred, attachment: this.attachment}
-        this.loadNode({opt: opt}).then(data => {
-            // 监听tree初始化完成
-            $scope.$on(`${_that.name}TreeInitFinish`, function () {
-                $timeout(function () {
-                    _that.loadStatus = 1;
-                    // 将tree状态更新为加载中
-                    $scope.$refs.tree.$ctrl.loadStatus = 1
+        try {
+            this.loadNode({opt: opt}).then(data => {
+                // 监听tree初始化完成
+                $scope.$on(`${_that.name}TreeInitFinish`, function () {
+                    $timeout(function () {
+                        _that.loadStatus = 1;
+                        // 将tree状态更新为加载中
+                        $scope.$refs.tree.$ctrl.loadStatus = 1
 
-                    loadDeferred.resolve(true)
-                }, 100)
+                        loadDeferred.resolve(true)
+                    }, 100)
+                })
+                // 通知tree解析节点
+                $scope.$broadcast(`${_that.name}TreeInit`, {data: angular.copy(data)})
+            }).catch(err => {
+                _that.loadStatus = 0;
+                loadDeferred.resolve(false)
             })
-            // 通知tree解析节点
-            $scope.$broadcast(`${_that.name}TreeInit`, {data: angular.copy(data)})
-        }).catch(err => {
+        }catch (e){
             _that.loadStatus = 0;
             loadDeferred.resolve(false)
-        })
+        }
         return loadDeferred.promise
     }
     /**
@@ -257,6 +296,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             // 没有数据时reject
             treeOpt.opt.deferred.reject()
         }).catch(err => {
+            console.log('mobTreeSelect load Function error',err)
             treeOpt.opt.deferred.reject()
         })
         return treeOpt.opt.deferred.promise
@@ -266,11 +306,19 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
         let popperTooltipList = []
         let selectOptions = $compile(
             `
-                <div class="mob-popper-down mob-tree-select-popper" id="${_that.name}_mob-tree-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
+                <div class="mob-popper-down mob-tree-select-popper ${_that.filterable ? 'is-filterable' : ''}" id="${_that.name}_mob-tree-select-popper" ng-click="{'is_multiple':${_that.multiple}}" popper-group="selectDrown">
                     <div class="mob-popper-down__wrapper">
                         <span class="mob-popper-down__arrow"></span>
+                        ${_that.filterable ? `
+                        <div class="mob-tree-select__filter-input-wrapper" ng-click="$event.stopPropagation()">
+                            <span class="mob-tree-select__filter-icon">
+                                <mob-icon-search></mob-icon-search>
+                            </span>
+                            <input type="text" autocomplete="off" placeholder="请输入关键词" class="mob-input__inner mob-input-filterable custom" ng-model="filterableText" ng-change="$ctrl.filterOptions()">
+                        </div>
+                        ` : ''}
                         <div class="mob-popper-down__inner">
-                            <mob-tree ng-model="$ctrl.ngModel"
+                            <mob-tree ng-model="$ctrl.model"
                                 ng-ref="'tree'"
                                 data="$ctrl.options" 
                                 node-key="$ctrl.nodeKey"
@@ -281,11 +329,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                                 multiple="$ctrl.multiple"
                                 expand-on-click-node="$ctrl.expandOnClickNode"
                                 check-on-click-node="$ctrl.checkOnClickNode"
+                                check-strictly="$ctrl.checkStrictly"
                                 load="$ctrl.loadNode({opt:opt})"
                                 node-click="$ctrl.nodeClick({opt:opt})"
                                 node-collapse="$ctrl.nodeCollapse({opt:opt})"
                                 node-expand="$ctrl.nodeExpand({opt:opt})"
                              ></mob-tree>
+                            <div class="mob-tree-select__no-match" ng-if="$ctrl.filterable && filterableText && !filterResult.anyMatch">无匹配数据</div>
                         </div>
                     </div>
                 </div>
@@ -310,7 +360,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
                         <span class="mob-popper-down__arrow"></span>
                         <div class="mob-popper-down__inner">
                             <div class="mob-tree-select__selected-item__collapse" ng-repeat="item in collapseTagsList" ng-if="!$first">
-                                <span ng-bind="$ctrl.getLabel(item)"></span>
+                                <span ng-bind="item[$ctrl.props['label']]"></span>
                                 <!-- TreeSelect暂时不支持通过Tag移除 -->
 <!--                                <mob-icon-close class="mob-icon__close" ng-click="collapseRemove(item)" stop-bubbling></mob-icon-close>-->
                             </div>
@@ -344,24 +394,24 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     this.changeValueHandler = function (data) {
 
         if (this.multiple) {
-            if (angular.isUndefined(this.ngModel)) {
-                this.ngModel = []
+            if (angular.isUndefined(this.model)) {
+                this.model = []
             }
             if (Array.isArray(data) && data.length === 0) {
-                this.ngModel = []
+                this.model = []
             }
             else {
                 // 判断model中是否包含
-                if (this.ngModel.includes(data[this.nodeKey])) {
-                    this.ngModel.splice(this.ngModel.indexOf(this.nodeKey), 1)
+                if (this.model.includes(data[this.nodeKey])) {
+                    this.model.splice(this.model.indexOf(this.nodeKey), 1)
                 }
                 else {
-                    this.ngModel.push(data[this.nodeKey])
+                    this.model.push(data[this.nodeKey])
                 }
             }
         }
         else {
-            this.ngModel = data[this.nodeKey]
+            this.model = data[this.nodeKey]
             let node = this.optionsCache[data[this.nodeKey]]
             if (angular.isDefined(node)) {
                 $scope.placeholder = node[this.props["label"]]
@@ -394,6 +444,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
             unknownNode[this.nodeKey] = nodeKey
             $scope.collapseTagsList.push(unknownNode)
             return;
+            // 判断node是否存在
         }
         let winIndex = $scope.collapseTagsList.findIndex(obj => {
             return obj[_that.nodeKey] === node[_that.nodeKey]
@@ -411,15 +462,19 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 发送过滤操作
      */
     this.filterOptions = function () {
-        // $debounce.debounce($scope, () => {
-        //     let filter = !!$scope.filterableText
-        //     // TODO 通知tree进行过滤
-        //     $scope.$broadcast(`${_that.name}Filter`, {
-        //         filter,
-        //         value: $scope.filterableText,
-        //         filterMethod: _that.filterMethod
-        //     })
-        // }, 300)()
+        $scope.filterResult.anyMatch = true
+        $debounce.debounce($scope, $scope.$id, () => {
+            $scope.$broadcast(`${_that.name}Filter`, {
+                filter: !!$scope.filterableText,
+                value: $scope.filterableText || ''
+            })
+        }, 300)()
+    }
+
+    this.clearFilter = function () {
+        $scope.filterableText = ''
+        $scope.filterResult.anyMatch = true
+        $scope.$broadcast(`${_that.name}Filter`, {filter: false, value: ''})
     }
 
     /**
@@ -431,31 +486,14 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     }
 
     /**
-     * 获取节点的label
-     * @param node
-     * @returns {*}
-     */
-    this.getLabel = function (node) {
-        if (!node) {
-            return ''
-        }
-        let label = node[this.props['label']]
-        if (label) {
-            return label
-        }
-        return node[this.nodeKey]
-    }
-
-
-    /**
      * 无工具箱的collapse
      * @returns {false|string|boolean|*|boolean}
      */
     $scope.isCollapseTagsNoTooltip = function () {
         return !_that.ngDisabled &&
             _that.multiple &&
-            angular.isDefined(_that.ngModel) &&
-            _that.ngModel.length > 0 &&
+            angular.isDefined(_that.model) &&
+            _that.model.length > 0 &&
             _that.collapseTag &&
             !_that.collapseTagTooltip
     }
@@ -466,7 +504,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.isSpanPlaceholder = function () {
         // 不是可过滤
         // 且  不是多选 或者多选时并没有选中
-        return !_that.filterable && (!_that.multiple || _that.multiple && (!_that.ngModel || _that.ngModel.length === 0))
+        return !_that.filterable && (!_that.multiple || _that.multiple && (!_that.model || _that.model.length === 0))
     }
 
     /**
@@ -476,8 +514,8 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.isCollapseTagsHasTooltip = function () {
         return !_that.ngDisabled &&
             _that.multiple &&
-            angular.isDefined(_that.ngModel) &&
-            _that.ngModel.length > 0 &&
+            angular.isDefined(_that.model) &&
+            _that.model.length > 0 &&
             _that.collapseTag &&
             _that.collapseTagTooltip
     }
@@ -486,7 +524,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 是否有多余的tags
      */
     $scope.isCollapseTagsHasRedundant = function () {
-        return _that.multiple && _that.ngModel.length > 1
+        return _that.multiple && _that.model && _that.model.length > 1
     }
 
     /**
@@ -503,26 +541,37 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
      * 重新聚焦
      */
     $scope.focus = function () {
-        let input = $element[0].querySelector('.mob-input__inner')
-        input.focus()
+        let input
+        if (_that.filterable) {
+            let popper = document.getElementById(`${_that.name}_mob-tree-select-popper`)
+            input = popper && popper.querySelector('.mob-input-filterable')
+        } else {
+            input = $element[0].querySelector('.mob-input__inner')
+        }
+        if (input) input.focus()
     }
 
     // 是否显示清除按钮
     $scope.showClear = function () {
         return _that.clearable &&
             !_that.ngDisabled &&
-            _that.ngModel && _that.ngModel.length > 0
+            _that.model && _that.model.length > 0
     }
     /**
      * 清空input内容
      */
-    $scope.clean = function () {
-        this.focus()
+    this.cleanHandler = function () {
+        $scope.focus()
         if (_that.multiple) {
             _that.changeHandler([])
         }
         else {
             _that.changeHandler('')
+        }
+
+        if (angular.isDefined(this.clean)) {
+            let opt = {value: this.model, attachment: this.attachment}
+            this.clean({opt: opt})
         }
     }
 
@@ -644,7 +693,7 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
     $scope.reset = function (){
         _that.initOptionsCache([])
         $timeout(function (){
-            $scope.$refs.tree.$ctrl.initialNodeList()
+            _that.initLoad()
         })
     }
 
@@ -652,11 +701,13 @@ function controller($scope, $element, $timeout, $document, $compile, $attrs, $de
 
 app
     .component('mobTreeSelect', {
+        require: {
+            ngModel: '^ngModel'
+        },
         transclude: true,
         templateUrl: './components/tree-select/index.html',
         bindings: {
             ref:"<?", // ref
-            ngModel: '=?',// 双向数据绑定
             required: '<?', // 是否必填
             options: '<?',// 选项
             appendToBody: '<?',// 是否添加到body
@@ -669,16 +720,17 @@ app
             filterable: '<?', // 是否可过滤 TODO
             filterMethod: '&?', // 过滤方法, TODO 待实现
             group: '<?',// 是否分组
-            loadPerExpand: "<?",// 每次展示时加载
             /**
              * 下面是tree组件的内容
              */
             nodeKey: "<?",
-            showCheckbox: "<?",
+            // showCheckbox: "<?",// 默认true暂不支持false
             props: "<?",
             lazy: "<?",
+            loadPerExpand: "<?",// 每次展示时加载
             expandOnClickNode: "<?",// 点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
             checkOnClickNode: "<?",// 点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。
+            checkStrictly: "<?",// 是否父子节点不联动，默认false；为true时只勾选当前操作的节点
             load: "&?",
             nodeClick:"&?", // 当节点被点击时触发， Function(event, node)
             nodeExpand:"&?",// 节点被展开时触发， Function(node)
@@ -694,6 +746,7 @@ app
             attachment: "<?",
             // Events
             change: '&?',
+            clean: '&?', // 清零时触发
         },
         controller: controller
     })

@@ -37,7 +37,7 @@ mob-tree-node .mob-tree-node .mob-tree-node-content .mob-tree-node-expand {
 
 mob-tree-node .mob-tree-node .mob-tree-node-content .mob-icon {
     transition: all .3s;
-    transform: rotate(-90deg);
+    /*transform: rotate(-90deg);*/
 }
 
 mob-tree-node .mob-tree-node .mob-tree-node-content mob-icon {
@@ -46,7 +46,7 @@ mob-tree-node .mob-tree-node .mob-tree-node-content mob-icon {
 
 
 mob-tree-node .mob-tree-node.is_expand>.mob-tree-node-content .mob-icon {
-    transform: rotate(0deg);
+    transform: rotate(90deg);
 }
 
 mob-tree-node .mob-tree-node>.mob-tree-node-children {
